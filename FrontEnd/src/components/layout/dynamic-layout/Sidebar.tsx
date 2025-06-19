@@ -1,0 +1,142 @@
+import type { IDecodedUserType } from "../../../types/auth.types";
+import React from "react";
+import { navigationConfig } from "../../../config/UI-config/Navigation.config";
+import { X,GraduationCap } from "lucide-react";
+
+import type { NavigationItem } from "../../../config/UI-config/Navigation.config";
+
+interface ISidebarProps{
+    user:IDecodedUserType,
+    isOpen:boolean,
+    onClose:()=>void
+}
+
+ interface NavItemProps {
+  item: NavigationItem;
+  isSecondary?: boolean;
+}
+
+const Sidebar :React.FC<ISidebarProps>= ({ user, isOpen, onClose }) => {
+  const navigation = navigationConfig[user.role];
+
+  const NavItem :React.FC<NavItemProps>= ({ item, isSecondary = false }) => (
+    <a
+      href={item.path}
+      className={`flex items-center px-3 py-2 rounded-lg text-sm font-medium transition-colors relative ${
+        item.active
+          ? 'bg-blue-600 text-white'
+          : isSecondary
+          ? 'text-gray-600 hover:text-gray-900 hover:bg-gray-50'
+          : 'text-gray-700 hover:text-gray-900 hover:bg-gray-100'
+      }`}
+    >
+      <item.icon className={`w-5 h-5 mr-3 ${item.active ? 'text-white' : ''}`} />
+      <span className="flex-1">{item.label}</span>
+      {item.badge && (
+        <span className={`ml-2 px-2 py-1 text-xs rounded-full ${
+          item.active 
+            ? 'bg-blue-500 text-white' 
+            : 'bg-red-500 text-white'
+        }`}>
+          {item.badge}
+        </span>
+      )}
+    </a>
+  );
+
+  return (
+    <>
+      {/* Mobile Overlay */}
+      {isOpen && (
+        <div
+          className="fixed inset-0 bg-black bg-opacity-50 z-40 lg:hidden"
+          onClick={onClose}
+        />
+      )}
+
+      {/* Sidebar */}
+      <aside
+        className={`fixed top-0 left-0 z-50 w-64 h-screen bg-white border-r border-gray-200 transform transition-transform duration-300 ease-in-out lg:transform-none lg:static lg:z-auto ${
+          isOpen ? 'translate-x-0' : '-translate-x-full'
+        } lg:translate-x-0`}
+      >
+        <div className="flex flex-col h-full">
+          {/* Logo/Brand */}
+          <div className="flex items-center justify-between px-4 py-4 border-b border-gray-200">
+            <div className="flex items-center space-x-2">
+              <div className="w-8 h-8 bg-blue-600 rounded-lg flex items-center justify-center">
+                <GraduationCap className="w-5 h-5 text-white" />
+              </div>
+              <span className="text-lg font-semibold text-gray-900">EduPlatform</span>
+            </div>
+            <button
+              onClick={onClose}
+              className="lg:hidden p-1 rounded-md hover:bg-gray-100"
+            >
+              <X className="w-5 h-5" />
+            </button>
+          </div>
+
+          {/* User Info */}
+          <div className="px-4 py-4 border-b border-gray-200">
+            <div className="flex items-center space-x-3">
+              <img
+                src={user.profile}
+                alt={user.name}
+                className="w-10 h-10 rounded-full"
+              />
+              <div className="flex-1 min-w-0">
+                <p className="text-sm font-medium text-gray-900 truncate">{user.name}</p>
+                <p className="text-xs text-gray-500 capitalize">{user.role}</p>
+              </div>
+              <div className={`px-2 py-1 text-xs rounded-full font-medium ${
+                user.role === 'admin' ? 'bg-red-100 text-red-800' :
+                user.role === 'mentor' ? 'bg-green-100 text-green-800' :
+                'bg-blue-100 text-blue-800'
+              }`}>
+                {user.role}
+              </div>
+            </div>
+          </div>
+
+          {/* Navigation */}
+          <nav className="flex-1 px-4 py-4 space-y-6 overflow-y-auto">
+            {/* Primary Navigation */}
+            <div>
+              <h3 className="px-3 text-xs font-semibold text-gray-500 uppercase tracking-wider mb-3">
+                Main Menu
+              </h3>
+              <div className="space-y-1">
+                {navigation.primary.map((item, index) => (
+                  <NavItem key={index} item={item} />
+                ))}
+              </div>
+            </div>
+
+            {/* Secondary Navigation */}
+            <div>
+              <h3 className="px-3 text-xs font-semibold text-gray-500 uppercase tracking-wider mb-3">
+                Other
+              </h3>
+              <div className="space-y-1">
+                {navigation.secondary.map((item, index) => (
+                  <NavItem key={index} item={item} isSecondary />
+                ))}
+              </div>
+            </div>
+          </nav>
+
+          {/* Footer */}
+          <div className="p-4 border-t border-gray-200">
+            <div className="flex items-center justify-between text-xs text-gray-500">
+              <span>© 2025 EduPlatform</span>
+              <span>v2.1.0</span>
+            </div>
+          </div>
+        </div>
+      </aside>
+    </>
+  );
+};
+
+export default  Sidebar
