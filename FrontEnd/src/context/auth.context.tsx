@@ -32,14 +32,14 @@ export const AuthProvider=({children}:AuthContext)=>{
     const [loading,setLoading]=useState<Boolean>(false)
     //  const navigate=useNavigate()
 
-     useEffect(()=>{
+    useEffect(()=>{
       
           checkAuth();
      
-     },[])
+    },[])
 
 
-     const checkAuth=async()=>{
+    const checkAuth=async()=>{
         setLoading(true)
          try {
              const result= await AuthService.authME()
@@ -55,28 +55,31 @@ export const AuthProvider=({children}:AuthContext)=>{
             setLoading(false)
         }
 
-     }
+    }
 
-   console.log('user fron context',user)
-            const logout = async (): Promise<void> => {
+     console.log('user fron context',user)
+    const logout = async (): Promise<void> => {
             setLoading(true);
         try {
             const res = await AuthService.logOut();
             if (res) {
-            setUser(null);
-            
+                setTimeout(() => {
+                setUser(null);
+                setLoading(false); 
+            }, 3000);
             }
         } catch (error) {
+            setLoading(false)
             console.error("Logout error:", error);
             setUser(null);
            
         } finally {
             setLoading(false);
         }
-        };
+    };
 
 
-     return(
+    return(
         <AuthContext.Provider value={{user,setUser,loading,checkAuth,logout}}>
         {children}
         </AuthContext.Provider>

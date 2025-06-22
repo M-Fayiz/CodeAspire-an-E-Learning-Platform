@@ -1,16 +1,16 @@
 import { IUser,IAuth } from "../../types/user.types";
 import { IAuthService } from "../interface/IauthService";
 import { IUserRepo } from "../../repository/interface/IUserRepo";
-import { hashPassword,comparePassword } from "../../utility/bcrypt.utility";
+import { hashPassword,comparePassword } from "../../utility/bcrypt.util";
 // import { generateOtp } from "../../utility/generate.otp";
-import { sendToken } from "../../utility/sendMail";
+import { sendToken } from "../../utility/send-mail.util";
 import { v4 as uuidv4 } from "uuid";
 import client from "../../config/redis";
 import { HttpStatus } from "../../const/http-status";
 import { HttpResponse } from "../../const/error-message";
-import { createHttpError } from "../../utility/httpError";
-import { generateTokens } from "../../utility/jwtToken.util";
-import { verifyAccesToken,verifyRefreshToken } from "../../utility/jwtToken.util";
+import { createHttpError } from "../../utility/http-error";
+import { generateTokens } from "../../utility/jwt-token.util";
+import { verifyAccesToken,verifyRefreshToken } from "../../utility/jwt-token.util";
 import type { IMappedUser } from "../../Models/userModel";
 import { JwtPayload } from "jsonwebtoken";
 import { IPayload } from "../../Models/userModel";
@@ -166,5 +166,15 @@ export class AuthService implements IAuthService{
         }
         const {accessToken,refreshToken}=generateTokens(payload)
         return {accessToken,refreshToken,payload}
+    }
+
+    async  forgotPassword(email: string): Promise<string> {
+        const isUserExist=await this.userRepo.findUserByEmail(email)
+
+        if(!isUserExist){
+            throw createHttpError(HttpStatus.NOT_FOUND,HttpResponse.USER_NOT_FOUND)
+        }
+        return ''
+        
     }
 }

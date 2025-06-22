@@ -3,9 +3,9 @@ import { IAuthController } from "../interface/authController";
 import { IAuthService } from "../../services/interface/IauthService";
 import { HttpStatus } from "../../const/http-status";
 import { HttpResponse } from "../../const/error-message";
-import { successResponse } from "../../utility/response";
+import { successResponse } from "../../utility/response.util";
 import {options} from '../../config/cookie.config'
-import { createHttpError } from "../../utility/httpError";
+import { createHttpError } from "../../utility/http-error";
 import { clearCookies } from "../../utility/clearCookies.util";
 import { token } from "morgan";
 import { date } from "zod";
@@ -87,12 +87,19 @@ export class AuthController implements IAuthController{
    }
 
    async logout(req: Request, res: Response, next: NextFunction): Promise<void> {
-       try {
+      try {
         clearCookies(res)
         res.status(HttpStatus.OK).json(successResponse(HttpResponse.LOGGED_OUT))
-       } catch (error) {
+      } catch (error) {
         next(error)
-       }
+      }
+   }
+   async forgotPassword(req: Request, res: Response, next: NextFunction): Promise<void> {
+      try {
+        console.log(req.body)
+      } catch (error) {
+        
+      } 
    }
 }
 

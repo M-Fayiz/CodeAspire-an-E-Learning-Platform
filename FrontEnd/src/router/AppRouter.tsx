@@ -1,8 +1,12 @@
-import { createBrowserRouter } from "react-router";
+import { createBrowserRouter, Navigate } from "react-router";
 
 import Landing from "../pages/Landing/Landing";
-import AuthPage from "../pages/Auth Page/Auth-Page";
+
+// Auth Components
+import LoginPage from "../pages/Auth Page/LoginPage";
+import SignupPage from "../pages/Auth Page/SignupPage";
 import VerifyEmail from "../components/auth-components/verifyEmail";
+import ForgotPassword from "../components/auth-components/ForgotPassword";
 
 import NotFound from "../pages/not-found/Not-Found";
 import ErrorFallback from "../components/common/ErrorFallback";
@@ -17,13 +21,15 @@ export const  router=createBrowserRouter([
         errorElement:<ErrorFallback/>
     },
     {
-        path:'/auth/*',
-        element:<AuthPage/>,   
-        errorElement :<ErrorFallback/>
-    },
-    {
-        path: "/auth/verify-email",
-        element: <VerifyEmail />,
+        path: '/auth',
+        errorElement: <ErrorFallback />,
+        children: [
+            { index:true, element: <Navigate to='login'/>},
+            { path: 'login' , element: <LoginPage/>},
+            { path: 'signup' , element: <SignupPage/>},
+            { path: 'forgot-password', element: <ForgotPassword /> },
+            { path: 'verify-email', element: <VerifyEmail /> }
+        ]
     },
     {
         path:'/learner',
@@ -33,12 +39,12 @@ export const  router=createBrowserRouter([
             </Protected_Router>
         ),
         children:[
+            { index:true, element: <Navigate to='dashboard'/>},
             { path:'dashboard' ,element:<DashboardContent/>}
         ]
 
      
     },
-
     {
         path: '*',
         element: <NotFound /> 

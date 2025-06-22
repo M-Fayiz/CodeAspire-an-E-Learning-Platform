@@ -86,6 +86,21 @@ export const  AuthService={
         const errorMessage=err.response?.data.error
         throw new Error(errorMessage)
       }
+    },
+    googleAuth:async(role:UserRole):Promise<void>=>{
+      try {
+        window.location.href=`${import.meta.env.VITE_BASE_URL}/auth/google?role:${role}`
+      } catch (error) {
+        console.log(error)
+      }
+    },
+    forgotPassword:async(email:string):Promise<void>=>{
+      try {
+        const response=await authInstance.post(API.Auth.FORGOT_PASSWORD_URL,{email})
+      } catch (error) {
+        
+      }
+
     }
 
 

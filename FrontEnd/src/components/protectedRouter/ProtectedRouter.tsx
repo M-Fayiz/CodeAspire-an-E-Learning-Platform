@@ -21,7 +21,7 @@ export const Protected_Router:React.FC<ProtectedProps>=({children,requiredRole,f
     }
     console.log('user from context in protect',user)
     if(!user){
-        return <Navigate to={fallback} state={{from:location}} replace />
+        return <Navigate to={fallback} state={{ from: location }}  replace />
     }
 
     if(requiredRole.length>0){

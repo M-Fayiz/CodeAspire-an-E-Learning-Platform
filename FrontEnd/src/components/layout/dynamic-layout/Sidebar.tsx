@@ -1,7 +1,9 @@
 import type { IDecodedUserType } from "../../../types/auth.types";
 import React from "react";
 import { navigationConfig } from "../../../config/UI-config/Navigation.config";
-import { X,GraduationCap } from "lucide-react";
+// import { X,GraduationCap } from "lucide-react";
+
+
 
 import type { NavigationItem } from "../../../config/UI-config/Navigation.config";
 
@@ -62,7 +64,7 @@ const Sidebar :React.FC<ISidebarProps>= ({ user, isOpen, onClose }) => {
       >
         <div className="flex flex-col h-full">
           {/* Logo/Brand */}
-          <div className="flex items-center justify-between px-4 py-4 border-b border-gray-200">
+          {/* <div className="flex items-center justify-between px-4 py-4 border-b border-gray-200">
             <div className="flex items-center space-x-2">
               <div className="w-8 h-8 bg-blue-600 rounded-lg flex items-center justify-center">
                 <GraduationCap className="w-5 h-5 text-white" />
@@ -75,13 +77,13 @@ const Sidebar :React.FC<ISidebarProps>= ({ user, isOpen, onClose }) => {
             >
               <X className="w-5 h-5" />
             </button>
-          </div>
+          </div> */}
 
           {/* User Info */}
           <div className="px-4 py-4 border-b border-gray-200">
             <div className="flex items-center space-x-3">
               <img
-                src={user.profile}
+                src={`${user.profile ?user.profile:'/illustration/Avatar.jpeg'}`}
                 alt={user.name}
                 className="w-10 h-10 rounded-full"
               />

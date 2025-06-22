@@ -49,7 +49,7 @@ import { Link } from 'react-router-dom';
         return
       }
       setErrors({})
-      onSubmit(roleAdded, selectedRole,'signup');
+      onSubmit(roleAdded);
       setIsLoading(true)
        setFormData({
             name: '',
@@ -60,11 +60,12 @@ import { Link } from 'react-router-dom';
           })
    }   
 
+
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-50 to-blue-50 flex items-center justify-center p-4">
       <div className="bg-white rounded-2xl shadow-2xl overflow-hidden max-w-5xl w-full">
         <div className="flex flex-col lg:flex-row">
-          {/* Left Side */}
+          
           <div className={`lg:w-1/2 bg-gradient-to-br ${currentRole.color} p-8 flex flex-col justify-center items-center text-white relative overflow-hidden`}>
             <div className="absolute inset-0 bg-black/10"></div>
            <div className="flex items-center justify-center min-h-screen">
@@ -89,7 +90,6 @@ import { Link } from 'react-router-dom';
 
           </div>
 
-          {/* Right Side */}
           <div className="lg:w-1/2 p-8">
             <div className="max-w-md mx-auto">
               <div className="text-center mb-8">
@@ -102,7 +102,7 @@ import { Link } from 'react-router-dom';
                 <p className="text-gray-600">Choose your role to get started</p>
               </div>
 
-              {/* Role Selection */}
+            
               <div className="grid grid-cols-3 gap-2 mb-6">
                 {(Object.keys(roleConfig) as UserRole[]).map((role) => {
                   const config = roleConfig[role];
@@ -124,7 +124,7 @@ import { Link } from 'react-router-dom';
                 })}
               </div>
 
-              {/* Google Signup */}
+              
               <button
                 onClick={() => onGoogleAuth(selectedRole)}
                 className="w-full bg-white border-2 border-gray-200 text-gray-700 py-3 px-4 rounded-lg font-medium hover:bg-gray-50 transition-colors mb-4 flex items-center justify-center space-x-2"
@@ -138,7 +138,7 @@ import { Link } from 'react-router-dom';
                 <span>Continue with Google</span>
               </button>
 
-              {/* Email Signup Form */}
+            
               <form onSubmit={handleSubmit} className="space-y-4">
                     <Input
                      label='Your Name'

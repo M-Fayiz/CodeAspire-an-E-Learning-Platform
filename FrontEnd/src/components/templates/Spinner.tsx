@@ -19,7 +19,7 @@ export const Spinner: React.FC<SpinnerProps> = ({
 }) => {
   const sizeClasses: Record<SpinnerSize, string> = {
     small: 'w-4 h-4',
-    medium: 'w-8 h-8',
+    medium: 'w-6 h-6',
     large: 'w-12 h-12',
     xlarge: 'w-16 h-16'
   };

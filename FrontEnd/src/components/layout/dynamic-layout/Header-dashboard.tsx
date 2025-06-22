@@ -1,6 +1,8 @@
 import { Bell, ChevronDown, HelpCircle, LogOut, Menu, Search, Settings, User, X } from "lucide-react";
 import React,{useState} from "react";
 import type { IDecodedUserType } from "../../../types/auth.types";
+import { useAuth } from "../../../context/auth.context";
+import { Spinner } from "../../templates/Spinner";
 
 interface IHeaderProbs{
   user:IDecodedUserType
@@ -11,6 +13,8 @@ interface IHeaderProbs{
 const Header :React.FC<IHeaderProbs>=({ user, onMenuToggle, isSidebarOpen }) => {
   const [showProfileDropdown, setShowProfileDropdown] = useState(false);
   const [showNotifications, setShowNotifications] = useState(false);
+
+  const {logout,loading}=useAuth()
 
   const notifications = [
     { id: 1, text: "New course enrollment", time: "5 min ago", unread: true },
@@ -131,15 +135,16 @@ const Header :React.FC<IHeaderProbs>=({ user, onMenuToggle, isSidebarOpen }) => 
                 </a>
               </div>
               <div className="border-t border-gray-200 py-2">
-                <a href="#" className="flex items-center px-4 py-2 text-sm text-red-600 hover:bg-red-50">
+                <button onClick={logout} className="flex items-center px-4 py-2 text-sm text-red-600 hover:bg-red-50">
                   <LogOut className="w-4 h-4 mr-3" />
                   Sign Out
-                </a>
+                </button>
               </div>
             </div>
           )}
         </div>
       </div>
+      {loading&&<Spinner fullScreen variant="theme"/>}
     </header>
   );
 };

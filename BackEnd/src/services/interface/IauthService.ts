@@ -10,4 +10,5 @@ export interface IAuthService {
     authMe(token:string):Promise<IMappedUser>
     refreshAccessToken(token:string):Promise<{newAccessToken:string,payload:JwtPayload}>
     login(email:string,password:string):Promise<{accessToken:string,refreshToken:string,payload:IPayload}>
+    forgotPassword(email:string):Promise<string>
 }

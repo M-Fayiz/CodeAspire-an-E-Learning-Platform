@@ -1,4 +1,5 @@
 
+
 export interface ILogin{
     email:string,
     password:string,
@@ -22,7 +23,7 @@ export interface IDecodedUserType{
 
 
 export interface AuthComponentProps {
-  onSubmit: (data: ISignUp, role: UserRole,source:'signup'|'login') => void;
+  onSubmit: (data: ISignUp) => void;
   onGoogleAuth: (role: UserRole) => void;
 
 }

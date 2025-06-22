@@ -8,6 +8,7 @@ import { Link } from 'react-router-dom';
 
 
 export const LoginComponent: React.FC<AuthComponentProps> = ({ onSubmit, onGoogleAuth }) => {
+
   const [isLoading,setIsLoading]=useState(false)
   const [formData, setFormData] = useState<ILogin>({ email: '', password: '' });
   const [errors, setErrors] = useState<{[key:string]:string}>({})
@@ -35,7 +36,7 @@ export const LoginComponent: React.FC<AuthComponentProps> = ({ onSubmit, onGoogl
         return
       }
 
-    onSubmit(formData, 'learner' ,'login',);
+    onSubmit(formData);
     setErrors({})
     setIsLoading(false);
   };
@@ -79,11 +80,6 @@ export const LoginComponent: React.FC<AuthComponentProps> = ({ onSubmit, onGoogl
                 <h1 className="text-2xl font-bold text-gray-900 mb-2">Welcome Back</h1>
                 <p className="text-gray-600">Sign in to your account</p>
               </div>
-
-             
-              
-
-              
               <button
                 type="button"
                 onClick={() => onGoogleAuth('learner')}
@@ -137,15 +133,15 @@ export const LoginComponent: React.FC<AuthComponentProps> = ({ onSubmit, onGoogl
                      
                     />
 
-                {/* Remember Me + Forgot */}
+                
                 <div className="flex items-center justify-between">
-                  <label className="flex items-center">
+                  {/* <label className="flex items-center">
                     <input type="checkbox" className="w-4 h-4 text-blue-600 border-gray-300 rounded" />
                     <span className="ml-2 text-sm text-gray-600">Remember me</span>
-                  </label>
-                  <a href="#" className="text-sm text-blue-600 hover:underline">
-                    Forgot password?
-                  </a>
+                  </label> */}
+                  <Link to='/auth/forgot-password' className="text-sm text-blue-600 hover:underline">
+                   Forgot password?
+                  </Link>
                 </div>
 
                 {/* Submit */}

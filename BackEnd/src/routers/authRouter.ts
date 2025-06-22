@@ -13,8 +13,10 @@ const authService=new AuthService(userRepository)
 const authController=new AuthController(authService)
 
 authRouter.post('/signup',Validate(registerSchema),authController.signUp.bind(authController))
-authRouter.post('/verifyEmail',authController.verifyEmail.bind(authController))
+authRouter.post('/verify-email',authController.verifyEmail.bind(authController))
 authRouter.post('/me',authController.authMe.bind(authController))
-authRouter.post('/refreshToken',authController.refreshToken.bind(authController))
+authRouter.post('/refresh-token',authController.refreshToken.bind(authController))
 authRouter.post('/login',authController.login.bind(authController))
+authRouter.post('/logout',authController.logout.bind(authController))
+authRouter.post('/forgot-password',authController.forgotPassword.bind(authController))
 export default authRouter
