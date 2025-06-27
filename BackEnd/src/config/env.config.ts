@@ -22,6 +22,18 @@ export  const env={
     },
     get REFRESH_TOKEN(){
         return process.env.REFRESH_TOKEN
+    },
+    get CLIENT_ID(){
+        return process.env.CLIENT_ID
+    },
+    get CLIENT_SECRET(){
+        return process.env.CLIENT_SECRET
+    },
+    get CALLBACK_URL(){
+        return process.env.CALLBACK_URL
+    },
+    get SESSION_SECRET(){
+        return process.env.SESSION_SECRET
     }
 
 }

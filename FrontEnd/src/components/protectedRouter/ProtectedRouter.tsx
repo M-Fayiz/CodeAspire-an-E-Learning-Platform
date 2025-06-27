@@ -1,5 +1,6 @@
 import type { ReactNode } from "react";
-import { Navigate,useLocation } from "react-router";
+import {useLocation } from "react-router";
+import { Navigate} from 'react-router-dom'
 import { useAuth } from "../../context/auth.context";
 import type { UserRole } from "../../types/auth.types";
 import { Spinner } from "../templates/Spinner";
@@ -16,8 +17,9 @@ export const Protected_Router:React.FC<ProtectedProps>=({children,requiredRole,f
          
     const {loading,user}=useAuth()
      const location=useLocation()
+
     if(loading){
-        return  <Spinner fullScreen variant="theme"/>
+        return <Spinner fullScreen variant="theme"/>
     }
     console.log('user from context in protect',user)
     if(!user){

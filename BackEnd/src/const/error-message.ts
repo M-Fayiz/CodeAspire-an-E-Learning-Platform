@@ -6,12 +6,14 @@ export const HttpResponse={
     USER_EXIST:'User already exist',
     USER_CREATION_FAILED: 'User Creation Failed',
     USER_NOT_FOUND:'User not Found',
-    USER_BLOCKED:'User bloced',
+    USER_BLOCKED:'User blocked',
     INVALID_CREDNTIALS:'Invalid Credentials',
     CREATED: 'Created Successfully',
     LOGGED_IN_SUCCESSFULLY: 'User Logged In Successfully',
     LOGGED_OUT: 'User Logged Out',
-    TOKEN_EXPIRED:'Token Expired',
-    UNAUTHORIZED:'Unauthorized Access, Please Login First'
+    ACCESS_TOKEN_EXPIRED:'Access Token Expired',
+    REFRESH_TOKEN_EXPIRED:'Refresh Token Expired',
+    UNAUTHORIZED:'Unauthorized Access, Please Login First',
+    TOKEN_NOT_FOUND:'Token not Found'
 
 }

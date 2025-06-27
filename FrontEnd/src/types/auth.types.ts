@@ -18,7 +18,8 @@ export interface IDecodedUserType{
     name?:string,
     email : string,
     role :UserRole,
-    profile?:string
+    profile?:string,
+    
 }
 
 

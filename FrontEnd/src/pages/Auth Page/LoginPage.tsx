@@ -22,23 +22,23 @@ const LoginPage: React.FC = () => {
   
 
   const handleAuthSubmit =async (data: ISignUp) => {
-    console.log('data from login',data)
+    
     try {
-            const result=await AuthService.login(data)
+      const result=await AuthService.login(data)
             
-             if(result){
-              const payloadData={
-                id:result.id,
-                email:result.email,
-                role:result.role as UserRole
-              }
-              console.log('user',user)
-              setUser(payloadData)
-              setLoading(true)
-              setTimeout(()=>{
-               navigate(from, { replace: true });
-              },3000)
-             }
+      if(result){
+        const payloadData={
+        id:result.id,
+        email:result.email,
+        role:result.role as UserRole
+        }
+          
+        setUser(payloadData)
+        setLoading(true)
+        setTimeout(()=>{
+         navigate(from, { replace: true });
+        },3000)
+      }
         
     } catch (error) {
         if(error instanceof Error){
@@ -49,10 +49,10 @@ const LoginPage: React.FC = () => {
               }
 
         }else if(error instanceof HttpError){
-
+              console.log('error status',error)
             switch(error.status){
               case 404:
-                 toastService.error(`${error.message}. Please sign up.`);
+                toastService.error(`${error.message}. Please sign up.`);
                   navigate('/auth/signup')
                   return
               case 401:
@@ -67,7 +67,7 @@ const LoginPage: React.FC = () => {
 
   const handleGoogleAuth =async (role: UserRole) => {
      try {
-       await AuthService.googleAuth(role)
+      await AuthService.googleAuth(role)
       
      } catch (error) {
       console.log(error)

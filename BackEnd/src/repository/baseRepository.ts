@@ -1,4 +1,4 @@
-import { Document,Model,Types,FilterQuery,UpdateQuery, } from "mongoose";
+import { Document,Model,Types,FilterQuery,UpdateQuery, UpdateWriteOpResult, } from "mongoose";
 
 export abstract class BaseRepository<T extends Document> {
     constructor(protected model:Model<T>) {}
@@ -19,4 +19,13 @@ export abstract class BaseRepository<T extends Document> {
     async findUserByEmail(email:string):Promise<T|null>{
         return this.model.findOne({email})
     }
+    async findUserAndUpdate(filter:FilterQuery<T>,update:UpdateQuery<T>,options = { new: true }):Promise<T|null>{
+            return this.model.findOneAndUpdate(filter,update,options)
+    }
+    async findByIDAndUpdate(id:Types.ObjectId,update:UpdateQuery<T>):Promise<T|null>{
+        return this.model.findByIdAndUpdate(id,update,{upsert:true,new:true})
+    }
+    // async updateOne(filter:FilterQuery<T>,update:UpdateQuery<T>):Promise<T|null>{
+    //     return this.model.updateOne(filter,update)
+    // }
 }

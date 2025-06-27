@@ -3,6 +3,7 @@ import React,{useState} from "react";
 import type { IDecodedUserType } from "../../../types/auth.types";
 import { useAuth } from "../../../context/auth.context";
 import { Spinner } from "../../templates/Spinner";
+import { Link } from "react-router";
 
 interface IHeaderProbs{
   user:IDecodedUserType
@@ -24,7 +25,7 @@ const Header :React.FC<IHeaderProbs>=({ user, onMenuToggle, isSidebarOpen }) => 
 
   return (
     <header className="bg-white border-b border-gray-200 px-4 py-3 flex items-center justify-between sticky top-0 z-40">
-      {/* Left Section */}
+      
       <div className="flex items-center space-x-4">
         <button
           onClick={onMenuToggle}
@@ -34,10 +35,10 @@ const Header :React.FC<IHeaderProbs>=({ user, onMenuToggle, isSidebarOpen }) => 
         </button>
         
         <div className="hidden lg:block">
-          <h1 className="text-xl font-semibold text-gray-900">EduPlatform</h1>
+          <h1 className="text-xl font-semibold text-gray-900">Tech Master</h1>
         </div>
         
-        {/* Search Bar */}
+        
         <div className="hidden md:flex items-center relative">
           <Search className="w-4 h-4 absolute left-3 text-gray-400" />
           <input
@@ -48,14 +49,14 @@ const Header :React.FC<IHeaderProbs>=({ user, onMenuToggle, isSidebarOpen }) => 
         </div>
       </div>
 
-      {/* Right Section */}
+      
       <div className="flex items-center space-x-3">
-        {/* Search Icon for Mobile */}
+        
         <button className="md:hidden p-2 rounded-md hover:bg-gray-100 transition-colors">
           <Search className="w-5 h-5 text-gray-600" />
         </button>
 
-        {/* Notifications */}
+        
         <div className="relative">
           <button
             onClick={() => setShowNotifications(!showNotifications)}
@@ -121,10 +122,10 @@ const Header :React.FC<IHeaderProbs>=({ user, onMenuToggle, isSidebarOpen }) => 
                 <p className="text-sm text-gray-500">{user.email}</p>
               </div>
               <div className="py-2">
-                <a href="#" className="flex items-center px-4 py-2 text-sm text-gray-700 hover:bg-gray-50">
+                <Link to={`/${user.role}/profile`} className="flex items-center px-4 py-2 text-sm text-gray-700 hover:bg-gray-50">
                   <User className="w-4 h-4 mr-3" />
                   My Profile
-                </a>
+                </Link>
                 <a href="#" className="flex items-center px-4 py-2 text-sm text-gray-700 hover:bg-gray-50">
                   <Settings className="w-4 h-4 mr-3" />
                   Account Settings

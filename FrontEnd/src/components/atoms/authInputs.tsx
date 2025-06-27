@@ -8,10 +8,11 @@ interface IInputProps {
   value: string;
   name: string;
   onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
-  icon: React.ReactNode;
-  error: string;
+  icon?: React.ReactNode;
+  error?: string;
   label:string,
-  showPasswordToggle?: boolean; 
+  showPasswordToggle?: boolean;
+  required?:boolean
 }
 
 export const Input: React.FC<IInputProps> = ({

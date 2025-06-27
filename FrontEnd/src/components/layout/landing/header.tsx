@@ -20,6 +20,8 @@ const Header: React.FC = () => {
 
 
 
+
+
   return (
     <header className={`fixed w-full z-50 transition-all duration-300 ${
       isScrolled ? 'bg-white/95 backdrop-blur-md shadow-lg' : 'bg-transparent'
@@ -42,7 +44,7 @@ const Header: React.FC = () => {
             <A_tag href="#about" label="About"/>
             {/* <A_tag href="#about" label="About"/> */}
             <a href="#pricing" className="text-gray-700 hover:text-blue-600 transition-colors font-medium">Pricing</a>
-          {user? <Link to='/learner/dashboard'><User/></Link>: <Link to='/auth/login'><button className="text-gray-700 hover:text-blue-600 transition-colors font-medium">Login</button></Link> }
+          {user? <Link to={`/${user.role}/dashboard`}><User/></Link>: <Link to='/auth/login'><button className="text-gray-700 hover:text-blue-600 transition-colors font-medium">Login</button></Link> }
             <button className="bg-gradient-to-r from-blue-600 to-purple-600 text-white px-6 py-2 rounded-full hover:shadow-lg transform hover:scale-105 transition-all duration-200 font-medium">
               Get Started
             </button>

@@ -11,7 +11,7 @@ const DynamicLayout =() => {
 
   const {user}=useAuth()
   
-  console.log('user from context 🔁', user);
+
 
   const toggleSidebar = () => {
     setIsSidebarOpen(!isSidebarOpen);
@@ -31,7 +31,7 @@ const DynamicLayout =() => {
 
   return (
     <div className="min-h-screen bg-gray-50">
-      {/* Header */}
+     
       <Header 
         user={user} 
         onMenuToggle={toggleSidebar}
@@ -39,14 +39,13 @@ const DynamicLayout =() => {
       />
 
       <div className="flex">
-        {/* Sidebar */}
+       
         <Sidebar 
           user={user} 
           isOpen={isSidebarOpen}
           onClose={closeSidebar}
         />
 
-        {/* Main Content */}
         <main className="flex-1 lg:ml-0">
           <div className="p-6">
             <Outlet/>

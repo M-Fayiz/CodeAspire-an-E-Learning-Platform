@@ -61,9 +61,12 @@ const SignupPage: React.FC = () => {
   const handleGoogleAuth =async (role: UserRole) => {
      try {
       const result= await AuthService.googleAuth(role)
-        
+        console.log('sign',result)
      } catch (error) {
       console.log(error)
+      if(error instanceof Error){
+        toastService.error(error.message)
+      }
      }
   };
 
@@ -78,7 +81,7 @@ const SignupPage: React.FC = () => {
         onClose={closeModal}
         showCloseButton={true}
         autoClose={true}
-        autoCloseDelay={4000}
+        autoCloseDelay={5000}
       />
     )}
      

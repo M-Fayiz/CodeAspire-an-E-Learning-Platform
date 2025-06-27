@@ -5,7 +5,7 @@ import { hashPassword,comparePassword } from "../../utility/bcrypt.util";
 // import { generateOtp } from "../../utility/generate.otp";
 import { sendToken } from "../../utility/send-mail.util";
 import { v4 as uuidv4 } from "uuid";
-import client from "../../config/redis";
+import redisClient from "../../config/redis";
 import { HttpStatus } from "../../const/http-status";
 import { HttpResponse } from "../../const/error-message";
 import { createHttpError } from "../../utility/http-error";
@@ -14,7 +14,8 @@ import { verifyAccesToken,verifyRefreshToken } from "../../utility/jwt-token.uti
 import type { IMappedUser } from "../../Models/userModel";
 import { JwtPayload } from "jsonwebtoken";
 import { IPayload } from "../../Models/userModel";
-
+import { generateSecureToken } from "../../utility/crypto.util";
+import { redisPrefix } from "../../const/redisKey";
 
 
 
@@ -33,10 +34,12 @@ export class AuthService implements IAuthService{
 
          const token=uuidv4()
          
-         await sendToken(user.email,token)
-         let key=`${user.email}:${token}`
-        const response= await client.setEx(key,300,JSON.stringify(user))
-
+         await sendToken(user.email,token,'verify-email')
+         let key=`${redisPrefix.VERIFY_EMAIL}:${token}`
+                
+        
+        const response= await redisClient.setEx(key,300,JSON.stringify(user))
+      
         if(!response){
             throw createHttpError(HttpStatus.INTERNAL_SERVER_ERROR,HttpResponse.SERVER_ERROR)
         }
@@ -45,9 +48,10 @@ export class AuthService implements IAuthService{
     }
     async verifyEmail(data:IAuth):Promise<{accessToken:string,refreshToken:string}>{
         try {
-               let key=`${data.email}:${data.token}`
-              
-            let result=await client.get(key)
+               let key=`${redisPrefix.VERIFY_EMAIL}:${data.token}`
+               
+      
+            let result=await redisClient.get(key)
             console.log('verify email',result)
             if(!result){
                 throw createHttpError(HttpStatus.UNAUTHORIZED,HttpResponse.USER_CREATION_FAILED)
@@ -69,7 +73,7 @@ export class AuthService implements IAuthService{
             }
         
            const newUser=await this.userRepo.createUser(user as IUser)
-           await client.del(key)
+           await redisClient.del(key)
            console.log('📈 newwUser',newUser)
            if(!newUser){
             throw createHttpError(HttpStatus.CONFLICT,HttpResponse.USER_CREATION_FAILED)
@@ -92,11 +96,14 @@ export class AuthService implements IAuthService{
         const decode= verifyAccesToken(token) 
        
         if(!decode){
-            throw createHttpError(HttpStatus.UNAUTHORIZED,HttpResponse.TOKEN_EXPIRED)
+            throw createHttpError(HttpStatus.UNAUTHORIZED,HttpResponse.ACCESS_TOKEN_EXPIRED)
         }
 
         const user=await this.userRepo.findUserByEmail(decode.email)
-         console.log('user from authme service',user)
+        if(user){
+            console.log('user from authme service')
+        }
+
         if(!user){
             throw createHttpError(HttpStatus.NOT_FOUND,HttpResponse.USER_NOT_FOUND)
         }
@@ -108,7 +115,7 @@ export class AuthService implements IAuthService{
             name:user.name,
             email:user.email,
             role:user.role,
-            profile:user.profile
+            profile:user.profilePicture
         }
     }
 
@@ -119,7 +126,7 @@ export class AuthService implements IAuthService{
         const decode =verifyRefreshToken(token) as JwtPayload
 
         if(!decode){
-            throw createHttpError(HttpStatus.NOT_FOUND,HttpResponse.TOKEN_EXPIRED)
+            throw createHttpError(HttpStatus.NOT_FOUND,HttpResponse.REFRESH_TOKEN_EXPIRED)
         }
 
         const user= await this.userRepo.findUserByEmail(
@@ -149,7 +156,7 @@ export class AuthService implements IAuthService{
             throw createHttpError(HttpStatus.NOT_FOUND,HttpResponse.USER_NOT_FOUND)
         }
         if(!user.isActive){
-            throw createHttpError(HttpStatus.UNAUTHORIZED,HttpResponse.USER_BLOCKED)
+            throw createHttpError(HttpStatus.FORBIDDEN,HttpResponse.USER_BLOCKED)
         }
          
         const isMatch=await comparePassword(password,user.password)
@@ -174,7 +181,48 @@ export class AuthService implements IAuthService{
         if(!isUserExist){
             throw createHttpError(HttpStatus.NOT_FOUND,HttpResponse.USER_NOT_FOUND)
         }
-        return ''
+
+        const secureToken=generateSecureToken()
+        let key=`${redisPrefix.FORGOT_PASSWORD}:${email}`
+
+        await sendToken(email,secureToken,'reset-password')
+        const response=await redisClient.setEx(key,300,secureToken)
+
+        if(!response){
+            throw createHttpError(HttpStatus.INTERNAL_SERVER_ERROR,HttpResponse.SERVER_ERROR)
+        }
+
+        return email
         
+    }
+    async resetPassword(email: string, token: string, password: string): Promise<string> {
+        let key=`${redisPrefix.FORGOT_PASSWORD}:${email}`
+
+        const storedToken= await redisClient.get(key)
+        console.log('stored ✅ redis',storedToken)
+        if(!storedToken){
+            throw createHttpError(HttpStatus.BAD_REQUEST,HttpResponse.TOKEN_NOT_FOUND)
+        }
+
+        if(storedToken!==token){
+            throw createHttpError(HttpStatus.FORBIDDEN,HttpResponse.UNAUTHORIZED)
+        }
+        
+        const hashedPassword=await hashPassword(password as string)
+        
+        const result=await this.userRepo.updateUserPassword(email,hashedPassword)
+
+        if(!result){
+            throw createHttpError(HttpStatus.INTERNAL_SERVER_ERROR,HttpResponse.SERVER_ERROR)
+        }
+        await redisClient.del(key)
+        return result.email
+    }
+
+
+    async generateToken(user: IUser): Promise<{ accessToken: string; refreshToken: string;payload:JwtPayload }> {
+         const payload={id:user._id,email:user.email,role:user.role}
+         const {accessToken,refreshToken}=generateTokens(payload)
+         return {accessToken,refreshToken,payload}
     }
 }

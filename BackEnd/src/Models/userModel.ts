@@ -1,7 +1,7 @@
 import mongoose,{Schema,Document,Types} from "mongoose";
 import  { IUser } from "../types/user.types";
 
-export interface IuserModel extends Document <Types.ObjectId>,Omit<IUser,'_id'>{}
+export interface IUserModel extends Document <Types.ObjectId>,Omit<IUser,'_id'>{}
 
 
 
@@ -30,16 +30,25 @@ const UserModel=new mongoose.Schema({
                 enum:['admin','learner','mentor'],
                 
             },
-            profile:{
+            profilePicture:{
                 type:String
             },
             password:{
                 type:String
-            }
+            },
+            // Mentor Specified 
+            expertise: [{ type: String }],
+           
+            mentorRating: { type: Number },
+            bio: { type: String },
 
-})
+            // Learner
+            enrolledCourses: [{ type: Schema.Types.ObjectId, ref: 'Course' }],
 
-export  const User=mongoose.model<IuserModel>('User',UserModel)
+
+},{timestamps:true})
+
+export  const User=mongoose.model<IUserModel>('User',UserModel)
 
 
 export interface IMappedUser{

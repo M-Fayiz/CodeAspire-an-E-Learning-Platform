@@ -48,7 +48,7 @@ const Sidebar :React.FC<ISidebarProps>= ({ user, isOpen, onClose }) => {
 
   return (
     <>
-      {/* Mobile Overlay */}
+     
       {isOpen && (
         <div
           className="fixed inset-0 bg-black bg-opacity-50 z-40 lg:hidden"
@@ -56,30 +56,14 @@ const Sidebar :React.FC<ISidebarProps>= ({ user, isOpen, onClose }) => {
         />
       )}
 
-      {/* Sidebar */}
+      
       <aside
         className={`fixed top-0 left-0 z-50 w-64 h-screen bg-white border-r border-gray-200 transform transition-transform duration-300 ease-in-out lg:transform-none lg:static lg:z-auto ${
           isOpen ? 'translate-x-0' : '-translate-x-full'
         } lg:translate-x-0`}
       >
         <div className="flex flex-col h-full">
-          {/* Logo/Brand */}
-          {/* <div className="flex items-center justify-between px-4 py-4 border-b border-gray-200">
-            <div className="flex items-center space-x-2">
-              <div className="w-8 h-8 bg-blue-600 rounded-lg flex items-center justify-center">
-                <GraduationCap className="w-5 h-5 text-white" />
-              </div>
-              <span className="text-lg font-semibold text-gray-900">EduPlatform</span>
-            </div>
-            <button
-              onClick={onClose}
-              className="lg:hidden p-1 rounded-md hover:bg-gray-100"
-            >
-              <X className="w-5 h-5" />
-            </button>
-          </div> */}
-
-          {/* User Info */}
+         
           <div className="px-4 py-4 border-b border-gray-200">
             <div className="flex items-center space-x-3">
               <img
@@ -101,9 +85,9 @@ const Sidebar :React.FC<ISidebarProps>= ({ user, isOpen, onClose }) => {
             </div>
           </div>
 
-          {/* Navigation */}
+         
           <nav className="flex-1 px-4 py-4 space-y-6 overflow-y-auto">
-            {/* Primary Navigation */}
+           
             <div>
               <h3 className="px-3 text-xs font-semibold text-gray-500 uppercase tracking-wider mb-3">
                 Main Menu
@@ -115,7 +99,7 @@ const Sidebar :React.FC<ISidebarProps>= ({ user, isOpen, onClose }) => {
               </div>
             </div>
 
-            {/* Secondary Navigation */}
+          
             <div>
               <h3 className="px-3 text-xs font-semibold text-gray-500 uppercase tracking-wider mb-3">
                 Other
@@ -128,13 +112,10 @@ const Sidebar :React.FC<ISidebarProps>= ({ user, isOpen, onClose }) => {
             </div>
           </nav>
 
-          {/* Footer */}
-          <div className="p-4 border-t border-gray-200">
-            <div className="flex items-center justify-between text-xs text-gray-500">
-              <span>© 2025 EduPlatform</span>
-              <span>v2.1.0</span>
-            </div>
-          </div>
+          
+          {/* <div className="p-4 border-t border-gray-200">
+            
+          </div> */}
         </div>
       </aside>
     </>

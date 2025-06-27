@@ -20,15 +20,6 @@ export  const roleConfig = {
     message: 'Share your knowledge and help students achieve their tech dreams. Make an impact in the developer community.',
     features: ['Teach Students', 'Flexible Schedule', 'Earn Income']
   },
-  admin: {
-    title: 'Admin Access',
-    subtitle: 'Manage platform and oversee operations',
-    icon: Shield,
-    color: 'from-red-500 to-purple-600',
-    illustration: '⚡',
-    message: 'Administrative access to manage the platform, courses, and user experiences.',
-    features: ['Platform Management', 'User Analytics', 'Content Control']
-  }
 
 };
 

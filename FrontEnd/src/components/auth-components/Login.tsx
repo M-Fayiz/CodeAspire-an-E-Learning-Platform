@@ -45,7 +45,7 @@ export const LoginComponent: React.FC<AuthComponentProps> = ({ onSubmit, onGoogl
     <div className="min-h-screen bg-gradient-to-br from-slate-400 to-blue-100 flex items-center justify-center p-4">
       <div className="bg-white rounded-2xl shadow-2xl overflow-hidden max-w-5xl w-full">
         <div className="flex flex-col lg:flex-row">
-          {/* Illustration Section */}
+          
           <div className={`lg:w-1/2 ${currentRole.color} p-8 flex flex-col justify-evenly items-center  text-white relative`}>
           <div className="flex items-center space-x-2 ">
             <div className="w-15 h-15 bg-gradient-to-r from-blue-600 to-purple-600 rounded-lg flex items-center justify-center">
@@ -67,7 +67,7 @@ export const LoginComponent: React.FC<AuthComponentProps> = ({ onSubmit, onGoogl
             <div className="absolute -top-10 -left-10 w-32 h-32 bg-white/10 rounded-full" />
           </div>
 
-          {/* Login Form */}
+          
           <div className="lg:w-1/2 p-8">
             <div className="max-w-md mx-auto">
               {/* Header */}
@@ -94,7 +94,6 @@ export const LoginComponent: React.FC<AuthComponentProps> = ({ onSubmit, onGoogl
                 <span>Continue with Google</span>
               </button>
 
-              {/* Divider */}
               <div className="relative my-6">
                 <div className="absolute inset-0 flex items-center">
                   <div className="w-full border-t border-gray-300"></div>
@@ -156,7 +155,7 @@ export const LoginComponent: React.FC<AuthComponentProps> = ({ onSubmit, onGoogl
                      'Creating Account...'
                   </>
                 )}
-                Sign Up
+                Sign In
                 </button>
               </form>
 

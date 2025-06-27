@@ -4,6 +4,7 @@ import type { IDecodedUserType } from "../types/auth.types";
 import { AuthService } from "../service/client/auth.service";
 
 
+
 interface User extends IDecodedUserType{}
 
 interface AuthContextProps{
@@ -29,23 +30,32 @@ interface AuthContext{
 
 export const AuthProvider=({children}:AuthContext)=>{
     const [user,setUser]=useState<User|null>(null)
-    const [loading,setLoading]=useState<Boolean>(false)
-    //  const navigate=useNavigate()
+    const [loading, setLoading] = useState<Boolean>(true)
 
     useEffect(()=>{
       
-          checkAuth();
+        checkAuth()
+
+        const handleLogout = () => {
+            logout();
+        };
+
+        window.addEventListener('force-logout',handleLogout)
+        return()=>{
+            window.removeEventListener('force-logout',handleLogout)
+        }
      
     },[])
 
-
+    
     const checkAuth=async()=>{
         setLoading(true)
+       
          try {
              const result= await AuthService.authME()
              if(result){
-                setLoading(false)
                 setUser(result)
+                setLoading(false)
              }
              console.log('data delivered to auth context',result)
 
@@ -57,16 +67,14 @@ export const AuthProvider=({children}:AuthContext)=>{
 
     }
 
-     console.log('user fron context',user)
+     
     const logout = async (): Promise<void> => {
             setLoading(true);
         try {
             const res = await AuthService.logOut();
-            if (res) {
-                setTimeout(() => {
+            if (res) {  
                 setUser(null);
                 setLoading(false); 
-            }, 3000);
             }
         } catch (error) {
             setLoading(false)
@@ -77,8 +85,6 @@ export const AuthProvider=({children}:AuthContext)=>{
             setLoading(false);
         }
     };
-
-
     return(
         <AuthContext.Provider value={{user,setUser,loading,checkAuth,logout}}>
         {children}

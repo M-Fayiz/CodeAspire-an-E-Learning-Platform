@@ -8,9 +8,9 @@ import { Link } from 'react-router-dom';
 
 
  const SignupComponent: React.FC<AuthComponentProps> = ({ onSubmit, onGoogleAuth}) => {
-  const [selectedRole, setSelectedRole] = useState<UserRole>('learner');
+  const [selectedRole, setSelectedRole] = useState<'learner' | 'mentor'>('learner');
   const [isLoading,setIsLoading]=useState(false)
- 
+  type AvailableRoles = keyof typeof roleConfig;
   const currentRole = roleConfig[selectedRole];
   // const IconComponent = currentRole.icon;
 
@@ -35,6 +35,8 @@ import { Link } from 'react-router-dom';
    const handleSubmit=async(e:React.FormEvent<HTMLFormElement>)=>{
       e.preventDefault()
 
+
+
       const roleAdded={...formData,role:selectedRole}
 
       const result=registrationSchema.safeParse(roleAdded)
@@ -58,6 +60,10 @@ import { Link } from 'react-router-dom';
             password: '', 
             confirmPassword: ''
           })
+
+          setTimeout(()=>{
+            setIsLoading(false)
+          },3000)
    }   
 
 
@@ -104,7 +110,7 @@ import { Link } from 'react-router-dom';
 
             
               <div className="grid grid-cols-3 gap-2 mb-6">
-                {(Object.keys(roleConfig) as UserRole[]).map((role) => {
+                {(Object.keys(roleConfig)as AvailableRoles[]).map((role) => {
                   const config = roleConfig[role];
                   const RoleIcon = config.icon;
                   return (

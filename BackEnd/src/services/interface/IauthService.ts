@@ -11,4 +11,6 @@ export interface IAuthService {
     refreshAccessToken(token:string):Promise<{newAccessToken:string,payload:JwtPayload}>
     login(email:string,password:string):Promise<{accessToken:string,refreshToken:string,payload:IPayload}>
     forgotPassword(email:string):Promise<string>
+    resetPassword(email:string,token:string,password:string):Promise<string>
+    generateToken(user:IUser):Promise<{accessToken:string,refreshToken:string,payload:JwtPayload }>
 }

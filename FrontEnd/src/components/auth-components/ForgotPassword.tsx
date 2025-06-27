@@ -1,21 +1,26 @@
 import React, { useState } from 'react';
-import { Mail, ArrowLeft, CheckCircle, AlertCircle } from 'lucide-react';
+import { Mail, ArrowLeft, AlertCircle } from 'lucide-react';
 import { Link } from 'react-router-dom'
 import { AuthService } from '../../service/client/auth.service';
-
+import SuccessModal from '../templates/SuccessModal';
+import { toastService } from '../toast/ToastSystem';
 
 
 const ForgotPassword = () => {
   const [email, setEmail] = useState('');
-  const [isSubmitted, setIsSubmitted] = useState(false);
+  const [showModal, setShowModal] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState('');
-
+  const [modalEmail,setModalEmail]=useState('')
   const validateEmail = (email: string) => {
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     return emailRegex.test(email);
   };
+  
+  const closeModal=()=>{
 
+    setShowModal(false)
+  }
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setError('');
@@ -32,9 +37,18 @@ const ForgotPassword = () => {
     try {
         setIsLoading(true);
         const result=await AuthService.forgotPassword(email)
+        if(result){
+          setModalEmail(result.email)
+          setShowModal(true)
+        }
         setIsLoading(false)
     } catch (error) {
+
         setIsLoading(false);
+        if(error instanceof Error){
+          error.message+=' ,Please Register'
+          toastService.error(error.message)
+        }
     }
 
 
@@ -118,6 +132,17 @@ const ForgotPassword = () => {
           </button>
         </div>
       </div>
+      <SuccessModal
+        show={showModal}
+        title="Reset Link Sent!"
+        message="We’ve sent a password reset link to your email. Please check your inbox and follow the instructions. The link will expire in 5 minutes."
+        email={modalEmail || ''}
+        onClose={closeModal}
+        showCloseButton={true}
+        autoClose={false}
+        autoCloseDelay={5000}
+      />
+
     </div>
   );
 };

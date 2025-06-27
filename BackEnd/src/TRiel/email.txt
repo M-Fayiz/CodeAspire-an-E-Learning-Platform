@@ -1,0 +1,556 @@
+// types/email.types.ts
+export enum EmailType {
+  EMAIL_VERIFICATION = 'EMAIL_VERIFICATION',
+  PASSWORD_RESET = 'PASSWORD_RESET',
+  WELCOME = 'WELCOME',
+  PASSWORD_CHANGED = 'PASSWORD_CHANGED'
+}
+
+export interface EmailOptions {
+  to: string;
+  type: EmailType;
+  data: {
+    token?: string;
+    email?: string;
+    name?: string;
+    [key: string]: any;
+  };
+}
+
+// services/email.service.ts
+import { EmailType, EmailOptions } from '../types/email.types';
+
+class EmailService {
+  private transport: any; // Your nodemailer transport
+  
+  constructor(transport: any) {
+    this.transport = transport;
+  }
+
+  /**
+   * Send email based on type with appropriate template and content
+   */
+  async sendEmail(options: EmailOptions): Promise<void> {
+    try {
+      const emailConfig = this.getEmailConfig(options);
+      
+      const mailOptions = {
+        from: process.env.SMTP_FROM_EMAIL || 'noreply@techmastersync.com',
+        to: options.to,
+        subject: emailConfig.subject,
+        html: emailConfig.html,
+        // Add text version for better deliverability
+        text: emailConfig.text
+      };
+
+      await this.transport.sendMail(mailOptions);
+      
+      // Log successful email (without sensitive data)
+      console.log(`Email sent successfully: ${options.type} to ${options.to}`);
+      
+    } catch (error) {
+      // Proper error logging with context
+      console.error('Email sending failed:', {
+        type: options.type,
+        to: options.to,
+        error: error instanceof Error ? error.message : 'Unknown error'
+      });
+      
+      // Re-throw for upstream error handling
+      throw new Error(`Failed to send ${options.type} email`);
+    }
+  }
+
+  private getEmailConfig(options: EmailOptions) {
+    switch (options.type) {
+      case EmailType.EMAIL_VERIFICATION:
+        return this.getVerificationEmailConfig(options.data);
+        
+      case EmailType.PASSWORD_RESET:
+        return this.getPasswordResetEmailConfig(options.data);
+        
+      case EmailType.WELCOME:
+        return this.getWelcomeEmailConfig(options.data);
+        
+      case EmailType.PASSWORD_CHANGED:
+        return this.getPasswordChangedEmailConfig(options.data);
+        
+      default:
+        throw new Error(`Unsupported email type: ${options.type}`);
+    }
+  }
+
+  private getVerificationEmailConfig(data: any) {
+    const verifyUrl = `${process.env.CLIENT_ORIGIN}/auth/verify-email?token=${data.token}&email=${data.email}`;
+    
+    return {
+      subject: 'Verify Your Email Address - TechMaster',
+      html: `
+        <!DOCTYPE html>
+        <html lang="en">
+        <head>
+          <meta charset="utf-8">
+          <meta name="viewport" content="width=device-width, initial-scale=1.0">
+          <meta http-equiv="X-UA-Compatible" content="IE=edge">
+          <title>Email Verification - TechMaster</title>
+          <!--[if mso]>
+          <noscript>
+            <xml>
+              <o:OfficeDocumentSettings>
+                <o:PixelsPerInch>96</o:PixelsPerInch>
+              </o:OfficeDocumentSettings>
+            </xml>
+          </noscript>
+          <![endif]-->
+        </head>
+        <body style="margin: 0; padding: 0; background-color: #f4f7fa; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;">
+          <table role="presentation" cellspacing="0" cellpadding="0" border="0" width="100%" style="background-color: #f4f7fa; padding: 40px 20px;">
+            <tr>
+              <td align="center">
+                <table role="presentation" cellspacing="0" cellpadding="0" border="0" width="600" style="max-width: 600px; background-color: #ffffff; border-radius: 12px; box-shadow: 0 4px 12px rgba(0,0,0,0.15);">
+                  
+                  <!-- Header -->
+                  <tr>
+                    <td style="padding: 40px 40px 20px; text-align: center; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); border-radius: 12px 12px 0 0;">
+                      <div style="display: inline-flex; align-items: center; justify-content: center; background-color: rgba(255,255,255,0.2); padding: 12px 20px; border-radius: 8px; margin-bottom: 20px;">
+                        <div style="width: 32px; height: 32px; background-color: #ffffff; border-radius: 6px; display: inline-flex; align-items: center; justify-content: center; margin-right: 12px;">
+                          <span style="color: #667eea; font-size: 20px; font-weight: bold;">&lt;/&gt;</span>
+                        </div>
+                        <span style="color: #ffffff; font-size: 24px; font-weight: 700; letter-spacing: -0.5px;">TechMaster</span>
+                      </div>
+                      <h1 style="margin: 0; color: #ffffff; font-size: 28px; font-weight: 700; line-height: 1.2;">Verify Your Email</h1>
+                      <p style="margin: 16px 0 0; color: rgba(255,255,255,0.9); font-size: 16px; line-height: 1.5;">Complete your registration to start your tech journey</p>
+                    </td>
+                  </tr>
+                  
+                  <!-- Content -->
+                  <tr>
+                    <td style="padding: 40px;">
+                      <div style="text-align: center; margin-bottom: 32px;">
+                        <div style="width: 80px; height: 80px; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); border-radius: 50%; margin: 0 auto 24px; display: flex; align-items: center; justify-content: center;">
+                          <svg width="40" height="40" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M4 7L10.94 13.94C11.52 14.52 12.48 14.52 13.06 13.94L20 7M4 7L4 18C4 19.1 4.9 20 6 20L18 20C19.1 20 20 19.1 20 18L20 7M4 7L6 7L18 7L20 7" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                          </svg>
+                        </div>
+                      </div>
+                      
+                      <h2 style="margin: 0 0 16px; color: #1a202c; font-size: 24px; font-weight: 600; text-align: center;">Welcome to TechMaster!</h2>
+                      
+                      <p style="margin: 0 0 24px; color: #4a5568; font-size: 16px; line-height: 1.6; text-align: center;">
+                        Thank you for joining our community of developers and learners. To complete your registration and secure your account, please verify your email address.
+                      </p>
+                      
+                      <!-- CTA Button -->
+                      <div style="text-align: center; margin: 32px 0;">
+                        <a href="${verifyUrl}" 
+                           style="display: inline-block; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: #ffffff; text-decoration: none; padding: 16px 32px; border-radius: 8px; font-weight: 600; font-size: 16px; box-shadow: 0 4px 12px rgba(102, 126, 234, 0.4); transition: all 0.3s ease;">
+                          Verify Email Address
+                        </a>
+                      </div>
+                      
+                      <p style="margin: 24px 0 0; color: #718096; font-size: 14px; line-height: 1.5; text-align: center;">
+                        Or copy and paste this link in your browser:<br>
+                        <a href="${verifyUrl}" style="color: #667eea; word-break: break-all; text-decoration: none; border-bottom: 1px solid #667eea;">${verifyUrl}</a>
+                      </p>
+                    </td>
+                  </tr>
+                  
+                  <!-- Security Notice -->
+                  <tr>
+                    <td style="padding: 0 40px 32px;">
+                      <div style="background-color: #f7fafc; border-left: 4px solid #667eea; padding: 20px; border-radius: 0 8px 8px 0;">
+                        <h3 style="margin: 0 0 12px; color: #2d3748; font-size: 16px; font-weight: 600;">
+                          🔒 Security Information
+                        </h3>
+                        <ul style="margin: 0; padding-left: 16px; color: #4a5568; font-size: 14px; line-height: 1.6;">
+                          <li style="margin-bottom: 8px;">This verification link expires in <strong>24 hours</strong></li>
+                          <li style="margin-bottom: 8px;">Keep this link confidential and don't share it</li>
+                          <li>If you didn't create this account, please ignore this email</li>
+                        </ul>
+                      </div>
+                    </td>
+                  </tr>
+                  
+                  <!-- Footer -->
+                  <tr>
+                    <td style="padding: 32px 40px; background-color: #f8fafc; border-radius: 0 0 12px 12px; border-top: 1px solid #e2e8f0;">
+                      <div style="text-align: center;">
+                        <p style="margin: 0 0 16px; color: #718096; font-size: 14px;">
+                          Need help? Contact our support team at 
+                          <a href="mailto:support@techmaster.com" style="color: #667eea; text-decoration: none;">support@techmaster.com</a>
+                        </p>
+                        <div style="margin: 16px 0;">
+                          <a href="#" style="display: inline-block; margin: 0 8px; color: #a0aec0; text-decoration: none; font-size: 12px;">Privacy Policy</a>
+                          <span style="color: #cbd5e0;">|</span>
+                          <a href="#" style="display: inline-block; margin: 0 8px; color: #a0aec0; text-decoration: none; font-size: 12px;">Terms of Service</a>
+                        </div>
+                        <p style="margin: 16px 0 0; color: #a0aec0; font-size: 12px;">
+                          © ${new Date().getFullYear()} TechMaster. All rights reserved.<br>
+                          Launch Your Tech Career Today 🚀
+                        </p>
+                      </div>
+                    </td>
+                  </tr>
+                  
+                </table>
+              </td>
+            </tr>
+          </table>
+        </body>
+        </html>
+      `,
+      text: `
+        TechMaster - Email Verification Required
+        
+        Welcome to TechMaster!
+        
+        Thank you for joining our community of developers and learners. To complete your registration and secure your account, please verify your email address.
+        
+        Verify your email: ${verifyUrl}
+        
+        🔒 Security Information:
+        - This verification link expires in 24 hours
+        - Keep this link confidential and don't share it
+        - If you didn't create this account, please ignore this email
+        
+        Need help? Contact support@techmaster.com
+        
+        © ${new Date().getFullYear()} TechMaster. All rights reserved.
+        Launch Your Tech Career Today 🚀
+      `
+    };
+  }
+
+  private getPasswordResetEmailConfig(data: any) {
+    const resetUrl = `${process.env.CLIENT_ORIGIN}/auth/reset-password?token=${data.token}&email=${data.email}`;
+    
+    return {
+      subject: 'Reset Your Password - TechMaster',
+      html: `
+        <!DOCTYPE html>
+        <html lang="en">
+        <head>
+          <meta charset="utf-8">
+          <meta name="viewport" content="width=device-width, initial-scale=1.0">
+          <meta http-equiv="X-UA-Compatible" content="IE=edge">
+          <title>Password Reset - TechMaster</title>
+          <!--[if mso]>
+          <noscript>
+            <xml>
+              <o:OfficeDocumentSettings>
+                <o:PixelsPerInch>96</o:PixelsPerInch>
+              </o:OfficeDocumentSettings>
+            </xml>
+          </noscript>
+          <![endif]-->
+        </head>
+        <body style="margin: 0; padding: 0; background-color: #f4f7fa; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;">
+          <table role="presentation" cellspacing="0" cellpadding="0" border="0" width="100%" style="background-color: #f4f7fa; padding: 40px 20px;">
+            <tr>
+              <td align="center">
+                <table role="presentation" cellspacing="0" cellpadding="0" border="0" width="600" style="max-width: 600px; background-color: #ffffff; border-radius: 12px; box-shadow: 0 4px 12px rgba(0,0,0,0.15);">
+                  
+                  <!-- Header -->
+                  <tr>
+                    <td style="padding: 40px 40px 20px; text-align: center; background: linear-gradient(135deg, #e53e3e 0%, #c53030 100%); border-radius: 12px 12px 0 0;">
+                      <div style="display: inline-flex; align-items: center; justify-content: center; background-color: rgba(255,255,255,0.2); padding: 12px 20px; border-radius: 8px; margin-bottom: 20px;">
+                        <div style="width: 32px; height: 32px; background-color: #ffffff; border-radius: 6px; display: inline-flex; align-items: center; justify-content: center; margin-right: 12px;">
+                          <span style="color: #e53e3e; font-size: 20px; font-weight: bold;">&lt;/&gt;</span>
+                        </div>
+                        <span style="color: #ffffff; font-size: 24px; font-weight: 700; letter-spacing: -0.5px;">TechMaster</span>
+                      </div>
+                      <h1 style="margin: 0; color: #ffffff; font-size: 28px; font-weight: 700; line-height: 1.2;">Password Reset</h1>
+                      <p style="margin: 16px 0 0; color: rgba(255,255,255,0.9); font-size: 16px; line-height: 1.5;">Secure your account with a new password</p>
+                    </td>
+                  </tr>
+                  
+                  <!-- Content -->
+                  <tr>
+                    <td style="padding: 40px;">
+                      <div style="text-align: center; margin-bottom: 32px;">
+                        <div style="width: 80px; height: 80px; background: linear-gradient(135deg, #e53e3e 0%, #c53030 100%); border-radius: 50%; margin: 0 auto 24px; display: flex; align-items: center; justify-content: center;">
+                          <svg width="40" height="40" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M12 22C12.5523 22 13 21.5523 13 21C13 20.4477 12.5523 20 12 20C11.4477 20 11 20.4477 11 21C11 21.5523 11.4477 22 12 22Z" fill="white"/>
+                            <path d="M12 1.5C16.9706 1.5 21 5.52944 21 10.5C21 14.1 17.91 17.01 16.5 18.5H7.5C6.09 17.01 3 14.1 3 10.5C3 5.52944 7.02944 1.5 12 1.5Z" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                            <path d="M16 18.5V19.5C16 20.6046 15.1046 21.5 14 21.5H10C8.89543 21.5 8 20.6046 8 19.5V18.5" stroke="white" stroke-width="2" stroke-linecap="round"/>
+                          </svg>
+                        </div>
+                      </div>
+                      
+                      <h2 style="margin: 0 0 16px; color: #1a202c; font-size: 24px; font-weight: 600; text-align: center;">Reset Your Password</h2>
+                      
+                      <p style="margin: 0 0 24px; color: #4a5568; font-size: 16px; line-height: 1.6; text-align: center;">
+                        We received a request to reset your password for your TechMaster account. Click the button below to create a new password.
+                      </p>
+                      
+                      <!-- CTA Button -->
+                      <div style="text-align: center; margin: 32px 0;">
+                        <a href="${resetUrl}" 
+                           style="display: inline-block; background: linear-gradient(135deg, #e53e3e 0%, #c53030 100%); color: #ffffff; text-decoration: none; padding: 16px 32px; border-radius: 8px; font-weight: 600; font-size: 16px; box-shadow: 0 4px 12px rgba(229, 62, 62, 0.4); transition: all 0.3s ease;">
+                          Reset Password
+                        </a>
+                      </div>
+                      
+                      <p style="margin: 24px 0 0; color: #718096; font-size: 14px; line-height: 1.5; text-align: center;">
+                        Or copy and paste this link in your browser:<br>
+                        <a href="${resetUrl}" style="color: #e53e3e; word-break: break-all; text-decoration: none; border-bottom: 1px solid #e53e3e;">${resetUrl}</a>
+                      </p>
+                    </td>
+                  </tr>
+                  
+                  <!-- Security Notice -->
+                  <tr>
+                    <td style="padding: 0 40px 32px;">
+                      <div style="background-color: #fff5f5; border-left: 4px solid #e53e3e; padding: 20px; border-radius: 0 8px 8px 0;">
+                        <h3 style="margin: 0 0 12px; color: #2d3748; font-size: 16px; font-weight: 600;">
+                          🔐 Important Security Notice
+                        </h3>
+                        <ul style="margin: 0; padding-left: 16px; color: #4a5568; font-size: 14px; line-height: 1.6;">
+                          <li style="margin-bottom: 8px;">This reset link expires in <strong>1 hour</strong> for security</li>
+                          <li style="margin-bottom: 8px;">Only use this link if you requested a password reset</li>
+                          <li style="margin-bottom: 8px;">Never share this link with anyone</li>
+                          <li>If you didn't request this, please ignore this email and consider changing your password</li>
+                        </ul>
+                      </div>
+                    </td>
+                  </tr>
+                  
+                  <!-- Additional Security Info -->
+                  <tr>
+                    <td style="padding: 0 40px 32px;">
+                      <div style="background-color: #f0fff4; border: 1px solid #9ae6b4; padding: 20px; border-radius: 8px;">
+                        <h3 style="margin: 0 0 12px; color: #2d3748; font-size: 16px; font-weight: 600;">
+                          💡 Tips for a Strong Password
+                        </h3>
+                        <ul style="margin: 0; padding-left: 16px; color: #4a5568; font-size: 14px; line-height: 1.6;">
+                          <li style="margin-bottom: 6px;">Use at least 8 characters</li>
+                          <li style="margin-bottom: 6px;">Include uppercase and lowercase letters</li>
+                          <li style="margin-bottom: 6px;">Add numbers and special characters</li>
+                          <li>Avoid using personal information</li>
+                        </ul>
+                      </div>
+                    </td>
+                  </tr>
+                  
+                  <!-- Footer -->
+                  <tr>
+                    <td style="padding: 32px 40px; background-color: #f8fafc; border-radius: 0 0 12px 12px; border-top: 1px solid #e2e8f0;">
+                      <div style="text-align: center;">
+                        <p style="margin: 0 0 16px; color: #718096; font-size: 14px;">
+                          Need help? Contact our security team at 
+                          <a href="mailto:security@techmaster.com" style="color: #e53e3e; text-decoration: none;">security@techmaster.com</a>
+                        </p>
+                        <div style="margin: 16px 0;">
+                          <a href="#" style="display: inline-block; margin: 0 8px; color: #a0aec0; text-decoration: none; font-size: 12px;">Security Center</a>
+                          <span style="color: #cbd5e0;">|</span>
+                          <a href="#" style="display: inline-block; margin: 0 8px; color: #a0aec0; text-decoration: none; font-size: 12px;">Privacy Policy</a>
+                        </div>
+                        <p style="margin: 16px 0 0; color: #a0aec0; font-size: 12px;">
+                          © ${new Date().getFullYear()} TechMaster. All rights reserved.<br>
+                          Launch Your Tech Career Today 🚀
+                        </p>
+                      </div>
+                    </td>
+                  </tr>
+                  
+                </table>
+              </td>
+            </tr>
+          </table>
+        </body>
+        </html>
+      `,
+      text: `
+        TechMaster - Password Reset Request
+        
+        Reset Your Password
+        
+        We received a request to reset your password for your TechMaster account. Click the link below to create a new password.
+        
+        Reset your password: ${resetUrl}
+        
+        🔐 Important Security Notice:
+        - This reset link expires in 1 hour for security
+        - Only use this link if you requested a password reset
+        - Never share this link with anyone
+        - If you didn't request this, please ignore this email
+        
+        💡 Tips for a Strong Password:
+        - Use at least 8 characters
+        - Include uppercase and lowercase letters
+        - Add numbers and special characters
+        - Avoid using personal information
+        
+        Need help? Contact security@techmaster.com
+        
+        © ${new Date().getFullYear()} TechMaster. All rights reserved.
+        Launch Your Tech Career Today 🚀
+      `
+    };
+  }
+
+  private getWelcomeEmailConfig(data: any) {
+    return {
+      subject: 'Welcome to Tech Master Sync!',
+      html: `
+        <!DOCTYPE html>
+        <html>
+        <head>
+          <meta charset="utf-8">
+          <meta name="viewport" content="width=device-width, initial-scale=1.0">
+          <title>Welcome</title>
+        </head>
+        <body style="font-family: Arial, sans-serif; line-height: 1.6; color: #333; max-width: 600px; margin: 0 auto; padding: 20px;">
+          <div style="background-color: #f8f9fa; padding: 30px; border-radius: 10px;">
+            <h1 style="color: #28a745; text-align: center; margin-bottom: 30px;">Welcome to Tech Master Sync!</h1>
+            
+            <p>Hello ${data.name || 'there'},</p>
+            <p>Welcome to Tech Master Sync! Your email has been successfully verified and your account is now active.</p>
+            
+            <div style="text-align: center; margin: 30px 0;">
+              <a href="${process.env.CLIENT_ORIGIN}/dashboard" 
+                 style="display: inline-block; padding: 12px 30px; background-color: #007bff; color: white; text-decoration: none; border-radius: 5px; font-weight: bold;">
+                Get Started
+              </a>
+            </div>
+            
+            <p>Here's what you can do next:</p>
+            <ul>
+              <li>Complete your profile setup</li>
+              <li>Explore our features</li>
+              <li>Connect with the community</li>
+            </ul>
+            
+            <p>If you have any questions, feel free to contact our support team.</p>
+            
+            <hr style="margin: 30px 0; border: none; border-top: 1px solid #ddd;">
+            <p style="font-size: 14px; color: #666; text-align: center;">
+              © ${new Date().getFullYear()} Tech Master Sync. All rights reserved.
+            </p>
+          </div>
+        </body>
+        </html>
+      `,
+      text: `
+        Welcome to Tech Master Sync!
+        
+        Hello ${data.name || 'there'},
+        
+        Welcome to Tech Master Sync! Your email has been successfully verified and your account is now active.
+        
+        Visit your dashboard: ${process.env.CLIENT_ORIGIN}/dashboard
+        
+        Here's what you can do next:
+        - Complete your profile setup
+        - Explore our features
+        - Connect with the community
+        
+        © ${new Date().getFullYear()} Tech Master Sync. All rights reserved.
+      `
+    };
+  }
+
+  private getPasswordChangedEmailConfig(data: any) {
+    return {
+      subject: 'Password Changed Successfully - Tech Master Sync',
+      html: `
+        <!DOCTYPE html>
+        <html>
+        <head>
+          <meta charset="utf-8">
+          <meta name="viewport" content="width=device-width, initial-scale=1.0">
+          <title>Password Changed</title>
+        </head>
+        <body style="font-family: Arial, sans-serif; line-height: 1.6; color: #333; max-width: 600px; margin: 0 auto; padding: 20px;">
+          <div style="background-color: #f8f9fa; padding: 30px; border-radius: 10px;">
+            <h1 style="color: #28a745; text-align: center; margin-bottom: 30px;">Password Changed Successfully</h1>
+            
+            <p>Hello,</p>
+            <p>Your password has been successfully changed for your Tech Master Sync account.</p>
+            
+            <p><strong>Details:</strong></p>
+            <ul>
+              <li>Date: ${new Date().toLocaleString()}</li>
+              <li>IP Address: ${data.ipAddress || 'Not available'}</li>
+            </ul>
+            
+            <p><strong>If you didn't make this change:</strong></p>
+            <p>Please contact our support team immediately if you didn't authorize this password change.</p>
+            
+            <div style="text-align: center; margin: 30px 0;">
+              <a href="${process.env.CLIENT_ORIGIN}/support" 
+                 style="display: inline-block; padding: 12px 30px; background-color: #dc3545; color: white; text-decoration: none; border-radius: 5px; font-weight: bold;">
+                Contact Support
+              </a>
+            </div>
+            
+            <hr style="margin: 30px 0; border: none; border-top: 1px solid #ddd;">
+            <p style="font-size: 14px; color: #666; text-align: center;">
+              © ${new Date().getFullYear()} Tech Master Sync. All rights reserved.
+            </p>
+          </div>
+        </body>
+        </html>
+      `,
+      text: `
+        Password Changed Successfully
+        
+        Hello,
+        
+        Your password has been successfully changed for your Tech Master Sync account.
+        
+        Details:
+        - Date: ${new Date().toLocaleString()}
+        - IP Address: ${data.ipAddress || 'Not available'}
+        
+        If you didn't make this change, please contact our support team immediately.
+        
+        © ${new Date().getFullYear()} Tech Master Sync. All rights reserved.
+      `
+    };
+  }
+}
+
+// Usage examples:
+
+// Initialize the service
+const emailService = new EmailService(transport);
+
+// Send verification email
+export const sendVerificationEmail = async (email: string, token: string) => {
+  await emailService.sendEmail({
+    to: email,
+    type: EmailType.EMAIL_VERIFICATION,
+    data: { email, token }
+  });
+};
+
+// Send password reset email
+export const sendPasswordResetEmail = async (email: string, token: string) => {
+  await emailService.sendEmail({
+    to: email,
+    type: EmailType.PASSWORD_RESET,
+    data: { email, token }
+  });
+};
+
+// Send welcome email
+export const sendWelcomeEmail = async (email: string, name?: string) => {
+  await emailService.sendEmail({
+    to: email,
+    type: EmailType.WELCOME,
+    data: { name }
+  });
+};
+
+// Send password change confirmation
+export const sendPasswordChangedEmail = async (email: string, ipAddress?: string) => {
+  await emailService.sendEmail({
+    to: email,
+    type: EmailType.PASSWORD_CHANGED,
+    data: { ipAddress }
+  });
+};
+
+export { EmailService, EmailType };
+export type { EmailOptions };
