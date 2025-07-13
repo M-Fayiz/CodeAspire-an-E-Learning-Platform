@@ -67,3 +67,72 @@ export const validatePassword = (password:string,confirmPassword:string) => {
 
     return newErrors;
   };
+
+
+export const validateFiles = (selectedFile: string, targetFile: string): string | null => {
+  const imageTypes = ['image/png', 'image/jpeg', 'image/jpg'];
+  const videoTypes = ['video/mp4', 'video/webm'];
+  const pdfTypes = ['application/pdf'];
+
+  switch (targetFile) {
+    case 'image':
+      if (!imageTypes.includes(selectedFile)) {
+        return `Allowed image types are: ${imageTypes.join(', ')}`;
+      }
+      break;
+    case 'video':
+      if (!videoTypes.includes(selectedFile)) {
+        return `Allowed video types are: ${videoTypes.join(', ')}`;
+      }
+      break;
+    case 'pdf':
+      if (!pdfTypes.includes(selectedFile)) {
+        return `Allowed file type is: ${pdfTypes.join(', ')}`;
+      }
+      break;
+    default:
+      return 'Invalid target file type.';
+  }
+
+  return null;
+};
+
+const validator={
+  required:(value:string)=>value.trim()==''||'This Filed is required',
+  email:(value:string)=>/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value) || 'Invalid email address.',
+  url:(value:string)=>/^(http|https):\/\/[^ "]+$/.test(value) || 'Invalid URL',
+  // file:(value:string,target:string)=>validateFiles(value,target)
+}
+
+const Rules={
+  email:['required','email'],
+  url:['required','url'],
+}
+interface valueType{
+  [key:string]:string
+}
+interface rulesType{
+  [key:string]:string[]
+}
+export const ValidateField = (values: valueType, rules: rulesType = Rules) => {
+  const fieldErrors: { [key: string]: string } = {};
+
+  for (const key in rules) {
+    const fieldRules = rules[key] 
+    const fieldValue = values[key]
+    for (const rule of fieldRules) {
+      const validateFn = validator[rule as keyof typeof validator]
+      if (validateFn) {
+        const result = validateFn(fieldValue)
+        if (result !== true) {
+          fieldErrors[key] = result
+          break; 
+        }
+      } else {
+        console.warn(`Validator "${rule}" is not defined.`)
+      }
+    }
+  }
+
+  return fieldErrors;
+};

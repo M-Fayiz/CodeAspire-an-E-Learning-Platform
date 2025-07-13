@@ -7,6 +7,8 @@ import { HttpResponse } from "../../const/error-message";
 import { ProfileData } from "../../types/user.types";
 import { parseObjectId } from "../../mongoose/objectId";
 import { comparePassword,hashPassword } from "../../utility/bcrypt.util";
+import { getObjectURL, putObjectURl } from "../../config/s3Bucket.config";
+
 
 export class UserService implements IUserService{
 
@@ -55,5 +57,33 @@ export class UserService implements IUserService{
         await this.userRep.updateUserPassword(user.email,hashedPassword)
         
         return true
+    }
+    async generatePresignedUploadUrl(fileName: string, fileType: string): Promise<{ uploadURL: string; fileURL: string; }> {
+        
+        const {uploadURL,fileURL}=await putObjectURl(fileName,fileType)
+        if(!uploadURL||!fileURL){
+            throw createHttpError(HttpStatus.INTERNAL_SERVER_ERROR,HttpResponse.SERVER_ERROR)
+        }
+        return {uploadURL,fileURL}
+    }
+
+    async generatePresignedGetUrl(fileName: string): Promise< string> {
+
+        const getURL=await getObjectURL(fileName)
+        if(!getURL){
+            throw createHttpError(HttpStatus.INTERNAL_SERVER_ERROR,HttpResponse.SERVER_ERROR)
+        }
+        return getURL
+    }
+    async userProfilePitcureUpdate(imageURL: string, userId: string): Promise<string> {
+        const userObjectId=parseObjectId(userId)
+        if(!userObjectId){
+            throw createHttpError(HttpStatus.BAD_REQUEST,HttpResponse.INVALID_CREDNTIALS)
+        }
+        const userData=await this.userRep.userProfilePictureUpdate(userObjectId,imageURL)
+        if(!userData||!userData.profilePicture){
+            throw createHttpError(HttpStatus.NOT_FOUND,HttpResponse.USER_NOT_FOUND)
+        }
+        return  userData.profilePicture 
     }
 }

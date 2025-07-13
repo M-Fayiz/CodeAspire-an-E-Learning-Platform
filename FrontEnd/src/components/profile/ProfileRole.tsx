@@ -4,8 +4,8 @@ import type { IUserType } from "../../types/profile.type";
 export const RoleSpecificFields: React.FC<{
   profile: IUserType;
   isEditing: boolean;
-  onUpdate: (field: keyof IUserType, value: any) => void;
-}> = ({ profile, isEditing, onUpdate }) => {
+  // onUpdate: (field: keyof IUserType, value: any) => void;
+}> = ({ profile, isEditing }) => {
  
  function handleChanges(e:React.ChangeEvent<HTMLInputElement>){
             const {name,value}=e.target

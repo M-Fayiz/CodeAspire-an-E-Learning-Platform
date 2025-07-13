@@ -1,5 +1,6 @@
 import { Document,Model,Types,FilterQuery,UpdateQuery, UpdateWriteOpResult, } from "mongoose";
 
+
 export abstract class BaseRepository<T extends Document> {
     constructor(protected model:Model<T>) {}
     async findAll():Promise<T[]>{

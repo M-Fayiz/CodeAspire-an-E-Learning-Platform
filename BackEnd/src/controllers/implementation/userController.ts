@@ -6,7 +6,6 @@ import { HttpStatus } from "../../const/http-status";
 import { successResponse } from "../../utility/response.util";
 import { HttpResponse } from "../../const/error-message";
 
-
 export class UserController implements IUserController {
     constructor(private _userService: IUserService) {}
 
@@ -28,6 +27,50 @@ export class UserController implements IUserController {
             res.status(HttpStatus.OK).json(successResponse(HttpResponse.OK))
         } catch (error) {
             next(error)
+        }
+    }
+
+    preSignedURL=async(req: Request, res: Response, next: NextFunction): Promise<void>=>{
+        try {
+            const {fileName,type}=req.query 
+            console.log('filename ',fileName)
+            const {uploadURL,fileURL}=await this._userService.generatePresignedUploadUrl(fileName as string,type as string)
+            res.status(HttpStatus.OK).json(successResponse(HttpResponse.OK,{uploadURL,fileURL}))
+        } catch (error) {
+            next()
+        }
+    }
+
+    get_preSignedURL=async(req: Request, res: Response, next: NextFunction): Promise<void>=>{
+        try {
+            const{key}=req.query
+            const get_fileURL=await this._userService.generatePresignedGetUrl(key as string)
+            
+            res.status(HttpStatus.OK).json(successResponse(HttpResponse.OK,{get_fileURL}))
+        } catch (error) {
+            next()
+        }
+    }
+
+    updateProfileImage=async(req:Request,res:Response,next:NextFunction):Promise<void>=>{
+        try {
+            const {imageURL}=req.body
+            const userId=req.params.id
+            
+            const ImageSavedUrl=await this._userService.userProfilePitcureUpdate(imageURL,userId)
+            res.status(HttpStatus.OK).json(successResponse(HttpResponse.OK,{imgURL:ImageSavedUrl}))
+            
+        } catch (error) {
+            next()
+        }
+    }
+    updateUserProfile=async(req: Request, res: Response, next: NextFunction): Promise<void>=> {
+        try {
+            const {id}=req.params
+            console.log('mentor data recied here',req.body)
+            console.log('pdf')
+        } catch (error) {
+            next()
         }
     }
 }

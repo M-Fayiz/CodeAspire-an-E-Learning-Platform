@@ -48,6 +48,7 @@ const Sidebar :React.FC<ISidebarProps>= ({ user, isOpen, onClose }) => {
 
   return (
     <>
+   
      
       {isOpen && (
         <div
@@ -57,11 +58,12 @@ const Sidebar :React.FC<ISidebarProps>= ({ user, isOpen, onClose }) => {
       )}
 
       
-      <aside
-        className={`fixed top-0 left-0 z-50 w-64 h-screen bg-white border-r border-gray-200 transform transition-transform duration-300 ease-in-out lg:transform-none lg:static lg:z-auto ${
-          isOpen ? 'translate-x-0' : '-translate-x-full'
-        } lg:translate-x-0`}
-      >
+       <aside
+          className={`fixed top-[74px] left-0 z-40 w-64 h-[calc(100vh-56px)] bg-white border-r border-gray-200 transition-transform duration-300 ease-in-out ${
+            isOpen ? 'translate-x-0' : '-translate-x-full'
+          } lg:translate-x-0`}
+        >
+
         <div className="flex flex-col h-full">
          
           <div className="px-4 py-4 border-b border-gray-200">
@@ -86,7 +88,7 @@ const Sidebar :React.FC<ISidebarProps>= ({ user, isOpen, onClose }) => {
           </div>
 
          
-          <nav className="flex-1 px-4 py-4 space-y-6 overflow-y-auto">
+          <nav className="flex-1 px-4 py-4 space-y-6 overflow-auto ">
            
             <div>
               <h3 className="px-3 text-xs font-semibold text-gray-500 uppercase tracking-wider mb-3">

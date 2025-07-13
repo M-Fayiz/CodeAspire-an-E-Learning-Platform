@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { LogIn, Mail, Lock, Code} from 'lucide-react'; // Adjust if using different icons
 import { loginFeatur } from '../../config/UI-config/RoleConfig'; 
 import type { AuthComponentProps, ILogin}  from '../../types/auth.types'
-import {Input} from '../atoms/authInputs';
+import {Input} from '../atoms/Inputs';
 import { loginSchema } from '../../utility/validateForm';
 import { Link } from 'react-router-dom';
 
@@ -15,7 +15,7 @@ export const LoginComponent: React.FC<AuthComponentProps> = ({ onSubmit, onGoogl
   const currentRole = loginFeatur['login'];
   
 
-   const updateFormData=(e:React.ChangeEvent<HTMLInputElement>)=>{
+   const updateFormData=(e:React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>)=>{
             const {name,value}=e.target
             setFormData((prv)=>({...prv,[name]:value}))
             console.log(formData)

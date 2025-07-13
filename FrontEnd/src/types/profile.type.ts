@@ -13,6 +13,7 @@ export interface IUserType{
     enrolledCourses?: string[];
     expertise?: string[];
     mentorRating?: number;
+    imageURL?:string
 }
 
 

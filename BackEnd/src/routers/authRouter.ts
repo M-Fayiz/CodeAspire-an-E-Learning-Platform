@@ -10,6 +10,7 @@ import { registerSchema } from "../utility/zod";
 import passport from '../utility/passport.util'
 import {env} from '../config/env.config'
 import { verifyUser } from "../middlewares/userVerify.middleware";
+
 const userRepository=new UserRepository()
 const authService=new AuthService(userRepository)
 const authController=new AuthController(authService)
@@ -24,17 +25,19 @@ authRouter.post('/forgot-password',authController.forgotPassword.bind(authContro
 authRouter.patch('/reset-password',authController.resetPassword.bind(authController))
 
 // Google Auth
-authRouter.get('/google',(req:Request,res:Response,next:NextFunction)=>{
-    console.log('-k-kk-k-k-k-')
- const {role}=req.query as {role?:IUserRole}
- (req.session as any).role=role||'learner'
-  next()
-},
-    passport.authenticate('google',{
-        scope:['profile','email'],
-        prompt:'select_account'
-    }) 
-)
+authRouter.get(
+  '/google',
+  (req: Request, res: Response, next: NextFunction) => {
+    const { role } = req.query as { role?: IUserRole };
+    (req.session as any).role = role || 'learner';
+    next(); 
+  },
+  passport.authenticate('google', {
+    scope: ['profile', 'email'],
+    prompt: 'select_account',
+  })
+);
+
 
 authRouter.get(
     '/google/callback',

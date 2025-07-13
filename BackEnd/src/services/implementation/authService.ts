@@ -35,6 +35,7 @@ export class AuthService implements IAuthService{
          const token=uuidv4()
          
          await sendToken(user.email,token,'verify-email')
+        
          let key=`${redisPrefix.VERIFY_EMAIL}:${token}`
                 
         
@@ -48,20 +49,14 @@ export class AuthService implements IAuthService{
     }
     async verifyEmail(data:IAuth):Promise<{accessToken:string,refreshToken:string}>{
         try {
-               let key=`${redisPrefix.VERIFY_EMAIL}:${data.token}`
-               
-      
+            let key=`${redisPrefix.VERIFY_EMAIL}:${data.token}`
             let result=await redisClient.get(key)
             console.log('verify email',result)
             if(!result){
                 throw createHttpError(HttpStatus.UNAUTHORIZED,HttpResponse.USER_CREATION_FAILED)
-             
             }
-            
             const storedData=JSON.parse(result)
-          
-           
-     
+
             let user={
                 name:storedData.name,
                 email:storedData.email,
@@ -74,7 +69,7 @@ export class AuthService implements IAuthService{
         
            const newUser=await this.userRepo.createUser(user as IUser)
            await redisClient.del(key)
-           console.log('📈 newwUser',newUser)
+        
            if(!newUser){
             throw createHttpError(HttpStatus.CONFLICT,HttpResponse.USER_CREATION_FAILED)
            }
@@ -225,4 +220,5 @@ export class AuthService implements IAuthService{
          const {accessToken,refreshToken}=generateTokens(payload)
          return {accessToken,refreshToken,payload}
     }
+   
 }

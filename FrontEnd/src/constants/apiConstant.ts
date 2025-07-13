@@ -13,11 +13,15 @@ export const API={
     },
     USER:{
         FETCH_USER_PROFILE:'/user/profile',
-        CHANGE_PASSWORD:(id:string)=>`/user/change-password/${id}`
-       
+        CHANGE_PASSWORD:(id:string)=>`/user/change-password/${id}`,
+        UPDATE_PROFILE_PICTURE:(id:string)=>`/user/profile-picture/${id}`,
+        PUT_PRESIGNED_URL:'/user/s3-presigned-url',
+        GET_PRESIGNED_URL:'/user/s3-getPresigned-url',
+        UPDATE_MENTOR_DATA:(id:string)=>`/user/profile/${id}`,
     },
     ADMIN:{
         FETCH_ALL_USERS:'/admin/users',
-        BLOCK_USER:(id:string)=>`/admin/user/${id}`
-    }
+        BLOCK_USER:(id:string)=>`/admin/user/${id}`,
+        USER_PROFILE:(id:string)=>`/admin/user/${id}`
+    },
 }

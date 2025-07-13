@@ -1,11 +1,13 @@
-import { ShieldCheck, Trash2 } from "lucide-react";
+
 import type { IUserType } from "../../../types/profile.type";
+import { useNavigate } from "react-router-dom";
 
 
+const TableRow: React.FC<{user: IUserType; onDelete: (id:string  ) => void}> = ({ user, onDelete }) => {
+  
+  
+  const navigate=useNavigate()
 
-const TableRow: React.FC<{user: IUserType; onDelete: (id:string  ) => void; 
-}> = ({ user, onDelete }) => {
- 
 
   return (
     <tr className="bg-white hover:bg-gray-50 transition-colors">
@@ -13,7 +15,7 @@ const TableRow: React.FC<{user: IUserType; onDelete: (id:string  ) => void;
         <div className="flex items-center">
           <div className="flex-shrink-0 h-10 w-10">
             <div className="h-10 w-10 rounded-full bg-gray-200 flex items-center justify-center text-lg">
-              {user.profilePicture || '👤'}
+              {/* {user.profilePicture || '👤'} */}
             </div>
           </div>
           <div className="ml-4">
@@ -49,23 +51,26 @@ const TableRow: React.FC<{user: IUserType; onDelete: (id:string  ) => void;
       </td> */}
       <td className="px-6 py-4 whitespace-nowrap">
          <div className="flex items-center space-x-2">
-            <button
-                
-                className="p-1 text-gray-600 hover:text-blue-600 hover:bg-blue-50 rounded transition-colors"
-                title="View Details"
+            <button onClick={()=>navigate(`/admin/user-profile/${user._id}`)}               
+              className="p-1 text-gray-600 hover:text-blue-600 hover:bg-blue-50 rounded transition-colors"
+              title="View Details"
             >
-                view
+              view
             
             </button>
             <button
                 onClick={() => onDelete(user._id)}
-                className="p-1 text-gray-600 hover:text-red-600 hover:bg-red-50 rounded transition-colors"
                 title="Delete User"
+                className={`px-3 py-1 text-sm  font-medium rounded transition-colors
+                ${user.isActive
+                  ? 'text-green-600 hover:text-red-600 hover:bg-red-50'   
+                  : 'text-red-600 hover:text-green-600 hover:bg-green-50' 
+                }`}
             >
                 {user.isActive ? (
-                    <Trash2 className="w-4 h-4" /> 
+                    'block'
                      ) : (
-                    <ShieldCheck className="w-4 h-4" />  
+                    'unblock'
                      )}
             </button>
         </div>

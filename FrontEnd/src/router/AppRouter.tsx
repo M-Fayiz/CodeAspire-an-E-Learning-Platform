@@ -15,7 +15,11 @@ import DynamicLayout from "../pages/Daynamic-Layout/Dynamic-Dashboard";
 import DashboardContent from "../components/layout/dynamic-layout/Dashboard-Content";
 import { Protected_Router } from "../components/protectedRouter/ProtectedRouter";
 import ProfileManagement from "../pages/Profile Page/Profile";
-import UserManagement from "../pages/Admin Page/UserMangement";
+import UserManagement from "../pages/Admin Page/user-management/UserMangement";
+// import MentorInfoForm from "../components/Mentor/Mentor";
+import AdminUserProfile from "../pages/Admin Page/user-management/UserProfile";
+import { useProfileLoader } from "../pages/Admin Page/user-management/profile.loader";
+import MentorDataForm from "../components/auth-components/MentorInformation";
 
 export const  router=createBrowserRouter([
     {
@@ -60,7 +64,8 @@ export const  router=createBrowserRouter([
         children:[
             { index:true, element: <Navigate to='dashboard'/>},
             { path:'dashboard' ,element:<DashboardContent/>},
-            { path:'profile' ,element:<ProfileManagement/>}
+            { path:'profile' ,element:<ProfileManagement/>},
+            { path: 'data', element: <MentorDataForm /> },
         ]
     },
     {
@@ -74,11 +79,13 @@ export const  router=createBrowserRouter([
             { index:true, element: <Navigate to='dashboard'/>},
             { path:'dashboard' ,element:<DashboardContent/>},
             { path:'profile' ,element:<ProfileManagement/>},
-            { path:'users' ,element:<UserManagement/>}
+            { path:'users' ,element:<UserManagement/>},
+            { path:'user-profile/:id' ,element:<AdminUserProfile/>,loader:useProfileLoader}
         ]
     },
     
  
+    
     {
         path: '*',
         element: <NotFound /> 

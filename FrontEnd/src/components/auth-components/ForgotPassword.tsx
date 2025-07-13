@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { Mail, ArrowLeft, AlertCircle } from 'lucide-react';
 import { Link } from 'react-router-dom'
-import { AuthService } from '../../service/client/auth.service';
+import { AuthService } from '../../service/client-API/auth.service';
 import SuccessModal from '../templates/SuccessModal';
 import { toastService } from '../toast/ToastSystem';
 

@@ -1,5 +1,5 @@
-import { Request,response,NextFunction } from "express";
-import { User } from "../Models/userModel";
+import { Request,Response,NextFunction } from "express";
+import { UserModel } from "../Models/userModel";
 import { createHttpError } from "../utility/http-error";
 import { HttpStatus } from "../const/http-status";
 import { HttpResponse } from "../const/error-message";
@@ -14,9 +14,9 @@ export async function verifyUser(req:Request,res:Response,next:NextFunction){
        }
        const decode=verifyAccesToken(accessToken)
         if(!decode){
-            throw createHttpError(HttpStatus.UNAUTHORIZED,HttpResponse.TOKEN_EXPIRED)
+            throw createHttpError(HttpStatus.UNAUTHORIZED,HttpResponse.ACCESS_TOKEN_EXPIRED)
         }
-       const user=await User.findOne({email:decode.email})
+       const user=await UserModel.findOne({email:decode.email})
        
        if(!user||!user?.isActive){
              throw createHttpError(HttpStatus.FORBIDDEN, HttpResponse.USER_BLOCKED)

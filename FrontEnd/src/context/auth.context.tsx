@@ -1,7 +1,7 @@
 import {createContext,useContext,useEffect,useState, type ReactNode} from "react";
 // import { useNavigate } from "react-router";
 import type { IDecodedUserType } from "../types/auth.types";
-import { AuthService } from "../service/client/auth.service";
+import { AuthService } from "../service/client-API/auth.service";
 
 
 

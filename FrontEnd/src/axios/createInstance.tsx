@@ -1,6 +1,6 @@
 import axios, { AxiosError} from "axios";
 import type { AxiosInstance } from "axios";
-import { AuthService } from "../service/client/auth.service";
+import { AuthService } from "../service/client-API/auth.service";
 
 
 
@@ -9,6 +9,7 @@ const createInstance = ():AxiosInstance=>{
         baseURL:import.meta.env.VITE_BASE_URL,
         withCredentials:true
     })
+    
     
     instance.interceptors.response.use(
         // Success
@@ -50,3 +51,4 @@ const createInstance = ():AxiosInstance=>{
 export const authInstance=createInstance()
 export const userInstance=createInstance()
 export const adminInstance=createInstance()
+export const commonInstance=createInstance()

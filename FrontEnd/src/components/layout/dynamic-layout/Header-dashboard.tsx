@@ -11,7 +11,7 @@ interface IHeaderProbs{
   isSidebarOpen:boolean
 }
 
-const Header :React.FC<IHeaderProbs>=({ user, onMenuToggle, isSidebarOpen }) => {
+const   Header :React.FC<IHeaderProbs>=({ user, onMenuToggle, isSidebarOpen }) => {
   const [showProfileDropdown, setShowProfileDropdown] = useState(false);
   const [showNotifications, setShowNotifications] = useState(false);
 

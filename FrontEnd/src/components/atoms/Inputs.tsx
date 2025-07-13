@@ -3,15 +3,18 @@ import React, { useState } from 'react';
 import { Eye, EyeOff,  X } from 'lucide-react'; 
 
 interface IInputProps {
-  type: string;
-  placeholder: string; 
-  value: string;
+  type?: string;
+  placeholder?: string; 
+  value?: string;
   name: string;
-  onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
+  onChange: (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => void;
   icon?: React.ReactNode;
   error?: string;
   label:string,
   showPasswordToggle?: boolean;
+  min?:string
+  max?:string
+  textArea?:boolean;
   required?:boolean
 }
 
@@ -25,6 +28,9 @@ export const Input: React.FC<IInputProps> = ({
   error,
   label,
   showPasswordToggle,
+  textArea,
+  min,
+  max,
 }) => {
   const [showPassword, setShowPassword] = useState(false);
   const [isFocused, setIsFocused] = useState(false);
@@ -40,7 +46,19 @@ export const Input: React.FC<IInputProps> = ({
             {icon}
           </span>
         )}
+        {textArea?(
+          <textarea
+            value={value}
+            name={name}
+            onChange={onChange}
+            placeholder="Tell us about yourself, your background, and what you're passionate about..."
+            rows={4}
+            className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent resize-none"
+          />
+        ):(   
         <input
+          min={min}
+          max={max}
           type={inputType}
           value={value}
           name={name}
@@ -52,6 +70,7 @@ export const Input: React.FC<IInputProps> = ({
           } ${isFocused ? 'bg-white/20' : ''}`}
           placeholder={placeholder}
         />
+        )}
         {showPasswordToggle && (
           <button
             type="button"

@@ -1,7 +1,7 @@
 
 import  SignupComponent  from '../../components/auth-components/SignUp';
 import type { ISignUp, UserRole } from '../../types/auth.types';
-import { AuthService } from '../../service/client/auth.service';
+import { AuthService } from '../../service/client-API/auth.service';
 import SuccessModal from '../../components/templates/SuccessModal';
 import { useState } from 'react';
 import { toastService } from '../../components/toast/ToastSystem';  
@@ -26,13 +26,13 @@ const SignupPage: React.FC = () => {
    console.log('data from sign up' ,data)
     try {
        
-              const result=await AuthService.signUp(data)
+        const result=await AuthService.signUp(data)
 
-            if (result) {
-                setShowModal(true);
-                setModalEmail(result.email)
+          if (result) {
+            setShowModal(true);
+            setModalEmail(result.email)
                 
-            }
+          }
     } catch (error) {
         if(error instanceof Error){
 

@@ -2,7 +2,7 @@
 // import  SignupComponent  from '../../components/auth-components/SignUp';
 import { LoginComponent } from '../../components/auth-components/Login';
 import type { ISignUp, UserRole } from '../../types/auth.types';
-import { AuthService } from '../../service/client/auth.service';
+import { AuthService } from '../../service/client-API/auth.service';
 import { useLocation } from 'react-router-dom';
 import { useState } from 'react';
 import { toastService } from '../../components/toast/ToastSystem';  

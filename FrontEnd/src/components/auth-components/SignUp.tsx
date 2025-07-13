@@ -1,8 +1,8 @@
 import React, { useState } from 'react';
 import { User, Mail, Lock, UserPlus ,Phone} from 'lucide-react';
-import type { AuthComponentProps,ISignUp,UserRole } from '../../types/auth.types';
+import type { AuthComponentProps,ISignUp } from '../../types/auth.types';
 import { roleConfig } from '../../config/UI-config/RoleConfig'; 
-import {Input} from '../atoms/authInputs';
+import {Input} from '../atoms/Inputs';
 import { registrationSchema } from '../../utility/validateForm';
 import { Link } from 'react-router-dom';
 
@@ -25,10 +25,10 @@ import { Link } from 'react-router-dom';
   
   const [errors, setErrors] = useState<{[key:string]:string}>({})
 
-   const updateFormData=(e:React.ChangeEvent<HTMLInputElement>)=>{
-           const {name,value}=e.target
-           setFormData((prv)=>({...prv,[name]:value}))
-           console.log(formData)
+   const updateFormData=(e:React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>)=>{
+      const {name,value}=e.target
+      setFormData((prv)=>({...prv,[name]:value}))
+      console.log(formData)
     }
 
 

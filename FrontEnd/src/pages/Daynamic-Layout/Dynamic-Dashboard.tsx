@@ -30,30 +30,25 @@ const DynamicLayout =() => {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50">
-     
-      <Header 
-        user={user} 
-        onMenuToggle={toggleSidebar}
-        isSidebarOpen={isSidebarOpen}
-      />
+  
+    <div className="flex h-screen overflow-hidden">
 
-      <div className="flex">
-       
-        <Sidebar 
+      <Sidebar user={user} isOpen={isSidebarOpen} onClose={closeSidebar} />
+
+      <div className="flex-1 flex flex-col">       
+        <Header 
           user={user} 
-          isOpen={isSidebarOpen}
-          onClose={closeSidebar}
+          onMenuToggle={toggleSidebar} 
+          isSidebarOpen={isSidebarOpen} 
         />
 
-        <main className="flex-1 lg:ml-0">
-          <div className="p-6">
-            <Outlet/>
-          </div>
+        <main className="flex-1 overflow-y-auto bg-gray-50 p-4 mt-[56px] lg:mt-0 lg:ml-64 transition-all duration-300">
+          <Outlet />
         </main>
       </div>
     </div>
-  );
+  
+);
 };
 
 

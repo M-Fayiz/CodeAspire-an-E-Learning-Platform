@@ -1,17 +1,18 @@
 import { BaseRepository } from "../baseRepository";
-import { User ,IUserModel} from "../../Models/userModel";
+import { UserModel ,IUserModel} from "../../Models/userModel";
 import { IUserRepo } from "../interface/IUserRepo";
 import { Profile } from "passport-google-oauth20";
-import { IUserRole } from "../../types/user.types";
+import { IUserRole, searchProps } from "../../types/user.types";
 import { use } from "passport";
-import { Types } from "mongoose";
+import { Types, UpdateQuery } from "mongoose";
+import { buildUserFilter } from "../../utility/searchQuery";
 
 export class UserRepository extends BaseRepository<IUserModel> implements IUserRepo{
 
 
-        constructor(){
-            super(User)
-        }
+    constructor(){
+        super(UserModel)
+    }
     async  createUser(user: IUserModel): Promise<IUserModel> {
         
         try{
@@ -53,11 +54,23 @@ export class UserRepository extends BaseRepository<IUserModel> implements IUserR
                 return user
     }
 
-    async findAllUsers(): Promise<IUserModel[] | null> {
-               const filter={role:{$ne:'admin'}}
-               return this.model.find(filter).select('-password -googleId')
+    async findAllUsers(limit:number,skip:number,searchQuery:searchProps): Promise<IUserModel[] | null> {
+        try {           
+            const filter=buildUserFilter(searchQuery)
+            return this.model.find(filter).select('-password -googleId').skip(skip).limit(limit)
+        } catch (error) {
+            throw error
+        }
     }
 
+    async findUserCount(searchQuery: searchProps): Promise<number | 0> {
+        try {
+            const filter=buildUserFilter(searchQuery)
+            return this.model.countDocuments(filter)
+        } catch (error) {
+            throw error
+        }
+    }
     async blockUser(id:Types.ObjectId): Promise<IUserModel | null> {
               try {
                 return this.model.findByIdAndUpdate(id,[{ $set: { isActive: { $not: "$isActive" } } }],{
@@ -71,7 +84,10 @@ export class UserRepository extends BaseRepository<IUserModel> implements IUserR
     async findUserById(id:Types.ObjectId):Promise<IUserModel|null>{
         return await this.findById(id)
     }
-    
+
+    async userProfilePictureUpdate(id: Types.ObjectId, imageURL: string): Promise<IUserModel | null> {
+        return await this.model.findByIdAndUpdate(id,{profilePicture:imageURL},{new:true})
+    }
 
 
 }

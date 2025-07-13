@@ -80,6 +80,7 @@ export class AuthController implements IAuthController{
        const tokens=await this._authSerive.login(email,password)
         setAccessToken(res,tokens.accessToken)
         setRefreshToken(res,tokens.refreshToken) 
+
        res.status(HttpStatus.OK).json(successResponse(HttpResponse.LOGGED_IN_SUCCESSFULLY,tokens.payload))
        } catch (error) {
         next(error)

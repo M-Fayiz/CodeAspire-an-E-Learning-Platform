@@ -1,20 +1,20 @@
 import React, { useEffect, useState } from 'react';
-import { User, Phone, Save, Edit2, Lock } from 'lucide-react';
-import ProfileImage from '../../components/profile/ProfileImage';
+import { User, Phone, Save, Edit2, Lock, Camera } from 'lucide-react';
+// import ProfileImage from '../../components/profile/ProfileImage';
 import { PasswordChangeForm } from '../../components/profile/ChangePassword';
 import RoleSpecificFields from '../../components/profile/ProfileRole';
 import type { IUserType } from '../../types/profile.type';
 import { useAuth } from '../../context/auth.context';
 import { ProfileTabs } from '../../components/profile/ProfileUI/Profile-Taps';
-
-
 export type TapsComp='security'|'profile'|'information'
-
 import { InputField,TextareaField } from '../../components/profile/ProfileUI/ProfileInput';
-
 import RoleBadge from '../../components/profile/ProfileUI/RoleBadge';
-import UserService from '../../service/client/user.service';
+import UserService from '../../service/client-API/user.service';
 import { toastService } from '../../components/toast/ToastSystem';
+import { validateFiles } from '../../utility/validateForm';
+import { S3BucketUtil } from '../../utility/S3Bucket.util';
+
+
 
 const ProfileManagement: React.FC = () => {
 
@@ -36,7 +36,9 @@ const ProfileManagement: React.FC = () => {
   const [isEditing, setIsEditing] = useState(false);
   const [originalProfile, setOriginalProfile] = useState<IUserType>(profile);
   const [errors, setErrors] = useState<{ [key: string]: string }>({});
+  const [fileError,setFileError]=useState('')
   const [activeTab,setActiveTab]=useState<TapsComp>('profile')
+  const [signedImageUrl, setSignedImageUrl] = useState<string>('');
 
   const handleEdit = () => {
     setOriginalProfile({ ...profile });
@@ -53,19 +55,12 @@ const ProfileManagement: React.FC = () => {
 
       const result = await UserService.fetchProfile(user.email);
       if (result) {
-        const newProfile = {
-          _id: result._id,
-          email: result.email,
-          name: result.name,
-          phone: result.phone,
-          role: result.role,
-          bio: result.bio,
-          expertise: result.expertise,
-          mentorRating: result.mentorRating,
-          profilePicture: result.profilePicture,
-        };
-        setProfile(result);
-        setOriginalProfile(result); 
+        if (result.profilePicture) {
+          const  get_fileURL  = await S3BucketUtil.getPreSignedURL(result.profilePicture);
+          setSignedImageUrl(get_fileURL);
+          setProfile(result);
+          setOriginalProfile(result); 
+        }
       }
     } catch (error) {
       if (error instanceof Error) {
@@ -89,12 +84,7 @@ const ProfileManagement: React.FC = () => {
     setIsEditing(false);
   };
 
-  const handleProfileUpdate = (field: keyof IUserType, value: any) => {
-    setProfile(prev => ({
-      ...prev,
-      [field]: value
-    }));
-  };
+
 
   const handleInputChange=(e:React.ChangeEvent<HTMLInputElement>)=>{
         const {name,value}=e.target
@@ -117,37 +107,73 @@ const ProfileManagement: React.FC = () => {
 
   }
 
-  const handleTabs=(tab:TapsComp)=>{
-    
-       setActiveTab(tab)
+  const handleTabs=(tab:TapsComp)=>{ 
+    setActiveTab(tab)
   }
-
-  
-  const handleImageUpload = (file: File) => {
-    
-    const url = URL.createObjectURL(file);
-    handleProfileUpdate('profilePicture', url);
+  const handleProfilePictureUpdate =async (file:File) => {
+    try {
+      const result=await S3BucketUtil.putPreSignedURL(file)
+      const fileURL=await UserService.uploadImageIntoS3(result.uploadURL,result.fileURL,file,user!.id)
+      console.log('file ',fileURL)
+      if(fileURL){
+        setProfile((prv)=>({...prv,profilePicture:fileURL}))
+        console.log(profile)
+      }
+    } catch (error) {
+      if(error instanceof Error){
+         toastService.error(error.message)
+      }
+    }    
   };
 
-
+ const handleImageUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (file ) {
+      const validatedError=validateFiles(file.type,'image')
+      if(validatedError){
+       
+        setFileError(validatedError)
+        return
+      }
+      setFileError('')
+     handleProfilePictureUpdate(file)
+    }
+  };
  
 
   
 
   return (
     <div className="max-w-4xl mx-auto p-5 space-y-2">
-    
-    
       <div className="bg-white rounded-lg shadow-lg p-4">
         <div className="flex items-center justify-between mb-6">
           <div className="flex items-center gap-4">
-            <ProfileImage
-              src={profile.profilePicture}
-              alt={`${profile.name}`}
-              size="md"
-              editable={isEditing}
-              onImageChange={handleImageUpload}
-            />
+           <div className=" relative flex flex-col items-center">
+            {/* Avatar */}
+              <div className="relative w-24 h-24 rounded-full overflow-hidden bg-gray-200 flex items-center justify-center shadow-md">
+                {profile.profilePicture ? (
+                  <img src={signedImageUrl} className="w-full h-full object-cover" />
+                ) : (
+                  <User className="w-1/2 h-1/2 text-gray-400" />
+                )}
+                <label className="absolute bottom-0 right-2 bg-blue-500 p-1 rounded-full cursor-pointer hover:bg-blue-600 transition duration-200 shadow-md">
+                  <Camera className="w-4 h-4 text-white" />
+                  <input
+                    type="file"
+                    accept="image/*"
+                    onChange={handleImageUpload}
+                    className="hidden"
+                  />
+                </label>
+              </div>
+
+              {/* Error Message (properly aligned) */}
+              {fileError && (
+                <p className="text-[11px] text-red-500 absolute top-23 left-0 bg-red-100 px-3 py-1 rounded-md text-center shadow-sm mt-2 w-max mx-auto">
+                  {fileError}
+                </p>
+              )}
+            </div>
             <div>
               <h1 className="text-2xl font-bold text-gray-900">
                 {profile.name}
@@ -263,7 +289,7 @@ const ProfileManagement: React.FC = () => {
         <RoleSpecificFields
           profile={profile}
           isEditing={isEditing}
-          onUpdate={handleProfileUpdate}
+          // onUpdate={handleProfileUpdate}
         />
       </div>
       </form>):<PasswordChangeForm setTabs={handleTabs} userId={user!.id}/>}

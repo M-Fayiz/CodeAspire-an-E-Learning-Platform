@@ -11,6 +11,7 @@ const adminController=new AdminController(adminService)
 
 adminRouter.get('/users',adminController.fetchAllUsers)
 adminRouter.delete('/user/:id',adminController.blockUser)
+adminRouter.get('/user/:id',adminController.userProfile)
 
 
 export default adminRouter
