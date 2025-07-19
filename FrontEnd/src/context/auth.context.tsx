@@ -78,7 +78,7 @@ export const AuthProvider=({children}:AuthContext)=>{
             }
         } catch (error) {
             setLoading(false)
-            console.error("Logout error:", error);
+            console.error("Logout error:", error);  
             setUser(null);
            
         } finally {

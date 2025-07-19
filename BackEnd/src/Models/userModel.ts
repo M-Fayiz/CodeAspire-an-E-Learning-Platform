@@ -1,5 +1,6 @@
-import mongoose,{Schema,Document,Types} from "mongoose";
+import mongoose,{Document,Types} from "mongoose";
 import  { IUser,IAdmin,ILearner,IMentor } from "../types/user.types";
+
 
 const option={discriminatorKey:'role',timeStamps:true}
 
@@ -17,6 +18,8 @@ const BaseUserSchema=new mongoose.Schema({
   profilePicture: String,
   googleId:{type:String},
   isActive: { type: Boolean, default: false },
+  isApproved: { type: Boolean, default: false },
+  isRequested:{ type:Boolean,default:false},
     
 },option)
 export const UserModel=mongoose.model<IUserModel>('User',BaseUserSchema)
@@ -32,25 +35,23 @@ const MentorSchema=new mongoose.Schema({
     github: String,
     portfolio: String
   },
-  resumeUrl: String,
-  isApproved: { type: Boolean, default: false }
+  resume: String,
 })
-export const MentorModel=UserModel.discriminator('mentor',MentorSchema)
+export const MentorModel=UserModel.discriminator<IMenterModel>('mentor',MentorSchema)
 
 
 
 const LearnerSchema = new mongoose.Schema({
   enrolledCourses: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Course' }]
 });
-export const LearnerModel=UserModel.discriminator('learner',LearnerSchema)
+export const LearnerModel=UserModel.discriminator<ILearnerModel>('learner',LearnerSchema)
 
 
 
 const AdminSchema = new mongoose.Schema({
   permissions: [String] 
 });
-export const AdminModel = UserModel.discriminator('admin', AdminSchema);
-
+export const AdminModel = UserModel.discriminator<IAdminModel>('admin', AdminSchema);
 
 
 
@@ -106,9 +107,14 @@ export interface IMappedUser{
     email:string,
     role:string,
     profile?:string
+    isApproved?:boolean
+    isRequested?:boolean
 }
 export interface IPayload{
     id:Types.ObjectId,
+    name?:string,
     email:string,
     role:'learner'|'admin'|'mentor'
+    isApproved?:boolean
+    isRequested?:boolean
 }

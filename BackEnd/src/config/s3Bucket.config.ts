@@ -6,7 +6,7 @@ const region=env.AWS_S3_REGION as string
 const accessKeyID=env.AWS_S3_ACCESS_KEY as string
 const secreteAccessKey=env.AWS_S3_SECRET_KEY as string
 const bucketName=env.AWS_s3_BUCKET_NAME as string
-// console.log(`🙂${region}😞${accessKeyID}✅${bucketName}`)
+
 const s3Bucket=new  S3Client({
     region:region,
     credentials:{
@@ -27,8 +27,13 @@ export async function getObjectURL(key:string){
 export async function  putObjectURl(filename:string,type:string):Promise<{uploadURL:string,fileURL:string}>{
 
     let folderName=''
+    console.log(type)
     if(type.startsWith('image/')){
         folderName='upload/images'
+    }else if(type.startsWith('application/pdf')){
+        folderName='upload/pdf'
+    }else{
+        folderName='upload/other'
     }
     const key=`${folderName}/${Date.now()}-${filename}`
 

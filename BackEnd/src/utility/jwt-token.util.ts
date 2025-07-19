@@ -13,17 +13,13 @@ export function generateTokens(payload:object){
 
 }
 
-export function verifyAccesToken(token:string):JwtPayload|null{
-       try {
-        return jwt.verify(token,ACCESS_TOKEN) as JwtPayload
-       } catch (error) {
-        return null
-       }
+export function verifyAccesToken(token:string):JwtPayload{
+       
+    return jwt.verify(token,ACCESS_TOKEN) as JwtPayload
+      
 }
-export function verifyRefreshToken(token:string):JwtPayload|null{
-    try {
-        return jwt.verify(token,REFRESH_TOKEN) as JwtPayload
-    } catch (error) {
-        return null
-    }
+export function verifyRefreshToken(token:string):JwtPayload{
+    
+    return jwt.verify(token,REFRESH_TOKEN) as JwtPayload
+   
 }

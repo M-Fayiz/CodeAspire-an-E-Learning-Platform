@@ -19,7 +19,7 @@ import { S3BucketUtil } from '../../utility/S3Bucket.util';
 const ProfileManagement: React.FC = () => {
 
   const [profile, setProfile] = useState<IUserType>({
-  _id: '',
+  id: '',
   email: '',
   name: '',
   phone: '',

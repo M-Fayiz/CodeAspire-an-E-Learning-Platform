@@ -13,6 +13,7 @@ import type { SearchQuery } from '../../../types/parser.types';
 
 const UserManagement: React.FC = () => {
   const [users, setUsers] = useState<IUserType[]>([]);
+
   const [search, setSearch] = useState<SearchQuery>({
     name:'',
     role:'',
@@ -48,7 +49,7 @@ const UserManagement: React.FC = () => {
       }
       setUsers(prevUsers =>
         prevUsers.map(user =>
-          user._id === result.id
+          user.id === result.id
             ? { ...user, isActive: result.isActive }
             : user
         )
@@ -107,7 +108,7 @@ const UserManagement: React.FC = () => {
                   <tbody className="bg-white divide-y divide-gray-200">
                     {users.map((user) => (
                       <TableRow
-                        key={user._id}
+                        key={user.id}
                         user={user}
                         onDelete={handleDelete}
                       />

@@ -51,7 +51,7 @@ const TableRow: React.FC<{user: IUserType; onDelete: (id:string  ) => void}> = (
       </td> */}
       <td className="px-6 py-4 whitespace-nowrap">
          <div className="flex items-center space-x-2">
-            <button onClick={()=>navigate(`/admin/user-profile/${user._id}`)}               
+            <button onClick={()=>navigate(`/admin/user-profile/${user.id}`)}               
               className="p-1 text-gray-600 hover:text-blue-600 hover:bg-blue-50 rounded transition-colors"
               title="View Details"
             >
@@ -59,7 +59,7 @@ const TableRow: React.FC<{user: IUserType; onDelete: (id:string  ) => void}> = (
             
             </button>
             <button
-                onClick={() => onDelete(user._id)}
+                onClick={() => onDelete(user.id)}
                 title="Delete User"
                 className={`px-3 py-1 text-sm  font-medium rounded transition-colors
                 ${user.isActive

@@ -1,4 +1,4 @@
 
-export const successResponse=(message:string,data:Record<string,any>={})=>{
+export const successResponse=(message:string,data:any={})=>{
     return ({success:true,message:message,...data})
 }

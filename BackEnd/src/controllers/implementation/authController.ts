@@ -1,4 +1,4 @@
-import { Response,Request,NextFunction, response } from "express";
+import { Response,Request,NextFunction } from "express";
 import { IAuthController } from "../interface/IAuthController";
 import { IAuthService } from "../../services/interface/IauthService";
 import { HttpStatus } from "../../const/http-status";
@@ -15,31 +15,29 @@ import { env } from "../../config/env.config";
 
 export class AuthController implements IAuthController{
 
-    constructor(private _authSerive:IAuthService){}
+ constructor(private _authSerive:IAuthService){}
 
   async signUp (req: Request, res: Response,next:NextFunction): Promise<void>{
-        try {
-         
-          const email= await this._authSerive.signUp(req.body)
+   try {
+      const email= await this._authSerive.signUp(req.body)
+      res.status(HttpStatus.OK).json(successResponse(HttpResponse.OK,{email:email}))
 
-          res.status(HttpStatus.OK).json(successResponse(HttpResponse.OK,{email:email}))
-
-        } catch (error) {
+    } catch (error) {
       
-          next(error)
-        }
+      next(error)
+    }
   }
   async verifyEmail(req:Request,res:Response,next:NextFunction):Promise<void>{
-          try {
-              console.log('verify Email')
-             const token=await this._authSerive.verifyEmail(req.body)
-             setAccessToken(res,token.accessToken)
-             setRefreshToken(res,token.refreshToken,) 
-             console.log('😎 token from verify ',token)
-             res.status(HttpStatus.OK).json(successResponse(HttpResponse.LOGGED_IN_SUCCESSFULLY,{token:token}))
-           } catch (error) {
-            next()
-           }
+    try {
+      
+      const token=await this._authSerive.verifyEmail(req.body)
+      setAccessToken(res,token.accessToken)
+      setRefreshToken(res,token.refreshToken,) 
+      console.log('😎 token from verify ',token)
+      res.status(HttpStatus.OK).json(successResponse(HttpResponse.LOGGED_IN_SUCCESSFULLY,{token:token}))
+    } catch (error) {
+      next(error)
+    }
   }
 
   async authMe(req: Request, res: Response, next: NextFunction): Promise<void> {
@@ -50,7 +48,7 @@ export class AuthController implements IAuthController{
             return next(createHttpError(HttpStatus.UNAUTHORIZED,HttpResponse.ACCESS_TOKEN_EXPIRED))
            }
           const user=await this._authSerive.authMe(accessToken)
-
+           console.log(user)
           res.status(HttpStatus.OK).json(successResponse(HttpResponse.OK,{user:user}))
     } catch (error) {
       next(error)
@@ -106,30 +104,32 @@ export class AuthController implements IAuthController{
   }
   async resetPassword(req: Request, res: Response, next: NextFunction): Promise<void> {
     console.log(req.body)
-       try {
-        const {email,token,password}=req.body
-        const response=await this._authSerive.resetPassword(email,token,password)
-        res.status(HttpStatus.OK).json(successResponse(HttpResponse.OK,{email:response}))
-       } catch (error) {
-        next(error)
-       }
+    try {
+      const {email,token,password}=req.body
+      const response=await this._authSerive.resetPassword(email,token,password)
+      res.status(HttpStatus.OK).json(successResponse(HttpResponse.OK,{email:response}))
+    } catch (error) {
+      next(error)
+    }
   }
   async googleAuthRedirection(req: Request, res: Response, next: NextFunction): Promise<void> {
-       try {
-        if(!req.user){
-          res.status(HttpStatus.FORBIDDEN).json(HttpResponse.INVALID_CREDNTIALS)
-          return
-        }
-        console.log('google user data',req.user)
-        const userData:{id:string,email:string,role:string}=req.user as { id: string; email: string; role: string };
-        const Data=await this._authSerive.generateToken(req.user as IUserModel)
-    
-        setAccessToken(res,Data.accessToken)
-        setRefreshToken(res,Data.refreshToken)
-        res.redirect(`${env.CLIENT_ORGIN}`)
-       } catch (error) {
-          res.redirect(`${env.CLIENT_ORGIN}/auth/signup`)
-       }
+    try {
+      if(!req.user){
+        res.status(HttpStatus.FORBIDDEN).json(HttpResponse.INVALID_CREDNTIALS)
+        return
+      }
+
+      const userData:{id:string,email:string,role:string}=req.user as { id: string; email: string; role: string };
+      const Data=await this._authSerive.generateToken(req.user as IUserModel)
+      
+      setAccessToken(res,Data.accessToken)
+      setRefreshToken(res,Data.refreshToken)
+      
+      res.redirect(`${env.CLIENT_ORGIN}/?token=${Data.accessToken}`)
+    } catch (error) {
+      res.redirect(`${env.CLIENT_ORGIN}/auth/signup`)
+      next(error)
+    }
   }
 }
 

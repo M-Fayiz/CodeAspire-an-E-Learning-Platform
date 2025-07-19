@@ -1,8 +1,10 @@
 
 import { searchProps } from "../types/user.types";
+import { IAnyUser} from "../types/user.types";
+import { FilterQuery } from "mongoose";
 
-export const buildUserFilter = (query: searchProps): Record<string, any> => {
-  const filter: Record<string, any> = {
+export const buildUserFilter = (query: searchProps): FilterQuery<IAnyUser> => {
+  const filter: FilterQuery<IAnyUser> = {
     role: { $ne: 'admin' },
   };
 

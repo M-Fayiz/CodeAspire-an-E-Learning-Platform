@@ -44,6 +44,7 @@ export class UserController implements IUserController {
     get_preSignedURL=async(req: Request, res: Response, next: NextFunction): Promise<void>=>{
         try {
             const{key}=req.query
+            console.log('key',key)
             const get_fileURL=await this._userService.generatePresignedGetUrl(key as string)
             
             res.status(HttpStatus.OK).json(successResponse(HttpResponse.OK,{get_fileURL}))
@@ -66,9 +67,9 @@ export class UserController implements IUserController {
     }
     updateUserProfile=async(req: Request, res: Response, next: NextFunction): Promise<void>=> {
         try {
-            const {id}=req.params
-            console.log('mentor data recied here',req.body)
-            console.log('pdf')
+            const {id}=req.params     
+            const updatedData=await this._userService.updateUserProfile(id,req.body)
+            res.status(HttpStatus.OK).json(successResponse(HttpResponse.OK,{updatedData:updatedData}))
         } catch (error) {
             next()
         }

@@ -19,6 +19,8 @@ export interface IDecodedUserType{
     email : string,
     role :UserRole,
     profile?:string,
+    isApproved?:boolean,
+    isRequested?:boolean
     
 }
 

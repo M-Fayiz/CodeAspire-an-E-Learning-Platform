@@ -18,7 +18,7 @@ const app= express()
 const secrete=env.SESSION_SECRET as string
 // MIddlewares
 app.use(cookieParser())
-app.use(morgan("dev"))
+app.use(morgan("dev")) //morgan
 app.use(express.json())
 app.use(express.urlencoded({ extended: true }))
 app.use(session({
@@ -33,7 +33,7 @@ app.use(cors(corsSetUp))
 
 // Routers 
 app.use('/auth',authRouter)
-app.use('/user',userRouter)
+app.use('/users',userRouter)
 app.use('/admin',adminRouter)
 
 // Error Handler

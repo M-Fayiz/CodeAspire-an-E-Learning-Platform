@@ -9,9 +9,13 @@
   "scripts": {
     "dev": "tsx watch src/app.ts",
     "start": "node dist/app.js",
-    "build": "tsc"
+    "build": "tsc",
+    "lint": "eslint \"src/**/*.{ts,js}\"",
+    "lint:fix": "eslint \"src/**/*.{ts,js}\" --fix"
   },
   "devDependencies": {
+    "@eslint/js": "^9.31.0",
+    "@eslint/json": "^0.13.0",
     "@types/bcrypt": "^5.0.2",
     "@types/cors": "^2.8.18",
     "@types/express": "^5.0.1",
@@ -20,8 +24,11 @@
     "@types/nodemailer": "^6.4.17",
     "@types/passport": "^1.0.17",
     "@types/passport-google-oauth20": "^2.0.16",
+    "eslint": "^9.31.0",
+    "globals": "^16.3.0",
     "install": "^0.13.0",
-    "typescript": "^5.8.3"
+    "typescript": "^5.8.3",
+    "typescript-eslint": "^8.37.0"
   },
   "dependencies": {
     "@aws-sdk/client-s3": "^3.839.0",
@@ -47,6 +54,7 @@
     "passport-google-oauth20": "^2.0.0",
     "redis": "^5.1.0",
     "uuid": "^11.1.0",
+    "winston": "^3.17.0",
     "zod": "^3.25.7"
   }
 }

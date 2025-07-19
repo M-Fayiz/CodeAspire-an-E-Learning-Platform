@@ -40,6 +40,9 @@ const createInstance = ():AxiosInstance=>{
                     window.dispatchEvent(new Event("force-logout"));
                 } 
             }
+            if(status==403&&errorMessage=='User blocked'){
+                window.dispatchEvent(new Event('force-logout'))
+            }
             return Promise.reject(error)
         }   
     )

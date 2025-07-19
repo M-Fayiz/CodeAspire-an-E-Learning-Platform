@@ -1,7 +1,7 @@
 import type { UserRole } from "./auth.types";
 
 export interface IUserType{
-    _id:string,
+    id:string,
     name:string,
     email:string,
     phone:string,
@@ -13,7 +13,15 @@ export interface IUserType{
     enrolledCourses?: string[];
     expertise?: string[];
     mentorRating?: number;
-    imageURL?:string
+    imageURL?:string,
+    isApproved?:boolean
+    socialLinks?:{
+        linkedIn:string,
+        github:string,
+        portfolio:string
+    },
+    resume?:string
+
 }
 
 

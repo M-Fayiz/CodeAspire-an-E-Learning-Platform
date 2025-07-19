@@ -1,11 +1,19 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { User, Award, Link, Plus, X ,FileUp} from 'lucide-react';
 import {Input} from '../../components/atoms/Inputs'
 import UserService from '../../service/client-API/user.service';
 import { useAuth } from '../../context/auth.context';
+import type { IMentorProps } from '../../types/mentor.types';
+import { toastService } from '../toast/ToastSystem';
+import MentorApprovalCard from '../Mentor/MentorApproval';
+import { useNavigate } from 'react-router';
+
 
 const MentorDataForm = () => {
-  const [formData, setFormData] = useState({
+   const {user}=useAuth()
+   const navigate=useNavigate()
+   const [watingCard,setWaithingCard]=useState(false)
+  const [formData, setFormData] = useState<IMentorProps>({
     expertise:[] as string[],
     bio: '',
     experience: '',
@@ -14,18 +22,28 @@ const MentorDataForm = () => {
       github: '',
       portfolio: ''
     },
-    resume: ''
   });
+  useEffect(()=>{
+      if(user?.role=='mentor'&&user.isRequested){
+        setWaithingCard(true)
+      }
+      if(user?.role=='mentor'&&user.isApproved){
+        navigate('/mentor/dashboard')
+      }
+  },[])
 
+  
   const [newExpertise, setNewExpertise] = useState('');
   const [currentStep, setCurrentStep] = useState(1);
-  const {user}=useAuth()
+ 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
   const { name, value, type } = e.target;
 
   if (e.target instanceof HTMLInputElement && type === 'file') {
     const file = e.target.files?.[0];
+
     if (file) {
+      console.log(file.type)
       setFormData((prev) => ({
         ...prev,
         [name]: file,
@@ -68,13 +86,20 @@ const MentorDataForm = () => {
   const handleSubmit=async (e:React.FormEvent<HTMLFormElement>)=>{
     e.preventDefault();
     try {
+  
         const result=await UserService.updateMentorInformation(user!.id,formData)
+        console.log('result from resulr',result)
+        if(result){
+          setWaithingCard(true)
+        }
     } catch (error) {
-        
+        if(error instanceof Error){
+          toastService.error(error.message)
+        }
     }
 
   }
-
+ 
   const nextStep = () => {
     if (currentStep <2) setCurrentStep(currentStep + 1);
   };
@@ -82,6 +107,14 @@ const MentorDataForm = () => {
   const prevStep = () => {
     if (currentStep > 1) setCurrentStep(currentStep - 1);
   };
+
+  if(user?.role=='mentor'&&user.isRequested){
+   return <MentorApprovalCard/>
+  }
+
+  if(watingCard){
+    return <MentorApprovalCard/>
+  }
 
   return (
     <div>

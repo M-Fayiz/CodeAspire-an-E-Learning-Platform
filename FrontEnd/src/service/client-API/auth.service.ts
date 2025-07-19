@@ -36,7 +36,8 @@ export const  AuthService={
   },
   authME:async():Promise<{id : string,
     email : string,
-    role : UserRole}>=>{
+    role : UserRole
+    isApproved:boolean}>=>{
     console.log('auth me load..')
     try {
       const response=await authInstance.post(API.Auth.AUTH_URL,{},{withCredentials:true})
@@ -88,6 +89,7 @@ export const  AuthService={
     googleAuth:async(role:UserRole):Promise<void>=>{
       try {
         window.location.href=`${import.meta.env.VITE_BASE_URL}/auth/google?role:${role}`
+        
       } catch (error) {
         const err=error as AxiosError<{error:string}>
         const errorMessage=err.response?.data.error

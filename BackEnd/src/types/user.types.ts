@@ -1,4 +1,4 @@
-import { IMappedUser } from "../Models/userModel"
+
 import { Types } from "mongoose"
 
 export interface IUser{
@@ -13,11 +13,9 @@ export interface IUser{
   isActive: boolean;
   createdAt: Date;
   updatedAt:DataTransfer;
-  expertise?: string[];
-  department?: string;
-  mentorRating?: number;
   bio?: string; 
-  enrolledCourses?: Types.ObjectId[];
+  isApproved: boolean;
+  isRequested:boolean
 }
 
 export interface IMentor extends IUser{
@@ -30,8 +28,8 @@ export interface IMentor extends IUser{
     github?: string;
     portfolio?: string;
   };
-  resumeUrl?: string;
-  isApproved: boolean;
+  resume?: string;
+  
 }
 
 export interface ILearner extends IUser{
@@ -43,6 +41,7 @@ export interface IAdmin extends IUser{
   role:'admin'
 }
 
+
 export type IUserRole='admin'|'learner'|'mentor'
 
 export interface IAuth{
@@ -50,6 +49,7 @@ export interface IAuth{
   token:string
 }
 
+export type IAnyUser=IUser|IAdmin|ILearner|IMentor
 
 
 export interface ProfileData{
@@ -71,6 +71,8 @@ export interface searchProps{
   role:string|'',
   isActive:boolean|''
 } 
+
+export type IRole='admin'|'mentor'|'learner'
 
 
 

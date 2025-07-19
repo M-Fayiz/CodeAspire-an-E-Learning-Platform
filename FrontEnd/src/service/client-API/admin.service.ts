@@ -4,6 +4,7 @@ import { API } from "../../constants/apiConstant";
 import type { IUserType } from "../../types/profile.type";
 import { searchFromParser } from "../../utility/parser.util";
 import type { SearchQuery } from "../../types/parser.types";
+
 interface fetchedUsers{
     users:IUserType[]
     totalPage:number
@@ -49,6 +50,16 @@ export const adminService={
             return response.data.userData
         } catch (error) {
             const err=error as AxiosError<{error:string}>
+            const errorMessage=err.response?.data.error
+            throw new Error(errorMessage)
+        }
+    },
+    approveMentor:async (id:string):Promise<{isApproved:boolean}>=>{
+        try {
+            const response=await adminInstance.put(API.ADMIN.APPROVE_MENTOR(id))
+            return response.data
+        } catch (error) {
+             const err=error as AxiosError<{error:string}>
             const errorMessage=err.response?.data.error
             throw new Error(errorMessage)
         }

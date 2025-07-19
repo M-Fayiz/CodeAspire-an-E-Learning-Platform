@@ -34,18 +34,15 @@ import { Link } from 'react-router-dom';
 
    const handleSubmit=async(e:React.FormEvent<HTMLFormElement>)=>{
       e.preventDefault()
-
-
-
+      
       const roleAdded={...formData,role:selectedRole}
-
       const result=registrationSchema.safeParse(roleAdded)
       if(!result.success){
-         const ERROR:{[key:string]:string}={}
+        const ERROR:{[key:string]:string}={}
         result.error.errors.forEach(err=>{
-            if(err.path[0]){
-                ERROR[err.path[0]]=err.message
-            }
+          if(err.path[0]){
+            ERROR[err.path[0]]=err.message
+          }
         })
         setErrors(ERROR)
         return
@@ -53,13 +50,13 @@ import { Link } from 'react-router-dom';
       setErrors({})
       onSubmit(roleAdded);
       setIsLoading(true)
-       setFormData({
-            name: '',
-            email: '',
-            phone: '',
-            password: '', 
-            confirmPassword: ''
-          })
+      //  setFormData({
+      //       name: '',
+      //       email: '',
+      //       phone: '',
+      //       password: '', 
+      //       confirmPassword: ''
+      //     })
 
           setTimeout(()=>{
             setIsLoading(false)

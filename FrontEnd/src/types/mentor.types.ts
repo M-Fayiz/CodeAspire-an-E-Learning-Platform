@@ -9,5 +9,5 @@ export interface IMentorProps{
       github: string;
       portfolio: string;
     };
-    resume: File;
+    resume?: File;
 }

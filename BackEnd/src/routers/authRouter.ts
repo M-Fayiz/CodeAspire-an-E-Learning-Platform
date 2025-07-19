@@ -9,7 +9,6 @@ import { AuthController } from "../controllers/implementation/authController";
 import { registerSchema } from "../utility/zod";
 import passport from '../utility/passport.util'
 import {env} from '../config/env.config'
-import { verifyUser } from "../middlewares/userVerify.middleware";
 
 const userRepository=new UserRepository()
 const authService=new AuthService(userRepository)
@@ -42,9 +41,9 @@ authRouter.get(
 authRouter.get(
     '/google/callback',
     passport.authenticate('google',
-        {
-          failureRedirect:`${env.CLIENT_ORGIN}/auth/login`
-        }
+      {
+        failureRedirect:`${env.CLIENT_ORGIN}/auth/login`
+      }
     ),
     authController.googleAuthRedirection.bind(authController)
 )

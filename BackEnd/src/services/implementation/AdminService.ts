@@ -1,25 +1,26 @@
 import { HttpResponse } from "../../const/error-message";
 import { HttpStatus } from "../../const/http-status";
-import { IUserModel } from "../../Models/userModel";
+import { ILearnerModel, IMenterModel } from "../../Models/userModel";
 import { IUserRepo } from "../../repository/interface/IUserRepo";
 import { createHttpError } from "../../utility/http-error";
 import { IAdminService } from "../interface/IAdminService";
-import { ProfileData } from "../../types/user.types";
 import { parseObjectId } from "../../mongoose/objectId";
+import { LearnerDTO,MentorDTO } from "../../dtos/role.dto";
+import { ILearnerDTO, IMentorDTO } from "../../types/dto.types";
 
 export type UserFetchResponse = {
-  safeUsers: ProfileData[];
+  safeUsers: IMentorDTO|ILearnerDTO[];
   totalPage: number;
 };
 
 
 export class AdminService implements IAdminService{
 
-    constructor(private userRepo:IUserRepo){}
+    constructor(private _userRepo:IUserRepo){}
 
    async fetchAllUsers(page:number,isActive:boolean|'',name:string,role:string): Promise<UserFetchResponse> {
-    let limit=3
-    let skip=(page-1)*limit
+    const limit=3
+    const skip=(page-1)*limit
        
        const searchQuery={
         name:name,
@@ -27,24 +28,30 @@ export class AdminService implements IAdminService{
         isActive:isActive
        }
     
-        const [allUsers,userCount]=await Promise.all([this.userRepo.findAllUsers(limit,skip,searchQuery),this.userRepo.findUserCount(searchQuery)])
+        const [allUsers,userCount]=await Promise.all([this._userRepo.findAllUsers(limit,skip,searchQuery),this._userRepo.findUserCount(searchQuery)])
         if(!allUsers){
             throw createHttpError(HttpStatus.INTERNAL_SERVER_ERROR,HttpResponse.SERVER_ERROR)
         }
-        const safeUsers = allUsers.map(user => ({
-            _id: user._id,
-            name: user.name,
-            email: user.email,
-            role: user.role,
-            phone:user.phone,
-            isActive: user.isActive,
-            profilePicture: user.profilePicture,
-            expertise: user.expertise,
-            mentorRating: user.mentorRating,
-            bio:user.bio,
-            enrolledCourses: user.enrolledCourses,
- 
-        }));
+        
+        const safeUsers = allUsers.map(user =>{
+            switch(user.role){
+                case 'mentor':
+                   return MentorDTO(user as IMenterModel)
+                case 'learner':
+                   return LearnerDTO(user as ILearnerModel)
+                default:
+                   return{
+                    id:user._id,
+                    name: user.name,
+                    email: user.email,
+                    phone: user.phone,
+                    profilePicture: user.profilePicture,
+                    isActive: user.isActive,
+                    role: user.role,
+                    isApproved:user.isApproved
+                   }
+            }
+        });
         const totalPage=Math.ceil(userCount/limit)
         return {safeUsers,totalPage}
     }
@@ -56,7 +63,7 @@ export class AdminService implements IAdminService{
             throw createHttpError(HttpStatus.BAD_REQUEST,HttpResponse.INVALID_CREDNTIALS)
         }
 
-        const updatedUser=await this.userRepo.blockUser(objectId )
+        const updatedUser=await this._userRepo.blockUser(objectId )
      
         if(!updatedUser){
             throw createHttpError(HttpStatus.INTERNAL_SERVER_ERROR,HttpResponse.SERVER_ERROR)
@@ -67,31 +74,47 @@ export class AdminService implements IAdminService{
         }
         return result
     }
-    async userProfile(id: string): Promise<ProfileData | null> {
+    async userProfile(id: string): Promise<ILearnerDTO|IMentorDTO | null> {
         const objectId=parseObjectId(id)
         if(!objectId){
             throw createHttpError(HttpStatus.BAD_REQUEST,HttpResponse.INVALID_CREDNTIALS)
         }
         
-        const profileData=await this.userRepo.findUserById(objectId)
+        const profileData=await this._userRepo.findUserById(objectId)
         if(!profileData){
             throw createHttpError(HttpStatus.NOT_FOUND,HttpResponse.USER_NOT_FOUND)
         }
 
-        const safeUsers = {
-            _id: profileData._id,
-            name: profileData.name,
-            email: profileData.email,
-            role: profileData.role,
-            phone:profileData.phone,
-            isActive: profileData.isActive,
-            profilePicture: profileData.profilePicture,
-            expertise: profileData.expertise,
-            mentorRating: profileData.mentorRating,
-            bio:profileData.bio,
-            enrolledCourses: profileData.enrolledCourses,
-        }
+        switch(profileData.role){
+            case 'mentor':
+             return MentorDTO(profileData as IMenterModel)
+            case 'learner':
+             return LearnerDTO(profileData as ILearnerModel)
+            default:
+              return{
+                id:profileData._id,
+                name: profileData.name,
+                email: profileData.email,
+                phone: profileData.phone,
+                profilePicture: profileData.profilePicture,
+                isActive: profileData.isActive,
+                role: profileData.role,
+                isApproved:profileData.isApproved,
+                isRequested:profileData.isRequested
 
-        return safeUsers
+             }
+        }
+    }
+    async approveMentor(id: string): Promise<{isApproved:boolean}> {
+        const objectId=parseObjectId(id)
+         if(!objectId){
+            throw createHttpError(HttpStatus.BAD_REQUEST,HttpResponse.INVALID_CREDNTIALS)
+        }
+        const approvedData=await this._userRepo.approveMentor(objectId)
+        if(!approvedData){
+            throw createHttpError(HttpStatus.NOT_FOUND,HttpResponse.USER_NOT_FOUND)
+        }
+       
+        return {isApproved:approvedData.isApproved}
     }
 }

@@ -1,4 +1,4 @@
-import { IUser,IAuth } from "../../types/user.types";
+import { IUser,IAuth, IMentor, ILearner, IAdmin } from "../../types/user.types";
 import { IAuthService } from "../interface/IauthService";
 import { IUserRepo } from "../../repository/interface/IUserRepo";
 import { hashPassword,comparePassword } from "../../utility/bcrypt.util";
@@ -18,15 +18,13 @@ import { generateSecureToken } from "../../utility/crypto.util";
 import { redisPrefix } from "../../const/redisKey";
 
 
-
-
 export class AuthService implements IAuthService{
 
-    constructor(private userRepo:IUserRepo){}
+    constructor(private _userRepo:IUserRepo){}
 
     async signUp(user: IUser): Promise<string> {
      
-        const isUserExist=await this.userRepo.findUserByEmail(user.email)
+        const isUserExist=await this._userRepo.findUserByEmail(user.email)
         if(isUserExist){
             throw createHttpError(HttpStatus.CONFLICT,HttpResponse.USER_EXIST)
         } 
@@ -36,7 +34,7 @@ export class AuthService implements IAuthService{
          
          await sendToken(user.email,token,'verify-email')
         
-         let key=`${redisPrefix.VERIFY_EMAIL}:${token}`
+         const key=`${redisPrefix.VERIFY_EMAIL}:${token}`
                 
         
         const response= await redisClient.setEx(key,300,JSON.stringify(user))
@@ -49,35 +47,38 @@ export class AuthService implements IAuthService{
     }
     async verifyEmail(data:IAuth):Promise<{accessToken:string,refreshToken:string}>{
         try {
-            let key=`${redisPrefix.VERIFY_EMAIL}:${data.token}`
-            let result=await redisClient.get(key)
-            console.log('verify email',result)
+            const key=`${redisPrefix.VERIFY_EMAIL}:${data.token}`
+            const result=await redisClient.get(key)
+        
             if(!result){
                 throw createHttpError(HttpStatus.UNAUTHORIZED,HttpResponse.USER_CREATION_FAILED)
             }
             const storedData=JSON.parse(result)
 
-            let user={
+            const user={
                 name:storedData.name,
                 email:storedData.email,
                 phone:storedData.phone,
                 password:storedData.password,
                 role:storedData.role,
-                isActive:true
-             
+                isActive:true,
+                isApproved:false,
+                isRequested:false
             }
         
-           const newUser=await this.userRepo.createUser(user as IUser)
+           const newUser=await this._userRepo.createUser(user as IUser)
            await redisClient.del(key)
         
            if(!newUser){
             throw createHttpError(HttpStatus.CONFLICT,HttpResponse.USER_CREATION_FAILED)
            }
-            const payload={
+            const payload :IPayload={
                 id:newUser._id,
                 name:newUser.name,
                 email:newUser.email,
-                role:newUser.role
+                role:newUser.role,
+                isApproved:newUser.isApproved,
+                isRequested:newUser.isRequested
             }
            return generateTokens(payload)
         } catch (error) {
@@ -94,10 +95,7 @@ export class AuthService implements IAuthService{
             throw createHttpError(HttpStatus.UNAUTHORIZED,HttpResponse.ACCESS_TOKEN_EXPIRED)
         }
 
-        const user=await this.userRepo.findUserByEmail(decode.email)
-        if(user){
-            console.log('user from authme service')
-        }
+        const user=await this._userRepo.findUserByEmail(decode.email)
 
         if(!user){
             throw createHttpError(HttpStatus.NOT_FOUND,HttpResponse.USER_NOT_FOUND)
@@ -110,7 +108,9 @@ export class AuthService implements IAuthService{
             name:user.name,
             email:user.email,
             role:user.role,
-            profile:user.profilePicture
+            profile:user.profilePicture,
+            isApproved:user.isApproved,
+            isRequested:user.isRequested
         }
     }
 
@@ -124,7 +124,7 @@ export class AuthService implements IAuthService{
             throw createHttpError(HttpStatus.NOT_FOUND,HttpResponse.REFRESH_TOKEN_EXPIRED)
         }
 
-        const user= await this.userRepo.findUserByEmail(
+        const user= await this._userRepo.findUserByEmail(
             decode.email
         )
         if(!user?.isActive){
@@ -136,6 +136,8 @@ export class AuthService implements IAuthService{
             name:user.name,
             email:user.email,
             role:user.role,
+            isApproved:user.isApproved,
+            isRequested:user.isRequested
         }
         
         const {accessToken}=generateTokens(payload)
@@ -146,7 +148,7 @@ export class AuthService implements IAuthService{
 
     async login(email: string, password: string): Promise<{ accessToken: string; refreshToken: string; payload:IPayload }> {
         
-        const user=await this.userRepo.findUserByEmail(email)
+        const user=await this._userRepo.findUserByEmail(email)
         if(!user){
             throw createHttpError(HttpStatus.NOT_FOUND,HttpResponse.USER_NOT_FOUND)
         }
@@ -164,21 +166,23 @@ export class AuthService implements IAuthService{
             id:user._id,
             name:user.name,
             email:user.email,
-            role:user.role
+            role:user.role,
+            isApprved:user.isApproved,
+            isRequested:user.isRequested
         }
         const {accessToken,refreshToken}=generateTokens(payload)
         return {accessToken,refreshToken,payload}
     }
 
     async  forgotPassword(email: string): Promise<string> {
-        const isUserExist=await this.userRepo.findUserByEmail(email)
+        const isUserExist=await this._userRepo.findUserByEmail(email)
 
         if(!isUserExist){
             throw createHttpError(HttpStatus.NOT_FOUND,HttpResponse.USER_NOT_FOUND)
         }
 
         const secureToken=generateSecureToken()
-        let key=`${redisPrefix.FORGOT_PASSWORD}:${email}`
+        const key=`${redisPrefix.FORGOT_PASSWORD}:${email}`
 
         await sendToken(email,secureToken,'reset-password')
         const response=await redisClient.setEx(key,300,secureToken)
@@ -191,10 +195,9 @@ export class AuthService implements IAuthService{
         
     }
     async resetPassword(email: string, token: string, password: string): Promise<string> {
-        let key=`${redisPrefix.FORGOT_PASSWORD}:${email}`
+        const key=`${redisPrefix.FORGOT_PASSWORD}:${email}`
 
         const storedToken= await redisClient.get(key)
-        console.log('stored ✅ redis',storedToken)
         if(!storedToken){
             throw createHttpError(HttpStatus.BAD_REQUEST,HttpResponse.TOKEN_NOT_FOUND)
         }
@@ -205,7 +208,7 @@ export class AuthService implements IAuthService{
         
         const hashedPassword=await hashPassword(password as string)
         
-        const result=await this.userRepo.updateUserPassword(email,hashedPassword)
+        const result=await this._userRepo.updateUserPassword(email,hashedPassword)
 
         if(!result){
             throw createHttpError(HttpStatus.INTERNAL_SERVER_ERROR,HttpResponse.SERVER_ERROR)
@@ -215,10 +218,10 @@ export class AuthService implements IAuthService{
     }
 
 
-    async generateToken(user: IUser): Promise<{ accessToken: string; refreshToken: string;payload:JwtPayload }> {
-         const payload={id:user._id,email:user.email,role:user.role}
+    async generateToken(user: IUser|IMentor|ILearner|IAdmin): Promise<{ accessToken: string; refreshToken: string;payload:JwtPayload }> {
+        const payload:IPayload={id:user._id,email:user.email,role:user.role,isApproved:user.isApproved}
          const {accessToken,refreshToken}=generateTokens(payload)
-         return {accessToken,refreshToken,payload}
+        return {accessToken,refreshToken,payload}
     }
    
 }

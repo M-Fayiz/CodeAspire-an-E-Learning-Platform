@@ -1,8 +1,8 @@
 import { BaseRepository } from "../baseRepository";
-import { UserModel ,IUserModel} from "../../Models/userModel";
+import { UserModel ,IUserModel, IMenterModel, ILearnerModel, IAdminModel} from "../../Models/userModel";
 import { IUserRepo } from "../interface/IUserRepo";
 import { Profile } from "passport-google-oauth20";
-import { IUserRole, searchProps } from "../../types/user.types";
+import { IAdmin, ILearner, IMentor, IUserRole, searchProps } from "../../types/user.types";
 import { use } from "passport";
 import { Types, UpdateQuery } from "mongoose";
 import { buildUserFilter } from "../../utility/searchQuery";
@@ -13,19 +13,42 @@ export class UserRepository extends BaseRepository<IUserModel> implements IUserR
     constructor(){
         super(UserModel)
     }
-    async  createUser(user: IUserModel): Promise<IUserModel> {
-        
-        try{
-         return await this.create(user)
-            }catch(error){
-         console.error(error)
-         throw error
+    async  createUser(user: IUserModel): Promise<IUserModel|IMenterModel|ILearnerModel|IAdminModel> {
+        try {
+            const createdUser=await this.create(user)
+            switch(createdUser.role){
+                case 'mentor':
+                    return createdUser as IMenterModel
+                case 'learner':
+                    return createdUser as ILearnerModel
+                case 'admin':
+                    return createdUser as IAdminModel
+                default :
+                return createdUser as IUserModel        
+
             }
+        } catch (error) {
+            throw error
+        }
+        
     }
 
-    async findUserByEmail(email: string): Promise<IUserModel | null> {
+    async findUserByEmail(email: string): Promise<IUserModel|IMenterModel|ILearnerModel|IAdminModel | null> {
         try {
-            return await this.model.findOne({email:email})
+             const user = await this.model.findOne({ email }).lean();
+             if(!user) return null
+            switch(user?.role){
+                case 'mentor':
+                    return user as unknown as IMenterModel
+                case 'learner':
+                    return user as unknown as  ILearnerModel
+                case 'admin':
+                    return user as IAdminModel
+                default :
+                return user as IUserModel        
+
+            }
+           
         } catch (error) {
             console.error(error)
             throw error
@@ -72,14 +95,14 @@ export class UserRepository extends BaseRepository<IUserModel> implements IUserR
         }
     }
     async blockUser(id:Types.ObjectId): Promise<IUserModel | null> {
-              try {
-                return this.model.findByIdAndUpdate(id,[{ $set: { isActive: { $not: "$isActive" } } }],{
-                new: true,
-                upsert: false,
-                })
-              } catch (error) {
-                throw error
-              }
+        try {
+            return this.model.findByIdAndUpdate(id,[{ $set: { isActive: { $not: "$isActive" } } }],{
+             new: true,
+             upsert: false,
+            })
+        } catch (error) {
+            throw error
+        }
     }
     async findUserById(id:Types.ObjectId):Promise<IUserModel|null>{
         return await this.findById(id)
@@ -88,6 +111,7 @@ export class UserRepository extends BaseRepository<IUserModel> implements IUserR
     async userProfilePictureUpdate(id: Types.ObjectId, imageURL: string): Promise<IUserModel | null> {
         return await this.model.findByIdAndUpdate(id,{profilePicture:imageURL},{new:true})
     }
-
-
+    async approveMentor(id: Types.ObjectId): Promise<IUserModel| null> {
+        return await this.findByIDAndUpdate(id,{isApproved:true})
+    }
 }

@@ -3,18 +3,20 @@ const userRouter=express.Router()
 import { UserController } from "../controllers/implementation/userController";
 import { UserRepository } from "../repository/implementation/userRepo";
 import { UserService } from "../services/implementation/userService";
-import { verifyUser } from "../middlewares/userVerify.middleware";
+import { verifyUser } from "../middlewares/authentication.middleware";
+import { MentorRepository } from "../repository/implementation/mentorRepository";
 
 const userRepository=new UserRepository()
-const userService=new UserService(userRepository)
+const mentorRepository=new MentorRepository()
+const userService=new UserService(userRepository,mentorRepository)
 const userController=new UserController(userService)
 
-userRouter.get('/profile',verifyUser,userController.fetchProfile)
-userRouter.patch('/change-password/:id',userController.changePassword)
-userRouter.get('/s3-presigned-url',userController.preSignedURL)
-userRouter.get('/s3-getPresigned-url',userController.get_preSignedURL)
-userRouter.put('/profile-picture/:id',userController.updateProfileImage)
-userRouter.put('/profile/:id',userController.updateUserProfile)
+userRouter.get('/me',verifyUser,userController.fetchProfile)
+userRouter.patch('/:id/change-password',verifyUser,userController.changePassword)
+userRouter.get('/s3-presigned-url',verifyUser,userController.preSignedURL)
+userRouter.get('/s3-getPresigned-url',verifyUser,userController.get_preSignedURL)
+userRouter.put('/:id/profile-picture',verifyUser,userController.updateProfileImage)
+userRouter.put('/me/:id',verifyUser,userController.updateUserProfile)
 
 
 

@@ -1,22 +1,25 @@
 import { IUserService } from "../interface/IUserService";
 import { IUserRepo } from "../../repository/interface/IUserRepo";
-import { IUserModel } from "../../Models/userModel";
+import { ILearnerModel, IMenterModel, IUserModel } from "../../Models/userModel";
 import { createHttpError } from "../../utility/http-error";
 import { HttpStatus } from "../../const/http-status";
 import { HttpResponse } from "../../const/error-message";
-import { ProfileData } from "../../types/user.types";
+import { IAdmin, ILearner, IMentor, ProfileData } from "../../types/user.types";
 import { parseObjectId } from "../../mongoose/objectId";
 import { comparePassword,hashPassword } from "../../utility/bcrypt.util";
 import { getObjectURL, putObjectURl } from "../../config/s3Bucket.config";
+import { IMentorRepository } from "../../repository/interface/IMentorRepository";
+import { MentorDTO } from "../../dtos/role.dto";
+import { IMentorDTO } from "../../types/dto.types";
 
 
 export class UserService implements IUserService{
 
-    constructor(private userRep:IUserRepo){}
+    constructor(private _userRep:IUserRepo,private _mentorRepository:IMentorRepository){}
 
     async fetchUser(email: string): Promise<ProfileData> {
         
-        const userData=await this.userRep.findUserByEmail(email)
+        const userData=await this._userRep.findUserByEmail(email)
         if(!userData){
             throw createHttpError(HttpStatus.NOT_FOUND,HttpResponse.USER_NOT_FOUND)
         }
@@ -37,13 +40,13 @@ export class UserService implements IUserService{
         return profileData
     }
 
-    async changePassword(id:string,currentPassword: string, newPassword: string): Promise<Boolean> {
+    async changePassword(id:string,currentPassword: string, newPassword: string): Promise<boolean> {
         
         const objectId=parseObjectId(id)
         if(!objectId){
             throw createHttpError(HttpStatus.BAD_REQUEST,HttpResponse.INVALID_CREDNTIALS)
         }
-        const user=await this.userRep.findUserById(objectId)
+        const user=await this._userRep.findUserById(objectId)
         if(!user){
             throw createHttpError(HttpStatus.NOT_FOUND,HttpResponse.USER_NOT_FOUND)
         }
@@ -54,7 +57,7 @@ export class UserService implements IUserService{
             throw createHttpError(HttpStatus.NOT_FOUND,HttpResponse.INVALID_CREDNTIALS)
         }
         const hashedPassword=await hashPassword(newPassword)
-        await this.userRep.updateUserPassword(user.email,hashedPassword)
+        await this._userRep.updateUserPassword(user.email,hashedPassword)
         
         return true
     }
@@ -80,10 +83,28 @@ export class UserService implements IUserService{
         if(!userObjectId){
             throw createHttpError(HttpStatus.BAD_REQUEST,HttpResponse.INVALID_CREDNTIALS)
         }
-        const userData=await this.userRep.userProfilePictureUpdate(userObjectId,imageURL)
+        const userData=await this._userRep.userProfilePictureUpdate(userObjectId,imageURL)
         if(!userData||!userData.profilePicture){
             throw createHttpError(HttpStatus.NOT_FOUND,HttpResponse.USER_NOT_FOUND)
         }
         return  userData.profilePicture 
+    }
+    async updateUserProfile(id: string, userData: ILearner | IMenterModel | IAdmin):Promise<IMentorDTO|null> {
+        const userId=parseObjectId(id) 
+        if(!userId) {
+            throw createHttpError(HttpStatus.BAD_REQUEST,HttpResponse.INVALID_CREDNTIALS)
+        }
+        const user=await this._userRep.findUserById(userId)
+        if(!user){
+            throw createHttpError(HttpStatus.NOT_FOUND,HttpResponse.USER_NOT_FOUND)
+        }
+        
+        switch(user.role){
+            case 'mentor':
+            const updatedMentor=await this._mentorRepository.updateMentorProfile(userId,userData as IMenterModel)
+            return updatedMentor?MentorDTO(updatedMentor):null
+        }
+       
+        return null
     }
 }
