@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { Activity, Mail, Phone, AlertTriangle, CheckCircle, XCircle, Ban, User, MapPin, ExternalLink, FileText} from 'lucide-react';
 // import type { IUserType } from '../../../types/profile.type';
 import { useLoaderData } from 'react-router';
-import { adminService } from '../../../service/client-API/admin.service';
+import { adminService } from '@/service/client-API/admin/admin.service';
 import { toastService } from '../../../config/Toast.config';
 import type { IUserType } from '../../../types/profile.type';
 

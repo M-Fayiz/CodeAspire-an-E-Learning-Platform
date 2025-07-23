@@ -1,5 +1,5 @@
 import { Request, Response, NextFunction } from "express";
-import { IMenterModel, MentorModel } from "../../Models/userModel";
+import { IMenterModel, MentorModel } from "../../models/user.model";
 import { BaseRepository } from "../baseRepository";
 import { IMentorRepository } from "../interface/IMentorRepository";
 import { Types } from "mongoose";

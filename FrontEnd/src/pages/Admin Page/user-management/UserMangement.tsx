@@ -1,11 +1,11 @@
 import React, { useState, useEffect } from 'react';
 
 import type{ IUserType } from '../../../types/profile.type';
-import { SearchAndFilter } from '../../../components/admin-components/userMangement/SerchAndFilter';
+import { SearchAndFilter } from '../../../features/admin/userMangement/SerchAndFilter';
 import { TableHeader } from '../../../components/common/TableComponents';
-import { adminService } from '../../../service/client-API/admin.service';
+import { adminService } from '@/service/client-API/admin/admin.service';
 import { toastService } from '../../../components/toast/ToastSystem';
-import TableRow from '../../../components/admin-components/userMangement/TableData';
+import TableRow from '../../../features/admin/userMangement/TableData';
 // import { StatsCards } from '../components/admin-components/userMangement/StatusCard
 import PaginationRounded from '../../../components/ui/Pagination';
 import type { SearchQuery } from '../../../types/parser.types';

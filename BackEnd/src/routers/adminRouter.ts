@@ -1,7 +1,7 @@
 import express from 'express'
 const adminRouter=express.Router()
 
-import { UserRepository } from '../repository/implementation/userRepo'
+import { UserRepository } from '../repository/implementation/UserRepository'
 import { AdminService } from '../services/implementation/AdminService'
 import { AdminController } from '../controllers/implementation/AdminController'
 import { verifyUser } from '../middlewares/authentication.middleware'

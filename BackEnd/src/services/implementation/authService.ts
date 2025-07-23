@@ -1,5 +1,5 @@
 import { IUser,IAuth, IMentor, ILearner, IAdmin } from "../../types/user.types";
-import { IAuthService } from "../interface/IauthService";
+import { IAuthService } from "../interface/IAuthService";
 import { IUserRepo } from "../../repository/interface/IUserRepo";
 import { hashPassword,comparePassword } from "../../utility/bcrypt.util";
 // import { generateOtp } from "../../utility/generate.otp";
@@ -11,11 +11,13 @@ import { HttpResponse } from "../../const/error-message";
 import { createHttpError } from "../../utility/http-error";
 import { generateTokens } from "../../utility/jwt-token.util";
 import { verifyAccesToken,verifyRefreshToken } from "../../utility/jwt-token.util";
-import type { IMappedUser } from "../../Models/userModel";
+import type { IMappedUser } from "../../models/user.model";
 import { JwtPayload } from "jsonwebtoken";
-import { IPayload } from "../../Models/userModel";
+import { IPayload } from "../../models/user.model";
 import { generateSecureToken } from "../../utility/crypto.util";
 import { redisPrefix } from "../../const/redisKey";
+import { payloadDTO } from "../../dtos/payload.dto";
+import { IPayloadDTO } from "../../types/dto.types";
 
 
 export class AuthService implements IAuthService{
@@ -87,31 +89,26 @@ export class AuthService implements IAuthService{
         }
     }
 
-    async authMe(token: string):Promise<IMappedUser> {
-           
+    async authMe(token: string):Promise<IPayloadDTO> {
+          
+        console.log(11,'this is verifyToken')
         const decode= verifyAccesToken(token) 
-       
+        console.log(22,'this is verifyToken')
         if(!decode){
             throw createHttpError(HttpStatus.UNAUTHORIZED,HttpResponse.ACCESS_TOKEN_EXPIRED)
         }
-
+        
         const user=await this._userRepo.findUserByEmail(decode.email)
-
+        console.log(33,'this is verifyToken',user)
         if(!user){
             throw createHttpError(HttpStatus.NOT_FOUND,HttpResponse.USER_NOT_FOUND)
         }
         if(!user.isActive){
             throw createHttpError(HttpStatus.FORBIDDEN,HttpResponse.USER_BLOCKED)
         }
-        return {
-            id:user._id,
-            name:user.name,
-            email:user.email,
-            role:user.role,
-            profile:user.profilePicture,
-            isApproved:user.isApproved,
-            isRequested:user.isRequested
-        }
+
+
+        return payloadDTO(user)
     }
 
     async refreshAccessToken(token: string): Promise<{ newAccessToken: string; payload: JwtPayload; }> {
@@ -131,14 +128,7 @@ export class AuthService implements IAuthService{
             throw createHttpError(HttpStatus.FORBIDDEN,HttpResponse.USER_BLOCKED)
         }
 
-        const payload={
-            id:user._id,
-            name:user.name,
-            email:user.email,
-            role:user.role,
-            isApproved:user.isApproved,
-            isRequested:user.isRequested
-        }
+        const payload=payloadDTO(user)
         
         const {accessToken}=generateTokens(payload)
         const newAccessToken=accessToken

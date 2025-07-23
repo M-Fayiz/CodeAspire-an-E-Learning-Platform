@@ -1,4 +1,4 @@
-import { IUserModel } from "../../Models/userModel";
+import { IUserModel } from "../../models/user.model";
 import { ILearnerDTO, IMentorDTO, } from "../../types/dto.types";
 import { ProfileData } from "../../types/user.types";
 import { UserFetchResponse } from "../implementation/AdminService";

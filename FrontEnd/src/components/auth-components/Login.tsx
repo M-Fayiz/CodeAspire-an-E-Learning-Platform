@@ -2,9 +2,10 @@ import React, { useState } from 'react';
 import { LogIn, Mail, Lock, Code} from 'lucide-react'; // Adjust if using different icons
 import { loginFeatur } from '../../config/UI-config/RoleConfig'; 
 import type { AuthComponentProps, ILogin}  from '../../types/auth.types'
-import {Input} from '../atoms/Inputs';
+import {Input} from '../ui/Inputs';
 import { loginSchema } from '../../utility/validateForm';
 import { Link } from 'react-router-dom';
+
 
 
 export const LoginComponent: React.FC<AuthComponentProps> = ({ onSubmit, onGoogleAuth }) => {
@@ -15,31 +16,38 @@ export const LoginComponent: React.FC<AuthComponentProps> = ({ onSubmit, onGoogl
   const currentRole = loginFeatur['login'];
   
 
-   const updateFormData=(e:React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>)=>{
-            const {name,value}=e.target
-            setFormData((prv)=>({...prv,[name]:value}))
-            console.log(formData)
-     }
+  const updateFormData=(e:React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>)=>{
+    const {name,value}=e.target
+    setFormData((prv)=>({...prv,[name]:value}))
+    console.log(formData)
+  }
 
-  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+    const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
-    const result=loginSchema.safeParse(formData)
-    if(!result.success){
-         const ERROR:{[key:string]:string}={}
-        result.error.errors.forEach(err=>{
-            if(err.path[0]){
-                ERROR[err.path[0]]=err.message
-            }
-        })
-        setErrors(ERROR)
-        return
-      }
+    const result = loginSchema.safeParse(formData);
 
-    onSubmit(formData);
-    setErrors({})
-    setIsLoading(false);
-  };
+    if (!result.success) {
+      const ERROR: { [key: string]: string } = {};
+
+     
+      const zodError = result.error
+
+      
+      zodError.issues.forEach((err) => {
+        if (err.path[0]) {
+          ERROR[err.path[0] as string] = err.message;
+        }
+      });
+
+      setErrors(ERROR);
+      return;
+    }
+
+  onSubmit(formData);
+  setErrors({});
+  setIsLoading(false);
+};
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-400 to-blue-100 flex items-center justify-center p-4">

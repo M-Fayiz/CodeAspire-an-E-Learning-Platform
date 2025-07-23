@@ -1,6 +1,6 @@
 import { HttpResponse } from "../../const/error-message";
 import { HttpStatus } from "../../const/http-status";
-import { ILearnerModel, IMenterModel } from "../../Models/userModel";
+import { ILearnerModel, IMenterModel } from "../../models/user.model";
 import { IUserRepo } from "../../repository/interface/IUserRepo";
 import { createHttpError } from "../../utility/http-error";
 import { IAdminService } from "../interface/IAdminService";

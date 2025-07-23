@@ -79,7 +79,7 @@ export const  AuthService={
     try {
     const response=await authInstance.post(API.Auth.LOGOUT_URL,{},{withCredentials:true})
              
-       if(response.status==200) return true
+      if(response.status==200) return true
     } catch (error) {
       const err=error as AxiosError<{error:string}>
       const errorMessage=err.response?.data.error

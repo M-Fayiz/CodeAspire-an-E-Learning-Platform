@@ -1,4 +1,4 @@
-import { ILearnerModel, IMenterModel } from "../Models/userModel";
+import { ILearnerModel, IMenterModel } from "../models/user.model";
 import { ILearnerDTO, IMentorDTO } from "../types/dto.types";
 
 export function MentorDTO(mentor:IMenterModel):IMentorDTO{

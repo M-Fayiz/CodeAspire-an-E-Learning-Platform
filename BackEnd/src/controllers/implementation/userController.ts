@@ -1,5 +1,5 @@
 import { Request, Response, NextFunction } from "express";
-import { IUserModel } from "../../Models/userModel";
+import { IUserModel } from "../../models/user.model";
 import { IUserService } from "../../services/interface/IUserService";
 import { IUserController } from "../interface/IUserController";
 import { HttpStatus } from "../../const/http-status";

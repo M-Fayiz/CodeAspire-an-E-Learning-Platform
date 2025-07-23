@@ -1,6 +1,6 @@
 import { Profile } from "passport-google-oauth20"
-import type { UserModel } from "../../Models/userModel"
-import { IUserModel ,IMenterModel,ILearnerModel,IAdminModel} from "../../Models/userModel"
+import type { UserModel } from "../../models/user.model"
+import { IUserModel ,IMenterModel,ILearnerModel,IAdminModel} from "../../models/user.model"
 import { ILearner, IMentor,IAdmin,IUserRole, searchProps } from "../../types/user.types"
 import { Types } from "mongoose"
 

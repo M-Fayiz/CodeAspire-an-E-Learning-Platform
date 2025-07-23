@@ -21,6 +21,8 @@ import AdminUserProfile from "../pages/Admin Page/user-management/UserProfile";
 import { useProfileLoader } from "../pages/Admin Page/user-management/profile.loader";
 import MentorDataForm from "../components/auth-components/MentorInformation";
 
+import CategoryManagement from "@/pages/Admin Page/category";
+
 export const  router=createBrowserRouter([
     {
         path:'/',
@@ -80,15 +82,13 @@ export const  router=createBrowserRouter([
             { path:'dashboard' ,element:<DashboardContent/>},
             { path:'profile' ,element:<ProfileManagement/>},
             { path:'users' ,element:<UserManagement/>},
-            { path:'user-profile/:id' ,element:<AdminUserProfile/>,loader:useProfileLoader}
+            { path:'user-profile/:id' ,element:<AdminUserProfile/>,loader:useProfileLoader},
+            { path: 'category',element: <CategoryManagement /> },
         ]
     },
-    
- 
-    
     {
         path: '*',
         element: <NotFound /> 
-    }
+    },
 
 ])

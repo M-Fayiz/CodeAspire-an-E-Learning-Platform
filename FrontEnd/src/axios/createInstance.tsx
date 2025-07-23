@@ -24,7 +24,7 @@ const createInstance = ():AxiosInstance=>{
             const url = error.config?.url;
             const errorMessage=(error.response?.data as any).error
              
-            console.warn(`⚠️ Interceptor caught error STSTUS:❌ ${status} | ERROR MESSAGE :⭕ ${errorMessage} | on URL :🔗 ${url}`);
+            console.warn(`⚠️ Interceptor caught error STATUS:❌ ${status} | ERROR MESSAGE :⭕ ${errorMessage} | on URL :🔗 ${url}`);
 
             const originalRequest=error.config as any
 
@@ -36,7 +36,7 @@ const createInstance = ():AxiosInstance=>{
                 if (refreshed) {
                     return instance(originalRequest);
                 } else {
-       
+                          
                     window.dispatchEvent(new Event("force-logout"));
                 } 
             }
@@ -53,5 +53,8 @@ const createInstance = ():AxiosInstance=>{
 
 export const authInstance=createInstance()
 export const userInstance=createInstance()
-export const adminInstance=createInstance()
 export const commonInstance=createInstance()
+
+// Admin Area
+export const adminInstance=createInstance()
+export const categoryInstance=createInstance()

@@ -15,7 +15,8 @@ interface IInputProps {
   min?:string
   max?:string
   textArea?:boolean;
-  required?:boolean
+  required?:boolean;
+ 
 }
 
 export const Input: React.FC<IInputProps> = ({
@@ -31,6 +32,7 @@ export const Input: React.FC<IInputProps> = ({
   textArea,
   min,
   max,
+  
 }) => {
   const [showPassword, setShowPassword] = useState(false);
   const [isFocused, setIsFocused] = useState(false);
@@ -65,7 +67,7 @@ export const Input: React.FC<IInputProps> = ({
           onChange={onChange}
           onFocus={() => setIsFocused(true)}
           onBlur={() => setIsFocused(false)}
-          className={`w-full pl-10 pr-12 py-3 rounded-lg border ${
+          className={`w-full pl-8 pr-10 py-2.5 rounded-lg border ${
             error ? 'border-red-400' : 'border-gray-300'
           } ${isFocused ? 'bg-white/20' : ''}`}
           placeholder={placeholder}

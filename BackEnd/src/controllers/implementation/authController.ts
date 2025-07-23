@@ -1,6 +1,6 @@
 import { Response,Request,NextFunction } from "express";
 import { IAuthController } from "../interface/IAuthController";
-import { IAuthService } from "../../services/interface/IauthService";
+import { IAuthService } from "../../services/interface/IAuthService";
 import { HttpStatus } from "../../const/http-status";
 import { HttpResponse } from "../../const/error-message";
 import { successResponse } from "../../utility/response.util";
@@ -8,7 +8,7 @@ import {options} from '../../config/cookie.config'
 import { createHttpError } from "../../utility/http-error";
 import { clearCookies } from "../../utility/clearCookies.util";
 import { setAccessToken,setRefreshToken } from "../../utility/cookie.util";
-import { IUserModel } from "../../Models/userModel";
+import { IUserModel } from "../../models/user.model";
 import { env } from "../../config/env.config";
 
 
@@ -44,12 +44,12 @@ export class AuthController implements IAuthController{
     try {
       const {accessToken}=req.cookies
       console.log('authme cntrl-access✅',accessToken)
-           if(!accessToken){
-            return next(createHttpError(HttpStatus.UNAUTHORIZED,HttpResponse.ACCESS_TOKEN_EXPIRED))
-           }
-          const user=await this._authSerive.authMe(accessToken)
-           console.log(user)
-          res.status(HttpStatus.OK).json(successResponse(HttpResponse.OK,{user:user}))
+      if(!accessToken){
+        return next(createHttpError(HttpStatus.UNAUTHORIZED,HttpResponse.ACCESS_TOKEN_EXPIRED))
+      }
+      const user=await this._authSerive.authMe(accessToken)
+      console.log(user)
+      res.status(HttpStatus.OK).json(successResponse(HttpResponse.OK,{user:user}))
     } catch (error) {
       next(error)
     }      

@@ -10,8 +10,7 @@ export abstract class BaseRepository<T extends Document> {
         return this.model.findOne(filter)
     }
     async create(data:Partial<T>):Promise<T>{
-        console.log("Saving new document...");
-        const document=new  this.model(data)
+        const document=new this.model(data)
        return document.save()
     }
     async findById(id:Types.ObjectId):Promise<T|null>{
@@ -26,7 +25,4 @@ export abstract class BaseRepository<T extends Document> {
     async findByIDAndUpdate(id:Types.ObjectId,update:UpdateQuery<T>):Promise<T|null>{
         return this.model.findByIdAndUpdate(id,update,{upsert:true,new:true})
     }
-    // async updateOne(filter:FilterQuery<T>,update:UpdateQuery<T>):Promise<T|null>{
-    //     return this.model.updateOne(filter,update)
-    // }
 }

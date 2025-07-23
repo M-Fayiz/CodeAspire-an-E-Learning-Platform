@@ -1,7 +1,7 @@
 import { useLocation, Link } from "react-router-dom";
 import { useEffect, useState } from "react";
 // import { Button } from "@/components/ui/button";
-import { Card, CardContent } from "../../components/atoms/Cards";
+import { Card, CardContent } from "../../components/ui/Cards";
 import { Home, ArrowLeft, Code2, Terminal, Bug } from "lucide-react";
 
 interface NotFoundProps {

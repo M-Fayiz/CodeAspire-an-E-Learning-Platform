@@ -1,11 +1,11 @@
 import React, { useEffect, useState } from 'react';
 import { User, Award, Link, Plus, X ,FileUp} from 'lucide-react';
-import {Input} from '../../components/atoms/Inputs'
+import {Input} from '../ui/Inputs'
 import UserService from '../../service/client-API/user.service';
 import { useAuth } from '../../context/auth.context';
 import type { IMentorProps } from '../../types/mentor.types';
 import { toastService } from '../toast/ToastSystem';
-import MentorApprovalCard from '../Mentor/MentorApproval';
+import MentorApprovalCard from '../Mentor/mentor-approval/MentorApproval';
 import { useNavigate } from 'react-router';
 
 

@@ -1,7 +1,7 @@
 import passport from 'passport'
 import { Strategy as GoogleStrategy, Profile, VerifyCallback } from 'passport-google-oauth20';
 import { env } from '../config/env.config';
-import { UserRepository } from '../repository/implementation/userRepo';
+import { UserRepository } from '../repository/implementation/UserRepository';
 import { Request } from 'express';
 import { IUserRole } from '../types/user.types';
 import { Types } from 'mongoose';

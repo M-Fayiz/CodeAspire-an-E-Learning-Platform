@@ -31,7 +31,15 @@ export interface IPayloadDTO{
     id:Types.ObjectId,
     name?:string,
     email:string,
+    profile:string|undefined
     role:'learner'|'admin'|'mentor'
     isApproved?:boolean
     isRequested?:boolean
+}
+
+export interface ICategoryDTO{
+    _id:Types.ObjectId,
+    title:string,
+    parentId:Types.ObjectId|null,
+    children:ICategoryDTO[]
 }

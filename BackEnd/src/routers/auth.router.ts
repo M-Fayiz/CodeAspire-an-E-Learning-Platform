@@ -3,7 +3,7 @@ import { Validate } from "../middlewares/validate";
 import { IUserRole } from "../types/user.types";
 const authRouter=express.Router()
 import { Request,Response,NextFunction } from "express";
-import { UserRepository } from "../repository/implementation/userRepo";
+import { UserRepository } from "../repository/implementation/UserRepository";
 import { AuthService } from "../services/implementation/authService";
 import { AuthController } from "../controllers/implementation/authController";
 import { registerSchema } from "../utility/zod";

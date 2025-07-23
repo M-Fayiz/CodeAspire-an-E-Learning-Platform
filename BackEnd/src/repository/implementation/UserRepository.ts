@@ -1,5 +1,5 @@
 import { BaseRepository } from "../baseRepository";
-import { UserModel ,IUserModel, IMenterModel, ILearnerModel, IAdminModel} from "../../Models/userModel";
+import { UserModel ,IUserModel, IMenterModel, ILearnerModel, IAdminModel} from "../../models/user.model";
 import { IUserRepo } from "../interface/IUserRepo";
 import { Profile } from "passport-google-oauth20";
 import { IAdmin, ILearner, IMentor, IUserRole, searchProps } from "../../types/user.types";
@@ -50,7 +50,7 @@ export class UserRepository extends BaseRepository<IUserModel> implements IUserR
             }
            
         } catch (error) {
-            console.error(error)
+            console.error('🍜',error)
             throw error
         }
     }

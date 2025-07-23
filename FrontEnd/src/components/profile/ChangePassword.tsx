@@ -1,6 +1,6 @@
 import {  Lock } from "lucide-react";
 import { useState } from "react";
-import { Input } from "../atoms/Inputs";
+import { Input } from "../ui/Inputs";
 import { validatePassword } from "../../utility/validateForm";
 import UserService from "../../service/client-API/user.service";
 import { toastService } from "../toast/ToastSystem";

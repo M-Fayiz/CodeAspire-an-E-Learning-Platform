@@ -24,6 +24,10 @@ export const API={
         FETCH_ALL_USERS:'/admin/users',
         GET_USER_PROFILE:(id:string)=>`/admin/users/${id}`,
         BLOCK_USER:(id:string)=>`/admin/users/${id}/block`,
-        APPROVE_MENTOR:(id:string)=>`/admin/users/${id}/approve`,    
+        APPROVE_MENTOR:(id:string)=>`/admin/users/${id}/approve`,
     },
+    CATEGORY:{
+        CREATE_CATEGORY:`/category`,
+        LIST_CATEGORIES:`/category`
+    }
 }

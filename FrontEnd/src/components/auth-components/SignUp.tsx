@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { User, Mail, Lock, UserPlus ,Phone} from 'lucide-react';
 import type { AuthComponentProps,ISignUp } from '../../types/auth.types';
 import { roleConfig } from '../../config/UI-config/RoleConfig'; 
-import {Input} from '../atoms/Inputs';
+import {Input} from '../ui/Inputs';
 import { registrationSchema } from '../../utility/validateForm';
 import { Link } from 'react-router-dom';
 

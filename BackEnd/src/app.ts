@@ -6,12 +6,13 @@ import { dbConnect } from './config/db.config'
 import {env} from './config/env.config'
 import { errorHandler } from './middlewares/error-handling';
 import { corsSetUp } from './config/cors.config';
-import authRouter from './routers/authRouter';
+import authRouter from './routers/auth.router';
 import cookieParser from'cookie-parser'
 import session from 'express-session'
 import passport  from 'passport';
-import userRouter from './routers/userRouter';
+import userRouter from './routers/user.router';
 import adminRouter from './routers/adminRouter';
+import categoryRouter from './routers/category.router';
 dotenv.config()
 
 const app= express()
@@ -35,6 +36,7 @@ app.use(cors(corsSetUp))
 app.use('/auth',authRouter)
 app.use('/users',userRouter)
 app.use('/admin',adminRouter)
+app.use('/category',categoryRouter)
 
 // Error Handler
 app.use(errorHandler)

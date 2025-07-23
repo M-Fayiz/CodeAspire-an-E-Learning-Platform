@@ -1,5 +1,5 @@
 import { Request,Response,NextFunction } from "express";
-import { IUserModel } from "../../Models/userModel";
+import { IUserModel } from "../../models/user.model";
 
 export interface IAdminController{
     fetchAllUsers(req:Request,res:Response,next:NextFunction):Promise<void>

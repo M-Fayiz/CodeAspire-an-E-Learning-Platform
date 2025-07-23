@@ -1,6 +1,6 @@
 import { NextFunction,Request,Response } from "express";
 import { Types } from "mongoose";
-import { IMenterModel } from "../../Models/userModel";
+import { IMenterModel } from "../../models/user.model";
 
 
 export interface IMentorRepository{

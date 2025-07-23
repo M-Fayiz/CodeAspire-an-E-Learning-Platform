@@ -1,6 +1,6 @@
 import { IUserService } from "../interface/IUserService";
 import { IUserRepo } from "../../repository/interface/IUserRepo";
-import { ILearnerModel, IMenterModel, IUserModel } from "../../Models/userModel";
+import { ILearnerModel, IMenterModel, IUserModel } from "../../models/user.model";
 import { createHttpError } from "../../utility/http-error";
 import { HttpStatus } from "../../const/http-status";
 import { HttpResponse } from "../../const/error-message";
