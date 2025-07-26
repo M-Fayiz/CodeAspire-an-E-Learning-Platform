@@ -19,8 +19,6 @@ export class CategoryController implements ICategoryController{
         } catch (error) {
             next(error)
         }
-
-        console.log(req.body)
     }
     listCategories=async(req: Request, res: Response, next: NextFunction): Promise<void>=> {
        
@@ -29,6 +27,18 @@ export class CategoryController implements ICategoryController{
            
             res.status(HttpStatus.OK).json(successResponse(HttpResponse.OK,{categories}))
         }catch(error){
+            next(error)
+        }
+    }
+    editCategory=async(req: Request, res: Response, next: NextFunction): Promise<void>=> {
+        try {
+            const slug=req.params.id
+            let {title,parentId}=req.body
+            console.log('t',title,parentId)
+            if(!parentId) parentId=null
+            const editedData=await this._categoryService.editCategory(slug,title,parentId)
+            res.status(HttpStatus.OK).json(successResponse(HttpResponse.OK,{editedData}))
+        } catch (error) {
             next(error)
         }
     }

@@ -1,11 +1,10 @@
 import type { IDecodedUserType } from "../../../types/auth.types";
 import React from "react";
 import { navigationConfig } from "../../../config/UI-config/Navigation.config";
-// import { X,GraduationCap } from "lucide-react";
-
-
-
+import {Link} from 'react-router-dom'
 import type { NavigationItem } from "../../../config/UI-config/Navigation.config";
+import { useLocation } from "react-router";
+
 
 interface ISidebarProps{
     user:IDecodedUserType,
@@ -20,30 +19,32 @@ interface ISidebarProps{
 
 const Sidebar :React.FC<ISidebarProps>= ({ user, isOpen, onClose }) => {
   const navigation = navigationConfig[user.role];
-
+  const location=useLocation()
+  const isActive=(path:string)=>location.pathname==path
   const NavItem :React.FC<NavItemProps>= ({ item, isSecondary = false }) => (
-    <a
-      href={item.path}
+    <Link
+      to={item.path}
+      key={item.path}
       className={`flex items-center px-3 py-2 rounded-lg text-sm font-medium transition-colors relative ${
-        item.active
+        isActive(item.path)
           ? 'bg-blue-600 text-white'
           : isSecondary
           ? 'text-gray-600 hover:text-gray-900 hover:bg-gray-50'
           : 'text-gray-700 hover:text-gray-900 hover:bg-gray-100'
       }`}
     >
-      <item.icon className={`w-5 h-5 mr-3 ${item.active ? 'text-white' : ''}`} />
+      <item.icon className={`w-5 h-5 mr-3 ${isActive(item.path) ? 'text-white' : ''}`} />
       <span className="flex-1">{item.label}</span>
       {item.badge && (
         <span className={`ml-2 px-2 py-1 text-xs rounded-full ${
-          item.active 
+          isActive(item.path)
             ? 'bg-blue-500 text-white' 
             : 'bg-red-500 text-white'
         }`}>
           {item.badge}
         </span>
       )}
-    </a>
+    </Link>
   );
 
   return (

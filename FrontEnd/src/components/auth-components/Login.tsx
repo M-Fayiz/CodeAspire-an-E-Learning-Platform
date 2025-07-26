@@ -50,16 +50,17 @@ export const LoginComponent: React.FC<AuthComponentProps> = ({ onSubmit, onGoogl
 };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-400 to-blue-100 flex items-center justify-center p-4">
-      <div className="bg-white rounded-2xl shadow-2xl overflow-hidden max-w-5xl w-full">
+    <div >
+      {/* className="min-h-screen bg-gradient-to-br from-slate-400 to-blue-100 flex items-center justify-center p-4" */}
+      <div >
         <div className="flex flex-col lg:flex-row">
           
-          <div className={`lg:w-1/2 ${currentRole.color} p-8 flex flex-col justify-evenly items-center  text-white relative`}>
+          <div className={`lg:w-1/2 ${currentRole.color} p-5 flex flex-col justify-evenly items-center  text-white relative`}>
           <div className="flex items-center space-x-2 ">
-            <div className="w-15 h-15 bg-gradient-to-r from-blue-600 to-purple-600 rounded-lg flex items-center justify-center">
-              <Code className="w-10 h-10 text-white" />
+            <div className="w-10 h-10 bg-gradient-to-r from-blue-600 to-purple-600 rounded-lg flex items-center justify-center">
+              <Code className="w-8 h-8 text-white" />
             </div>
-            <span className="text-4xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
+            <span className="text-3xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
               TechMaster
             </span>
           </div>    
@@ -67,8 +68,8 @@ export const LoginComponent: React.FC<AuthComponentProps> = ({ onSubmit, onGoogl
             <div className="relative z-10 text-center">
               {/* <div className="text-6xl mb-6">{currentRole.illustration}</div> */}
               <img src={currentRole.illustration} alt="" />
-              <h2 className="text-blue-800 dark:text-sky-600/100 text-3xl font-bold mb-4">Welcome Back!</h2>
-              <p className=" text-blue-800 dark:text-sky-800/100 text-xl mb-8 opacity-90">Continue your journey with TechMaster</p>
+              <h2 className="text-blue-800 dark:text-sky-600/100 text-3xl font-bold mb-2">Welcome Back!</h2>
+              <p className=" text-blue-800 dark:text-sky-800/100 text-xl mb-3 opacity-90">Continue your journey with TechMaster</p>
              
             </div>
             <div className="absolute -bottom-10 -right-10 w-40 h-40 bg-white/10 rounded-full" />
@@ -76,22 +77,22 @@ export const LoginComponent: React.FC<AuthComponentProps> = ({ onSubmit, onGoogl
           </div>
 
           
-          <div className="lg:w-1/2 p-8">
+          <div className="lg:w-1/2 p-5">
             <div className="max-w-md mx-auto">
               {/* Header */}
-              <div className="text-center mb-8">
-                <div className="flex justify-center mb-4">
+              <div className="text-center mb-5">
+                <div className="flex justify-center mb-1">
                   <div className="bg-blue-600 p-3 rounded-xl">
                     <LogIn className="w-6 h-6 text-white" />
                   </div>
                 </div>
-                <h1 className="text-2xl font-bold text-gray-900 mb-2">Welcome Back</h1>
+                <h1 className="text-2xl font-bold text-gray-900 mb-1">Welcome Back</h1>
                 <p className="text-gray-600">Sign in to your account</p>
               </div>
               <button
                 type="button"
                 onClick={() => onGoogleAuth('learner')}
-                className="w-full bg-white border-2 border-gray-200 text-gray-700 py-3 px-4 rounded-lg font-medium hover:bg-gray-50 transition mb-4 flex items-center justify-center space-x-2"
+                className="w-full bg-white border-2 border-gray-200 text-gray-700 py-3 px-4 rounded-lg font-medium hover:bg-gray-50 transition mb-2 flex items-center justify-center space-x-2"
               >
                 <svg className="w-5 h-5" viewBox="0 0 24 24">
                   <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/>
@@ -102,7 +103,7 @@ export const LoginComponent: React.FC<AuthComponentProps> = ({ onSubmit, onGoogl
                 <span>Continue with Google</span>
               </button>
 
-              <div className="relative my-6">
+              <div className="relative my-5">
                 <div className="absolute inset-0 flex items-center">
                   <div className="w-full border-t border-gray-300"></div>
                 </div>
@@ -167,7 +168,7 @@ export const LoginComponent: React.FC<AuthComponentProps> = ({ onSubmit, onGoogl
                 </button>
               </form>
 
-              <p className="text-center text-sm text-gray-600 mt-6">
+              <p className="text-center text-sm text-gray-600 mt-4">
                 Don&apos;t have an account?{' '}
                 <Link to='/auth/signup' className="text-blue-600 hover:underline font-medium"> Sign Up</Link>
               </p>

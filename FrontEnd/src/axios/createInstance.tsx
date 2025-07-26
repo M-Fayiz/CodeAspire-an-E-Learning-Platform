@@ -31,8 +31,9 @@ const createInstance = ():AxiosInstance=>{
             if(error.response?.status==401 && !originalRequest._retry){
 
                 originalRequest._retry=true
+                console.log('🏃‍♀️‍➡️ i am going')
                 const refreshed = await AuthService.refreshToken();
-
+                console.log('⛓️‍💥')
                 if (refreshed) {
                     return instance(originalRequest);
                 } else {

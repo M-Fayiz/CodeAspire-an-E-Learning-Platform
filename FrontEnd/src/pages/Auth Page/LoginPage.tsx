@@ -13,7 +13,7 @@ import { useAuth } from '../../context/auth.context';
 
 const LoginPage: React.FC = () => {
  const [isLoading,setLoading]=useState(false)  
- const {user,setUser}=useAuth()
+ const {setUser}=useAuth()
  const navigate=useNavigate() 
  const location=useLocation()
 
@@ -75,7 +75,7 @@ const LoginPage: React.FC = () => {
   };
 
   return (
-    <div className="auth-wrapper">
+    <div className="">
             <LoginComponent
               onSubmit={(data) => handleAuthSubmit(data)}
               onGoogleAuth={handleGoogleAuth}

@@ -64,7 +64,7 @@ export class AuthService implements IAuthService{
                 password:storedData.password,
                 role:storedData.role,
                 isActive:true,
-                isApproved:false,
+                ApprovalStatus:'pending',
                 isRequested:false
             }
         
@@ -79,7 +79,7 @@ export class AuthService implements IAuthService{
                 name:newUser.name,
                 email:newUser.email,
                 role:newUser.role,
-                isApproved:newUser.isApproved,
+                ApprovalStatus :newUser.ApprovalStatus ,
                 isRequested:newUser.isRequested
             }
            return generateTokens(payload)
@@ -91,8 +91,7 @@ export class AuthService implements IAuthService{
 
     async authMe(token: string):Promise<IPayloadDTO> {
           
-        console.log(11,'this is verifyToken')
-        const decode= verifyAccesToken(token) 
+        const decode= verifyAccesToken(token)
         console.log(22,'this is verifyToken')
         if(!decode){
             throw createHttpError(HttpStatus.UNAUTHORIZED,HttpResponse.ACCESS_TOKEN_EXPIRED)
@@ -157,7 +156,7 @@ export class AuthService implements IAuthService{
             name:user.name,
             email:user.email,
             role:user.role,
-            isApprved:user.isApproved,
+            isApprved:user.ApprovalStatus ,
             isRequested:user.isRequested
         }
         const {accessToken,refreshToken}=generateTokens(payload)
@@ -209,7 +208,7 @@ export class AuthService implements IAuthService{
 
 
     async generateToken(user: IUser|IMentor|ILearner|IAdmin): Promise<{ accessToken: string; refreshToken: string;payload:JwtPayload }> {
-        const payload:IPayload={id:user._id,email:user.email,role:user.role,isApproved:user.isApproved}
+        const payload:IPayload={id:user._id,email:user.email,role:user.role,ApprovalStatus:user.ApprovalStatus}
          const {accessToken,refreshToken}=generateTokens(payload)
         return {accessToken,refreshToken,payload}
     }

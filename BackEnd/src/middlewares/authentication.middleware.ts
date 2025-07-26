@@ -9,7 +9,7 @@ export async function verifyUser(req:Request,res:Response,next:NextFunction){
     try {
        const {accessToken}=req.cookies
         
-        
+        console.log('get in here ')
        if(!accessToken){
         throw createHttpError(HttpStatus.UNAUTHORIZED,HttpResponse.UNAUTHORIZED)
        }

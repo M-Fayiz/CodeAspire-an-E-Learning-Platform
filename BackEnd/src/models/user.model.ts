@@ -18,7 +18,7 @@ const BaseUserSchema=new mongoose.Schema({
   profilePicture: String,
   googleId:{type:String},
   isActive: { type: Boolean, default: false },
-  isApproved: { type: Boolean, default: false },
+  isApproved: { type: String, enum:['pending','approved','rejected','requested'], default: 'pending' },
   isRequested:{ type:Boolean,default:false},
     
 },option)
@@ -115,6 +115,6 @@ export interface IPayload{
     name?:string,
     email:string,
     role:'learner'|'admin'|'mentor'
-    isApproved?:boolean
+    ApprovalStatus ?:'pending'|'approved'|'rejected'|'requested'
     isRequested?:boolean
 }

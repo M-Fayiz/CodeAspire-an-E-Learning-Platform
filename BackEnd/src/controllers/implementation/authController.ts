@@ -19,6 +19,7 @@ export class AuthController implements IAuthController{
 
   async signUp (req: Request, res: Response,next:NextFunction): Promise<void>{
    try {
+      console.log('new body',req.body)
       const email= await this._authSerive.signUp(req.body)
       res.status(HttpStatus.OK).json(successResponse(HttpResponse.OK,{email:email}))
 

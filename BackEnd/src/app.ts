@@ -13,6 +13,7 @@ import passport  from 'passport';
 import userRouter from './routers/user.router';
 import adminRouter from './routers/adminRouter';
 import categoryRouter from './routers/category.router';
+import courseRouter from './routers/courses.router';
 dotenv.config()
 
 const app= express()
@@ -36,7 +37,9 @@ app.use(cors(corsSetUp))
 app.use('/auth',authRouter)
 app.use('/users',userRouter)
 app.use('/admin',adminRouter)
-app.use('/category',categoryRouter)
+app.use('/categories',categoryRouter)
+app.use('/courses',courseRouter)
+
 
 // Error Handler
 app.use(errorHandler)

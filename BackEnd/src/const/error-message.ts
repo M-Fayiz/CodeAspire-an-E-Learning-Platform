@@ -15,6 +15,7 @@ export const HttpResponse={
     REFRESH_TOKEN_EXPIRED:'Refresh Token Expired',
     UNAUTHORIZED:'Unauthorized Access, Please Login First',
     TOKEN_NOT_FOUND:'Token not Found',
-    ACCESS_DENIED:'Access Denied!'
+    ACCESS_DENIED:'Access Denied!',
+    ITEM_EXIST:'Item Already Exist'
 
 }

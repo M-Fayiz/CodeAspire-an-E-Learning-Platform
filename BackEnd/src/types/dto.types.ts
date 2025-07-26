@@ -1,8 +1,9 @@
 import { Types } from "mongoose"
+import { mentorApprovalStatus } from "./user.types"
 
 
 
-interface IBaseRoleDTO{
+export interface IBaseRoleDTO{
     id:Types.ObjectId,
     name:string,
     email:string,
@@ -11,6 +12,7 @@ interface IBaseRoleDTO{
     profilePicture?:string,
     isActive:boolean,
     bio?:string,
+    ApprovalStatus:mentorApprovalStatus,
 }
 
 export interface IMentorDTO extends IBaseRoleDTO{
@@ -19,7 +21,7 @@ export interface IMentorDTO extends IBaseRoleDTO{
     socialLinks?:object,
     mentorRating?:number,
     resume?:string,
-    isApproved:boolean,
+    ApprovalStatus:mentorApprovalStatus,
     isRequested?:boolean
 }
 
@@ -33,7 +35,7 @@ export interface IPayloadDTO{
     email:string,
     profile:string|undefined
     role:'learner'|'admin'|'mentor'
-    isApproved?:boolean
+    ApprovalStatus?:mentorApprovalStatus
     isRequested?:boolean
 }
 

@@ -107,7 +107,7 @@ const MentorInfoForm: React.FC = () => {
     if (validateForm()) {
       console.log('Form submitted:', formData);
       alert('Mentor information submitted successfully!');
-      // Here you would typically send the data to your backend
+      
     }
   };
 

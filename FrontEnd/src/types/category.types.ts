@@ -8,6 +8,13 @@ export interface ICategory {
 export interface ITree {
   key:string,
   label:string,
+  slug:string,
   parent?:string
   children:ITree[]
+}
+
+  export interface ICategoryEdit {
+  slug:string;
+  title:string;
+  parentId:string; 
 }

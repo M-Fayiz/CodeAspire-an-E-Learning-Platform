@@ -27,7 +27,8 @@ export const API={
         APPROVE_MENTOR:(id:string)=>`/admin/users/${id}/approve`,
     },
     CATEGORY:{
-        CREATE_CATEGORY:`/category`,
-        LIST_CATEGORIES:`/category`
+        CREATE_CATEGORY:`/categories`,
+        LIST_CATEGORIES:`/categories`,
+        EDIT_CATEGORY:(id:string)=>`/categories/${id}`
     }
 }

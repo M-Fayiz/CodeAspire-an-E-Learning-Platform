@@ -1,6 +1,8 @@
 
 import { Types } from "mongoose"
 
+
+export type mentorApprovalStatus='pending'|'approved'|'rejected'|'requested'
 export interface IUser{
   _id: Types.ObjectId;
   name: string;
@@ -14,7 +16,7 @@ export interface IUser{
   createdAt: Date;
   updatedAt:DataTransfer;
   bio?: string; 
-  isApproved: boolean;
+  ApprovalStatus : mentorApprovalStatus
   isRequested:boolean
 }
 

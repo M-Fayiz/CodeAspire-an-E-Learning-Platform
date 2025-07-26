@@ -25,4 +25,7 @@ export abstract class BaseRepository<T extends Document> {
     async findByIDAndUpdate(id:Types.ObjectId,update:UpdateQuery<T>):Promise<T|null>{
         return this.model.findByIdAndUpdate(id,update,{upsert:true,new:true})
     }
+    async findBySlugAndUpdate(slug:string,update:UpdateQuery<T>):Promise<T|null>{
+        return this.model.findOneAndUpdate({slug:slug},{$set:update},{ new: true })
+    }
 }

@@ -16,15 +16,15 @@ interface SelectInputProps <T=string> {
 export const SelectInput =<T extends string = string> ({ name,placeholder = "Select an option", value,onChange,options,}:  SelectInputProps<T>) => {
     console.log('options',options)
   return (
-    <Select
+    <Select  
       value={value === "" ? undefined : value}
       onValueChange={(val) => onChange({ target: { name, value: val as T} })}
     >
       <SelectTrigger className="w-full">
         <SelectValue placeholder={placeholder} />
       </SelectTrigger>
-      <SelectContent>
-        <SelectItem value="n">None</SelectItem>
+      <SelectContent >
+        
         {options.map((opt) => (
           <SelectItem key={opt.value} value={opt.value}>
             {opt.label}

@@ -22,6 +22,7 @@ import { useProfileLoader } from "../pages/Admin Page/user-management/profile.lo
 import MentorDataForm from "../components/auth-components/MentorInformation";
 
 import CategoryManagement from "@/pages/Admin Page/category";
+import CourseBasicInfoForm from "@/components/Mentor/course-creation/course-inputs";
 
 export const  router=createBrowserRouter([
     {
@@ -68,6 +69,7 @@ export const  router=createBrowserRouter([
             { path:'dashboard' ,element:<DashboardContent/>},
             { path:'profile' ,element:<ProfileManagement/>},
             { path: 'data', element: <MentorDataForm /> },
+            { path: 'courses', element: <CourseBasicInfoForm /> },
         ]
     },
     {

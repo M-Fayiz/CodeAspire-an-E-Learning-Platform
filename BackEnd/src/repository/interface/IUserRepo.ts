@@ -15,6 +15,6 @@ export interface IUserRepo{
     findUserById(id:Types.ObjectId):Promise<IUserModel|IMenterModel|ILearnerModel|IAdminModel|null>
     findByIDAndUpdate(id:Types.ObjectId,update:Partial<IUserModel>):Promise<IUserModel|IMenterModel|ILearnerModel|IAdminModel|null>
     userProfilePictureUpdate(id:Types.ObjectId,imageURL:string):Promise<IUserModel|IMenterModel|ILearnerModel|IAdminModel|null>
-    approveMentor(id:Types.ObjectId):Promise<IUserModel|null>
+    updateMentorStatus(id:Types.ObjectId,status:string):Promise<IUserModel|null>
    
 }

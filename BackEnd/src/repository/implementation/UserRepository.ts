@@ -3,7 +3,6 @@ import { UserModel ,IUserModel, IMenterModel, ILearnerModel, IAdminModel} from "
 import { IUserRepo } from "../interface/IUserRepo";
 import { Profile } from "passport-google-oauth20";
 import { IAdmin, ILearner, IMentor, IUserRole, searchProps } from "../../types/user.types";
-import { use } from "passport";
 import { Types, UpdateQuery } from "mongoose";
 import { buildUserFilter } from "../../utility/searchQuery";
 
@@ -111,7 +110,7 @@ export class UserRepository extends BaseRepository<IUserModel> implements IUserR
     async userProfilePictureUpdate(id: Types.ObjectId, imageURL: string): Promise<IUserModel | null> {
         return await this.model.findByIdAndUpdate(id,{profilePicture:imageURL},{new:true})
     }
-    async approveMentor(id: Types.ObjectId): Promise<IUserModel| null> {
-        return await this.findByIDAndUpdate(id,{isApproved:true})
+    async updateMentorStatus(id: Types.ObjectId,status:string): Promise<IUserModel| null> {
+        return await this.findByIDAndUpdate(id,{ApprovalStatus:status})
     }
 }

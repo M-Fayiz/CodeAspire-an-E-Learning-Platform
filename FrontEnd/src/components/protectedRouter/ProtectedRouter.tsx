@@ -20,7 +20,7 @@ export const Protected_Router:React.FC<ProtectedProps>=({children,requiredRole,f
     const navigate=useNavigate()
     
     useEffect(() => {
-      if (user?.role === "mentor" && !user.isApproved) {
+      if (user?.role === "mentor" && user.ApprovalStatus=='pending') {
         navigate("/mentor/data");
       }
     }, [user, navigate]);
@@ -37,7 +37,7 @@ export const Protected_Router:React.FC<ProtectedProps>=({children,requiredRole,f
     if(requiredRole.length>0){
         const hasRole=requiredRole.find(role=>user.role==role)
         if(!hasRole){
-              return <Navigate to="/unauthorized" replace />;
+            return <Navigate to="/unauthorized" replace />;
         }
     }
   

@@ -9,11 +9,23 @@ import 'primereact/resources/themes/lara-light-indigo/theme.css';
 import 'primereact/resources/primereact.min.css';                
 import 'primeicons/primeicons.css';         
 import EditCategory from "@/features/admin/category/EditCategory"
+import {
+  Sheet,
+  SheetContent,
+  SheetDescription,
+  SheetHeader,
+  SheetTitle,
+
+} from "@/components/ui/sheet"
+import type { ICategoryEdit } from "@/types/category.types"
+import { toastService } from "@/components/toast/ToastSystem"
 
 const CategoryManagement=()=>{
     const [fetchedData,setFetchedData]=useState<ITree[]>([])
     const [selectedKey, setSelectedKey] = useState<string | null>(null);
     const [selectedCategory,setSelectedCategory]=useState<ITree|null>(null)
+    const [sheetOpen,setSheetOpen]=useState(false)
+    // const [editFormData,setEditedForm]=useState<ICategoryEdit>({categoryId:'',title:'',parentId:''})
 
     useEffect(()=>{
         const fetchCategories =async()=>{
@@ -24,7 +36,18 @@ const CategoryManagement=()=>{
         fetchCategories()
     },[])
     console.log('selected Category ',selectedCategory)
-
+    const editCategry=async(editData:ICategoryEdit)=>{
+        console.log('edit category :',editCategry)
+        try {
+            const result= await categoryService.editCategory(editData.slug,editData)
+            if(result){
+            }
+        } catch (error) {
+            if(error instanceof Error){
+                toastService.error(error.message)
+            }
+        }
+    }
     
     const findCategoryByKey=(key:string)=>{
        
@@ -34,6 +57,7 @@ const CategoryManagement=()=>{
                     return elem 
                 }
                 if(elem.children?.length){
+                    console.log('childrens :',elem.children)
                     const result=serachNode(elem.children)
                     if(result){
                         return result
@@ -43,9 +67,10 @@ const CategoryManagement=()=>{
             return null
         }
         const foundCatgory=serachNode(fetchedData)
-        if(foundCatgory){
-            setSelectedCategory(foundCatgory)
+        if (foundCatgory && foundCatgory.key !== selectedCategory?.key) {
+          setSelectedCategory(foundCatgory);
         }
+
      
     }
    const onSelectionChange = (e: any) => {
@@ -53,6 +78,7 @@ const CategoryManagement=()=>{
         setSelectedKey(key);
         if (key) {
             findCategoryByKey(key);
+            setSheetOpen(true)
         }
     };
 
@@ -64,8 +90,8 @@ const CategoryManagement=()=>{
 
             <AddCategoryAccordion allCategories={fetchedData} />
             </div>
-            <div className="flex gap-6">
-                <div className="w-1/2 bg-white p-4 rounded">
+            <div className=" gap-6">
+                <div className=" bg-white p-4 rounded">
 
                <Tree
                     value={fetchedData}
@@ -74,7 +100,25 @@ const CategoryManagement=()=>{
                     onSelectionChange={onSelectionChange}
                 />
                 </div>
-                {selectedCategory&&<EditCategory category={selectedCategory} allCategory={fetchedData}/>}
+                {selectedCategory && (
+                <Sheet open={sheetOpen} onOpenChange={setSheetOpen}>
+                    <SheetContent className="w-[400px] sm:w-[500px]">
+                    <SheetHeader>
+                        <SheetTitle className="text-gray-600">Edit Category</SheetTitle>
+                        <SheetDescription>
+                        You are editing <strong>{selectedCategory.label}</strong>
+                        </SheetDescription>
+                    </SheetHeader>
+
+                    <EditCategory
+                        editedData={editCategry}
+                        category={selectedCategory}
+                        allCategory={fetchedData}
+                    />
+                    </SheetContent>
+                </Sheet>
+                )}
+
                 
             </div>
             <div>{selectedKey}</div>

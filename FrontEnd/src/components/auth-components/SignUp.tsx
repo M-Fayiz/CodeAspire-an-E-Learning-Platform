@@ -38,12 +38,13 @@ import { Link } from 'react-router-dom';
       const roleAdded={...formData,role:selectedRole}
       const result=registrationSchema.safeParse(roleAdded)
       if(!result.success){
-        const ERROR:{[key:string]:string}={}
-        result.error.errors.forEach(err=>{
-          if(err.path[0]){
-            ERROR[err.path[0]]=err.message
+          const ERROR:{[key:string]:string}={}
+          const zodError = result.error
+          zodError.issues.forEach((err) => {
+          if (err.path[0]) {
+            ERROR[err.path[0] as string] = err.message;
           }
-        })
+        });
         setErrors(ERROR)
         return
       }

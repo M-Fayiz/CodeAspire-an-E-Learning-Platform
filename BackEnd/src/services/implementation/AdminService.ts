@@ -6,7 +6,8 @@ import { createHttpError } from "../../utility/http-error";
 import { IAdminService } from "../interface/IAdminService";
 import { parseObjectId } from "../../mongoose/objectId";
 import { LearnerDTO,MentorDTO } from "../../dtos/role.dto";
-import { ILearnerDTO, IMentorDTO } from "../../types/dto.types";
+import { ILearnerDTO, IMentorDTO,IBaseRoleDTO } from "../../types/dto.types";
+import { mentorApprovalStatus } from "../../types/user.types";
 
 export type UserFetchResponse = {
   safeUsers: IMentorDTO|ILearnerDTO[];
@@ -48,7 +49,7 @@ export class AdminService implements IAdminService{
                     profilePicture: user.profilePicture,
                     isActive: user.isActive,
                     role: user.role,
-                    isApproved:user.isApproved
+                    ApprovalStatus:user.ApprovalStatus
                    }
             }
         });
@@ -74,7 +75,7 @@ export class AdminService implements IAdminService{
         }
         return result
     }
-    async userProfile(id: string): Promise<ILearnerDTO|IMentorDTO | null> {
+    async userProfile(id: string): Promise<ILearnerDTO|IMentorDTO |null> {
         const objectId=parseObjectId(id)
         if(!objectId){
             throw createHttpError(HttpStatus.BAD_REQUEST,HttpResponse.INVALID_CREDNTIALS)
@@ -99,22 +100,22 @@ export class AdminService implements IAdminService{
                 profilePicture: profileData.profilePicture,
                 isActive: profileData.isActive,
                 role: profileData.role,
-                isApproved:profileData.isApproved,
+                ApprovalStatus:profileData.ApprovalStatus,
                 isRequested:profileData.isRequested
 
              }
         }
     }
-    async approveMentor(id: string): Promise<{isApproved:boolean}> {
+    async approveMentor(id: string): Promise<{ApprovalStatus:mentorApprovalStatus}> {
         const objectId=parseObjectId(id)
          if(!objectId){
             throw createHttpError(HttpStatus.BAD_REQUEST,HttpResponse.INVALID_CREDNTIALS)
         }
-        const approvedData=await this._userRepo.approveMentor(objectId)
+        const approvedData=await this._userRepo.updateMentorStatus(objectId,'approved')
         if(!approvedData){
             throw createHttpError(HttpStatus.NOT_FOUND,HttpResponse.USER_NOT_FOUND)
         }
        
-        return {isApproved:approvedData.isApproved}
+        return {ApprovalStatus:approvedData.ApprovalStatus}
     }
 }

@@ -4,13 +4,18 @@ const categoryRouter=express.Router()
 import { CategoryController } from "../controllers/implementation/CategoryController";
 import { CategoryRepository } from "../repository/implementation/CategoryRepository";
 import { CategoryService } from "../services/implementation/CategoryService";
+import { verifyUser } from "../middlewares/authentication.middleware";
+import { authorizedRole } from "../middlewares/authorisation.middleware";
 
 const categoryRepository = new CategoryRepository()
 const categoryService = new CategoryService(categoryRepository)
 const categoryController=new CategoryController(categoryService)
 
+// categoryRouter.use(verifyUser)
+// categoryRouter.use(authorizedRole('admin'))
 
 categoryRouter.post('/', categoryController.createCategory);
 categoryRouter.get('/', categoryController.listCategories);
+categoryRouter.put('/:id',categoryController.editCategory)
 
 export default categoryRouter

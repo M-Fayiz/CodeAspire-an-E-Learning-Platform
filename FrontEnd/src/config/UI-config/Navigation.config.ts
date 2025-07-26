@@ -1,4 +1,4 @@
-import { Activity, Award, BarChart3, Book, BookOpen, Calendar, CreditCard, FileText, HelpCircle, Home, MessageSquare, PlusCircle, Settings, Shield, ShoppingCart, Star, Users } from "lucide-react";
+import { Activity, Award, Layers, Book, BookOpen, Calendar, CreditCard, FileText, HelpCircle, Home, MessageSquare, PlusCircle, Settings, Shield, ShoppingCart, Star, Users, BarChart3 } from "lucide-react";
 import React from "react";
 
 export interface NavigationItem {
@@ -14,11 +14,11 @@ export const navigationConfig = {
   admin: {
     primary: [
       { icon: Home, label: 'Dashboard', path: '/admin/dashboard', active: true },
-      { icon: Users, label: 'User Management', path: '/admin/users' },
-      { icon: Book, label: 'Course Management', path: '/admin/courses' },
-      { icon: BarChart3, label: 'Analytics', path: '/admin/analytics' },
-      { icon: MessageSquare, label: 'Messages', path: '/admin/messages', badge: 5 },
-      { icon: Settings, label: 'System Settings', path: '/admin/settings' }
+      { icon: Users, label: 'User Management', path: '/admin/users' , },
+      { icon: Book, label: 'Course Management', path: '/admin/courses',  },
+      { icon: Layers, label: 'Category Management', path: '/admin/category' , },
+      { icon: MessageSquare, label: 'Messages', path: '/admin/messages', },
+      { icon: Settings, label: 'System Settings', path: '/admin/settings',  }
     ],
     secondary: [
       { icon: FileText, label: 'Reports', path: '/admin/reports' },

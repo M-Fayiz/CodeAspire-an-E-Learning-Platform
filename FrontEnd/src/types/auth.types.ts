@@ -19,7 +19,7 @@ export interface IDecodedUserType{
     email : string,
     role :UserRole,
     profile?:string,
-    isApproved?:boolean,
+    ApprovalStatus ?: 'pending'|'approved'|'rejected'|'requested',
     isRequested?:boolean
     
 }

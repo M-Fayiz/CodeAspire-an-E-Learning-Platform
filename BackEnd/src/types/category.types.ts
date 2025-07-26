@@ -8,10 +8,17 @@ export interface ICategory extends Document<Types.ObjectId> {
   children?: ICategory[];
 }
 
+export interface ICategoryEdit {
+  categoryId:string;
+  title:string;
+  parentId:string; 
+}
+
 
 export interface ITree {
   key:string,
   label:string,
+  slug:string,
   parent?:string
   children:ITree[]
 }
