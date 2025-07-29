@@ -59,3 +59,6 @@ export const commonInstance=createInstance()
 // Admin Area
 export const adminInstance=createInstance()
 export const categoryInstance=createInstance()
+
+// course 
+export const courseInstance=createInstance()

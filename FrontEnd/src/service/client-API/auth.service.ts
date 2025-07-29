@@ -1,7 +1,7 @@
 import type {  AxiosError } from "axios";
 import { authInstance } from "../../axios/createInstance";
-import type{ ILogin, ISignUp } from "../../types/auth.types";
-import { API } from "../../constants/apiConstant";
+import type{ IDecodedUserType, ILogin, ISignUp } from "../../types/auth.types";
+import { API } from "../../constants/api.constant";
 import { HttpError } from "../../utility/error.util";
 import type { UserRole } from "../../types/auth.types";
 
@@ -14,7 +14,6 @@ export const  AuthService={
      return response.data
     } catch (error:unknown) {
       const err=error as AxiosError<{error:string}> 
-      console.log('error',err)
       const errorMessage=err.response?.data?.error ||'Registration Failed, Please try again '
            
       throw new Error(errorMessage)
@@ -25,8 +24,8 @@ export const  AuthService={
     try {
       console.log('verify email auth service')
       const response=await authInstance.post(API.Auth.VERIFY_EMAIL_URL,{token,email})
-      console.log('verify email ',response)
-       return response.data.message
+      console.log('verify email ',response.data)
+      return response.data.message
             
     } catch (error) {
       const err=error as AxiosError<{error:string}>
@@ -34,10 +33,7 @@ export const  AuthService={
       throw new Error(errorMessage)
     }
   },
-  authME:async():Promise<{id : string,
-    email : string,
-    role : UserRole
-    isApproved:boolean}>=>{
+  authME:async():Promise<IDecodedUserType>=>{
     console.log('auth me load..')
     try {
       const response=await authInstance.post(API.Auth.AUTH_URL,{},{withCredentials:true})

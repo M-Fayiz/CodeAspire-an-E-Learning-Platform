@@ -2,7 +2,7 @@
 import ManagementLayout from "@/components/layout/ManagementLayout"
 import AddCategoryAccordion from "@/features/admin/category/AddCategory"
 import categoryService from "@/service/client-API/admin/category.service"
-import type { ITree } from "@/types/category.types"
+// import type { ICategoryTree } from "@/types/category.types"
 import { useEffect, useState } from "react"
 import { Tree } from 'primereact/tree';
 import 'primereact/resources/themes/lara-light-indigo/theme.css';  
@@ -17,13 +17,13 @@ import {
   SheetTitle,
 
 } from "@/components/ui/sheet"
-import type { ICategoryEdit } from "@/types/category.types"
+import type { ICategoryEdit, ICategoryTree } from "@/types/category.types"
 import { toastService } from "@/components/toast/ToastSystem"
 
 const CategoryManagement=()=>{
-    const [fetchedData,setFetchedData]=useState<ITree[]>([])
+    const [fetchedData,setFetchedData]=useState<ICategoryTree[]>([])
     const [selectedKey, setSelectedKey] = useState<string | null>(null);
-    const [selectedCategory,setSelectedCategory]=useState<ITree|null>(null)
+    const [selectedCategory,setSelectedCategory]=useState<ICategoryTree|null>(null)
     const [sheetOpen,setSheetOpen]=useState(false)
     // const [editFormData,setEditedForm]=useState<ICategoryEdit>({categoryId:'',title:'',parentId:''})
 
@@ -35,7 +35,7 @@ const CategoryManagement=()=>{
         }
         fetchCategories()
     },[])
-    console.log('selected Category ',selectedCategory)
+  
     const editCategry=async(editData:ICategoryEdit)=>{
         console.log('edit category :',editCategry)
         try {
@@ -51,7 +51,7 @@ const CategoryManagement=()=>{
     
     const findCategoryByKey=(key:string)=>{
        
-        function serachNode(node:ITree[]):ITree|null{
+        function serachNode(node:ICategoryTree[]):ICategoryTree|null{
             for(let elem of node){
                 if(elem.key==key){
                     return elem 

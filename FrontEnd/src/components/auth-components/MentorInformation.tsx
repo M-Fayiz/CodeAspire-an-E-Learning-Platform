@@ -27,7 +27,7 @@ const MentorDataForm = () => {
       if(user?.role=='mentor'&&user.isRequested){
         setWaithingCard(true)
       }
-      if(user?.role=='mentor'&&user.isApproved){
+      if(user?.role=='mentor'&&user.ApprovalStatus=='approved'){
         navigate('/mentor/dashboard')
       }
   },[])

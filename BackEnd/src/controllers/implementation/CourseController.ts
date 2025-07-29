@@ -11,7 +11,7 @@ export class CourseController implements ICourseCategory{
     addCourse =async (req: Request, res: Response, next: NextFunction): Promise<void>=> {
         console.log(req.body)
         try {
-            const createdData=await this._courseService.createCourses(req.body)
+            const createdData=await this._courseService.createCourses(req.body.courseData)
             res.status(HttpStatus.OK).json(successResponse(HttpResponse.OK,{createdData}))
         } catch (error) {
             next(error)

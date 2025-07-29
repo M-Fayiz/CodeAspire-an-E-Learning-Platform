@@ -36,7 +36,7 @@ function VerifyEmail() {
       } catch (err) {
         if (err instanceof Error) toastService.error(err.message);
         // navigate('*')
-        setError("Verification failed. Try again later.");
+        setError("Verification failed. Try again .");
 
       }
     }

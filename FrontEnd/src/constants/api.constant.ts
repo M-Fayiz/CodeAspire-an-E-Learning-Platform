@@ -30,5 +30,8 @@ export const API={
         CREATE_CATEGORY:`/categories`,
         LIST_CATEGORIES:`/categories`,
         EDIT_CATEGORY:(id:string)=>`/categories/${id}`
+    },
+    COURSE:{
+        CREATE_COURSE:'/courses'
     }
 }

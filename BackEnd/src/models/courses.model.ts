@@ -18,12 +18,17 @@ const courseSchema = new mongoose.Schema<ICourses>({
     ref: 'categories', 
     required: true
   },
+  subCategoryId:{
+    type:mongoose.Schema.Types.ObjectId,
+    ref: 'categories'
+    
+  },
   language: {
     type: String
   },
   level: {
     type: String,
-    enum: ['beginner', 'intermediate', 'advanced']
+    enum: ['Beginner', 'Intermediate', 'Advanced']
   },
   price: {
     type: Number

@@ -1,6 +1,6 @@
 import type { AxiosError } from "axios";
 import { userInstance } from "../../axios/createInstance";
-import { API } from "../../constants/apiConstant";
+import { API } from "../../constants/api.constant";
 import type{ IUserType } from "../../types/profile.type";
 import type { IMentorProps } from "../../types/mentor.types";
 import { S3BucketUtil } from "../../utility/S3Bucket.util";
@@ -42,6 +42,7 @@ const UserService={
    updateMentorInformation:async(mentorId:string,mentorData:IMentorProps)=>{
       try {
          if(mentorData.resume){
+      
             const result=await S3BucketUtil.putPreSignedURL(mentorData.resume)
             await S3BucketUtil.uploadToS3(result.uploadURL,result.fileURL)
             mentorData.resume=result.fileURL

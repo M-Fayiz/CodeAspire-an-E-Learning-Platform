@@ -18,6 +18,7 @@ userRouter.get('/s3-presigned-url',userController.preSignedURL)
 userRouter.get('/s3-getPresigned-url',userController.get_preSignedURL)
 userRouter.put('/:id/profile-picture',userController.updateProfileImage)
 userRouter.put('/me/:id',userController.updateUserProfile)
+userRouter.put('/:id/mentor-profile',userController.updateUserProfile)
 
 
 

@@ -3,7 +3,7 @@ import { parseObjectId } from "../../mongoose/objectId";
 import { ICategoryRepository } from "../../repository/interface/ICategoryRepository";
 import { ICategoryService } from "../interface/ICategoryService";
 import slugify from "slugify";
-import { ICategory ,ICategoryEdit,ITree} from "../../types/category.types";
+import { ICategory ,ICategoryEdit,ICaregoryTree} from "../../types/category.types";
 import {startCase} from 'lodash';
 import { createHttpError } from "../../utility/http-error";
 import { HttpStatus } from "../../const/http-status";
@@ -24,10 +24,9 @@ export class CategoryService implements ICategoryService{
         title=startCase(title)
         return await this._categoryRepository.createCategory(title, categorySlug, parentId);
     }
-    async listCategories(): Promise<ITree[] | null> {
+    async listCategories(): Promise<ICaregoryTree[] | null> {
        
        const categories= await this._categoryRepository.listCategories()
-       console.log('sluged',categories)
        let map=new Map()
        categories?.forEach(cat => {
         map.set(cat._id.toString(), {
@@ -38,7 +37,7 @@ export class CategoryService implements ICategoryService{
             children: []                  
         });
         });
-       const tree:ITree[]=[];
+       const tree:ICaregoryTree[]=[];
 
         categories?.forEach(cat => {
         const node = map.get(cat._id.toString());
@@ -53,7 +52,7 @@ export class CategoryService implements ICategoryService{
             tree.push(node);               
         }
        });
-       console.log('categories',tree)
+     
        return tree
     }
     async editCategory(slug: string, title: string,parentId:string|null): Promise<ICategory | null> {

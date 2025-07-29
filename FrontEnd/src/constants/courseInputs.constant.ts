@@ -1,0 +1,50 @@
+
+
+export const COURSE_LEVEL=[
+    'Beginner',
+    'Intermediate',
+    'Advanced',
+    'All Levels'
+]
+
+export const COURSE_LANGUAGE=[
+  "English",
+  "Mandarin Chinese",
+  "Spanish",
+  "Arabic",
+  "Hindi",
+  "Russian",
+  "Portuguese",
+  "French",
+  "German",
+  "Japanese",
+  "Korean",
+  "Italian",
+  "Turkish",
+  "Vietnamese",
+  "Persian (Farsi)",
+  "Swahili",
+  "Dutch",
+  "Thai",
+  "Bengali",
+  "Telugu",
+  "Marathi",
+  "Tamil",
+  "Urdu",
+  "Gujarati",
+  "Kannada",
+  "Odia",
+  "Punjabi",
+  "Malayalam",
+  "Assamese",
+  "Maithili",
+  "Santali",
+  "Konkani",
+  "Sindhi",
+  "Kashmiri",
+  "Manipuri",
+  "Dogri",
+  "Bodo"
+]
+
+

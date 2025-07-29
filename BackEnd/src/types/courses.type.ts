@@ -4,12 +4,13 @@ export interface ICourses extends Document {
   title: string;
   description?: string;
   thumbnail?: string;
-  categoryId: Types.ObjectId;
+  categoryId:Types.ObjectId;
+  subCategoryId:Types.ObjectId
   language: string;
-  level: 'beginner' | 'intermediate' | 'advanced';
+  level: 'Beginner' | 'Intermediate' | 'Advanced';
   price: number;
   mentorsId: Types.ObjectId;
-  sessions:[
+  sessions?:[
     { 
       name :string,
       lectures:Types.ObjectId[]

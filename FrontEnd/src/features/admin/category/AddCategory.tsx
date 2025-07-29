@@ -5,12 +5,12 @@ import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import categoryService from "@/service/client-API/admin/category.service";
-import type { ITree } from "@/types/category.types";
+import type { ICategoryTree } from "@/types/category.types";
 import { SelectInput } from "@/components/ui/SelectInput";
 import { toastService } from "@/components/toast/ToastSystem";
 
 interface IAddCategoryProps{
-  allCategories:ITree[]
+  allCategories:ICategoryTree[]
 }
 
 const AddCategoryAccordion :React.FC<IAddCategoryProps>= ({allCategories}) => {

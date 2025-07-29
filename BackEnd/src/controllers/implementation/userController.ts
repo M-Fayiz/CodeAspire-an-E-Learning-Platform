@@ -67,6 +67,7 @@ export class UserController implements IUserController {
     }
     updateUserProfile=async(req: Request, res: Response, next: NextFunction): Promise<void>=> {
         try {
+            console.log('⛓️‍💥⛓️‍💥⛓️‍💥')
             const {id}=req.params     
             const updatedData=await this._userService.updateUserProfile(id,req.body)
             res.status(HttpStatus.OK).json(successResponse(HttpResponse.OK,{updatedData:updatedData}))

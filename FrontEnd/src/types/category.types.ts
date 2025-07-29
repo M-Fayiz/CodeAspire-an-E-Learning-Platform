@@ -5,15 +5,15 @@ export interface ICategory {
   children: ICategory[];
 }
 
-export interface ITree {
+export interface ICategoryTree {
   key:string,
   label:string,
   slug:string,
   parent?:string
-  children:ITree[]
+  children?:ICategoryTree[]
 }
 
-  export interface ICategoryEdit {
+export interface ICategoryEdit {
   slug:string;
   title:string;
   parentId:string; 

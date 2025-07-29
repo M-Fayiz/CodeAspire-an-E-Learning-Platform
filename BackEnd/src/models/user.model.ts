@@ -18,7 +18,7 @@ const BaseUserSchema=new mongoose.Schema({
   profilePicture: String,
   googleId:{type:String},
   isActive: { type: Boolean, default: false },
-  isApproved: { type: String, enum:['pending','approved','rejected','requested'], default: 'pending' },
+  ApprovalStatus: { type: String, enum:['pending','approved','rejected','requested'], default: 'pending' },
   isRequested:{ type:Boolean,default:false},
     
 },option)

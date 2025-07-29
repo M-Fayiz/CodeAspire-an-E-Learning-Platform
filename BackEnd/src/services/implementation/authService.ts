@@ -11,7 +11,6 @@ import { HttpResponse } from "../../const/error-message";
 import { createHttpError } from "../../utility/http-error";
 import { generateTokens } from "../../utility/jwt-token.util";
 import { verifyAccesToken,verifyRefreshToken } from "../../utility/jwt-token.util";
-import type { IMappedUser } from "../../models/user.model";
 import { JwtPayload } from "jsonwebtoken";
 import { IPayload } from "../../models/user.model";
 import { generateSecureToken } from "../../utility/crypto.util";
@@ -74,14 +73,8 @@ export class AuthService implements IAuthService{
            if(!newUser){
             throw createHttpError(HttpStatus.CONFLICT,HttpResponse.USER_CREATION_FAILED)
            }
-            const payload :IPayload={
-                id:newUser._id,
-                name:newUser.name,
-                email:newUser.email,
-                role:newUser.role,
-                ApprovalStatus :newUser.ApprovalStatus ,
-                isRequested:newUser.isRequested
-            }
+            const payload =payloadDTO(newUser)
+            console.log('payload',payload)
            return generateTokens(payload)
         } catch (error) {
             throw error
@@ -151,14 +144,7 @@ export class AuthService implements IAuthService{
             throw createHttpError(HttpStatus.FORBIDDEN,HttpResponse.INVALID_CREDNTIALS)
         }
 
-        const payload={
-            id:user._id,
-            name:user.name,
-            email:user.email,
-            role:user.role,
-            isApprved:user.ApprovalStatus ,
-            isRequested:user.isRequested
-        }
+        const payload=payloadDTO(user)
         const {accessToken,refreshToken}=generateTokens(payload)
         return {accessToken,refreshToken,payload}
     }

@@ -15,12 +15,12 @@ export interface ICategoryEdit {
 }
 
 
-export interface ITree {
+export interface ICaregoryTree {
   key:string,
   label:string,
   slug:string,
   parent?:string
-  children:ITree[]
+  children:ICaregoryTree[]
 }
 
 

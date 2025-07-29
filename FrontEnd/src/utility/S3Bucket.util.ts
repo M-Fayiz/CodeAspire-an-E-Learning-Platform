@@ -1,10 +1,11 @@
 import axios from "axios";
 import { userInstance } from "../axios/createInstance";
-import { API } from "../constants/apiConstant";
+import { API } from "../constants/api.constant";
 
 export const S3BucketUtil={
     putPreSignedURL:async(file:File)=>{
         try {
+            console.log(file,'file')
             const response=await userInstance.get(API.USER.PUT_PRESIGNED_URL,{
                 params:{
                     fileName:file.name,

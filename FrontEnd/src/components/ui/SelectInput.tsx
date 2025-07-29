@@ -14,7 +14,7 @@ interface SelectInputProps <T=string> {
 }
 
 export const SelectInput =<T extends string = string> ({ name,placeholder = "Select an option", value,onChange,options,}:  SelectInputProps<T>) => {
-    console.log('options',options)
+  
   return (
     <Select  
       value={value === "" ? undefined : value}

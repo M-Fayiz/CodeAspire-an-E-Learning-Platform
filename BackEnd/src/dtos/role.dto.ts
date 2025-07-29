@@ -16,7 +16,7 @@ export function MentorDTO(mentor:IMenterModel):IMentorDTO{
         socialLinks:mentor.socialLinks,
         mentorRating:mentor.mentorRating,
         resume:mentor.resume,
-        isApproved:mentor.isApproved,
+        ApprovalStatus:mentor.ApprovalStatus,
         isRequested:mentor.isRequested
     }
 }
@@ -31,6 +31,7 @@ export function LearnerDTO(learner:ILearnerModel):ILearnerDTO{
         profilePicture:learner.profilePicture,
         isActive:learner.isActive,
         bio:learner.bio,
+        ApprovalStatus:learner.ApprovalStatus,
         enrolledCourses:learner.enrolledCourses
     }
 }

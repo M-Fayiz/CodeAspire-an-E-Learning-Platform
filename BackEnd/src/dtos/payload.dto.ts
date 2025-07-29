@@ -9,7 +9,7 @@ export function payloadDTO(user:IAnyUser):IPayloadDTO{
         email:user.email,
         role:user.role,
         profile:user.profilePicture,
-        isApproved:user.isApproved,
+        ApprovalStatus:user.ApprovalStatus,
         isRequested:user.isRequested
     }
 }

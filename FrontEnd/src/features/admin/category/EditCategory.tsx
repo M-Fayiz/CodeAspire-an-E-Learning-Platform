@@ -1,12 +1,12 @@
 
 import  { useEffect,  useState } from 'react'
-import type{ ICategoryEdit, ITree } from "@/types/category.types"
+import type{ ICategoryEdit, ICategoryTree } from "@/types/category.types"
 import { Input } from "@/components/ui/Inputs" 
 import { SelectInput } from "@/components/ui/SelectInput" 
 
 interface EditCategoryProps{
-  category:ITree,
-  allCategory:ITree[];
+  category:ICategoryTree,
+  allCategory:ICategoryTree[];
   editedData:(editData:ICategoryEdit)=>void
 
 }
@@ -15,7 +15,7 @@ function EditCategory({category,allCategory,editedData}:EditCategoryProps) {
   const [formData,setFormData]=useState<ICategoryEdit>({slug:'',title:'',parentId:''})
   const [parent,setParent]=useState('')
  
-  const findParent=(categories:ITree[])=>{
+  const findParent=(categories:ICategoryTree[])=>{
     for(let node of categories){
       if(node.key==category.parent){
         setParent(node.label)

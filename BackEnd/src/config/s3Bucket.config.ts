@@ -25,7 +25,7 @@ export async function getObjectURL(key:string){
 }
 
 export async function  putObjectURl(filename:string,type:string):Promise<{uploadURL:string,fileURL:string}>{
-
+   console.log(filename,'8888',type)
     let folderName=''
     console.log(type)
     if(type.startsWith('image/')){

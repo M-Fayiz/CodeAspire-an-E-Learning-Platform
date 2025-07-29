@@ -1,7 +1,7 @@
 import type { AxiosError } from "axios";
 
 import { adminInstance } from "@/axios/createInstance";
-import { API } from "@/constants/apiConstant";
+import { API } from "@/constants/api.constant";
 import type { IUserType } from "@/types/profile.type"; 
 
 import { searchFromParser } from "@/utility/parser.util";
