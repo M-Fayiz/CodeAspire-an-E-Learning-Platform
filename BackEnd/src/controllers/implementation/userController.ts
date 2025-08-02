@@ -13,7 +13,7 @@ export class UserController implements IUserController {
         try {
             const email=req.query.email as string
             const userData=await this._userService.fetchUser(email)
-           res.status(HttpStatus.OK).json(successResponse(HttpResponse.OK,{userData}))
+            res.status(HttpStatus.OK).json(successResponse(HttpResponse.OK,{userData}))
         } catch (error) {
             next(error);
         }

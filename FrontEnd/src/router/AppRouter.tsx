@@ -23,7 +23,7 @@ import MentorDataForm from "../components/auth-components/MentorInformation";
 
 import CategoryManagement from "@/pages/Admin Page/category";
 import CourseCreation from "@/pages/Mentor_Page/course_creation/Index";
-import { CourseFormProvider } from "@/context/courseForm.context";
+
 
 export const  router=createBrowserRouter([
     {
@@ -70,11 +70,7 @@ export const  router=createBrowserRouter([
             { path:'dashboard' ,element:<DashboardContent/>},
             { path:'profile' ,element:<ProfileManagement/>},
             { path: 'data', element: <MentorDataForm /> },
-            { path: 'create', element:(
-                <CourseFormProvider>
-                    <CourseCreation />
-                </CourseFormProvider>
-            ) },
+            { path: 'create', element:<CourseCreation />},
         ]
     },
     {

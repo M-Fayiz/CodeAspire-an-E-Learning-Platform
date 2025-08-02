@@ -1,43 +1,38 @@
 import { IUserService } from "../interface/IUserService";
 import { IUserRepo } from "../../repository/interface/IUserRepo";
-import { ILearnerModel, IMenterModel, IUserModel } from "../../models/user.model";
+import { IAdminModel, ILearnerModel, IMenterModel, IUserModel } from "../../models/user.model";
 import { createHttpError } from "../../utility/http-error";
 import { HttpStatus } from "../../const/http-status";
 import { HttpResponse } from "../../const/error-message";
-import { IAdmin, ILearner, IMentor, ProfileData } from "../../types/user.types";
+import { IAdmin, ILearner } from "../../types/user.types";
 import { parseObjectId } from "../../mongoose/objectId";
 import { comparePassword,hashPassword } from "../../utility/bcrypt.util";
 import { getObjectURL, putObjectURl } from "../../config/s3Bucket.config";
 import { IMentorRepository } from "../../repository/interface/IMentorRepository";
-import { MentorDTO } from "../../dtos/role.dto";
-import { IMentorDTO } from "../../types/dto.types";
+import { AdminDTO, LearnerDTO, MentorDTO } from "../../dtos/role.dto";
+import { IAdminDTO, ILearnerDTO, IMentorDTO } from "../../types/dto.types";
 
 
 export class UserService implements IUserService{
 
     constructor(private _userRep:IUserRepo,private _mentorRepository:IMentorRepository){}
 
-    async fetchUser(email: string): Promise<ProfileData> {
+    async fetchUser(email: string): Promise<ILearnerDTO|IMentorDTO|IAdminDTO> {
         
         const userData=await this._userRep.findUserByEmail(email)
         if(!userData){
             throw createHttpError(HttpStatus.NOT_FOUND,HttpResponse.USER_NOT_FOUND)
         }
-
-        const profileData={
-            _id: userData._id,
-            name: userData.name,
-            email: userData.email,
-            phone: userData.phone,
-            role: userData.role,
-            profilePicture: userData.profilePicture,
-            isActive:userData.isActive,
-            bio: userData.bio,
-            mentorRating: userData.mentorRating,
-            expertise: userData.expertise,
-            enrolledCourses:userData.enrolledCourses
+        switch(userData.role){
+            case 'learner':
+                return LearnerDTO(userData as ILearnerModel)
+            case 'mentor':
+                return MentorDTO(userData as IMenterModel)
+            case 'admin':
+                return AdminDTO(userData as IAdminModel)        
         }
-        return profileData
+     
+       
     }
 
     async changePassword(id:string,currentPassword: string, newPassword: string): Promise<boolean> {

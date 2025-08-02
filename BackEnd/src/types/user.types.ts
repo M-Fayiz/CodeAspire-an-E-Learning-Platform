@@ -53,21 +53,6 @@ export interface IAuth{
 
 export type IAnyUser=IUser|IAdmin|ILearner|IMentor
 
-
-export interface ProfileData{
-  _id: Types.ObjectId;
-  name: string;
-  email: string;
-  phone: string | undefined;
-  role: "admin" | "mentor" | "learner";
-  profilePicture: string | undefined;
-  bio: string | undefined;
-  isActive:boolean
-  mentorRating: number | undefined;
-  expertise: string[] | undefined;
-  enrolledCourses:Types.ObjectId[]| undefined
-}
-
 export interface searchProps{
   name:string|'',
   role:string|'',

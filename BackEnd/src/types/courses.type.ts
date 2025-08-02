@@ -13,7 +13,13 @@ export interface ICourses extends Document {
   sessions?:[
     { 
       name :string,
-      lectures:Types.ObjectId[]
+      lectures:[
+        {
+          name:string,
+          lectureType:'video'|'image'|'pdf',
+          lecture:string
+        }
+      ]
     }
   ]
   isActive: boolean;

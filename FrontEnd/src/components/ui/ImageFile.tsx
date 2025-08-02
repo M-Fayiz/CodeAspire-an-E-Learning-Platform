@@ -1,9 +1,12 @@
 import React, { useState } from 'react';
-import { Input } from "@/components/ui/input"; // from ShadCN
+import { Input } from "@/components/ui/input"; 
+import { useFormContext } from 'react-hook-form';
+import FormErrorText from '../shared/FormErrorText';
+
 
 function ImageUploadPreview() {
   const [imagePreview, setImagePreview] = useState<string | null>(null);
-
+  const {register,formState:{errors}}=useFormContext()
   const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (file) {
@@ -17,7 +20,9 @@ function ImageUploadPreview() {
 
   return (
     <div className="space-y-4">
-      <Input type="file" accept="image/*" onChange={handleImageChange} />
+      <Input type="file"
+      {...register('thumbnail',{required:'Please Upload Your Course Thumbnail' })}
+       accept="image/*" onChange={handleImageChange} />
       {imagePreview && (
         <img
           src={imagePreview}
@@ -25,6 +30,7 @@ function ImageUploadPreview() {
           className="max-w-xs rounded shadow border"
         />
       )}
+      <FormErrorText message={errors.thumbnail?.message as string}/>
     </div>
   );
 }

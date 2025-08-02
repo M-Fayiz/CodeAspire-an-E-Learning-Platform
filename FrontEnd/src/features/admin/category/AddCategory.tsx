@@ -4,18 +4,18 @@ import React, { useState } from "react";
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import categoryService from "@/service/client-API/admin/category.service";
 import type { ICategoryTree } from "@/types/category.types";
 import { SelectInput } from "@/components/ui/SelectInput";
-import { toastService } from "@/components/toast/ToastSystem";
+
 
 interface IAddCategoryProps{
   allCategories:ICategoryTree[]
+  addCat:(title:string,parentId:string)=>void
 }
 
-const AddCategoryAccordion :React.FC<IAddCategoryProps>= ({allCategories}) => {
+const AddCategoryAccordion :React.FC<IAddCategoryProps>= ({allCategories,addCat}) => {
   const [formData, setFormData] = useState({ title: "", parentId: "" });
-  console.log('all category',allCategories)
+ 
   const handleChange = (e:{ target: { name: string; value: string } }) => {
     const { name, value } = e.target;
     setFormData(prev => ({ ...prev, [name]: value }));
@@ -23,17 +23,8 @@ const AddCategoryAccordion :React.FC<IAddCategoryProps>= ({allCategories}) => {
 
   const handleSubmit =async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!formData.title.trim()) return alert("Title is required");
-    try {
-      const result=await categoryService.createCategory(formData.title,formData.parentId)
-    if(result){
-      setFormData({ title: "", parentId: "none" }); 
-    }
-    } catch (error) {
-      if(error instanceof Error){
-        toastService.error(error.message)
-      }
-    }
+    if (!formData.title.trim()) return alert("Title is required"); 
+    addCat(formData.title,formData.parentId)
     
   };
 

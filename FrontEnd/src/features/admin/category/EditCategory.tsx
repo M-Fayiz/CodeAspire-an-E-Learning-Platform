@@ -21,7 +21,7 @@ function EditCategory({category,allCategory,editedData}:EditCategoryProps) {
         setParent(node.label)
         return node
       }
-      if(node.children.length>0){
+      if(node.children&&node.children.length>0){
         let foundNode=findParent(node.children)
         if(foundNode){
           setParent(foundNode.label)
@@ -59,14 +59,13 @@ function EditCategory({category,allCategory,editedData}:EditCategoryProps) {
           />
 
           <SelectInput 
-          
             name="parentId"
             placeholder={parent?parent:'select a parent'}
             value={formData.parentId}
             onChange={handleChange}
             options={[
               { label: "None", value: 'none' }, 
-                ...allCategory.map(cat => ({
+                ...allCategory.filter(data=>data.key!==category.key).map(cat => ({
                 label: cat.label,
                 value: cat.key,
                         

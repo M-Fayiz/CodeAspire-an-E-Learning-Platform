@@ -25,17 +25,20 @@ export const Protected_Router:React.FC<ProtectedProps>=({children,requiredRole,f
       }
     }, [user, navigate]);
     
-
+    console.log(1)
     if(loading){
         return <Spinner fullScreen variant="theme"/>
     }
+    console.log(2)
     console.log('user from context in protect',user)
     if(!user){
         return <Navigate to={fallback} state={{ from: location }}  replace />
     }
-    
+    console.log(3,user)
     if(requiredRole.length>0){
+        console.log(4)
         const hasRole=requiredRole.find(role=>user.role==role)
+        console.log('has role',hasRole)
         if(!hasRole){
             return <Navigate to="/unauthorized" replace />;
         }

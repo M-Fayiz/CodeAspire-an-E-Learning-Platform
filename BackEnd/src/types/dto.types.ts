@@ -29,7 +29,9 @@ export interface ILearnerDTO extends IBaseRoleDTO {
     enrolledCourses?:Types.ObjectId[]
 }
 
-export interface IPayloadDTO{
+export interface IAdminDTO extends IBaseRoleDTO{}
+
+export interface IUserDTO{
     id:Types.ObjectId,
     name?:string,
     email:string,
@@ -44,4 +46,10 @@ export interface ICategoryDTO{
     title:string,
     parentId:Types.ObjectId|null,
     children:ICategoryDTO[]
+}
+
+export interface IPayloadDTO{
+    _id:Types.ObjectId
+    email:string
+    role:string
 }

@@ -12,20 +12,10 @@ export class UserRepository extends BaseRepository<IUserModel> implements IUserR
     constructor(){
         super(UserModel)
     }
-    async  createUser(user: IUserModel): Promise<IUserModel|IMenterModel|ILearnerModel|IAdminModel> {
+    async  createUser(user: IUserModel): Promise<IUserModel> {
         try {
             const createdUser=await this.create(user)
-            switch(createdUser.role){
-                case 'mentor':
-                    return createdUser as IMenterModel
-                case 'learner':
-                    return createdUser as ILearnerModel
-                case 'admin':
-                    return createdUser as IAdminModel
-                default :
-                return createdUser as IUserModel        
-
-            }
+           return createdUser
         } catch (error) {
             throw error
         }
@@ -49,7 +39,6 @@ export class UserRepository extends BaseRepository<IUserModel> implements IUserR
             }
            
         } catch (error) {
-            console.error('🍜',error)
             throw error
         }
     }

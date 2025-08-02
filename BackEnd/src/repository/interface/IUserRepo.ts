@@ -5,7 +5,7 @@ import { ILearner, IMentor,IAdmin,IUserRole, searchProps } from "../../types/use
 import { Types } from "mongoose"
 
 export interface IUserRepo{
-    createUser(user:any):Promise<IUserModel|IMenterModel|ILearnerModel|IAdminModel>
+    createUser(user:IUserModel):Promise<IUserModel>
     findUserByEmail(email:string):Promise<IUserModel|IMenterModel|ILearnerModel|IAdminModel|null>
     updateUserPassword(email:string,password:string):Promise<IUserModel|IMenterModel|ILearnerModel|IAdminModel|null>
     findOrCreateUser(profile:Profile,role?:IUserRole):Promise<IUserModel|IMenterModel|ILearnerModel|IAdminModel|null>
@@ -16,5 +16,4 @@ export interface IUserRepo{
     findByIDAndUpdate(id:Types.ObjectId,update:Partial<IUserModel>):Promise<IUserModel|IMenterModel|ILearnerModel|IAdminModel|null>
     userProfilePictureUpdate(id:Types.ObjectId,imageURL:string):Promise<IUserModel|IMenterModel|ILearnerModel|IAdminModel|null>
     updateMentorStatus(id:Types.ObjectId,status:string):Promise<IUserModel|null>
-   
 }

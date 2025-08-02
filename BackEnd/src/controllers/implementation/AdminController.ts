@@ -1,6 +1,6 @@
 import { Request,Response,NextFunction } from "express";
 import { IAdminController } from "../interface/IAdminController";
-import { AdminService } from "../../services/implementation/AdminService";
+import { IAdminService } from "../../services/interface/IAdminService";
 import { HttpStatus } from "../../const/http-status";
 import { successResponse } from "../../utility/response.util";
 import { HttpResponse } from "../../const/error-message";
@@ -9,7 +9,8 @@ import { HttpResponse } from "../../const/error-message";
 export class AdminController implements IAdminController{
 
 
-    constructor(private _adminService:AdminService){}
+    constructor(private _adminService:IAdminService){}
+    
     fetchAllUsers=async(req: Request, res: Response, next: NextFunction): Promise<void>=> {
         try {
             const page = Number(req.query.page) || 1;

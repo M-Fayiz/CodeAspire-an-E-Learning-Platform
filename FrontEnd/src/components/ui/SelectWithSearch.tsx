@@ -33,7 +33,6 @@ export function Combobox({ name, value, onChange, boxOptions,setCategory,label }
   const [open, setOpen] = useState(false);
   
   const selectedLabel = boxOptions.find((item) => item.key === value)?.label 
-   
 
     setCategory?.(selectedLabel)
 

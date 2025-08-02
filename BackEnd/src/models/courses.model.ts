@@ -1,6 +1,5 @@
 import mongoose, { Schema, Types } from "mongoose";
 import { ICourses } from "../types/courses.type"; 
-import { string } from "zod";
 
 const courseSchema = new mongoose.Schema<ICourses>({
   title: {
@@ -48,7 +47,21 @@ const courseSchema = new mongoose.Schema<ICourses>({
   sessions:[
     {
       name:String,
-      lectures:[Types.ObjectId]
+      order:Number,
+      lectures:[
+        {
+          name:String,
+          lectureType:{
+            type:String,
+            enum:['video','pdf','audio']
+          },
+          lecture:String
+        }
+      ],
+      review:{
+        type:Boolean,
+        default:false
+      }
     }
   ]
   

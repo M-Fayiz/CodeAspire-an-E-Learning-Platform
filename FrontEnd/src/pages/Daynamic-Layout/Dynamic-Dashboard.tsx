@@ -23,8 +23,6 @@ const DynamicLayout =() => {
   
   
   if(!user) {
-
-    console.log('User not found, redirecting...');
     return <Navigate to='/auth/login' replace />
 
   }

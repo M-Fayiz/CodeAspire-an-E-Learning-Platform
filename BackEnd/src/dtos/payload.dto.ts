@@ -2,14 +2,11 @@ import { IPayloadDTO } from "../types/dto.types";
 import { IAnyUser } from "../types/user.types";
 
 
-export function payloadDTO(user:IAnyUser):IPayloadDTO{
+export const payloadDTO=(user:IAnyUser):IPayloadDTO=>{
     return{
-        id:user._id,
-        name:user.name,
+        _id:user._id,
         email:user.email,
-        role:user.role,
-        profile:user.profilePicture,
-        ApprovalStatus:user.ApprovalStatus,
-        isRequested:user.isRequested
+        role:user.role
+
     }
 }

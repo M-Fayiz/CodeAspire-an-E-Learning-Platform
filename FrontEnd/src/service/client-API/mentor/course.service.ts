@@ -7,7 +7,7 @@ import type { AxiosError } from "axios"
 
 
 const  courseService={
-    createCourse:async(courseData:ICourseData)=>{
+    createCourse:async(courseData:Partial<ICourseData>)=>{
         try {
             const response=await courseInstance.post(API.COURSE.CREATE_COURSE,{courseData})
             

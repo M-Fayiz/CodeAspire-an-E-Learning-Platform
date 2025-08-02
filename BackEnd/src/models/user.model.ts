@@ -47,7 +47,6 @@ const LearnerSchema = new mongoose.Schema({
 export const LearnerModel=UserModel.discriminator<ILearnerModel>('learner',LearnerSchema)
 
 
-
 const AdminSchema = new mongoose.Schema({
   permissions: [String] 
 });

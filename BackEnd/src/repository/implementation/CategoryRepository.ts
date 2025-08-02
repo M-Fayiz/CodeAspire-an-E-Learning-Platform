@@ -10,7 +10,7 @@ import { dlopen } from "process";
 export class CategoryRepository extends BaseRepository<ICategory> implements ICategoryRepository{
     constructor(){
         super(CategoryModel)
-    }
+    } 
 
     async createCategory(title:string,slug:string,parentId:Types.ObjectId|null): Promise<ICategory|null> {
         

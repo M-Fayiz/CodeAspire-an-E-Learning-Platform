@@ -12,6 +12,7 @@ const userService=new UserService(userRepository,mentorRepository)
 const userController=new UserController(userService)
 
 userRouter.use(verifyUser)
+
 userRouter.get('/me',userController.fetchProfile)
 userRouter.patch('/:id/change-password',userController.changePassword)
 userRouter.get('/s3-presigned-url',userController.preSignedURL)

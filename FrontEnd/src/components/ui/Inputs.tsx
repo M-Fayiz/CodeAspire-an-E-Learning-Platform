@@ -41,7 +41,7 @@ export const Input: React.FC<IInputProps> = ({
 
   return (
     <div>
-      <label className="block text-sm font-bold  text-gray-700 mb-1">{label}</label>
+      <label className="block text-sm font-semibold  text-gray-700 mb-1">{label}</label>
       <div className="relative">
         {icon && (
           <span className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-300">

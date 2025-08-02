@@ -2,7 +2,6 @@ import { IUser,IAuth, IMentor, ILearner, IAdmin } from "../../types/user.types";
 import { IAuthService } from "../interface/IAuthService";
 import { IUserRepo } from "../../repository/interface/IUserRepo";
 import { hashPassword,comparePassword } from "../../utility/bcrypt.util";
-// import { generateOtp } from "../../utility/generate.otp";
 import { sendToken } from "../../utility/send-mail.util";
 import { v4 as uuidv4 } from "uuid";
 import redisClient from "../../config/redis";
@@ -15,8 +14,9 @@ import { JwtPayload } from "jsonwebtoken";
 import { IPayload } from "../../models/user.model";
 import { generateSecureToken } from "../../utility/crypto.util";
 import { redisPrefix } from "../../const/redisKey";
+import { userDTO, } from "../../dtos/user.dto";
+import { IUserDTO } from "../../types/dto.types";
 import { payloadDTO } from "../../dtos/payload.dto";
-import { IPayloadDTO } from "../../types/dto.types";
 
 
 export class AuthService implements IAuthService{
@@ -82,7 +82,7 @@ export class AuthService implements IAuthService{
         }
     }
 
-    async authMe(token: string):Promise<IPayloadDTO> {
+    async authMe(token: string):Promise<IUserDTO> {
           
         const decode= verifyAccesToken(token)
         console.log(22,'this is verifyToken')
@@ -100,7 +100,7 @@ export class AuthService implements IAuthService{
         }
 
 
-        return payloadDTO(user)
+        return userDTO(user)
     }
 
     async refreshAccessToken(token: string): Promise<{ newAccessToken: string; payload: JwtPayload; }> {
@@ -128,7 +128,7 @@ export class AuthService implements IAuthService{
 
     }
 
-    async login(email: string, password: string): Promise<{ accessToken: string; refreshToken: string; payload:IPayload }> {
+    async login(email: string, password: string): Promise<{ accessToken: string; refreshToken: string; MappedUser:IUserDTO }> {
         
         const user=await this._userRepo.findUserByEmail(email)
         if(!user){
@@ -144,9 +144,9 @@ export class AuthService implements IAuthService{
             throw createHttpError(HttpStatus.FORBIDDEN,HttpResponse.INVALID_CREDNTIALS)
         }
 
-        const payload=payloadDTO(user)
-        const {accessToken,refreshToken}=generateTokens(payload)
-        return {accessToken,refreshToken,payload}
+        const MappedUser=userDTO(user)
+        const {accessToken,refreshToken}=generateTokens(payloadDTO(user))
+        return {accessToken,refreshToken,MappedUser}
     }
 
     async  forgotPassword(email: string): Promise<string> {

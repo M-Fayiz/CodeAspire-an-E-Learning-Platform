@@ -1,5 +1,5 @@
-import { ILearnerModel, IMenterModel } from "../models/user.model";
-import { ILearnerDTO, IMentorDTO } from "../types/dto.types";
+import { IAdminModel, ILearnerModel, IMenterModel } from "../models/user.model";
+import { IAdminDTO, ILearnerDTO, IMentorDTO } from "../types/dto.types";
 
 export function MentorDTO(mentor:IMenterModel):IMentorDTO{
    
@@ -14,11 +14,10 @@ export function MentorDTO(mentor:IMenterModel):IMentorDTO{
         expertise:mentor.expertise,
         bio:mentor.bio,
         socialLinks:mentor.socialLinks,
-        mentorRating:mentor.mentorRating,
         resume:mentor.resume,
         ApprovalStatus:mentor.ApprovalStatus,
         isRequested:mentor.isRequested
-    }
+    }   
 }
 
 export function LearnerDTO(learner:ILearnerModel):ILearnerDTO{
@@ -33,6 +32,20 @@ export function LearnerDTO(learner:ILearnerModel):ILearnerDTO{
         bio:learner.bio,
         ApprovalStatus:learner.ApprovalStatus,
         enrolledCourses:learner.enrolledCourses
+    }
+}
+
+export function AdminDTO(admin:IAdminModel):IAdminDTO{
+    return{
+        id:admin._id,
+        name:admin.name,
+        email:admin.email,
+        role:admin.role,
+        phone:admin.phone,
+        profilePicture:admin.profilePicture,
+        isActive:admin.isActive,
+        bio:admin.bio,
+        ApprovalStatus:admin.ApprovalStatus,
     }
 }
 

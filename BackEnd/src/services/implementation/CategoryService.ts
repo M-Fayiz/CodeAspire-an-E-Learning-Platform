@@ -15,7 +15,7 @@ export class CategoryService implements ICategoryService{
     constructor(private _categoryRepository:ICategoryRepository){}
 
     async createCategory(title: string, parent: string | null): Promise<ICategory|null> {
-        let  parentId =parent? parseObjectId(parent):null
+        const  parentId =parent? parseObjectId(parent):null
         const isExist=await this._categoryRepository.findCategory(title)
         if(isExist){
             throw createHttpError(HttpStatus.CONFLICT,HttpResponse.ITEM_EXIST)
@@ -27,7 +27,7 @@ export class CategoryService implements ICategoryService{
     async listCategories(): Promise<ICaregoryTree[] | null> {
        
        const categories= await this._categoryRepository.listCategories()
-       let map=new Map()
+       const map=new Map()
        categories?.forEach(cat => {
         map.set(cat._id.toString(), {
             key: cat._id.toString(),      

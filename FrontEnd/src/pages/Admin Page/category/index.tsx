@@ -20,12 +20,14 @@ import {
 import type { ICategoryEdit, ICategoryTree } from "@/types/category.types"
 import { toastService } from "@/components/toast/ToastSystem"
 
+
+
 const CategoryManagement=()=>{
     const [fetchedData,setFetchedData]=useState<ICategoryTree[]>([])
     const [selectedKey, setSelectedKey] = useState<string | null>(null);
     const [selectedCategory,setSelectedCategory]=useState<ICategoryTree|null>(null)
     const [sheetOpen,setSheetOpen]=useState(false)
-    // const [editFormData,setEditedForm]=useState<ICategoryEdit>({categoryId:'',title:'',parentId:''})
+    const [toFetch,setToFetch]=useState(false)
 
     useEffect(()=>{
         const fetchCategories =async()=>{
@@ -34,13 +36,15 @@ const CategoryManagement=()=>{
             setFetchedData(result)
         }
         fetchCategories()
-    },[])
+    },[toFetch])
   
     const editCategry=async(editData:ICategoryEdit)=>{
         console.log('edit category :',editCategry)
         try {
             const result= await categoryService.editCategory(editData.slug,editData)
             if(result){
+                setToFetch(true)
+                setSheetOpen(false)    
             }
         } catch (error) {
             if(error instanceof Error){
@@ -48,6 +52,22 @@ const CategoryManagement=()=>{
             }
         }
     }
+   
+    const AddCategory=async (title:string,parentId:string)=>{
+        try {
+            
+            const result=await categoryService.createCategory(title,parentId)
+            if(result){
+                setToFetch(true)
+            }
+        } catch (error) {
+            if(error instanceof Error){
+                toastService.error(error.message)
+            }
+        }
+    }
+  
+
     
     const findCategoryByKey=(key:string)=>{
        
@@ -57,7 +77,6 @@ const CategoryManagement=()=>{
                     return elem 
                 }
                 if(elem.children?.length){
-                    console.log('childrens :',elem.children)
                     const result=serachNode(elem.children)
                     if(result){
                         return result
@@ -73,7 +92,7 @@ const CategoryManagement=()=>{
 
      
     }
-   const onSelectionChange = (e: any) => {
+    const onSelectionChange = (e: any) => {
         const key = e.value;
         setSelectedKey(key);
         if (key) {
@@ -83,12 +102,14 @@ const CategoryManagement=()=>{
     };
 
 
+
+
     return(
         <ManagementLayout title="Category Management" description="Manage category and edit it ">
          <div className="flex flex-col md:justify-start gap-4">
             <div className="bg-white rounded-sm outline-1">
 
-            <AddCategoryAccordion allCategories={fetchedData} />
+            <AddCategoryAccordion allCategories={fetchedData} addCat={AddCategory} />
             </div>
             <div className=" gap-6">
                 <div className=" bg-white p-4 rounded">
@@ -121,8 +142,6 @@ const CategoryManagement=()=>{
 
                 
             </div>
-            <div>{selectedKey}</div>
-            
          </div>
         </ManagementLayout>
     )
