@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
 import {
   Command,
@@ -32,9 +32,13 @@ interface IComboboxProps {
 export function Combobox({ name, value, onChange, boxOptions,setCategory,label }: IComboboxProps) {
   const [open, setOpen] = useState(false);
   
-  const selectedLabel = boxOptions.find((item) => item.key === value)?.label 
-
+  useEffect(()=>{
+    const selectedLabel = boxOptions.find((item) => item.key === value)?.label 
     setCategory?.(selectedLabel)
+
+  },[value,boxOptions])
+
+  const selectedLabel = boxOptions.find((item) => item.key === value)?.label
 
   return (
     <div>

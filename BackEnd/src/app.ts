@@ -14,6 +14,7 @@ import userRouter from './routers/user.router';
 import adminRouter from './routers/adminRouter';
 import categoryRouter from './routers/category.router';
 import courseRouter from './routers/courses.router';
+import sharedRouter from './routers/shared.router';
 dotenv.config()
 
 const app= express()
@@ -39,7 +40,7 @@ app.use('/users',userRouter)
 app.use('/admin',adminRouter)
 app.use('/categories',categoryRouter)
 app.use('/courses',courseRouter)
-
+app.use('/shared',sharedRouter)
 
 // Error Handler
 app.use(errorHandler)

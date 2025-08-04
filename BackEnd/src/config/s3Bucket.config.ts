@@ -24,23 +24,15 @@ export async function getObjectURL(key:string){
     return getURL
 }
 
-export async function  putObjectURl(filename:string,type:string):Promise<{uploadURL:string,fileURL:string}>{
-   console.log(filename,'8888',type)
-    let folderName=''
-    console.log(type)
-    if(type.startsWith('image/')){
-        folderName='upload/images'
-    }else if(type.startsWith('application/pdf')){
-        folderName='upload/pdf'
-    }else{
-        folderName='upload/other'
-    }
+export async function  putObjectURl(filename:string,folderName:string,fileType:string):Promise<{uploadURL:string,fileURL:string}>{
+
+    
     const key=`${folderName}/${Date.now()}-${filename}`
 
     const command=new PutObjectCommand({
         Bucket:bucketName,
         Key:key,
-        ContentType:type
+        ContentType:fileType
     })
 
     const uploadURL=await  getSignedUrl(s3Bucket,command)

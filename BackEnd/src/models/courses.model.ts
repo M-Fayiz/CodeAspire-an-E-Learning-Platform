@@ -1,5 +1,6 @@
 import mongoose, { Schema, Types } from "mongoose";
 import { ICourses } from "../types/courses.type"; 
+import { title } from "process";
 
 const courseSchema = new mongoose.Schema<ICourses>({
   title: {
@@ -46,14 +47,21 @@ const courseSchema = new mongoose.Schema<ICourses>({
   },
   sessions:[
     {
-      name:String,
+      title:{
+        type:String,
+        
+      },
       order:Number,
       lectures:[
         {
-          name:String,
+          title:{
+            type:String,
+            
+          },
           lectureType:{
             type:String,
-            enum:['video','pdf','audio']
+            enum:['video','pdf','audio'],
+            
           },
           lecture:String
         }

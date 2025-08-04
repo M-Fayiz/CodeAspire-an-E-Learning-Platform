@@ -16,12 +16,15 @@ import DashboardContent from "../components/layout/dynamic-layout/Dashboard-Cont
 import { Protected_Router } from "../components/protectedRouter/ProtectedRouter";
 import ProfileManagement from "../pages/Profile Page/Profile";
 import UserManagement from "../pages/Admin Page/user-management/UserMangement";
-// import MentorInfoForm from "../components/Mentor/Mentor";
+
 import AdminUserProfile from "../pages/Admin Page/user-management/UserProfile";
 import { useProfileLoader } from "../pages/Admin Page/user-management/profile.loader";
 import MentorDataForm from "../components/auth-components/MentorInformation";
 
 import CategoryManagement from "@/pages/Admin Page/category";
+import CourseCreateLayout from "@/components/Mentor/course-form/courseForm";
+import BasicCourseInformation from "@/components/Mentor/course-form/BasicIformation";
+import CourseCurriculum from "@/components/Mentor/course-form/Carriculum/CourseCurriculum";
 import CourseCreation from "@/pages/Mentor_Page/course_creation/Index";
 
 
@@ -70,7 +73,8 @@ export const  router=createBrowserRouter([
             { path:'dashboard' ,element:<DashboardContent/>},
             { path:'profile' ,element:<ProfileManagement/>},
             { path: 'data', element: <MentorDataForm /> },
-            { path: 'create', element:<CourseCreation />},
+            { path: 'create',element: <CourseCreation /> },
+
         ]
     },
     {
@@ -87,6 +91,25 @@ export const  router=createBrowserRouter([
             { path:'users' ,element:<UserManagement/>},
             { path:'user-profile/:id' ,element:<AdminUserProfile/>,loader:useProfileLoader},
             { path: 'category',element: <CategoryManagement /> },
+            
+        ]
+    },
+    {
+        path:'/course',
+        children:[
+            {
+                path:'create',
+                element:(
+                    <Protected_Router requiredRole={['mentor']}>
+                        <CourseCreation /> 
+                    </Protected_Router>
+                ),
+                children:[
+                    {path:'',element:<Navigate to='basic'/>},
+                    {path:'basic',element:<BasicCourseInformation/>},
+                    {path:'curriculum',element:<CourseCurriculum/>},
+                ]
+            }
         ]
     },
     {

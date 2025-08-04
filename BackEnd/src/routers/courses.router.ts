@@ -15,6 +15,7 @@ const courseRouter=express.Router()
 // courseRouter.use(verifyUser)
 // courseRouter.use(authorizedRole('mentor'))
 courseRouter.post('/',courseController.addCourse)
+courseRouter.post('/:id',courseController.addCourse)
 
 
 export default courseRouter

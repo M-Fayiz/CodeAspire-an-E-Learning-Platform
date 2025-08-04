@@ -54,7 +54,7 @@ const createInstance = ():AxiosInstance=>{
 
 export const authInstance=createInstance()
 export const userInstance=createInstance()
-export const commonInstance=createInstance()
+export const sharedInstance=createInstance()
 
 // Admin Area
 export const adminInstance=createInstance()

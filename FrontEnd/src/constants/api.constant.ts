@@ -20,6 +20,10 @@ export const API={
         GET_PRESIGNED_URL:'/users/s3-getPresigned-url',
         UPDATE_MENTOR_PROFILE:(id:string)=>`/users/${id}/mentor-profile`,
     },
+    SHARED:{
+        UPLOAD_PUT_PRESIGNED_URL:'/shared/s3/presigned-url/upload',
+        DOWNLOAD_GET_PRESIGNED_URL:'/shared/s3/presigned-url/download',
+    },
     ADMIN:{
         FETCH_ALL_USERS:'/admin/users',
         GET_USER_PROFILE:(id:string)=>`/admin/users/${id}`,

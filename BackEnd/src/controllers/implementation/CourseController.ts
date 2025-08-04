@@ -10,11 +10,19 @@ export class CourseController implements ICourseCategory{
     
     addCourse =async (req: Request, res: Response, next: NextFunction): Promise<void>=> { 
         try {
-            const createdData=await this._courseService.createCourses(req.body.courseData)
-            console.log(createdData)
-            res.status(HttpStatus.OK).json(successResponse(HttpResponse.OK,{createdData}))
+            console.log(req.body.courseData)
+            
+            const createdCourseData=await this._courseService.createCourses(req.body.courseData)
+            res.status(HttpStatus.OK).json(successResponse(HttpResponse.OK,{createdCourseData}))
         } catch (error) {
             next(error)
+        }
+    }
+    updateCourse = async (req: Request, res: Response, next: NextFunction): Promise<void>=> {
+        try {
+            console.log(req.params.id,' 😶‍🌫️ 😶‍🌫️ ',req.body)
+        } catch (error) {
+            next()
         }
     }
 }

@@ -2,12 +2,34 @@ import { useState } from 'react';
 import BasicCourseInformation from './BasicIformation';
 import CourseCurriculum from './Carriculum/CourseCurriculum';
 import { ClipboardPen ,Layers,CloudUpload} from 'lucide-react';
+import type { ICourseData } from '@/types/courses.types';
 
-export default function CourseBasicInfoForm() {
+
+interface ICourseFormProps{
+  createdCourseData?:Partial<ICourseData>
+}
+
+export default function CourseCreateLayout ({createdCourseData}:ICourseFormProps) {
  
-  const [activeTab, setActiveTab] = useState('basic');
+  const [activeTab, setActiveTab] = useState<'basic'|'curriculum'|'publish'>('basic');
+  const handleActiveTap=(tap:'basic'|'curriculum'|'publish')=>{
+    setActiveTab(tap)
+  }
 
+  if(createdCourseData){
 
+    const basicInfo={
+      title: createdCourseData.title,
+      description: createdCourseData.description,
+      thumbnail: createdCourseData.thumbnail,
+      categoryId:createdCourseData.categoryId,
+      subCategoryId:createdCourseData.subCategoryId,
+      language: createdCourseData.language,
+      level: createdCourseData.level,
+      price:createdCourseData.price,
+      
+    }
+  }
   
   return (
     <div className="max-w-4xl mx-auto bg-white rounded-sm border ">
@@ -52,7 +74,7 @@ export default function CourseBasicInfoForm() {
       </div>
        
       {activeTab=='basic'?(
-        <BasicCourseInformation/>
+        <BasicCourseInformation handleTap={handleActiveTap} />
       ):(
         <CourseCurriculum/>
       )}

@@ -1,7 +1,7 @@
 export interface ICourseData {
  title: string;
   description?: string;
-  thumbnail?: string;
+  thumbnail?: File|string;
   categoryId:string;
   subCategoryId:string
   language: string;
@@ -10,14 +10,16 @@ export interface ICourseData {
   mentorsId: string
   sessions?:[
     { 
-      name :string,
+      title :string,
+      order:number
       lectures:[
         {
-          name:string,
+          title:string,
           lectureType:'video'|'image'|'pdf',
           lecture:string
         }
-      ]
+      ],
+      review:false
     }
   ]
   isActive: boolean;

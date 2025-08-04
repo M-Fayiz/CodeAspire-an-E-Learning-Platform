@@ -2,43 +2,52 @@ import ImageUploadPreview from "@/components/ui/ImageFile"
 import { Input } from "@/components/ui/Inputs"
 import { Combobox } from "@/components/ui/SelectWithSearch"
 import { COURSE_LANGUAGE, COURSE_LEVEL } from "@/constants/courseInputs.constant"
+import { useAuth } from "@/context/auth.context"
 import categoryService from "@/service/client-API/admin/category.service"
+import courseService from "@/service/client-API/mentor/course.service"
 import type { ICategoryTree } from "@/types/category.types"
-import { useEffect, useMemo, useState } from "react"
+import type { ICourseData } from "@/types/courses.types"
+import React, { useEffect, useMemo, useState } from "react"
 import { Controller, useFormContext } from "react-hook-form"
 
+interface BaseCaourseProps{
+  createBaseCourseData?:Partial<ICourseData>
+  handleTap?:(tap:'basic'|'curriculum'|'publish')=>void
+}
 
-const BasicCourseInformation=()=>{
-    const [categories,setCategories]=useState<ICategoryTree[]>([])
-    const {control,formState:{errors}}=useFormContext()
-    const [selectedCategory,setSelectedCategory]=useState('')
-    const [subCategoy,setSubCategory]=useState<ICategoryTree[]>([])
+const BasicCourseInformation:React.FC<BaseCaourseProps>=({createBaseCourseData,handleTap})=>{
+  const [categories,setCategories]=useState<ICategoryTree[]>([])
+  
+  const {getValues,control,formState:{errors}}=useFormContext()
 
-    useEffect(()=>{
-      const fetchCategories=async()=>{
-       const result=await categoryService.listCategory()
+  const [selectedCategory,setSelectedCategory]=useState('')
+  const [subCategoy,setSubCategory]=useState<ICategoryTree[]>([])
+  const {user}=useAuth()
+  useEffect(()=>{
+    const fetchCategories=async()=>{
+      const result=await categoryService.listCategory()
         if(result){
           setCategories(result)
         }
-      }
+    }
     fetchCategories()
-    },[])
+  },[])
 
-    const FormError=({message}:{message?:string})=>{
-      return message?<p className="text-red-500 text-sm pt-0  ">{message}</p>:null
-    }
+  const FormError=({message}:{message?:string})=>{
+    return message?<p className="text-red-500 text-sm pt-0  ">{message}</p>:null
+  }
     
-    const handleSubCategory=(selectedLabel:string|undefined)=>{
-      if(selectedLabel){
-        setSelectedCategory(selectedLabel)
+  const handleSubCategory=(selectedLabel:string|undefined)=>{
+    if(selectedLabel){
+      setSelectedCategory(selectedLabel)
       }
     }
-    useEffect(()=>{
-      const categoryChildren=categories.find(data=>data.label==selectedCategory)?.children
-      if(categoryChildren){
-        setSubCategory(categoryChildren)
-      }
-    },[selectedCategory])
+  useEffect(()=>{
+    const categoryChildren=categories.find(data=>data.label==selectedCategory)?.children
+    if(categoryChildren){
+      setSubCategory(categoryChildren)
+    }
+  },[selectedCategory])
 
 
     const boxData=useMemo(()=>
@@ -48,7 +57,16 @@ const BasicCourseInformation=()=>{
   
     })),[categories])
     
-
+     const saveDraft=async()=>{
+        const draftData=getValues()
+         if(draftData.thumbnail instanceof FileList &&draftData.thumbnail.length>0){
+          draftData.thumbnail=draftData.thumbnail[0]
+        }
+        console.log(' 🍉🍉🍉 ',draftData.thumbnail)
+        draftData.mentorsId=user?.id
+        const result=await courseService.createCourse(draftData)
+        console.log(' 😶‍🌫️😶‍🌫️',result)
+      }
     
 
     return(
@@ -199,7 +217,9 @@ const BasicCourseInformation=()=>{
         <div className="flex items-center justify-between mt-12 pt-6 border-t border-gray-200">
   
            <button
-              type="submit"
+              type="button"
+              onClick={()=>{saveDraft()
+                handleTap?.("curriculum")}}
               className="px-8 py-3 text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 rounded-md shadow-sm transition-colors"
             >
               Save & Next

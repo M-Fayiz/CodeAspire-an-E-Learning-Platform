@@ -15,7 +15,7 @@ export const navigationConfig = {
     primary: [
       { icon: Home, label: 'Dashboard', path: '/admin/dashboard', active: true },
       { icon: Users, label: 'User Management', path: '/admin/users' , },
-      { icon: Book, label: 'Course Management', path: '/admin/courses',  },
+      { icon: Book, label: 'Course Management', path: '/course/courses',  },
       { icon: Layers, label: 'Category Management', path: '/admin/category' , },
       { icon: MessageSquare, label: 'Messages', path: '/admin/messages', },
       { icon: Settings, label: 'System Settings', path: '/admin/settings',  }

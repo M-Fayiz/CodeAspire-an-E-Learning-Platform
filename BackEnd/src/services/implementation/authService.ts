@@ -11,7 +11,7 @@ import { createHttpError } from "../../utility/http-error";
 import { generateTokens } from "../../utility/jwt-token.util";
 import { verifyAccesToken,verifyRefreshToken } from "../../utility/jwt-token.util";
 import { JwtPayload } from "jsonwebtoken";
-import { IPayload } from "../../models/user.model";
+import { IPayload, IUserModel } from "../../models/user.model";
 import { generateSecureToken } from "../../utility/crypto.util";
 import { redisPrefix } from "../../const/redisKey";
 import { userDTO, } from "../../dtos/user.dto";
@@ -67,14 +67,14 @@ export class AuthService implements IAuthService{
                 isRequested:false
             }
         
-           const newUser=await this._userRepo.createUser(user as IUser)
+           const newUser=await this._userRepo.createUser(user as IUserModel)
            await redisClient.del(key)
         
            if(!newUser){
             throw createHttpError(HttpStatus.CONFLICT,HttpResponse.USER_CREATION_FAILED)
            }
             const payload =payloadDTO(newUser)
-            console.log('payload',payload)
+      
            return generateTokens(payload)
         } catch (error) {
             throw error
@@ -85,13 +85,13 @@ export class AuthService implements IAuthService{
     async authMe(token: string):Promise<IUserDTO> {
           
         const decode= verifyAccesToken(token)
-        console.log(22,'this is verifyToken')
+        
         if(!decode){
             throw createHttpError(HttpStatus.UNAUTHORIZED,HttpResponse.ACCESS_TOKEN_EXPIRED)
         }
         
         const user=await this._userRepo.findUserByEmail(decode.email)
-        console.log(33,'this is verifyToken',user)
+        
         if(!user){
             throw createHttpError(HttpStatus.NOT_FOUND,HttpResponse.USER_NOT_FOUND)
         }

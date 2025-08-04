@@ -23,7 +23,6 @@ const categoryService={
     listCategory:async():Promise<ICategoryTree[]>=>{
         try {
             const response=await categoryInstance.get(API.CATEGORY.LIST_CATEGORIES)
-           console.log('😶‍🌫️😶‍🌫️😶‍🌫️😶‍🌫️😶‍🌫️😶‍🌫️',response.data.categories)
             return response.data.categories
         } catch (error) {
             const err=error as AxiosError<{error:string}>

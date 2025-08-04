@@ -1,13 +1,42 @@
 
 import ManagementLayout from "@/components/layout/ManagementLayout"
-import CourseBasicInfoForm from "@/components/Mentor/course-form/courseForm"
 import {useForm,FormProvider, type SubmitHandler} from 'react-hook-form'
 import { BookPlus } from "lucide-react" 
 import type { ICourseData } from "@/types/courses.types"
 import courseService from "@/service/client-API/mentor/course.service"
+import CourseForm from "@/components/Mentor/course-form/courseForm"
 
 const CourseCreation=()=>{
-    const methods = useForm<ICourseData>();
+    const methods = useForm<ICourseData>({
+        defaultValues:{
+            title: '',
+            description: '',
+            thumbnail: '',
+            categoryId: '',
+            subCategoryId:'',
+            language:'',
+            level: 'Beginner',
+            price:0,
+            mentorsId: '',
+            isActive: false,
+            isDraft: true,
+            sessions:[
+                {
+                title:'',
+                order:1,
+                lectures:[
+                    {
+                    title:'',
+                    lectureType:'video',
+                    lecture:''
+                    }
+                ],
+                review:false
+                }
+            ]
+  
+        }
+    });
 
     const onSubmitForm: SubmitHandler<ICourseData> = (data) => {
         console.log('dattaattaa',data);
@@ -15,7 +44,12 @@ const CourseCreation=()=>{
 
     const saveDraft=async()=>{
         const draftData=methods.getValues()
+        
+        if(draftData.thumbnail instanceof FileList &&draftData.thumbnail.length>0){
+            draftData.thumbnail=draftData.thumbnail[0]
+        }
         const result=await courseService.createCourse(draftData)
+      
        
     }
 
@@ -30,7 +64,7 @@ const CourseCreation=()=>{
                 <form onSubmit={methods.handleSubmit(onSubmitForm)} >
 
                     
-                    <CourseBasicInfoForm/>
+                    <CourseForm/>
                    
                 </form>
             
