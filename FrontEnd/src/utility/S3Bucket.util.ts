@@ -34,7 +34,7 @@ export const S3BucketUtil={
     uploadToS3:async(uploadURL:string,file:File)=>{
         try {
             await axios.put(uploadURL,file,{
-                 headers: { "Content-Type": file.type },
+                headers: { "Content-Type": file.type },
             })
         } catch (error) {
             if(error instanceof Error){

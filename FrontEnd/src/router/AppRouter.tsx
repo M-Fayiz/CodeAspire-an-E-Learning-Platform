@@ -22,10 +22,13 @@ import { useProfileLoader } from "../pages/Admin Page/user-management/profile.lo
 import MentorDataForm from "../components/auth-components/MentorInformation";
 
 import CategoryManagement from "@/pages/Admin Page/category";
-import CourseCreateLayout from "@/components/Mentor/course-form/courseForm";
-import BasicCourseInformation from "@/components/Mentor/course-form/BasicIformation";
-import CourseCurriculum from "@/components/Mentor/course-form/Carriculum/CourseCurriculum";
+import BasicCourseInformation from "@/features/mentor/course-form/BasicIformation";
+import CourseCurriculum from "@/features/mentor/course-form/CourseCurriculum";
 import CourseCreation from "@/pages/Mentor_Page/course_creation/Index";
+import CourseLayout from "@/features/courses_list/CourseLayout";
+import { fetchCourses } from "@/features/courses_list/CourseLoader";
+
+
 
 
 export const  router=createBrowserRouter([
@@ -56,7 +59,8 @@ export const  router=createBrowserRouter([
         children:[
             { index:true, element: <Navigate to='dashboard'/>},
             { path:'dashboard' ,element:<DashboardContent/>},
-            { path:'profile' ,element:<ProfileManagement/>}
+            { path:'profile' ,element:<ProfileManagement/>},
+            { path:'courses' ,element:<CourseLayout/>},
         ]
 
      
@@ -104,13 +108,15 @@ export const  router=createBrowserRouter([
                         <CourseCreation /> 
                     </Protected_Router>
                 ),
-                children:[
-                    {path:'',element:<Navigate to='basic'/>},
-                    {path:'basic',element:<BasicCourseInformation/>},
-                    {path:'curriculum',element:<CourseCurriculum/>},
-                ]
+                // children:[
+                //     {path:'',element:<Navigate to='basic'/>},
+                //     {path:'basic',element:<BasicCourseInformation/>},
+                //     {path:'curriculum',element:<CourseCurriculum/>},
+                // ]
             }
         ]
+    },{
+        path:'/courses', element:<CourseLayout/>,loader:fetchCourses
     },
     {
         path: '*',

@@ -1,5 +1,5 @@
 import { useMemo } from "react";
-import type { IUserType } from "../../../types/profile.type";
+import type { IUserType } from "../../../types/users.type";
 import { GraduationCap, Users } from "lucide-react";
 
 export const StatsCards: React.FC<{ users: IUserType[]}> = ({ users }) => {

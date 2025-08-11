@@ -1,7 +1,13 @@
-import { IUser,IAuth, IMentor, ILearner, IAdmin } from "../../types/user.types";
+import {
+  IUser,
+  IAuth,
+  IMentor,
+  ILearner,
+  IAdmin,
+} from "../../types/user.types";
 import { IAuthService } from "../interface/IAuthService";
 import { IUserRepo } from "../../repository/interface/IUserRepo";
-import { hashPassword,comparePassword } from "../../utility/bcrypt.util";
+import { hashPassword, comparePassword } from "../../utility/bcrypt.util";
 import { sendToken } from "../../utility/send-mail.util";
 import { v4 as uuidv4 } from "uuid";
 import redisClient from "../../config/redis";
@@ -9,194 +15,239 @@ import { HttpStatus } from "../../const/http-status";
 import { HttpResponse } from "../../const/error-message";
 import { createHttpError } from "../../utility/http-error";
 import { generateTokens } from "../../utility/jwt-token.util";
-import { verifyAccesToken,verifyRefreshToken } from "../../utility/jwt-token.util";
+import {
+  verifyAccesToken,
+  verifyRefreshToken,
+} from "../../utility/jwt-token.util";
 import { JwtPayload } from "jsonwebtoken";
 import { IPayload, IUserModel } from "../../models/user.model";
 import { generateSecureToken } from "../../utility/crypto.util";
 import { redisPrefix } from "../../const/redisKey";
-import { userDTO, } from "../../dtos/user.dto";
-import { IUserDTO } from "../../types/dto.types";
+import { userDTO } from "../../dtos/user.dto";
+import { IUserDTO } from "../../types/dtos.type/dto.types";
 import { payloadDTO } from "../../dtos/payload.dto";
 
+export class AuthService implements IAuthService {
+  constructor(private _userRepo: IUserRepo) {}
 
-export class AuthService implements IAuthService{
-
-    constructor(private _userRepo:IUserRepo){}
-
-    async signUp(user: IUser): Promise<string> {
-     
-        const isUserExist=await this._userRepo.findUserByEmail(user.email)
-        if(isUserExist){
-            throw createHttpError(HttpStatus.CONFLICT,HttpResponse.USER_EXIST)
-        } 
-        user.password=await hashPassword(user.password as string)
-
-         const token=uuidv4()
-         
-         await sendToken(user.email,token,'verify-email')
-        
-         const key=`${redisPrefix.VERIFY_EMAIL}:${token}`
-                
-        
-        const response= await redisClient.setEx(key,300,JSON.stringify(user))
-      
-        if(!response){
-            throw createHttpError(HttpStatus.INTERNAL_SERVER_ERROR,HttpResponse.SERVER_ERROR)
-        }
-
-        return user.email
+  async signUp(user: IUser): Promise<string> {
+    const isUserExist = await this._userRepo.findUserByEmail(user.email);
+    if (isUserExist) {
+      throw createHttpError(HttpStatus.CONFLICT, HttpResponse.USER_EXIST);
     }
-    async verifyEmail(data:IAuth):Promise<{accessToken:string,refreshToken:string}>{
-        try {
-            const key=`${redisPrefix.VERIFY_EMAIL}:${data.token}`
-            const result=await redisClient.get(key)
-        
-            if(!result){
-                throw createHttpError(HttpStatus.UNAUTHORIZED,HttpResponse.USER_CREATION_FAILED)
-            }
-            const storedData=JSON.parse(result)
+    user.password = await hashPassword(user.password as string);
 
-            const user={
-                name:storedData.name,
-                email:storedData.email,
-                phone:storedData.phone,
-                password:storedData.password,
-                role:storedData.role,
-                isActive:true,
-                ApprovalStatus:'pending',
-                isRequested:false
-            }
-        
-           const newUser=await this._userRepo.createUser(user as IUserModel)
-           await redisClient.del(key)
-        
-           if(!newUser){
-            throw createHttpError(HttpStatus.CONFLICT,HttpResponse.USER_CREATION_FAILED)
-           }
-            const payload =payloadDTO(newUser)
-      
-           return generateTokens(payload)
-        } catch (error) {
-            throw error
-            
-        }
+    const token = uuidv4();
+
+    await sendToken(user.email, token, "verify-email");
+
+    const key = `${redisPrefix.VERIFY_EMAIL}:${token}`;
+
+    const response = await redisClient.setEx(key, 300, JSON.stringify(user));
+
+    if (!response) {
+      throw createHttpError(
+        HttpStatus.INTERNAL_SERVER_ERROR,
+        HttpResponse.SERVER_ERROR,
+      );
     }
 
-    async authMe(token: string):Promise<IUserDTO> {
-          
-        const decode= verifyAccesToken(token)
-        
-        if(!decode){
-            throw createHttpError(HttpStatus.UNAUTHORIZED,HttpResponse.ACCESS_TOKEN_EXPIRED)
-        }
-        
-        const user=await this._userRepo.findUserByEmail(decode.email)
-        
-        if(!user){
-            throw createHttpError(HttpStatus.NOT_FOUND,HttpResponse.USER_NOT_FOUND)
-        }
-        if(!user.isActive){
-            throw createHttpError(HttpStatus.FORBIDDEN,HttpResponse.USER_BLOCKED)
-        }
+    return user.email;
+  }
+  async verifyEmail(
+    data: IAuth,
+  ): Promise<{ accessToken: string; refreshToken: string }> {
+    try {
+      const key = `${redisPrefix.VERIFY_EMAIL}:${data.token}`;
+      const result = await redisClient.get(key);
 
+      if (!result) {
+        throw createHttpError(
+          HttpStatus.UNAUTHORIZED,
+          HttpResponse.USER_CREATION_FAILED,
+        );
+      }
+      const storedData = JSON.parse(result);
 
-        return userDTO(user)
+      const user = {
+        name: storedData.name,
+        email: storedData.email,
+        phone: storedData.phone,
+        password: storedData.password,
+        role: storedData.role,
+        isActive: true,
+        ApprovalStatus: "pending",
+        isRequested: false,
+      };
+
+      const newUser = await this._userRepo.createUser(user as IUserModel);
+      await redisClient.del(key);
+
+      if (!newUser) {
+        throw createHttpError(
+          HttpStatus.CONFLICT,
+          HttpResponse.USER_CREATION_FAILED,
+        );
+      }
+      const payload = payloadDTO(newUser);
+
+      return generateTokens(payload);
+    } catch (error) {
+      throw error;
+    }
+  }
+
+  async authMe(token: string): Promise<IUserDTO> {
+    const decode = verifyAccesToken(token);
+
+    if (!decode) {
+      throw createHttpError(
+        HttpStatus.UNAUTHORIZED,
+        HttpResponse.ACCESS_TOKEN_EXPIRED,
+      );
     }
 
-    async refreshAccessToken(token: string): Promise<{ newAccessToken: string; payload: JwtPayload; }> {
-        if(!token){
-            throw createHttpError(HttpStatus.NOT_FOUND,HttpResponse.USER_NOT_FOUND)
-        }
-        const decode =verifyRefreshToken(token) as JwtPayload
+    const user = await this._userRepo.findUserByEmail(decode.email);
 
-        if(!decode){
-            throw createHttpError(HttpStatus.NOT_FOUND,HttpResponse.REFRESH_TOKEN_EXPIRED)
-        }
-
-        const user= await this._userRepo.findUserByEmail(
-            decode.email
-        )
-        if(!user?.isActive){
-            throw createHttpError(HttpStatus.FORBIDDEN,HttpResponse.USER_BLOCKED)
-        }
-
-        const payload=payloadDTO(user)
-        
-        const {accessToken}=generateTokens(payload)
-        const newAccessToken=accessToken
-        return {newAccessToken,payload}
-
+    if (!user) {
+      throw createHttpError(HttpStatus.NOT_FOUND, HttpResponse.USER_NOT_FOUND);
+    }
+    if (!user.isActive) {
+      throw createHttpError(HttpStatus.FORBIDDEN, HttpResponse.USER_BLOCKED);
     }
 
-    async login(email: string, password: string): Promise<{ accessToken: string; refreshToken: string; MappedUser:IUserDTO }> {
-        
-        const user=await this._userRepo.findUserByEmail(email)
-        if(!user){
-            throw createHttpError(HttpStatus.NOT_FOUND,HttpResponse.USER_NOT_FOUND)
-        }
-        if(!user.isActive){
-            throw createHttpError(HttpStatus.FORBIDDEN,HttpResponse.USER_BLOCKED)
-        }
-         
-        const isMatch=await comparePassword(password,user.password)
+    return userDTO(user);
+  }
 
-        if(!isMatch){
-            throw createHttpError(HttpStatus.FORBIDDEN,HttpResponse.INVALID_CREDNTIALS)
-        }
+  async refreshAccessToken(
+    token: string,
+  ): Promise<{ newAccessToken: string; payload: JwtPayload }> {
+    if (!token) {
+      throw createHttpError(HttpStatus.NOT_FOUND, HttpResponse.USER_NOT_FOUND);
+    }
+    const decode = verifyRefreshToken(token) as JwtPayload;
 
-        const MappedUser=userDTO(user)
-        const {accessToken,refreshToken}=generateTokens(payloadDTO(user))
-        return {accessToken,refreshToken,MappedUser}
+    if (!decode) {
+      throw createHttpError(
+        HttpStatus.NOT_FOUND,
+        HttpResponse.REFRESH_TOKEN_EXPIRED,
+      );
     }
 
-    async  forgotPassword(email: string): Promise<string> {
-        const isUserExist=await this._userRepo.findUserByEmail(email)
-
-        if(!isUserExist){
-            throw createHttpError(HttpStatus.NOT_FOUND,HttpResponse.USER_NOT_FOUND)
-        }
-
-        const secureToken=generateSecureToken()
-        const key=`${redisPrefix.FORGOT_PASSWORD}:${email}`
-
-        await sendToken(email,secureToken,'reset-password')
-        const response=await redisClient.setEx(key,300,secureToken)
-
-        if(!response){
-            throw createHttpError(HttpStatus.INTERNAL_SERVER_ERROR,HttpResponse.SERVER_ERROR)
-        }
-
-        return email
-        
-    }
-    async resetPassword(email: string, token: string, password: string): Promise<string> {
-        const key=`${redisPrefix.FORGOT_PASSWORD}:${email}`
-
-        const storedToken= await redisClient.get(key)
-        if(!storedToken){
-            throw createHttpError(HttpStatus.BAD_REQUEST,HttpResponse.TOKEN_NOT_FOUND)
-        }
-
-        if(storedToken!==token){
-            throw createHttpError(HttpStatus.FORBIDDEN,HttpResponse.UNAUTHORIZED)
-        }
-        
-        const hashedPassword=await hashPassword(password as string)
-        
-        const result=await this._userRepo.updateUserPassword(email,hashedPassword)
-
-        if(!result){
-            throw createHttpError(HttpStatus.INTERNAL_SERVER_ERROR,HttpResponse.SERVER_ERROR)
-        }
-        await redisClient.del(key)
-        return result.email
+    const user = await this._userRepo.findUserByEmail(decode.email);
+    if (!user?.isActive) {
+      throw createHttpError(HttpStatus.FORBIDDEN, HttpResponse.USER_BLOCKED);
     }
 
+    const payload = payloadDTO(user);
 
-    async generateToken(user: IUser|IMentor|ILearner|IAdmin): Promise<{ accessToken: string; refreshToken: string;payload:JwtPayload }> {
-        const payload:IPayload={id:user._id,email:user.email,role:user.role,ApprovalStatus:user.ApprovalStatus}
-         const {accessToken,refreshToken}=generateTokens(payload)
-        return {accessToken,refreshToken,payload}
+    const { accessToken } = generateTokens(payload);
+    const newAccessToken = accessToken;
+    return { newAccessToken, payload };
+  }
+
+  async login(
+    email: string,
+    password: string,
+  ): Promise<{
+    accessToken: string;
+    refreshToken: string;
+    MappedUser: IUserDTO;
+  }> {
+    const user = await this._userRepo.findUserByEmail(email);
+    if (!user) {
+      throw createHttpError(HttpStatus.NOT_FOUND, HttpResponse.USER_NOT_FOUND);
     }
-   
+    if (!user.isActive) {
+      throw createHttpError(HttpStatus.FORBIDDEN, HttpResponse.USER_BLOCKED);
+    }
+
+    const isMatch = await comparePassword(password, user.password);
+
+    if (!isMatch) {
+      throw createHttpError(
+        HttpStatus.FORBIDDEN,
+        HttpResponse.INVALID_CREDNTIALS,
+      );
+    }
+
+    const MappedUser = userDTO(user);
+    const { accessToken, refreshToken } = generateTokens(payloadDTO(user));
+    return { accessToken, refreshToken, MappedUser };
+  }
+
+  async forgotPassword(email: string): Promise<string> {
+    const isUserExist = await this._userRepo.findUserByEmail(email);
+
+    if (!isUserExist) {
+      throw createHttpError(HttpStatus.NOT_FOUND, HttpResponse.USER_NOT_FOUND);
+    }
+
+    const secureToken = generateSecureToken();
+    const key = `${redisPrefix.FORGOT_PASSWORD}:${email}`;
+
+    await sendToken(email, secureToken, "reset-password");
+    const response = await redisClient.setEx(key, 300, secureToken);
+
+    if (!response) {
+      throw createHttpError(
+        HttpStatus.INTERNAL_SERVER_ERROR,
+        HttpResponse.SERVER_ERROR,
+      );
+    }
+
+    return email;
+  }
+  async resetPassword(
+    email: string,
+    token: string,
+    password: string,
+  ): Promise<string> {
+    const key = `${redisPrefix.FORGOT_PASSWORD}:${email}`;
+
+    const storedToken = await redisClient.get(key);
+    if (!storedToken) {
+      throw createHttpError(
+        HttpStatus.BAD_REQUEST,
+        HttpResponse.TOKEN_NOT_FOUND,
+      );
+    }
+
+    if (storedToken !== token) {
+      throw createHttpError(HttpStatus.FORBIDDEN, HttpResponse.UNAUTHORIZED);
+    }
+
+    const hashedPassword = await hashPassword(password as string);
+
+    const result = await this._userRepo.updateUserPassword(
+      email,
+      hashedPassword,
+    );
+
+    if (!result) {
+      throw createHttpError(
+        HttpStatus.INTERNAL_SERVER_ERROR,
+        HttpResponse.SERVER_ERROR,
+      );
+    }
+    await redisClient.del(key);
+    return result.email;
+  }
+
+  async generateToken(
+    user: IUser | IMentor | ILearner | IAdmin,
+  ): Promise<{
+    accessToken: string;
+    refreshToken: string;
+    payload: JwtPayload;
+  }> {
+    const payload: IPayload = {
+      id: user._id,
+      email: user.email,
+      role: user.role,
+      ApprovalStatus: user.ApprovalStatus,
+    };
+    const { accessToken, refreshToken } = generateTokens(payload);
+    return { accessToken, refreshToken, payload };
+  }
 }

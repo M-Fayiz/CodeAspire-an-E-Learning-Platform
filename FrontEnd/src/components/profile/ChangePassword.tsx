@@ -1,7 +1,7 @@
 import {  Lock } from "lucide-react";
 import { useState } from "react";
 import { Input } from "../ui/Inputs";
-import { validatePassword } from "../../utility/validateForm";
+import { validatePassword } from "../../schema/validateForm";
 import UserService from "../../service/client-API/user.service";
 import { toastService } from "../toast/ToastSystem";
 import { Spinner } from "../templates/Spinner";
@@ -70,7 +70,7 @@ export const PasswordChangeForm :React.FC<passWordsProps>= ({userId,setTabs}) =>
 
 
   };
-  const handleChange=(e:React.ChangeEvent<HTMLInputElement>)=>{
+  const handleChange=(e:{target:{name:string,value:string}})=>{
     const {name,value}=e.target
      setPasswordData((prv)=>({...prv,[name]:value}))
   }

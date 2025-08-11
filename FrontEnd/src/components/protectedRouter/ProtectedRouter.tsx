@@ -9,7 +9,7 @@ import { Spinner } from "../templates/Spinner";
 interface ProtectedProps{
     children:ReactNode,
     fallback?:string
-    requiredRole:UserRole[]
+    requiredRole?:UserRole[]
 }
 
 
@@ -22,23 +22,24 @@ export const Protected_Router:React.FC<ProtectedProps>=({children,requiredRole,f
     useEffect(() => {
       if (user?.role === "mentor" && user.ApprovalStatus=='pending') {
         navigate("/mentor/data");
+        return
       }
     }, [user, navigate]);
     
-    console.log(1)
+    
     if(loading){
         return <Spinner fullScreen variant="theme"/>
     }
-    console.log(2)
-    console.log('user from context in protect',user)
     if(!user){
         return <Navigate to={fallback} state={{ from: location }}  replace />
     }
-    console.log(3,user)
-    if(requiredRole.length>0){
-        console.log(4)
+
+    
+    if(requiredRole&&requiredRole.length>0){
+       console.log('resqured role',requiredRole);
+       
         const hasRole=requiredRole.find(role=>user.role==role)
-        console.log('has role',hasRole)
+        console.info('User Role :',hasRole)
         if(!hasRole){
             return <Navigate to="/unauthorized" replace />;
         }

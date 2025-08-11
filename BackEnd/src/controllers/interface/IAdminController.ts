@@ -1,9 +1,8 @@
-import { Request,Response,NextFunction } from "express";
-import { IUserModel } from "../../models/user.model";
+import { Request, Response, NextFunction } from "express";
 
-export interface IAdminController{
-    fetchAllUsers(req:Request,res:Response,next:NextFunction):Promise<void>
-    blockUser(req:Request,res:Response,next:NextFunction):Promise<void>
-    userProfile(req:Request,res:Response,next:NextFunction):Promise<void>
-    approveMentor(req:Request,res:Response,next:NextFunction):Promise<void>
+export interface IAdminController {
+  fetchAllUsers(req: Request, res: Response, next: NextFunction): Promise<void>;
+  blockUser(req: Request, res: Response, next: NextFunction): Promise<void>;
+  userProfile(req: Request, res: Response, next: NextFunction): Promise<void>;
+  approveMentor(req: Request, res: Response, next: NextFunction): Promise<void>;
 }

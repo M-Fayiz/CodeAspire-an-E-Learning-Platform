@@ -1,26 +1,22 @@
-import { Types,Document } from "mongoose";
-
+import { Types, Document } from "mongoose";
 
 export interface ICategory extends Document<Types.ObjectId> {
   title: string;
   slug: string;
-  parentId: string|Types.ObjectId | null;
+  parentId: string | Types.ObjectId | null;
   children?: ICategory[];
 }
 
 export interface ICategoryEdit {
-  categoryId:string;
-  title:string;
-  parentId:string; 
+  categoryId: string;
+  title: string;
+  parentId: string;
 }
-
 
 export interface ICaregoryTree {
-  key:string,
-  label:string,
-  slug:string,
-  parent?:string
-  children:ICaregoryTree[]
+  key: string;
+  label: string;
+  slug: string;
+  parent?: string;
+  children: ICaregoryTree[];
 }
-
-

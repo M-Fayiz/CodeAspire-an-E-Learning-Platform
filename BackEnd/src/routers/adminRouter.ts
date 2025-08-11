@@ -1,24 +1,22 @@
-import express from 'express'
-const adminRouter=express.Router()
+import express from "express";
+const adminRouter = express.Router();
 
-import { UserRepository } from '../repository/implementation/UserRepository'
-import { AdminService } from '../services/implementation/AdminService'
-import { AdminController } from '../controllers/implementation/AdminController'
-import { verifyUser } from '../middlewares/authentication.middleware'
-import { authorizedRole } from '../middlewares/authorisation.middleware'
+import { UserRepository } from "../repository/implementation/UserRepository";
+import { AdminService } from "../services/implementation/AdminService";
+import { AdminController } from "../controllers/implementation/AdminController";
+import { verifyUser } from "../middlewares/authentication.middleware";
+import { authorizedRole } from "../middlewares/authorisation.middleware";
 
+const userRepository = new UserRepository();
+const adminService = new AdminService(userRepository);
+const adminController = new AdminController(adminService);
 
-const userRepository=new UserRepository()
-const adminService=new AdminService(userRepository)
-const adminController=new AdminController(adminService)
+adminRouter.use(verifyUser);
+adminRouter.use(authorizedRole("admin"));
 
-adminRouter.use(verifyUser)
-adminRouter.use(authorizedRole('admin'))
+adminRouter.get("/users", adminController.fetchAllUsers);
+adminRouter.delete("/users/:id/block", adminController.blockUser);
+adminRouter.get("/users/:id", adminController.userProfile);
+adminRouter.put("/users/:id/approve", adminController.approveMentor);
 
-adminRouter.get('/users',adminController.fetchAllUsers)
-adminRouter.delete('/users/:id/block',adminController.blockUser)
-adminRouter.get('/users/:id',adminController.userProfile)
-adminRouter.put('/users/:id/approve',adminController.approveMentor)
-
-
-export default adminRouter
+export default adminRouter;

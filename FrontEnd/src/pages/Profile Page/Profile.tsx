@@ -1,48 +1,40 @@
 import React, { useEffect, useState } from 'react';
-import { User, Phone, Save, Edit2, Lock, Camera } from 'lucide-react';
+import { User, Phone, Save, Edit2, Lock, Camera, FilePlus } from 'lucide-react';
 // import ProfileImage from '../../components/profile/ProfileImage';
 import { PasswordChangeForm } from '../../components/profile/ChangePassword';
-import RoleSpecificFields from '../../components/profile/ProfileRole';
-import type { IUserType } from '../../types/profile.type';
 import { useAuth } from '../../context/auth.context';
 import { ProfileTabs } from '../../components/profile/ProfileUI/Profile-Taps';
-export type TapsComp='security'|'profile'|'information'
-import { InputField,TextareaField } from '../../components/profile/ProfileUI/ProfileInput';
+export type TapsComp = 'profile' | 'security' | 'additional';
 import RoleBadge from '../../components/profile/ProfileUI/RoleBadge';
 import UserService from '../../service/client-API/user.service';
 import { toastService } from '../../components/toast/ToastSystem';
-import { validateFiles } from '../../utility/validateForm';
+import { validateFiles } from '../../schema/validateForm';
 import { S3BucketUtil } from '../../utility/S3Bucket.util';
+import { Input } from '@/components/ui/Inputs';
+import type {  AnyUser, MentorUser } from '@/types/users.type';
+import AdditionalInformation from '@/components/profile/AdditionalInfo';
+
 
 
 
 const ProfileManagement: React.FC = () => {
-
-  const [profile, setProfile] = useState<IUserType>({
-  id: '',
-  email: '',
-  name: '',
-  phone: '',
-  role: 'learner',
-  bio: '',
-  expertise: [],
-  mentorRating: 0,
-  profilePicture: '',
-  isActive: true, 
-});
-
+  const [updatedFields, setUpdatedFields] = useState<Partial<AnyUser>>({});
+  const [profile, setProfile] = useState<AnyUser|null>(null);
+  const [isPictureUpdate,setIsPictureUpdate]=useState(false)
 
   const {user,checkAuth}=useAuth()
   const [isEditing, setIsEditing] = useState(false);
-  const [originalProfile, setOriginalProfile] = useState<IUserType>(profile);
+const [originalProfile, setOriginalProfile] = useState<AnyUser | null>(null);
   const [errors, setErrors] = useState<{ [key: string]: string }>({});
   const [fileError,setFileError]=useState('')
   const [activeTab,setActiveTab]=useState<TapsComp>('profile')
   const [signedImageUrl, setSignedImageUrl] = useState<string>('');
 
   const handleEdit = () => {
+    if (!profile) return;
     setOriginalProfile({ ...profile });
     setIsEditing(true);
+
   };
  
   useEffect(() => {
@@ -58,8 +50,10 @@ const ProfileManagement: React.FC = () => {
         if (result.profilePicture) {
           const  get_fileURL  = await S3BucketUtil.getPreSignedURL(result.profilePicture);
           setSignedImageUrl(get_fileURL);
-          setProfile(result);
-          setOriginalProfile(result); 
+          if(result){
+            setProfile(result);
+            setOriginalProfile(result); 
+          }
         }
       }
     } catch (error) {
@@ -70,13 +64,26 @@ const ProfileManagement: React.FC = () => {
   }
 
   fetchUserData();
-  }, []);
+  }, [isPictureUpdate]);
 
 
-  const handleSave = () => {
-    console.log('Saving profile:', profile);
+  const handleSave =async (e:React.FormEvent<HTMLFormElement>) => {
     setIsEditing(false);
-    alert('Profile updated successfully!');
+    e.preventDefault()
+    console.log(' updated Fields :',updatedFields)
+    try {
+      const result=await UserService.updateProfile(user!.id,updatedFields)
+      if(result){
+        toastService.success('Profile updated Successfully')
+      }
+    } catch (error) {
+      if(error instanceof Error){
+        toastService.error(error.message)
+      }
+      
+    }
+
+   
   };
 
   const handleCancel = () => {
@@ -86,39 +93,43 @@ const ProfileManagement: React.FC = () => {
 
 
 
-  const handleInputChange=(e:React.ChangeEvent<HTMLInputElement>)=>{
-        const {name,value}=e.target
-       setProfile((prv)=>({...prv,[name]:value}))
+ const handleChange = (e: {target:{name:string,value:string}}) => {
+  const { name, value } = e.target;
 
-         let errorMessage = '';
-  if (name === 'phone') {
-    if (!/^\d{10}$/.test(value)) {
-      errorMessage = 'Phone number must be exactly 10 digits';
-    }
-  }
+  setProfile((prev) => {
+    if (!prev) return prev;
+    return { ...prev, [name]: value };
+  });
+
+  setUpdatedFields((prv)=>({
+    ...prv,
+    [name]:value
+  }))
+
+  const errorMessage = value.trim() === '' ? 'This field is required' : '';
 
   setErrors((prev) => ({
     ...prev,
     [name]: errorMessage,
   }));
+};
 
   let kk=Object.values(errors).some((msg) => msg)
-  console.log(errors,kk)
-
-  }
+  // console.log(errors,kk)
 
   const handleTabs=(tab:TapsComp)=>{ 
     setActiveTab(tab)
   }
+
   const handleProfilePictureUpdate =async (file:File) => {
     try {
       const result=await S3BucketUtil.putPreSignedURL(file)
       const fileURL=await UserService.uploadImageIntoS3(result.uploadURL,result.fileURL,file,user!.id)
-      console.log('file ',fileURL)
-      if(fileURL){
-        setProfile((prv)=>({...prv,profilePicture:fileURL}))
-        console.log(profile)
+     
+      if (fileURL) {
+        setIsPictureUpdate(true)
       }
+      console.log(profile)
     } catch (error) {
       if(error instanceof Error){
          toastService.error(error.message)
@@ -127,6 +138,7 @@ const ProfileManagement: React.FC = () => {
   };
 
  const handleImageUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
+   setIsPictureUpdate(false)
     const file = e.target.files?.[0];
     if (file ) {
       const validatedError=validateFiles(file.type,'image')
@@ -141,7 +153,7 @@ const ProfileManagement: React.FC = () => {
   };
  
 
-  
+  if(!profile) return
 
   return (
     <div className="max-w-4xl mx-auto p-5 space-y-2">
@@ -149,9 +161,9 @@ const ProfileManagement: React.FC = () => {
         <div className="flex items-center justify-between mb-6">
           <div className="flex items-center gap-4">
            <div className=" relative flex flex-col items-center">
-            {/* Avatar */}
+          
               <div className="relative w-24 h-24 rounded-full overflow-hidden bg-gray-200 flex items-center justify-center shadow-md">
-                {profile.profilePicture ? (
+                {profile&&profile.profilePicture ? (
                   <img src={signedImageUrl} className="w-full h-full object-cover" />
                 ) : (
                   <User className="w-1/2 h-1/2 text-gray-400" />
@@ -166,27 +178,28 @@ const ProfileManagement: React.FC = () => {
                   />
                 </label>
               </div>
-
-              {/* Error Message (properly aligned) */}
               {fileError && (
                 <p className="text-[11px] text-red-500 absolute top-23 left-0 bg-red-100 px-3 py-1 rounded-md text-center shadow-sm mt-2 w-max mx-auto">
                   {fileError}
                 </p>
               )}
             </div>
-            <div>
-              <h1 className="text-2xl font-bold text-gray-900">
-                {profile.name}
-              </h1>
-              <p className="text-gray-600">{profile.email}</p>
-              <div className="mt-2">
-                <RoleBadge role={profile.role} />
+            {profile && (
+              <div className='flex flex-col'>
+                <h1 className="text-2xl font-bold text-gray-900">
+                  {profile.name}
+                </h1>
+                <p className="text-gray-600">{profile.email}</p>
+                <div className="mt-2">
+                  <RoleBadge role={profile.role} />
+                </div>
               </div>
-            </div>
+            )}
+
           </div>
          {activeTab=='profile'&&
           <div className="flex gap-2">
-            {!isEditing  ? (
+            {!isEditing  && (
               <>
                 <button
                 onClick={handleEdit}
@@ -197,28 +210,6 @@ const ProfileManagement: React.FC = () => {
                 <Edit2 className="w-4 h-4" />
                 Edit Profile
               </button>
-              </>
-            ) : (
-              <>
-                <button
-                  type='submit'
-                  onClick={handleSave}
-                   disabled={Object.values(errors).some((msg) => msg)}
-                   className={`flex items-center gap-2 px-4 py-2 rounded-lg transition-colors text-white ${
-                    Object.values(errors).some((msg) => msg)
-                      ? 'bg-gray-400 cursor-not-allowed'
-                      : 'bg-green-600 hover:bg-green-700'
-                  }`}
-                >
-                  <Save className="w-4 h-4" />
-                  Save Changes
-                </button>
-                <button
-                  onClick={handleCancel}
-                  className="bg-gray-300 text-gray-700 px-4 py-2 rounded-lg hover:bg-gray-400 transition-colors"
-                >
-                  Cancel
-                </button>
               </>
             )}
           </div>}
@@ -241,58 +232,80 @@ const ProfileManagement: React.FC = () => {
                 currentTab={activeTab}
                 setTabs={handleTabs}
               />
+              {profile.role=='mentor'&&(
+              <ProfileTabs
+                icon={<FilePlus  className="w-4 h-4" />}
+                title="Additional Information"
+                changeTab="additional"
+                currentTab={activeTab}
+                setTabs={handleTabs}
+              />
+              )}
             </nav>
           </div>
         </div>
      {activeTab=='profile'?(
-      <form action="" onSubmit={(e)=>e.preventDefault()} >
+      <form action="" onSubmit={handleSave} >
       <div className="bg-white rounded-lg shadow-lg p-6">
         <h2 className="text-lg font-semibold text-gray-900 mb-4">Personal Information</h2>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-          <InputField
-            label="Name"
-            value={profile.name}
-            name='name'
-            onChange={handleInputChange}
-            disabled={!isEditing}
-            required
-            icon={<User className="w-4 h-4" />}
-            
+          <Input
+          label='Name'
+          value={profile.name}
+          name='name'
+          onChange={handleChange}
+          type='text'
+          disabled={!isEditing}
+          icon={<User className="w-4 h-4" />}
+          
           />
-          <InputField
-            label="Phone"
-            type='phone'
-            name='phone'
-            value={profile.phone}
-            onChange={handleInputChange}
-            disabled={!isEditing}
-            error={errors.phone}
-            icon={<Phone className="w-4 h-4" />}
+          <Input
+          label='Phone'
+          value={profile.phone}
+          name='phone'
+          onChange={handleChange}
+          type='phone'
+          disabled={!isEditing}
+          icon={<Phone className="w-4 h-4" />}
+          
           />
         </div>
         <div className="mt-4">
-          <TextareaField
+          <Input
             label="Bio"
             value={profile.bio || ''}
-            onChange={(value) => handleProfileUpdate('bio', value)}
-            disabled={!isEditing}
-            rows={4}
+            type="text"
+            onChange={handleChange}
+            name="bio"
+            textArea
           />
-        </div>
-      </div>
 
-      
-      <div className="bg-white rounded-lg shadow-lg p-6">
-        <h2 className="text-lg font-semibold text-gray-900 mb-4">
-          {profile.role.charAt(0).toUpperCase() + profile.role.slice(1)} Information
-        </h2>
-        <RoleSpecificFields
-          profile={profile}
-          isEditing={isEditing}
-          // onUpdate={handleProfileUpdate}
-        />
+        </div>
+        {isEditing&&(
+          <div className='flex gap-4'>
+          
+            <button
+              type='submit'
+              disabled={Object.values(errors).some((msg) => msg)}
+              className={`flex items-center gap-2 px-4 py-2 rounded-lg transition-colors text-white ${
+                Object.values(errors).some((msg) => msg)
+                  ? 'bg-gray-400 cursor-not-allowed'
+                  : 'bg-green-600 hover:bg-green-700'
+              }`}
+            >
+              <Save className="w-4 h-4" />
+              Save Changes
+            </button>
+            <button
+                  onClick={handleCancel}
+                  className="bg-gray-300 text-gray-700 px-4 py-2 rounded-lg hover:bg-gray-400 transition-colors"
+                >
+                  Cancel
+                </button>
+          </div>
+        )}
       </div>
-      </form>):<PasswordChangeForm setTabs={handleTabs} userId={user!.id}/>}
+      </form>):activeTab==='additional'?<AdditionalInformation MentorData={profile as MentorUser}/>:<PasswordChangeForm setTabs={handleTabs} userId={user!.id}/>}
     </div>
   );
   

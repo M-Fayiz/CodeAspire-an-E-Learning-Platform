@@ -3,7 +3,7 @@ import { LogIn, Mail, Lock, Code} from 'lucide-react'; // Adjust if using differ
 import { loginFeatur } from '../../config/UI-config/RoleConfig'; 
 import type { AuthComponentProps, ILogin}  from '../../types/auth.types'
 import {Input} from '../ui/Inputs';
-import { loginSchema } from '../../utility/validateForm';
+import { loginSchema } from '../../schema/validateForm';
 import { Link } from 'react-router-dom';
 
 

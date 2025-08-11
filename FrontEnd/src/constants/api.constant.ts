@@ -1,5 +1,6 @@
 
 
+
 export const API={
     Auth:{
         SIGNUP_URL:'/auth/signup',
@@ -19,6 +20,7 @@ export const API={
         PUT_PRESIGNED_URL:'/users/s3-presigned-url',
         GET_PRESIGNED_URL:'/users/s3-getPresigned-url',
         UPDATE_MENTOR_PROFILE:(id:string)=>`/users/${id}/mentor-profile`,
+        UPDATE_PROFILE_DATA:(id:string)=>`/users/${id}/profile-data`
     },
     SHARED:{
         UPLOAD_PUT_PRESIGNED_URL:'/shared/s3/presigned-url/upload',
@@ -36,6 +38,10 @@ export const API={
         EDIT_CATEGORY:(id:string)=>`/categories/${id}`
     },
     COURSE:{
-        CREATE_COURSE:'/courses'
+        CREATE_COURSE:'/courses',
+        FETCH_COURSES:'/courses',
+        ADD_OR_UPDATE_SESSION:(courseId:string,updatePart:string)=>`/courses/${courseId}?course_part=${updatePart}`,
+        GET_COURSE:(id:string)=>`/courses/${id}`,
+        GET_MENTOR_DRAFTED_COURSE:`/courses/drafted-courses`
     }
 }

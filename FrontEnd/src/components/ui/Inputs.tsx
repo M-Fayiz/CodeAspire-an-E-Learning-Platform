@@ -7,15 +7,16 @@ interface IInputProps {
   placeholder?: string; 
   value?: string;
   name: string;
-  onChange: (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => void;
+  onChange?: (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => void;
   icon?: React.ReactNode;
   error?: string;
-  label:string,
+  label?:string,
   showPasswordToggle?: boolean;
   min?:string
   max?:string
   textArea?:boolean;
   required?:boolean;
+  disabled?: boolean;
  
 }
 
@@ -32,6 +33,7 @@ export const Input: React.FC<IInputProps> = ({
   textArea,
   min,
   max,
+  disabled
   
 }) => {
   const [showPassword, setShowPassword] = useState(false);
@@ -67,9 +69,9 @@ export const Input: React.FC<IInputProps> = ({
           onChange={onChange}
           onFocus={() => setIsFocused(true)}
           onBlur={() => setIsFocused(false)}
-          className={`w-full pl-8 pr-10 py-2.5 rounded-sm border ${
-            error ? 'border-red-400' : 'border-gray-300'
-          } ${isFocused ? 'bg-white/30' : ''}`}
+          className={`w-full bg-white text-gray-900 pl-8 pr-10 py-2.5 rounded-sm border ${
+            error ? 'border-red-400' : 'border-gray-400'
+          } ${isFocused ? 'bg-white' : ''}${disabled ? 'bg-gray-100 cursor-not-allowed' : ''}`}
           placeholder={placeholder}
         />
         )}

@@ -4,9 +4,11 @@ import { AuthService } from "../service/client-API/auth.service";
 
 
 
+
+
 const createInstance = ():AxiosInstance=>{
     const instance=axios.create({
-        baseURL:import.meta.env.VITE_BASE_URL,
+        baseURL:`${import.meta.env.VITE_BASE_URL}/api/v1/`,
         withCredentials:true
     })
     
@@ -23,7 +25,7 @@ const createInstance = ():AxiosInstance=>{
             const status = error.response?.status;
             const url = error.config?.url;
             const errorMessage=(error.response?.data as any).error
-             
+             console.log('type of the error',typeof error.response?.data)
             console.warn(`⚠️ Interceptor caught error STATUS:❌ ${status} | ERROR MESSAGE :⭕ ${errorMessage} | on URL :🔗 ${url}`);
 
             const originalRequest=error.config as any
@@ -33,7 +35,6 @@ const createInstance = ():AxiosInstance=>{
                 originalRequest._retry=true
                 console.log('🏃‍♀️‍➡️ i am going')
                 const refreshed = await AuthService.refreshToken();
-                console.log('⛓️‍💥')
                 if (refreshed) {
                     return instance(originalRequest);
                 } else {
@@ -52,13 +53,7 @@ const createInstance = ():AxiosInstance=>{
     return instance
 }
 
-export const authInstance=createInstance()
+
 export const userInstance=createInstance()
-export const sharedInstance=createInstance()
 
-// Admin Area
-export const adminInstance=createInstance()
-export const categoryInstance=createInstance()
-
-// course 
-export const courseInstance=createInstance()
+export const axiosInstance=createInstance()

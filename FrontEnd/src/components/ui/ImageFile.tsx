@@ -1,47 +1,59 @@
 import React, { useState } from 'react';
-import { Input } from "@/components/ui/input"; 
-import { useFormContext } from 'react-hook-form';
+import { Input } from "@/components/ui/input";
 import FormErrorText from '../shared/FormErrorText';
+import { Controller} from 'react-hook-form';
+import type{Control, FieldErrors }from 'react-hook-form'
+import type { ICourseData } from "@/types/courses.types"
 
+interface Props {
+  control: Control<ICourseData>;
+  errors: FieldErrors<ICourseData>;
+}
 
-function ImageUploadPreview() {
+function ImageUploadPreview({ control, errors }: Props) {
   const [imagePreview, setImagePreview] = useState<string | null>(null);
-  const {register,formState:{errors}}=useFormContext()
-  const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0];
-    if (file) {
-      const reader = new FileReader();
-      reader.onloadend = () => {
-        setImagePreview(reader.result as string);
-      };
-      reader.readAsDataURL(file);
-    }
-  };
 
   return (
     <div className="space-y-4">
-      <Input type="file"
-      {...register('thumbnail',{
-        required:'Please Upload Your Course Thumbnail' ,
-        
-        validate: {
-          acceptedFormats: (value) => {
-            const acceptedTypes = ["image/jpeg", "image/png", "application/pdf"];
-                 
-            if (value && value.length > 0) {
-              const fileType = value[0].type;
-              if (!acceptedTypes.includes(fileType)) {
-                return "Invalid file format. Only JPEG, PNG, or PDF files are allowed.";
-              }
+      <Controller
+        name="thumbnail"
+        control={control}
+        rules={{
+          required: 'Please upload your course thumbnail',
+          validate: (value: File | FileList | string | undefined) => {
+            const file = value instanceof FileList ? value[0] : value instanceof File ? value : null
+
+            if (!file) return 'File is required'
+
+            const acceptedTypes = ['image/jpeg', 'image/png', 'application/pdf']
+            if (!acceptedTypes.includes(file.type)) {
+              return 'Only JPEG, PNG, or PDF files are allowed.'
             }
-           return true; 
-          },
-        },
-      })}
-       accept="image/*"
-       onChange={(e) => {
-    handleImageChange(e);
-  }}/>
+
+            return true;
+          }
+        }}
+        render={({ field }) => (
+          <>
+            <Input
+              type="file"
+              accept="image/*"
+              onChange={(e) => {
+                const file = e.target.files?.[0]
+                if (file) {
+                  const reader = new FileReader()
+                  reader.onloadend = () => {
+                    setImagePreview(reader.result as string)
+                  };
+                  reader.readAsDataURL(file)
+                  field.onChange(e.target.files)
+                }
+              }}
+            />
+          </>
+        )}
+      />
+
       {imagePreview && (
         <img
           src={imagePreview}
@@ -49,7 +61,7 @@ function ImageUploadPreview() {
           className="max-w-xs rounded-sm shadow border"
         />
       )}
-      <FormErrorText message={errors.thumbnail?.message as string}/>
+      <FormErrorText message={errors.thumbnail?.message as string} />
     </div>
   );
 }

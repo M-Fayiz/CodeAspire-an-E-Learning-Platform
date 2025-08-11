@@ -1,21 +1,24 @@
-import express from 'express'
-import { CourseRepository } from '../repository/implementation/CourseRepository' 
-import { CourseService } from '../services/implementation/CourseService' 
-import { CourseController } from '../controllers/implementation/CourseController'
-import { verify } from 'crypto'
-import { verifyUser } from '../middlewares/authentication.middleware'
-import { authorizedRole } from '../middlewares/authorisation.middleware'
+import express from "express";
+import { CourseRepository } from "../repository/implementation/CourseRepository";
+import { CourseService } from "../services/implementation/CourseService";
+import { CourseController } from "../controllers/implementation/CourseController";
+import { verifyUser } from "../middlewares/authentication.middleware";
+import { authorizedRole } from "../middlewares/authorisation.middleware";
+import { CategoryRepository } from "../repository/implementation/CategoryRepository";
 
-const courseRepository=new CourseRepository()
-const courseService=new CourseService(courseRepository)
-const courseController=new CourseController(courseService)
+const courseRepository = new CourseRepository();
+const categoryRepository = new CategoryRepository();
+const courseService = new CourseService(courseRepository, categoryRepository);
+const courseController = new CourseController(courseService);
 
-const courseRouter=express.Router()
+const courseRouter = express.Router();
 
-// courseRouter.use(verifyUser)
-// courseRouter.use(authorizedRole('mentor'))
-courseRouter.post('/',courseController.addCourse)
-courseRouter.post('/:id',courseController.addCourse)
+courseRouter.use(verifyUser)
+courseRouter.use(authorizedRole('mentor'))
+courseRouter.post("/", courseController.addCourse);
+courseRouter.put("/:id", courseController.updateCourse);
+courseRouter.get("/", courseController.fetchCourse);
+courseRouter.get("/drafted-courses",courseController.getMentorDraftedCourseList)
+courseRouter.get("/:id",courseController.getCourse)
 
-
-export default courseRouter
+export default courseRouter;

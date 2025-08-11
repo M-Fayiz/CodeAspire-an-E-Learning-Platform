@@ -42,7 +42,7 @@ const LoginPage: React.FC = () => {
         
     } catch (error) {
         if(error instanceof Error){
-
+            
             toastService.error(error.message)
              if(error.message==='User already exist'){
                 navigate('/auth/login')    

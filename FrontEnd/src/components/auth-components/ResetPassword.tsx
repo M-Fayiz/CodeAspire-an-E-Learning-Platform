@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { Lock, Eye, EyeOff, CheckCircle, AlertCircle, Shield } from 'lucide-react';
-import { checkPasswordStrength } from '../../utility/validateForm';
+import { checkPasswordStrength } from '../../schema/validateForm';
 import { useSearchParams } from 'react-router';
 import { useNavigate } from 'react-router-dom';
 import { AuthService } from '../../service/client-API/auth.service';

@@ -1,5 +1,6 @@
 
-import type { IUserType } from "../../types/profile.type";
+import type { IUserType } from "../../types/users.type";
+
 export const TableHeader: React.FC = () => {
   return (
     <thead className="bg-gray-50">

@@ -40,7 +40,7 @@ const DynamicLayout =() => {
           isSidebarOpen={isSidebarOpen} 
         />
 
-        <main className="flex-1 overflow-y-auto bg-gray-50 p-4 mt-[56px] lg:mt-0 lg:ml-64 transition-all duration-300">
+        <main className="flex-1 overflow-y-auto bg-gray-50 p-4  md:mt-0 lg:mt-0 lg:ml-64 transition-all duration-300">
           <Outlet />
         </main>
       </div>

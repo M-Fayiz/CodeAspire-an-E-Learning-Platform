@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 
-import type{ IUserType } from '../../../types/profile.type';
+import type{ IUserType } from '../../../types/users.type';
 import { SearchAndFilter } from '../../../features/admin/userMangement/SerchAndFilter';
 import { TableHeader } from '../../../components/common/TableComponents';
 import { adminService } from '@/service/client-API/admin/admin.service';

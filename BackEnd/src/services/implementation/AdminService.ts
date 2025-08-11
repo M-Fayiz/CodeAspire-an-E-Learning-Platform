@@ -5,117 +5,145 @@ import { IUserRepo } from "../../repository/interface/IUserRepo";
 import { createHttpError } from "../../utility/http-error";
 import { IAdminService } from "../interface/IAdminService";
 import { parseObjectId } from "../../mongoose/objectId";
-import { LearnerDTO,MentorDTO } from "../../dtos/role.dto";
-import { ILearnerDTO, IMentorDTO,IBaseRoleDTO } from "../../types/dto.types";
+import { LearnerDTO, MentorDTO } from "../../dtos/role.dto";
+import {
+  ILearnerDTO,
+  IMentorDTO,
+  IBaseRoleDTO,
+} from "../../types/dtos.type/dto.types";
 import { mentorApprovalStatus } from "../../types/user.types";
 
 export type UserFetchResponse = {
-  safeUsers: IMentorDTO|ILearnerDTO[];
+  safeUsers: IMentorDTO | ILearnerDTO[];
   totalPage: number;
 };
 
+export class AdminService implements IAdminService {
+  constructor(private _userRepo: IUserRepo) {}
 
-export class AdminService implements IAdminService{
+  async fetchAllUsers(
+    page: number,
+    isActive: boolean | "",
+    name: string,
+    role: string,
+  ): Promise<UserFetchResponse> {
+    const limit = 3;
+    const skip = (page - 1) * limit;
 
-    constructor(private _userRepo:IUserRepo){}
+    const searchQuery = {
+      name: name,
+      role: role,
+      isActive: isActive,
+    };
 
-   async fetchAllUsers(page:number,isActive:boolean|'',name:string,role:string): Promise<UserFetchResponse> {
-    const limit=3
-    const skip=(page-1)*limit
-       
-       const searchQuery={
-        name:name,
-        role:role,
-        isActive:isActive
-       }
-    
-        const [allUsers,userCount]=await Promise.all([this._userRepo.findAllUsers(limit,skip,searchQuery),this._userRepo.findUserCount(searchQuery)])
-        if(!allUsers){
-            throw createHttpError(HttpStatus.INTERNAL_SERVER_ERROR,HttpResponse.SERVER_ERROR)
-        }
-        
-        const safeUsers = allUsers.map(user =>{
-            switch(user.role){
-                case 'mentor':
-                   return MentorDTO(user as IMenterModel)
-                case 'learner':
-                   return LearnerDTO(user as ILearnerModel)
-                default:
-                   return{
-                    id:user._id,
-                    name: user.name,
-                    email: user.email,
-                    phone: user.phone,
-                    profilePicture: user.profilePicture,
-                    isActive: user.isActive,
-                    role: user.role,
-                    ApprovalStatus:user.ApprovalStatus
-                   }
-            }
-        });
-        const totalPage=Math.ceil(userCount/limit)
-        return {safeUsers,totalPage}
+    const [allUsers, userCount] = await Promise.all([
+      this._userRepo.findAllUsers(limit, skip, searchQuery),
+      this._userRepo.findUserCount(searchQuery),
+    ]);
+    if (!allUsers) {
+      throw createHttpError(
+        HttpStatus.INTERNAL_SERVER_ERROR,
+        HttpResponse.SERVER_ERROR,
+      );
     }
 
-    async blockUser(id: string): Promise<{isActive:boolean,id:string}> {
-       
-        const objectId=parseObjectId(id)
-         if(!objectId){
-            throw createHttpError(HttpStatus.BAD_REQUEST,HttpResponse.INVALID_CREDNTIALS)
-        }
+    const safeUsers = allUsers.map((user) => {
+      switch (user.role) {
+        case "mentor":
+          return MentorDTO(user as IMenterModel);
+        case "learner":
+          return LearnerDTO(user as ILearnerModel);
+        default:
+          return {
+            id: user._id,
+            name: user.name,
+            email: user.email,
+            phone: user.phone,
+            profilePicture: user.profilePicture,
+            isActive: user.isActive,
+            role: user.role,
+            ApprovalStatus: user.ApprovalStatus,
+          };
+      }
+    });
+    const totalPage = Math.ceil(userCount / limit);
+    return { safeUsers, totalPage };
+  }
 
-        const updatedUser=await this._userRepo.blockUser(objectId )
-     
-        if(!updatedUser){
-            throw createHttpError(HttpStatus.INTERNAL_SERVER_ERROR,HttpResponse.SERVER_ERROR)
-        }
-        const result={
-            isActive:updatedUser.isActive,
-            id:updatedUser.id
-        }
-        return result
+  async blockUser(id: string): Promise<{ isActive: boolean; id: string }> {
+    const objectId = parseObjectId(id);
+    if (!objectId) {
+      throw createHttpError(
+        HttpStatus.BAD_REQUEST,
+        HttpResponse.INVALID_CREDNTIALS,
+      );
     }
-    async userProfile(id: string): Promise<ILearnerDTO|IMentorDTO |null> {
-        const objectId=parseObjectId(id)
-        if(!objectId){
-            throw createHttpError(HttpStatus.BAD_REQUEST,HttpResponse.INVALID_CREDNTIALS)
-        }
-        
-        const profileData=await this._userRepo.findUserById(objectId)
-        if(!profileData){
-            throw createHttpError(HttpStatus.NOT_FOUND,HttpResponse.USER_NOT_FOUND)
-        }
 
-        switch(profileData.role){
-            case 'mentor':
-             return MentorDTO(profileData as IMenterModel)
-            case 'learner':
-             return LearnerDTO(profileData as ILearnerModel)
-            default:
-              return{
-                id:profileData._id,
-                name: profileData.name,
-                email: profileData.email,
-                phone: profileData.phone,
-                profilePicture: profileData.profilePicture,
-                isActive: profileData.isActive,
-                role: profileData.role,
-                ApprovalStatus:profileData.ApprovalStatus,
-                isRequested:profileData.isRequested
+    const updatedUser = await this._userRepo.blockUser(objectId);
 
-             }
-        }
+    if (!updatedUser) {
+      throw createHttpError(
+        HttpStatus.INTERNAL_SERVER_ERROR,
+        HttpResponse.SERVER_ERROR,
+      );
     }
-    async approveMentor(id: string): Promise<{ApprovalStatus:mentorApprovalStatus}> {
-        const objectId=parseObjectId(id)
-         if(!objectId){
-            throw createHttpError(HttpStatus.BAD_REQUEST,HttpResponse.INVALID_CREDNTIALS)
-        }
-        const approvedData=await this._userRepo.updateMentorStatus(objectId,'approved')
-        if(!approvedData){
-            throw createHttpError(HttpStatus.NOT_FOUND,HttpResponse.USER_NOT_FOUND)
-        }
-       
-        return {ApprovalStatus:approvedData.ApprovalStatus}
+    const result = {
+      isActive: updatedUser.isActive,
+      id: updatedUser.id,
+    };
+    return result;
+  }
+  async userProfile(id: string): Promise<ILearnerDTO | IMentorDTO | null> {
+    const objectId = parseObjectId(id);
+    if (!objectId) {
+      throw createHttpError(
+        HttpStatus.BAD_REQUEST,
+        HttpResponse.INVALID_CREDNTIALS,
+      );
     }
+
+    const profileData = await this._userRepo.findUserById(objectId);
+    if (!profileData) {
+      throw createHttpError(HttpStatus.NOT_FOUND, HttpResponse.USER_NOT_FOUND);
+    }
+
+    switch (profileData.role) {
+      case "mentor":
+        return MentorDTO(profileData as IMenterModel);
+      case "learner":
+        return LearnerDTO(profileData as ILearnerModel);
+      default:
+        return {
+          id: profileData._id,
+          name: profileData.name,
+          email: profileData.email,
+          phone: profileData.phone,
+          profilePicture: profileData.profilePicture,
+          isActive: profileData.isActive,
+          role: profileData.role,
+          ApprovalStatus: profileData.ApprovalStatus,
+          isRequested: profileData.isRequested,
+        };
+    }
+  }
+  async approveMentor(
+    id: string,
+  ): Promise<{ ApprovalStatus: mentorApprovalStatus }> {
+    const objectId = parseObjectId(id);
+    if (!objectId) {
+      throw createHttpError(
+        HttpStatus.BAD_REQUEST,
+        HttpResponse.INVALID_CREDNTIALS,
+      );
+    }
+    const approvedData = await this._userRepo.updateMentorStatus(
+      objectId,
+      "approved",
+    );
+    if (!approvedData) {
+      throw createHttpError(HttpStatus.NOT_FOUND, HttpResponse.USER_NOT_FOUND);
+    }
+
+    return { ApprovalStatus: approvedData.ApprovalStatus };
+  }
 }

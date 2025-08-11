@@ -9,6 +9,7 @@ export const InputField: React.FC<{
   required?: boolean;
   icon?: React.ReactNode;
   error?:string
+  
 }> = ({ label, type = 'text', value, onChange, disabled = false, required = false, icon ,name,error}) => {
   return (
     <div className="space-y-2">

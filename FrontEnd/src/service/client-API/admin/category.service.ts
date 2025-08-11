@@ -1,5 +1,5 @@
 
-import { categoryInstance } from "@/axios/createInstance"
+import { axiosInstance } from "@/axios/createInstance"
 import { API } from "@/constants/api.constant"
 import type { ICategory,ICategoryEdit,ICategoryTree } from "@/types/category.types"
 import type { AxiosError } from "axios"
@@ -9,7 +9,7 @@ const categoryService={
     createCategory:async(title:string,parentId:string):Promise<ICategory>=>{
         
         try {
-            const response=await categoryInstance.post(API.CATEGORY.CREATE_CATEGORY,{
+            const response=await axiosInstance.post(API.CATEGORY.CREATE_CATEGORY,{
                 title:title,
                 parentId:parentId?parentId:null
             })
@@ -22,7 +22,7 @@ const categoryService={
     },
     listCategory:async():Promise<ICategoryTree[]>=>{
         try {
-            const response=await categoryInstance.get(API.CATEGORY.LIST_CATEGORIES)
+            const response=await axiosInstance.get(API.CATEGORY.LIST_CATEGORIES)
             return response.data.categories
         } catch (error) {
             const err=error as AxiosError<{error:string}>
@@ -34,7 +34,7 @@ const categoryService={
         
         try {
             const parentId=editData.parentId==='none'?null:editData.parentId
-            const response=await categoryInstance.put(API.CATEGORY.EDIT_CATEGORY(id),{title:editData.title,parentId:parentId})
+            const response=await axiosInstance.put(API.CATEGORY.EDIT_CATEGORY(id),{title:editData.title,parentId:parentId})
             return response.data.editedData
         } catch (error) {
             const err=error as AxiosError<{error:string}>

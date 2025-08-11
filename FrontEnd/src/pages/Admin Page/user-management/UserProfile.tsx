@@ -4,16 +4,16 @@ import { Activity, Mail, Phone, AlertTriangle, CheckCircle, XCircle, Ban, User, 
 import { useLoaderData } from 'react-router';
 import { adminService } from '@/service/client-API/admin/admin.service';
 import { toastService } from '../../../config/Toast.config';
-import type { IUserType } from '../../../types/profile.type';
+import type { AnyUser, IUserType } from '../../../types/users.type';
 
 
 const AdminUserProfile: React.FC = () => {
-  const userData = useLoaderData() as IUserType
+  const userData = useLoaderData() as AnyUser
   const [profileData,setProfileData]=useState(userData)
 
   const handleUnblockUser=async()=>{
     try {
-      const result=await adminService.blockUser(userData.id)
+      const result=await adminService.blockUser(userData._id)
       if(result){
         toastService.success(result.isActive?'User Unblocked Successfully':'User Blocked Successfully')
         setProfileData((prv)=>({...prv,isActive:result.isActive}))
@@ -44,7 +44,7 @@ const AdminUserProfile: React.FC = () => {
 
   const approveMentor=async()=>{
     try {
-      const result=await adminService.approveMentor(profileData.id)
+      const result=await adminService.approveMentor(profileData._id)
       console.log('is Approved',result)
       if(result){
         // setUser((prv)=>({...prv,isApproved}))
@@ -81,17 +81,6 @@ const AdminUserProfile: React.FC = () => {
                 <div>
                   <h1 className="text-2xl font-bold text-gray-900">{profileData.name}</h1>
                   <p className="text-gray-600 mt-1">{profileData.role}</p>
-                  {/* <p className="text-sm text-gray-500 mt-2">User ID: {user.id}</p> */}
-                  {/* <div className="flex items-center space-x-4 mt-3 text-sm text-gray-600">
-                    <div className="flex items-center space-x-1">
-                      <Calendar className="w-4 h-4" />
-                      <span>Joined {formatDate(profileData.createdAt)}</span>
-                    </div>
-                    <div className="flex items-center space-x-1">
-                      <Clock className="w-4 h-4" />
-                    
-                    </div>
-                  </div> */}
                 </div>
               </div>
               <div className="flex space-x-2">
@@ -149,7 +138,7 @@ const AdminUserProfile: React.FC = () => {
           </div>
 
           {profileData.role=='mentor'&&(
-            <div className="bg-white border rounded-sm p-4">
+            <div className="bg-white border  rounded-sm p-4">
             <h3 className="text-sm font-semibold text-slate-900 mb-3">Expertise</h3>
             <div className="flex flex-wrap gap-2">
               {profileData.expertise&&profileData.expertise.map((skill, index) => (
@@ -196,15 +185,20 @@ const AdminUserProfile: React.FC = () => {
                 View Activity
               </button>
             </div>
+            <div className='flex '>
             <div className='flex flex-wrap gap-2'>
               <button onClick={approveMentor} type="button" className="text-green-700 hover:text-white border border-green-700 hover:bg-green-800 focus:ring-4 focus:outline-none focus:ring-green-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center me-2 mb-2 dark:border-green-500 dark:text-green-500 dark:hover:text-white dark:hover:bg-green-600 dark:focus:ring-green-800">Approved</button>
+            </div>
+            <div className='flex flex-wrap gap-2'>
+              <button onClick={approveMentor} type="button" className="text-green-700 hover:text-white border border-green-700 hover:bg-green-800 focus:ring-4 focus:outline-none focus:ring-green-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center me-2 mb-2 dark:border-green-500 dark:text-green-500 dark:hover:text-white dark:hover:bg-green-600 dark:focus:ring-green-800">Approved</button>
+            </div>
             </div>
             </div>
           </div>
            )}
          </div> 
         </div> 
-        {/* </div>  */}
+      
       </div>
     </div>
   );

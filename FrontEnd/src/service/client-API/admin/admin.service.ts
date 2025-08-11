@@ -1,8 +1,8 @@
 import type { AxiosError } from "axios";
 
-import { adminInstance } from "@/axios/createInstance";
+import { axiosInstance } from "@/axios/createInstance";
 import { API } from "@/constants/api.constant";
-import type { IUserType } from "@/types/profile.type"; 
+import type { IUserType } from "@/types/users.type"; 
 
 import { searchFromParser } from "@/utility/parser.util";
 import type { SearchQuery } from "@/types/parser.types";
@@ -17,7 +17,7 @@ export const adminService={
     fetchAllUsers:async(page:number,searchQuery:SearchQuery):Promise<fetchedUsers>=>{
              const queryData=searchFromParser(searchQuery)
         try {
-            const response=await adminInstance.get(API.ADMIN.FETCH_ALL_USERS,{
+            const response=await axiosInstance.get(API.ADMIN.FETCH_ALL_USERS,{
                 params:{page,...queryData}
             })
             console.log(response?.data);
@@ -31,7 +31,7 @@ export const adminService={
     },
     blockUser:async(id:string):Promise<{isActive:boolean,id:string}>=>{
         try {  
-            const response=await adminInstance.delete(API.ADMIN.BLOCK_USER(id))
+            const response=await axiosInstance.delete(API.ADMIN.BLOCK_USER(id))
           console.log(response.data.result);
           
           return response.data.result
@@ -43,7 +43,7 @@ export const adminService={
     },
     userProfile:async(id:string):Promise<IUserType>=>{
         try {
-            const response=await adminInstance.get(API.ADMIN.GET_USER_PROFILE(id),{
+            const response=await axiosInstance.get(API.ADMIN.GET_USER_PROFILE(id),{
                 params:{id}
             })
        
@@ -58,7 +58,7 @@ export const adminService={
     },
     approveMentor:async (id:string):Promise<{isApproved:boolean}>=>{
         try {
-            const response=await adminInstance.put(API.ADMIN.APPROVE_MENTOR(id))
+            const response=await axiosInstance.put(API.ADMIN.APPROVE_MENTOR(id))
             return response.data
         } catch (error) {
              const err=error as AxiosError<{error:string}>
@@ -68,4 +68,4 @@ export const adminService={
     }
 }
 
-export default adminInstance
+

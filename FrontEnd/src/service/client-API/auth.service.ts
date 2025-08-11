@@ -1,8 +1,7 @@
 import type {  AxiosError } from "axios";
-import { authInstance } from "../../axios/createInstance";
+import { axiosInstance } from "../../axios/createInstance";
 import type{ IDecodedUserType, ILogin, ISignUp } from "../../types/auth.types";
 import { API } from "../../constants/api.constant";
-import { HttpError } from "../../utility/error.util";
 import type { UserRole } from "../../types/auth.types";
 
 
@@ -10,7 +9,7 @@ export const  AuthService={
   signUp:async(data:ISignUp):Promise<{status:number,message:string,email:string}> =>{
     try {
             
-     const response=await authInstance.post(API.Auth.SIGNUP_URL,data)
+     const response=await axiosInstance.post(API.Auth.SIGNUP_URL,data)
      return response.data
     } catch (error:unknown) {
       const err=error as AxiosError<{error:string}> 
@@ -23,7 +22,7 @@ export const  AuthService={
   ,verifyEmail:async(email:string|null,token:string|null):Promise<{status:number,message:string}>=>{
     try {
       console.log('verify email auth service')
-      const response=await authInstance.post(API.Auth.VERIFY_EMAIL_URL,{token,email})
+      const response=await axiosInstance.post(API.Auth.VERIFY_EMAIL_URL,{token,email})
       console.log('verify email ',response.data)
       return response.data.message
             
@@ -36,7 +35,7 @@ export const  AuthService={
   authME:async():Promise<IDecodedUserType>=>{
     console.log('auth me load..')
     try {
-      const response=await authInstance.post(API.Auth.AUTH_URL,{},{withCredentials:true})
+      const response=await axiosInstance.post(API.Auth.AUTH_URL,{},{withCredentials:true})
       return response.data?.user
             
     } catch (error) {
@@ -50,7 +49,7 @@ export const  AuthService={
     //  axios interseptor
   refreshToken:async():Promise<{ id: string, email: string, role: string } | null>=>{
     try {
-      const response=await authInstance.get(API.Auth.REFRESH_TOKEN_URL,{withCredentials: true})
+      const response=await axiosInstance.get(API.Auth.REFRESH_TOKEN_URL,{withCredentials: true})
       return response?.data.user
     } catch (error) {
       const err=error as AxiosError<{error:string}>
@@ -60,20 +59,22 @@ export const  AuthService={
   },
   login:async(data:ILogin):Promise<{status:number,message:string, id: string, email: string, role: string}>=>{
     try {
-      const response=await authInstance.post(API.Auth.LOGIN_URL,data)
+      const response=await axiosInstance.post(API.Auth.LOGIN_URL,data)
           
       return response?.data
 
     } catch (error) {
       const err=error as AxiosError<{error:string}>
       const errorMessage=err.response?.data?.error||'Something went wrong '
-      const statusCode=err.response?.status||500
-      throw new HttpError(statusCode,errorMessage)
+      // const statusCode=err.response?.status||500
+      
+      
+      throw new Error(errorMessage)
     }
   },
   logOut:async()=>{
     try {
-    const response=await authInstance.post(API.Auth.LOGOUT_URL,{},{withCredentials:true})
+    const response=await axiosInstance.post(API.Auth.LOGOUT_URL,{},{withCredentials:true})
              
       if(response.status==200) return true
     } catch (error) {
@@ -94,7 +95,7 @@ export const  AuthService={
     },
     forgotPassword:async(email:string):Promise<{status:number,message:string,email:string}>=>{
       try {
-        const response=await authInstance.post(API.Auth.FORGOT_PASSWORD_URL,{email})
+        const response=await axiosInstance.post(API.Auth.FORGOT_PASSWORD_URL,{email})
         return response.data?.email
       } catch (error) {
         const err=error as AxiosError<{error:string}>
@@ -105,7 +106,7 @@ export const  AuthService={
     },
     resetPassword:async(email:string,token:string,password:string):Promise<{status:number,message:string,email:string}>=>{
        try {
-        const response=await authInstance.patch(API.Auth.RESET_PASSWORD_URL,{email,token,password})
+        const response=await axiosInstance.patch(API.Auth.RESET_PASSWORD_URL,{email,token,password})
         return response?.data
        } catch (error) {
         const err=error as AxiosError<{error:string}>

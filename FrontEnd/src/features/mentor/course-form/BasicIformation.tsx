@@ -1,3 +1,4 @@
+
 import ImageUploadPreview from "@/components/ui/ImageFile"
 import { Input } from "@/components/ui/Inputs"
 import { Combobox } from "@/components/ui/SelectWithSearch"
@@ -6,28 +7,31 @@ import { useAuth } from "@/context/auth.context"
 import categoryService from "@/service/client-API/admin/category.service"
 import courseService from "@/service/client-API/mentor/course.service"
 import type { ICategoryTree } from "@/types/category.types"
-import type { ICourseData } from "@/types/courses.types"
+import type { ICourseData, ICourseDTO } from "@/types/courses.types"
 import React, { useEffect, useMemo, useState } from "react"
-import { Controller, useFormContext } from "react-hook-form"
+import { Controller, useForm } from "react-hook-form"
 
 interface BaseCaourseProps{
-  createBaseCourseData?:Partial<ICourseData>
+
   handleTap?:(tap:'basic'|'curriculum'|'publish')=>void
+  courseId:(id:string)=>void
 }
 
-const BasicCourseInformation:React.FC<BaseCaourseProps>=({createBaseCourseData,handleTap})=>{
+const BasicCourseInformation:React.FC<BaseCaourseProps>=({courseId})=>{
   const [categories,setCategories]=useState<ICategoryTree[]>([])
   
-  const {getValues,control,formState:{errors}}=useFormContext()
+  const {control, handleSubmit, formState: { errors } } = useForm<ICourseData>();
 
   const [selectedCategory,setSelectedCategory]=useState('')
   const [subCategoy,setSubCategory]=useState<ICategoryTree[]>([])
+  const [addesCourse,setAddedCourse]=useState<ICourseDTO|null>(null)
   const {user}=useAuth()
   useEffect(()=>{
     const fetchCategories=async()=>{
       const result=await categoryService.listCategory()
         if(result){
           setCategories(result)
+          
         }
     }
     fetchCategories()
@@ -40,8 +44,8 @@ const BasicCourseInformation:React.FC<BaseCaourseProps>=({createBaseCourseData,h
   const handleSubCategory=(selectedLabel:string|undefined)=>{
     if(selectedLabel){
       setSelectedCategory(selectedLabel)
-      }
     }
+  }
   useEffect(()=>{
     const categoryChildren=categories.find(data=>data.label==selectedCategory)?.children
     if(categoryChildren){
@@ -56,26 +60,34 @@ const BasicCourseInformation:React.FC<BaseCaourseProps>=({createBaseCourseData,h
       label: category.label
   
     })),[categories])
-    
-     const saveDraft=async()=>{
-        const draftData=getValues()
-         if(draftData.thumbnail instanceof FileList &&draftData.thumbnail.length>0){
-          draftData.thumbnail=draftData.thumbnail[0]
-        }
-        console.log(' 🍉🍉🍉 ',draftData.thumbnail)
-        draftData.mentorsId=user?.id
-        const result=await courseService.createCourse(draftData)
-        console.log(' 😶‍🌫️😶‍🌫️',result)
+  
+    const onSubmit=async(formData:Partial<ICourseData>)=>{
+      formData.mentorsId = user?.id;
+      if (formData.thumbnail instanceof FileList && formData.thumbnail.length > 0) {
+        formData.thumbnail = formData.thumbnail[0]; 
       }
-    
+      try {
+        const result=await courseService.createCourse(formData)
+        console.log('result',result)
+        if(result){
+          courseId(result.id)
+          localStorage.setItem('courseId',result.id)
+        }
+        
+      } catch (error) {
+        
+      }
+    }
+   
 
     return(
-        <div className="p-6">
+        <div className="p-4 sm:p-6">
             <div className="flex items-center justify-between mb-4">
              <h2 className="text-2xl font-semibold text-gray-900">Basic Information</h2>           
             </div>
+          <form onSubmit={handleSubmit(onSubmit)}>
 
-            <div className="space-y-2">
+            <div className="w-full space-y-4">
             <Controller
              name="title"
              control={control}
@@ -84,6 +96,7 @@ const BasicCourseInformation:React.FC<BaseCaourseProps>=({createBaseCourseData,h
                 <Input {...field}
                  placeholder="Course Title"
                  label="Course Title"
+            
                  error={errors.title?.message as string}
                 />
             )}
@@ -115,11 +128,12 @@ const BasicCourseInformation:React.FC<BaseCaourseProps>=({createBaseCourseData,h
                 <Input {...field} 
                 placeholder="Enter Course Price" 
                 label="Course Price"
+                name="price"
                 error={errors.price?.message as string}
                 />
             )}
             />
-           <div className="flex gap-5">
+           <div className="grid grid-cols-1 md:grid-cols-3 ">
              <div className="flex flex-col gap-2">
               <Controller
                 name="categoryId"
@@ -163,7 +177,7 @@ const BasicCourseInformation:React.FC<BaseCaourseProps>=({createBaseCourseData,h
               )}
            </div>
 
-            <div className='flex gap-3'>
+            <div className='grid grid-cols-1 md:grid-cols-3'>
               <div className="flex flex-col gap-2">
                 <Controller
                   name="language"
@@ -210,21 +224,25 @@ const BasicCourseInformation:React.FC<BaseCaourseProps>=({createBaseCourseData,h
                 <FormError message={errors.level?.message  as string}/>
               </div>
             </div>
-            <ImageUploadPreview/> 
+            <div className="col-span-1 md:col-span-2">
+
+            <ImageUploadPreview control={control} errors={errors} />
+            </div>
+
+         </div>
+          
     
-        </div>
 
         <div className="flex items-center justify-between mt-12 pt-6 border-t border-gray-200">
   
            <button
-              type="button"
-              onClick={()=>{saveDraft()
-                handleTap?.("curriculum")}}
-              className="px-8 py-3 text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 rounded-md shadow-sm transition-colors"
+              type="submit"
+              className="w-full sm:w-auto px-8 py-3 text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 rounded-md shadow-sm transition-colors"
             >
-              Save & Next
+              Save as Draft & Next
             </button>
         </div>
+        </form>
       </div>
     )
 }
