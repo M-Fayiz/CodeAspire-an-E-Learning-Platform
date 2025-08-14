@@ -11,4 +11,6 @@ export interface ICourseService {
   ): Promise<ICourses | null>;
   getCourse(courseId:string):Promise<ICourseDTO|null>
   getDraftedCourses(mentorId:string):Promise<ICourseDTO[]|null>
+  addSessions(courseId:string,session:ISession):Promise<ICourseDTO>
+  addLectures(courseId:string,sessionId:string,lecture:ILecture):Promise<ICourseDTO>
 }

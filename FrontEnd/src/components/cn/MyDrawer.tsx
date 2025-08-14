@@ -1,4 +1,4 @@
-"use client"
+"use client";
 
 import {
   Drawer,
@@ -6,26 +6,29 @@ import {
   DrawerHeader,
   DrawerTitle,
   DrawerDescription,
-} from "@/components/ui/drawer"
-import { useEffect, useState } from "react"
+} from "@/components/ui/drawer";
+import { useEffect, useState } from "react";
 
 interface MyDrawerProps {
-  isOpen: boolean
-  onClose: () => void
+  isOpen: boolean;
+  onClose: () => void;
 }
 
- function MyDrawer({ isOpen, onClose }: MyDrawerProps) {
-  const [open, setOpen] = useState(isOpen)
+function MyDrawer({ isOpen, onClose }: MyDrawerProps) {
+  const [open, setOpen] = useState(isOpen);
 
   useEffect(() => {
-    setOpen(isOpen)
-  }, [isOpen])
+    setOpen(isOpen);
+  }, [isOpen]);
 
   return (
-    <Drawer open={open} onOpenChange={(val) => {
-      setOpen(val)
-      if (!val) onClose()
-    }}>
+    <Drawer
+      open={open}
+      onOpenChange={(val) => {
+        setOpen(val);
+        if (!val) onClose();
+      }}
+    >
       <DrawerContent className="right-0 top-0 h-screen w-[400px] ml-auto bg-white shadow-lg rounded-none">
         <DrawerHeader>
           <DrawerTitle>Add Category</DrawerTitle>
@@ -38,14 +41,11 @@ interface MyDrawerProps {
         </div>
       </DrawerContent>
     </Drawer>
-  )
+  );
 }
 
-
-
-
 const CategoryManagement = () => {
-  const [drawerOpen, setDrawerOpen] = useState(false)
+  const [drawerOpen, setDrawerOpen] = useState(false);
 
   return (
     <div>
@@ -60,7 +60,7 @@ const CategoryManagement = () => {
         <MyDrawer isOpen={drawerOpen} onClose={() => setDrawerOpen(false)} />
       )}
     </div>
-  )
-}
+  );
+};
 
-export default CategoryManagement
+export default CategoryManagement;

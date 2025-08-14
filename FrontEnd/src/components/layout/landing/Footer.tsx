@@ -1,6 +1,5 @@
 import { Code } from "lucide-react";
 
-
 const Footer: React.FC = () => {
   return (
     <footer className="bg-gray-900 text-white py-16">
@@ -16,11 +15,16 @@ const Footer: React.FC = () => {
               </span>
             </div>
             <p className="text-gray-300 mb-6 max-w-md">
-              Empowering the next generation of developers with cutting-edge education and real-world experience.
+              Empowering the next generation of developers with cutting-edge
+              education and real-world experience.
             </p>
             <div className="flex space-x-4">
-              {['Twitter', 'LinkedIn', 'GitHub', 'Discord'].map((social) => (
-                <a key={social} href="#" className="w-10 h-10 bg-gray-800 rounded-full flex items-center justify-center hover:bg-blue-600 transition-colors">
+              {["Twitter", "LinkedIn", "GitHub", "Discord"].map((social) => (
+                <a
+                  key={social}
+                  href="#"
+                  className="w-10 h-10 bg-gray-800 rounded-full flex items-center justify-center hover:bg-blue-600 transition-colors"
+                >
                   <span className="text-sm">{social[0]}</span>
                 </a>
               ))}
@@ -30,30 +34,65 @@ const Footer: React.FC = () => {
           <div>
             <h4 className="font-semibold mb-4">Courses</h4>
             <ul className="space-y-2 text-gray-300">
-              <li><a href="#" className="hover:text-white transition-colors">Web Development</a></li>
-              <li><a href="#" className="hover:text-white transition-colors">Data Science</a></li>
-              <li><a href="#" className="hover:text-white transition-colors">DevOps</a></li>
-              <li><a href="#" className="hover:text-white transition-colors">Mobile Development</a></li>
+              <li>
+                <a href="#" className="hover:text-white transition-colors">
+                  Web Development
+                </a>
+              </li>
+              <li>
+                <a href="#" className="hover:text-white transition-colors">
+                  Data Science
+                </a>
+              </li>
+              <li>
+                <a href="#" className="hover:text-white transition-colors">
+                  DevOps
+                </a>
+              </li>
+              <li>
+                <a href="#" className="hover:text-white transition-colors">
+                  Mobile Development
+                </a>
+              </li>
             </ul>
           </div>
 
           <div>
             <h4 className="font-semibold mb-4">Company</h4>
             <ul className="space-y-2 text-gray-300">
-              <li><a href="#" className="hover:text-white transition-colors">About Us</a></li>
-              <li><a href="#" className="hover:text-white transition-colors">Careers</a></li>
-              <li><a href="#" className="hover:text-white transition-colors">Press</a></li>
-              <li><a href="#" className="hover:text-white transition-colors">Contact</a></li>
+              <li>
+                <a href="#" className="hover:text-white transition-colors">
+                  About Us
+                </a>
+              </li>
+              <li>
+                <a href="#" className="hover:text-white transition-colors">
+                  Careers
+                </a>
+              </li>
+              <li>
+                <a href="#" className="hover:text-white transition-colors">
+                  Press
+                </a>
+              </li>
+              <li>
+                <a href="#" className="hover:text-white transition-colors">
+                  Contact
+                </a>
+              </li>
             </ul>
           </div>
         </div>
 
         <div className="border-t border-gray-800 mt-12 pt-8 text-center text-gray-400">
-          <p>&copy; 2024 TechMaster. All rights reserved. Built with ❤️ for developers.</p>
+          <p>
+            &copy; 2024 TechMaster. All rights reserved. Built with ❤️ for
+            developers.
+          </p>
         </div>
       </div>
     </footer>
   );
 };
 
-export default Footer
+export default Footer;

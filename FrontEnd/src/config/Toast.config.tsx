@@ -1,8 +1,8 @@
-import React from 'react';
-import toast from 'react-hot-toast';
-import { CheckCircle, XCircle, AlertTriangle, Info, X } from 'lucide-react';
-import type { LucideIcon } from 'lucide-react'; 
-export type ToastStatus = 'success' | 'error' | 'warning' | 'info';
+import React from "react";
+import toast from "react-hot-toast";
+import { CheckCircle, XCircle, AlertTriangle, Info, X } from "lucide-react";
+import type { LucideIcon } from "lucide-react";
+export type ToastStatus = "success" | "error" | "warning" | "info";
 
 interface ToastConfig {
   icon: LucideIcon;
@@ -19,41 +19,45 @@ interface CustomToastProps {
   onDismiss: () => void;
 }
 
-const CustomToast: React.FC<CustomToastProps> = ({ message, status, onDismiss }) => {
+const CustomToast: React.FC<CustomToastProps> = ({
+  message,
+  status,
+  onDismiss,
+}) => {
   const getStatusConfig = (status: ToastStatus): ToastConfig => {
     const configs: Record<ToastStatus, ToastConfig> = {
       success: {
         icon: CheckCircle,
-        bgColor: 'bg-gradient-to-r from-green-50 to-emerald-50',
-        borderColor: 'border-green-200',
-        iconColor: 'text-green-600',
-        textColor: 'text-green-800',
-        titleColor: 'text-green-900'
+        bgColor: "bg-gradient-to-r from-green-50 to-emerald-50",
+        borderColor: "border-green-200",
+        iconColor: "text-green-600",
+        textColor: "text-green-800",
+        titleColor: "text-green-900",
       },
       error: {
         icon: XCircle,
-        bgColor: 'bg-gradient-to-r from-red-50 to-rose-50',
-        borderColor: 'border-red-200',
-        iconColor: 'text-red-600',
-        textColor: 'text-red-800',
-        titleColor: 'text-red-900'
+        bgColor: "bg-gradient-to-r from-red-50 to-rose-50",
+        borderColor: "border-red-200",
+        iconColor: "text-red-600",
+        textColor: "text-red-800",
+        titleColor: "text-red-900",
       },
       warning: {
         icon: AlertTriangle,
-        bgColor: 'bg-gradient-to-r from-yellow-50 to-amber-50',
-        borderColor: 'border-yellow-200',
-        iconColor: 'text-yellow-600',
-        textColor: 'text-yellow-800',
-        titleColor: 'text-yellow-900'
+        bgColor: "bg-gradient-to-r from-yellow-50 to-amber-50",
+        borderColor: "border-yellow-200",
+        iconColor: "text-yellow-600",
+        textColor: "text-yellow-800",
+        titleColor: "text-yellow-900",
       },
       info: {
         icon: Info,
-        bgColor: 'bg-gradient-to-r from-blue-50 to-indigo-50',
-        borderColor: 'border-blue-200',
-        iconColor: 'text-blue-600',
-        textColor: 'text-blue-800',
-        titleColor: 'text-blue-900'
-      }
+        bgColor: "bg-gradient-to-r from-blue-50 to-indigo-50",
+        borderColor: "border-blue-200",
+        iconColor: "text-blue-600",
+        textColor: "text-blue-800",
+        titleColor: "text-blue-900",
+      },
     };
     return configs[status];
   };
@@ -63,16 +67,18 @@ const CustomToast: React.FC<CustomToastProps> = ({ message, status, onDismiss })
 
   const getTitle = (status: ToastStatus): string => {
     const titles: Record<ToastStatus, string> = {
-      success: 'Success!',
-      error: 'Error!',
-      warning: 'Warning!',
-      info: 'Information'
+      success: "Success!",
+      error: "Error!",
+      warning: "Warning!",
+      info: "Information",
     };
     return titles[status];
   };
 
   return (
-    <div className={`max-w-md w-full ${config.bgColor} shadow-lg rounded-lg pointer-events-auto border ${config.borderColor}`}>
+    <div
+      className={`max-w-md w-full ${config.bgColor} shadow-lg rounded-lg pointer-events-auto border ${config.borderColor}`}
+    >
       <div className="p-4">
         <div className="flex items-start">
           <div className="flex-shrink-0">
@@ -82,9 +88,7 @@ const CustomToast: React.FC<CustomToastProps> = ({ message, status, onDismiss })
             <p className={`text-sm font-semibold ${config.titleColor}`}>
               {getTitle(status)}
             </p>
-            <p className={`mt-1 text-sm ${config.textColor}`}>
-              {message}
-            </p>
+            <p className={`mt-1 text-sm ${config.textColor}`}>{message}</p>
           </div>
           <div className="ml-4 flex-shrink-0 flex">
             <button
@@ -100,10 +104,7 @@ const CustomToast: React.FC<CustomToastProps> = ({ message, status, onDismiss })
   );
 };
 
-const showToast = (
-  message: string, 
-  status: ToastStatus = 'info'
-): string => {
+const showToast = (message: string, status: ToastStatus = "info"): string => {
   const toastId = toast.custom(
     (t) => (
       <CustomToast
@@ -114,8 +115,8 @@ const showToast = (
     ),
     {
       duration: 4000,
-      position: 'top-right'
-    }
+      position: "top-right",
+    },
   );
   return toastId;
 };
@@ -131,13 +132,13 @@ interface ToastService {
 }
 
 export const toastService: ToastService = {
-  success: (message: string) => showToast(message, 'success'),
-  error: (message: string) => showToast(message, 'error'),
-  warning: (message: string) => showToast(message, 'warning'),
-  info: (message: string) => showToast(message, 'info'),
+  success: (message: string) => showToast(message, "success"),
+  error: (message: string) => showToast(message, "error"),
+  warning: (message: string) => showToast(message, "warning"),
+  info: (message: string) => showToast(message, "info"),
   custom: showToast,
   dismiss: (toastId?: string) => toast.dismiss(toastId),
-  dismissAll: () => toast.dismiss()
+  dismissAll: () => toast.dismiss(),
 };
 
 // const ToastDemo: React.FC = () => {
@@ -148,7 +149,7 @@ export const toastService: ToastService = {
 //       warning: 'Your session will expire in 5 minutes.',
 //       info: 'New updates are available for your application.'
 //     };
-    
+
 //     toastService[type](messages[type]);
 //   };
 
@@ -162,8 +163,8 @@ export const toastService: ToastService = {
 //   const handlePromiseToast = (): void => {
 //     const myPromise = new Promise<string>((resolve, reject) => {
 //       setTimeout(() => {
-//         Math.random() > 0.5 
-//           ? resolve('Data loaded successfully!') 
+//         Math.random() > 0.5
+//           ? resolve('Data loaded successfully!')
 //           : reject(new Error('Failed to load data'));
 //       }, 2000);
 //     });
@@ -184,7 +185,7 @@ export const toastService: ToastService = {
 //   return (
 //     <div className="min-h-screen bg-gradient-to-br from-slate-50 to-blue-50 p-8">
 //       <div className="max-w-4xl mx-auto">
-       
+
 //         <div className="text-center mb-12">
 //           <h1 className="text-4xl font-bold text-gray-900 mb-4">
 //             Dynamic Toast System
@@ -196,7 +197,7 @@ export const toastService: ToastService = {
 
 //         <div className="bg-white rounded-xl shadow-lg p-8 mb-8">
 //           <h2 className="text-2xl font-semibold text-gray-800 mb-6">Test Toast Messages</h2>
-          
+
 //           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
 //             <button
 //               onClick={() => handleToast('success')}
@@ -205,7 +206,7 @@ export const toastService: ToastService = {
 //               <CheckCircle className="h-5 w-5" />
 //               <span>Success</span>
 //             </button>
-            
+
 //             <button
 //               onClick={() => handleToast('error')}
 //               className="bg-red-600 hover:bg-red-700 text-white font-medium py-3 px-6 rounded-lg transition-colors duration-200 flex items-center justify-center space-x-2"
@@ -213,7 +214,7 @@ export const toastService: ToastService = {
 //               <XCircle className="h-5 w-5" />
 //               <span>Error</span>
 //             </button>
-            
+
 //             <button
 //               onClick={() => handleToast('warning')}
 //               className="bg-yellow-600 hover:bg-yellow-700 text-white font-medium py-3 px-6 rounded-lg transition-colors duration-200 flex items-center justify-center space-x-2"
@@ -221,7 +222,7 @@ export const toastService: ToastService = {
 //               <AlertTriangle className="h-5 w-5" />
 //               <span>Warning</span>
 //             </button>
-            
+
 //             <button
 //               onClick={() => handleToast('info')}
 //               className="bg-blue-600 hover:bg-blue-700 text-white font-medium py-3 px-6 rounded-lg transition-colors duration-200 flex items-center justify-center space-x-2"
@@ -238,14 +239,14 @@ export const toastService: ToastService = {
 //             >
 //               Custom Toast
 //             </button>
-            
+
 //             <button
 //               onClick={handlePromiseToast}
 //               className="bg-indigo-600 hover:bg-indigo-700 text-white font-medium py-2 px-4 rounded-lg transition-colors duration-200"
 //             >
 //               Promise-based Toast
 //             </button>
-            
+
 //             <button
 //               onClick={() => toastService.dismissAll()}
 //               className="bg-gray-600 hover:bg-gray-700 text-white font-medium py-2 px-4 rounded-lg transition-colors duration-200"
@@ -255,7 +256,6 @@ export const toastService: ToastService = {
 //           </div>
 //         </div>
 
-     
 //         <div className="bg-white rounded-xl shadow-lg p-8">
 //           <h2 className="text-2xl font-semibold text-gray-800 mb-4">Simple Usage Examples</h2>
 //           <div className="bg-gray-100 rounded-lg p-4 font-mono text-sm">
@@ -277,7 +277,6 @@ export const toastService: ToastService = {
 //         </div>
 //       </div>
 
-      
 //       <Toaster
 //         position="top-center"
 //         gutter={12}

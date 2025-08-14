@@ -1,13 +1,10 @@
+export const COURSE_LEVEL = [
+  "Beginner",
+  "Intermediate",
+  "Advanced",
+];
 
-
-export const COURSE_LEVEL=[
-    'Beginner',
-    'Intermediate',
-    'Advanced',
-    'All Levels'
-]
-
-export const COURSE_LANGUAGE=[
+export const COURSE_LANGUAGE = [
   "English",
   "Mandarin Chinese",
   "Spanish",
@@ -44,7 +41,5 @@ export const COURSE_LANGUAGE=[
   "Kashmiri",
   "Manipuri",
   "Dogri",
-  "Bodo"
-]
-
-
+  "Bodo",
+];

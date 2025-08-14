@@ -1,23 +1,23 @@
-import { Target,Users,Globe,Star } from "lucide-react";
-
+import { Target, Users, Globe, Star } from "lucide-react";
 
 const StatsSection: React.FC = () => {
   const stats = [
     { number: "50,000+", label: "Students Enrolled", icon: Users },
     { number: "95%", label: "Job Placement Rate", icon: Target },
     { number: "500+", label: "Partner Companies", icon: Globe },
-    { number: "4.9/5", label: "Average Rating", icon: Star }
+    { number: "4.9/5", label: "Average Rating", icon: Star },
   ];
 
   return (
     <section className="py-20 bg-white-900 text-white">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="text-center mb-16">
-          <h2 className="text-4xl lg:text-5xl font-bold mb-4  text-gray-700 "  >
+          <h2 className="text-4xl lg:text-5xl font-bold mb-4  text-gray-700 ">
             Trusted by Thousands
           </h2>
           <p className="text-xl text-gray-500 max-w-3xl mx-auto">
-            Join a community of successful developers who have transformed their careers with TechMaster.
+            Join a community of successful developers who have transformed their
+            careers with TechMaster.
           </p>
         </div>
 
@@ -39,4 +39,4 @@ const StatsSection: React.FC = () => {
   );
 };
 
-export default StatsSection
+export default StatsSection;

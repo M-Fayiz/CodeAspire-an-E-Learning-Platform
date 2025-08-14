@@ -6,24 +6,26 @@ export const RoleSpecificFields: React.FC<{
   isEditing: boolean;
   // onUpdate: (field: keyof IUserType, value: any) => void;
 }> = ({ profile, isEditing }) => {
- 
- function handleChanges(e:React.ChangeEvent<HTMLInputElement>){
-            const {name,value}=e.target
-            console.log(name,value)
- } 
- 
+  function handleChanges(e: React.ChangeEvent<HTMLInputElement>) {
+    const { name, value } = e.target;
+    console.log(name, value);
+  }
 
-
-  if (profile.role === 'learner') {
+  if (profile.role === "learner") {
     return (
       <div className="space-y-4">
         <div className="space-y-2">
-          <label className="block text-sm font-medium text-gray-700">Enrolled Courses</label>
+          <label className="block text-sm font-medium text-gray-700">
+            Enrolled Courses
+          </label>
           <div className="bg-gray-50 p-3 rounded-lg">
             {profile.enrolledCourses && profile.enrolledCourses.length > 0 ? (
               <div className="flex flex-wrap gap-2">
                 {profile.enrolledCourses.map((course, index) => (
-                  <span key={index} className="bg-blue-100 text-blue-800 px-2 py-1 rounded text-sm">
+                  <span
+                    key={index}
+                    className="bg-blue-100 text-blue-800 px-2 py-1 rounded text-sm"
+                  >
                     {course}
                   </span>
                 ))}
@@ -37,7 +39,7 @@ export const RoleSpecificFields: React.FC<{
     );
   }
 
-  if (profile.role === 'admin') {
+  if (profile.role === "admin") {
     return (
       <div className="space-y-4">
         <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-4">
@@ -53,4 +55,4 @@ export const RoleSpecificFields: React.FC<{
   return null;
 };
 
-export default  RoleSpecificFields
+export default RoleSpecificFields;

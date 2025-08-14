@@ -2,7 +2,9 @@
 @import "tw-animate-css";
 
 @custom-variant dark (&:is(.dark *));
-html, body, #root {
+html,
+body,
+#root {
   height: 100%;
   margin: 0;
 }
@@ -124,9 +126,10 @@ html, body, #root {
 }
 /* In your global CSS or Tailwind config */
 body {
-  font-family: 'Inter', sans-serif;
+  font-family: "Inter", sans-serif;
 }
 
-code, pre {
-  font-family: 'Fira Code', monospace;
+code,
+pre {
+  font-family: "Fira Code", monospace;
 }

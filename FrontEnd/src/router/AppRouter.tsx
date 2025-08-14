@@ -28,99 +28,98 @@ import CourseCreation from "@/pages/Mentor_Page/course_creation/Index";
 import CourseLayout from "@/features/courses_list/CourseLayout";
 import { fetchCourses } from "@/features/courses_list/CourseLoader";
 
-
-
-
-export const  router=createBrowserRouter([
-    {
-        path:'/',
-        element:<Landing/>,
-        errorElement:<ErrorFallback/>
-    },
-    {
-        path: '/auth',
-        errorElement: <ErrorFallback />,
-        children: [
-            { index:true, element: <Navigate to='login'/>},
-            { path: 'login' , element: <LoginPage/>},
-            { path: 'signup' , element: <SignupPage/>},
-            { path: 'forgot-password', element: <ForgotPassword /> },
-            { path: 'verify-email', element: <VerifyEmail /> },
-            { path: 'reset-password', element: <ResetPassword /> },
-        ]
-    },
-    {
-        path:'/learner',
-        element:(
-            <Protected_Router requiredRole={['learner']}>
-                <DynamicLayout/>
-            </Protected_Router>
+export const router = createBrowserRouter([
+  {
+    path: "/",
+    element: <Landing />,
+    errorElement: <ErrorFallback />,
+  },
+  {
+    path: "/auth",
+    errorElement: <ErrorFallback />,
+    children: [
+      { index: true, element: <Navigate to="login" /> },
+      { path: "login", element: <LoginPage /> },
+      { path: "signup", element: <SignupPage /> },
+      { path: "forgot-password", element: <ForgotPassword /> },
+      { path: "verify-email", element: <VerifyEmail /> },
+      { path: "reset-password", element: <ResetPassword /> },
+    ],
+  },
+  {
+    path: "/learner",
+    element: (
+      <Protected_Router requiredRole={["learner"]}>
+        <DynamicLayout />
+      </Protected_Router>
+    ),
+    children: [
+      { index: true, element: <Navigate to="dashboard" /> },
+      { path: "dashboard", element: <DashboardContent /> },
+      { path: "profile", element: <ProfileManagement /> },
+      { path: "courses", element: <CourseLayout /> },
+    ],
+  },
+  {
+    path: "/mentor",
+    element: (
+      <Protected_Router requiredRole={["mentor"]}>
+        <DynamicLayout />
+      </Protected_Router>
+    ),
+    children: [
+      { index: true, element: <Navigate to="dashboard" /> },
+      { path: "dashboard", element: <DashboardContent /> },
+      { path: "profile", element: <ProfileManagement /> },
+      { path: "data", element: <MentorDataForm /> },
+      { path: "create", element: <CourseCreation /> },
+    ],
+  },
+  {
+    path: "/admin",
+    element: (
+      <Protected_Router requiredRole={["admin"]}>
+        <DynamicLayout />
+      </Protected_Router>
+    ),
+    children: [
+      { index: true, element: <Navigate to="dashboard" /> },
+      { path: "dashboard", element: <DashboardContent /> },
+      { path: "profile", element: <ProfileManagement /> },
+      { path: "users", element: <UserManagement /> },
+      {
+        path: "user-profile/:id",
+        element: <AdminUserProfile />,
+        loader: useProfileLoader,
+      },
+      { path: "category", element: <CategoryManagement /> },
+    ],
+  },
+  {
+    path: "/course",
+    children: [
+      {
+        path: "create",
+        element: (
+          <Protected_Router requiredRole={["mentor"]}>
+            <CourseCreation />
+          </Protected_Router>
         ),
-        children:[
-            { index:true, element: <Navigate to='dashboard'/>},
-            { path:'dashboard' ,element:<DashboardContent/>},
-            { path:'profile' ,element:<ProfileManagement/>},
-            { path:'courses' ,element:<CourseLayout/>},
-        ]
-
-     
-    },
-    {
-        path:'/mentor',
-        element:(
-            <Protected_Router requiredRole={['mentor']}>
-                <DynamicLayout/>
-            </Protected_Router>
-        ),
-        children:[
-            { index:true, element: <Navigate to='dashboard'/>},
-            { path:'dashboard' ,element:<DashboardContent/>},
-            { path:'profile' ,element:<ProfileManagement/>},
-            { path: 'data', element: <MentorDataForm /> },
-            { path: 'create',element: <CourseCreation /> },
-
-        ]
-    },
-    {
-        path:'/admin',
-        element:(
-            <Protected_Router requiredRole={['admin']}>
-                <DynamicLayout/>
-            </Protected_Router>
-        ),
-        children:[
-            { index:true, element: <Navigate to='dashboard'/>},
-            { path:'dashboard' ,element:<DashboardContent/>},
-            { path:'profile' ,element:<ProfileManagement/>},
-            { path:'users' ,element:<UserManagement/>},
-            { path:'user-profile/:id' ,element:<AdminUserProfile/>,loader:useProfileLoader},
-            { path: 'category',element: <CategoryManagement /> },
-            
-        ]
-    },
-    {
-        path:'/course',
-        children:[
-            {
-                path:'create',
-                element:(
-                    <Protected_Router requiredRole={['mentor']}>
-                        <CourseCreation /> 
-                    </Protected_Router>
-                ),
-                // children:[
-                //     {path:'',element:<Navigate to='basic'/>},
-                //     {path:'basic',element:<BasicCourseInformation/>},
-                //     {path:'curriculum',element:<CourseCurriculum/>},
-                // ]
-            }
-        ]
-    },{
-        path:'/courses', element:<CourseLayout/>,loader:fetchCourses
-    },
-    {
-        path: '*',
-        element: <NotFound /> 
-    },
-
-])
+        // children:[
+        //     {path:'',element:<Navigate to='basic'/>},
+        //     {path:'basic',element:<BasicCourseInformation/>},
+        //     {path:'curriculum',element:<CourseCurriculum/>},
+        // ]
+      },
+    ],
+  },
+  {
+    path: "/courses",
+    element: <CourseLayout />,
+    loader: fetchCourses,
+  },
+  {
+    path: "*",
+    element: <NotFound />,
+  },
+]);

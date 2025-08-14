@@ -1,21 +1,17 @@
 import { Search } from "lucide-react";
 
-export interface searchProps{
-  name:string,
-  role:string,
-  isActive:string
+export interface searchProps {
+  name: string;
+  role: string;
+  isActive: string;
 }
-
-
 
 export const SearchAndFilter: React.FC<{
   searchTerm: searchProps;
-  onSearchChange: (event: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => void;
-  
-}> = ({ searchTerm, onSearchChange}) => {
-  
-  
-
+  onSearchChange: (
+    event: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>,
+  ) => void;
+}> = ({ searchTerm, onSearchChange }) => {
   return (
     <div className="flex flex-col sm:flex-row gap-4 mb-6">
       <div className="relative flex-1">
@@ -29,7 +25,7 @@ export const SearchAndFilter: React.FC<{
           className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
         />
       </div>
-      
+
       <div className="flex gap-2">
         <select
           name="role"
@@ -41,9 +37,9 @@ export const SearchAndFilter: React.FC<{
           <option value="mentor">Mentors</option>
           <option value="learner">Learners</option>
         </select>
-        
+
         <select
-          name='isActive'
+          name="isActive"
           value={searchTerm.isActive}
           onChange={onSearchChange}
           className="px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"

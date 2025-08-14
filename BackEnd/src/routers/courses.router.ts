@@ -17,7 +17,9 @@ courseRouter.use(verifyUser)
 courseRouter.use(authorizedRole('mentor'))
 courseRouter.post("/", courseController.addCourse);
 courseRouter.put("/:id", courseController.updateCourse);
-courseRouter.get("/", courseController.fetchCourse);
+courseRouter.put('/:id/sessions',courseController.addSession)
+courseRouter.put('/:courseId/sessions/:sessionId',courseController.addLecture)
+courseRouter.get("/", courseController.fetchCourse); 
 courseRouter.get("/drafted-courses",courseController.getMentorDraftedCourseList)
 courseRouter.get("/:id",courseController.getCourse)
 

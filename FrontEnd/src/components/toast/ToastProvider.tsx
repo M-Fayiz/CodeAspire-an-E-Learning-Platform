@@ -1,5 +1,5 @@
-import React from 'react';
-import { Toaster } from 'react-hot-toast';
+import React from "react";
+import { Toaster } from "react-hot-toast";
 
 interface ToastProviderProps {
   children: React.ReactNode;
@@ -18,8 +18,8 @@ export const ToastProvider: React.FC<ToastProviderProps> = ({ children }) => {
         toastOptions={{
           duration: 4000,
           style: {
-            background: 'transparent',
-            boxShadow: 'none',
+            background: "transparent",
+            boxShadow: "none",
             padding: 0,
           },
         }}

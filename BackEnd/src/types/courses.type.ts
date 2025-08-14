@@ -3,7 +3,7 @@ import { Document, Types } from "mongoose";
 export interface ILecture {
   title: string;
   lectureType: "video" | "pdf";
-  lecture: string;
+  lectureContent: string;
 }
 export interface ISession {
   title: string;
@@ -14,6 +14,7 @@ export interface ISession {
   };
 }
 export interface ICourses extends Document {
+  id?:string
   title: string;
   description?: string;
   thumbnail?: string;

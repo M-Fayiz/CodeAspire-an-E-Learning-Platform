@@ -60,7 +60,7 @@ const courseSchema = new mongoose.Schema<ICourses>(
               type: String,
               enum: ["video", "pdf", "audio"],
             },
-            lecture: String,
+            lectureContent: String,
           },
         ],
         review: {

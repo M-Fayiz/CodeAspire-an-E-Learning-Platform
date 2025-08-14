@@ -1,250 +1,173 @@
+import ImageUploadPreview from "@/components/ui/ImageFile";
+import { Input } from "@/components/ui/Inputs";
+import { Combobox } from "@/components/ui/SelectWithSearch";
+import {
+  COURSE_LANGUAGE,
+  COURSE_LEVEL,
+} from "@/constants/courseInputs.constant";
+import { useAuth } from "@/context/auth.context";
+import { useCourseFormContext } from "@/context/courseForm.context";
+import categoryService from "@/service/client-API/admin/category.service";
+import type { ICategoryTree } from "@/types/category.types";
+import React, { useEffect, useMemo, useState } from "react";
 
-import ImageUploadPreview from "@/components/ui/ImageFile"
-import { Input } from "@/components/ui/Inputs"
-import { Combobox } from "@/components/ui/SelectWithSearch"
-import { COURSE_LANGUAGE, COURSE_LEVEL } from "@/constants/courseInputs.constant"
-import { useAuth } from "@/context/auth.context"
-import categoryService from "@/service/client-API/admin/category.service"
-import courseService from "@/service/client-API/mentor/course.service"
-import type { ICategoryTree } from "@/types/category.types"
-import type { ICourseData, ICourseDTO } from "@/types/courses.types"
-import React, { useEffect, useMemo, useState } from "react"
-import { Controller, useForm } from "react-hook-form"
-
-interface BaseCaourseProps{
-
-  handleTap?:(tap:'basic'|'curriculum'|'publish')=>void
-  courseId:(id:string)=>void
+interface BaseCaourseProps {
+  handleTap?: (tap: "basic" | "curriculum" | "publish") => void;
+  
 }
 
-const BasicCourseInformation:React.FC<BaseCaourseProps>=({courseId})=>{
-  const [categories,setCategories]=useState<ICategoryTree[]>([])
-  
-  const {control, handleSubmit, formState: { errors } } = useForm<ICourseData>();
+const BasicCourseInformation: React.FC<BaseCaourseProps> = () => {
+  const [categories, setCategories] = useState<ICategoryTree[]>([]);
+  const [selectedCategory, setSelectedCategory] = useState("");
 
-  const [selectedCategory,setSelectedCategory]=useState('')
-  const [subCategoy,setSubCategory]=useState<ICategoryTree[]>([])
-  const [addesCourse,setAddedCourse]=useState<ICourseDTO|null>(null)
-  const {user}=useAuth()
-  useEffect(()=>{
-    const fetchCategories=async()=>{
-      const result=await categoryService.listCategory()
-        if(result){
-          setCategories(result)
-          
-        }
-    }
-    fetchCategories()
-  },[])
-
-  const FormError=({message}:{message?:string})=>{
-    return message?<p className="text-red-500 text-sm pt-0  ">{message}</p>:null
-  }
-    
-  const handleSubCategory=(selectedLabel:string|undefined)=>{
-    if(selectedLabel){
-      setSelectedCategory(selectedLabel)
-    }
-  }
-  useEffect(()=>{
-    const categoryChildren=categories.find(data=>data.label==selectedCategory)?.children
-    if(categoryChildren){
-      setSubCategory(categoryChildren)
-    }
-  },[selectedCategory])
-
-
-    const boxData=useMemo(()=>
-      categories.map(category=>({
-      key: category.key,
-      label: category.label
-  
-    })),[categories])
-  
-    const onSubmit=async(formData:Partial<ICourseData>)=>{
-      formData.mentorsId = user?.id;
-      if (formData.thumbnail instanceof FileList && formData.thumbnail.length > 0) {
-        formData.thumbnail = formData.thumbnail[0]; 
+  const { formData, updateBaseField, OnSubmit, setField,zodError } =
+    useCourseFormContext();
+  useEffect(() => {
+    const fetchCategories = async () => {
+      const result = await categoryService.listCategory();
+      if (result) {
+        setCategories(result);
       }
-      try {
-        const result=await courseService.createCourse(formData)
-        console.log('result',result)
-        if(result){
-          courseId(result.id)
-          localStorage.setItem('courseId',result.id)
-        }
-        
-      } catch (error) {
-        
-      }
+    };
+    fetchCategories();
+  }, []);
+
+  const handleSubCategory = (selectedLabel: string | undefined) => {
+    if (selectedLabel) {
+      setSelectedCategory(selectedLabel);
     }
-   
+  };
 
-    return(
-        <div className="p-4 sm:p-6">
-            <div className="flex items-center justify-between mb-4">
-             <h2 className="text-2xl font-semibold text-gray-900">Basic Information</h2>           
-            </div>
-          <form onSubmit={handleSubmit(onSubmit)}>
 
-            <div className="w-full space-y-4">
-            <Controller
-             name="title"
-             control={control}
-             rules={{required:'Title is required'}}
-             render={({field})=>(
-                <Input {...field}
-                 placeholder="Course Title"
-                 label="Course Title"
-            
-                 error={errors.title?.message as string}
-                />
-            )}
-            />
+const { categoryOptions, subCategoryOptions } = useMemo(() => {
+  const categoryOptions = categories.map((category) => ({
+    key: category.key,
+    label: category.label,
+  }));
 
-            <Controller
-             name="description"
-             control={control}
-             rules={{
-              required:'description is required',
-              minLength: { value: 20, message: 'Description must be at least 20 characters' }
-            }}
-             render={({field})=>(
-                <Input {...field} 
-                 textArea
-                 placeholder="write Course description"
-                 label={'Course description'}
-                 error={errors.description?.message as string}
-                />
-            )}
-            />
-            
+  const subCategoryOptions =
+    categories.find((c) => c.label === selectedCategory)?.children?.map((child) => ({
+      key: child.key,
+      label: child.label,
+    })) || [];
 
-            <Controller
-             name="price"
-             control={control}
-             rules={{ required: 'Price is required', min: { value: 0, message: 'Price must be greater than 0' } }}
-             render={({field})=>(
-                <Input {...field} 
-                placeholder="Enter Course Price" 
-                label="Course Price"
-                name="price"
-                error={errors.price?.message as string}
-                />
-            )}
-            />
-           <div className="grid grid-cols-1 md:grid-cols-3 ">
-             <div className="flex flex-col gap-2">
-              <Controller
+  return { categoryOptions, subCategoryOptions };
+}, [categories, selectedCategory]);
+
+
+  return (
+    <div className="p-4 sm:p-6">
+      <div className="flex items-center justify-between mb-4">
+        <h2 className="text-2xl font-semibold text-gray-900">
+          Basic Information
+        </h2>
+      </div>
+      <form onSubmit={OnSubmit}>
+        <div className="w-full space-y-4">
+          <Input
+            placeholder="Course Title"
+            label="Course Title"
+            name="title"
+            value={formData.title}
+            onChange={updateBaseField}
+            error={zodError.title}
+          />
+
+          <Input
+            textArea
+            name="description"
+            onChange={updateBaseField}
+            value={formData.description}
+            placeholder="write Course description"
+            label={"Course description"}
+            error={zodError.description}
+          />
+
+          <Input
+            type="number"
+            placeholder="Enter Course Price"
+            label="Course Price"
+            name="price"
+            value={formData.price}
+            onChange={updateBaseField}
+            error={zodError.price}
+          />
+
+          <div className="grid grid-cols-1 md:grid-cols-3 ">
+            <div className="flex flex-col gap-2">
+              <Combobox
+                label="Choose a Category"
+                value={formData.categoryId}
+                boxOptions={categoryOptions}
                 name="categoryId"
-                control={control}
-                rules={{ required: 'category is required'}}
-                render={({field})=>(
-                  <Combobox {...field}
-                    label="Choose a Category"
-                    value={field.value}
-                    boxOptions={boxData}
-                    name={field.name}
-                    setCategory={handleSubCategory}
-                    onChange={(value) => {
-                      field.onChange(value); 
-                    }}
-                  />
-                )}
+                setCategory={handleSubCategory}
+                onChange={setField}
               />
-              <FormError message={errors.categoryId?.message  as string}/>
-             </div>
-              {subCategoy.length>0&&(
-                <>
-                  <Controller
-                    name="subCategoryId"
-                    control={control}
-                    rules={{ required: 'Sub-Category is required'}}
-                    render={({field})=>(
-                      <Combobox {...field}
-                        label="Choose a Sub-Category"
-                        value={field.value}
-                        boxOptions={subCategoy}
-                        name={field.name}
-                          onChange={(value) => {
-                            field.onChange(value); 
-                        }}
-                      />
-                    )}
-                  />
-                  <FormError message={errors.subCategoryId?.message  as string}/>
-                </>
-              )}
-           </div>
-
-            <div className='grid grid-cols-1 md:grid-cols-3'>
-              <div className="flex flex-col gap-2">
-                <Controller
-                  name="language"
-                  control={control}
-                  rules={{ required: 'Select a language  is required'}}
-                  render={({field})=>(
-                    <Combobox {...field}
-                      label="Select a Language"
-                      value={field.value}
-                      boxOptions={[...COURSE_LANGUAGE.map((data)=>({
-                        label:data,
-                        key:data 
-                      }))]}
-                      name={field.name}
-                        onChange={(value) => {
-                          field.onChange(value); 
-                      }}
-                    />
-                  )}
-                />
-                <FormError message={errors.language?.message  as string}/>
-              </div>
-              <div className="flex flex-col gap-2">
-
-                <Controller
-                  name="level"
-                  control={control}
-                  rules={{ required: 'Select a your Course  is required'}}
-                  render={({field})=>(
-                    <Combobox {...field}
-                      label="Select a Course Level"
-                      value={field.value}
-                      boxOptions={[...COURSE_LEVEL.map((data)=>({
-                        label:data,
-                        key:data 
-                      }))]}
-                      name={field.name}
-                        onChange={(value) => {
-                          field.onChange(value); 
-                      }}
-                    />
-                  )}
-                />
-                <FormError message={errors.level?.message  as string}/>
-              </div>
+              <p className="text-red-400 text-sm">{zodError.categoryId}</p>
+              
             </div>
-            <div className="col-span-1 md:col-span-2">
+            {subCategoryOptions.length > 0 && (
+              <>
+                <Combobox
+                  label="Choose a SubCategory"
+                  value={formData.subCategoryId||""}
+                  boxOptions={subCategoryOptions}
+                  name="subCategoryId"
+                  onChange={setField}
+                />
+              </>
+            )}
+          </div>
 
-            <ImageUploadPreview control={control} errors={errors} />
+          <div className="grid grid-cols-1 md:grid-cols-3">
+            <div className="flex flex-col gap-2">
+              <Combobox
+                label="Select a Language"
+                value={formData.language}
+                boxOptions={[
+                  ...COURSE_LANGUAGE.map((data) => ({
+                    label: data,
+                    key: data,
+                  })),
+                ]}
+                name="language"
+                onChange={setField}
+              />
+              <p className="text-red-400 text-sm">{zodError.language}</p>
             </div>
-
-         </div>
-          
-    
+            <div className="flex flex-col gap-2">
+              <Combobox
+                label="Select a Course Level"
+                value={formData.level}
+                boxOptions={[
+                  ...COURSE_LEVEL.map((data) => ({
+                    label: data,
+                    key: data,
+                  })),
+                ]}
+                name="level"
+                onChange={setField}
+              />
+              <p className="text-red-400 text-sm">{zodError.level}</p>
+            </div>
+          </div>
+          <div className="col-span-1 md:col-span-2">
+            <input type="file" name="thumbnail" onChange={updateBaseField} />
+            <p className="text-red-400 text-sm">{zodError.thumbnail}</p>
+          </div>
+        </div>
 
         <div className="flex items-center justify-between mt-12 pt-6 border-t border-gray-200">
-  
-           <button
-              type="submit"
-              className="w-full sm:w-auto px-8 py-3 text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 rounded-md shadow-sm transition-colors"
-            >
-              Save as Draft & Next
-            </button>
+          <button
+            type="submit"
+            className="w-full sm:w-auto px-8 py-3 text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 rounded-md shadow-sm transition-colors"
+          >
+            Save as Draft & Next
+          </button>
         </div>
-        </form>
-      </div>
-    )
-}
+      </form>
+    </div>
+  );
+};
 
-export default BasicCourseInformation
+export default BasicCourseInformation;

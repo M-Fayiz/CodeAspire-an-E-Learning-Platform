@@ -6,11 +6,16 @@ interface TabsProps {
   icon: ReactNode;
   setTabs: (tab: TapsComp) => void;
   currentTab: TapsComp;
-  title:string
+  title: string;
 }
 
-export const ProfileTabs: React.FC<TabsProps> = ({changeTab,icon,setTabs,currentTab,title}) => {
- 
+export const ProfileTabs: React.FC<TabsProps> = ({
+  changeTab,
+  icon,
+  setTabs,
+  currentTab,
+  title,
+}) => {
   return (
     <button
       onClick={() => setTabs(changeTab)}

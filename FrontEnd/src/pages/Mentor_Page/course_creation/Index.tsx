@@ -1,28 +1,22 @@
+import ManagementLayout from "@/components/layout/ManagementLayout";
+import { BookPlus } from "lucide-react";
+import CourseForm from "@/features/mentor/course-form/courseForm";
+import CourseFormProvider from "@/context/courseForm.context";
 
-import ManagementLayout from "@/components/layout/ManagementLayout"
-import { BookPlus } from "lucide-react" 
-import type { ICourseData } from "@/types/courses.types"
-import courseService from "@/service/client-API/mentor/course.service"
-import CourseForm from "@/features/mentor/course-form/courseForm"
-import CourseFormProvider from "@/context/courseForm.context"
+const CourseCreation = () => {
+  return (
+    <>
+      <ManagementLayout
+        title="Create  Course "
+        description=" Create your new Course Here"
+        icon={<BookPlus className="h-10 w-10 text-gray-700" />}
+      >
+        <CourseFormProvider>
+          <CourseForm />
+        </CourseFormProvider>
+      </ManagementLayout>
+    </>
+  );
+};
 
-const CourseCreation=()=>{
-    return (
-        <>
-            <ManagementLayout 
-                title="Create  Course "
-                description=" Create your new Course Here"
-                icon={<BookPlus className="h-10 w-10 text-gray-700"/>}
-            >
-            <CourseFormProvider>
-              <CourseForm/>    
-            </CourseFormProvider>
-
-             
-            </ManagementLayout>
-     
-        </>
-    )
-}
-
-export default CourseCreation
+export default CourseCreation;

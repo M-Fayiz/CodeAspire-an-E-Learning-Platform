@@ -1,8 +1,11 @@
-import { CheckCircle,Users } from "lucide-react";
+import { CheckCircle, Users } from "lucide-react";
 
 const MockInterviewSection: React.FC = () => {
   return (
-    <section id="interviews" className="py-20 bg-gradient-to-r from-blue-600 to-purple-600 text-white">
+    <section
+      id="interviews"
+      className="py-20 bg-gradient-to-r from-blue-600 to-purple-600 text-white"
+    >
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="grid lg:grid-cols-2 gap-12 items-center">
           <div>
@@ -10,15 +13,16 @@ const MockInterviewSection: React.FC = () => {
               Ace Your Next Interview
             </h2>
             <p className="text-xl mb-8 text-blue-100">
-              Practice with real industry professionals and get personalized feedback to boost your confidence and land your dream job.
+              Practice with real industry professionals and get personalized
+              feedback to boost your confidence and land your dream job.
             </p>
-            
+
             <div className="space-y-4 mb-8">
               {[
                 "1-on-1 sessions with senior engineers",
                 "Real interview questions from top companies",
                 "Detailed feedback and improvement tips",
-                "Flexible scheduling that fits your timeline"
+                "Flexible scheduling that fits your timeline",
               ].map((feature, index) => (
                 <div key={index} className="flex items-center space-x-3">
                   <CheckCircle className="w-6 h-6 text-green-400" />
@@ -41,18 +45,24 @@ const MockInterviewSection: React.FC = () => {
                   </div>
                   <div>
                     <div className="font-semibold">Mock Interview Session</div>
-                    <div className="text-sm text-blue-200">with Alex Johnson, Senior SWE @ Google</div>
+                    <div className="text-sm text-blue-200">
+                      with Alex Johnson, Senior SWE @ Google
+                    </div>
                   </div>
                 </div>
                 <div className="w-3 h-3 bg-green-400 rounded-full animate-pulse"></div>
               </div>
-              
+
               <div className="space-y-4">
                 <div className="bg-white/10 rounded-lg p-4">
-                  <div className="text-sm text-blue-200 mb-2">Current Question:</div>
-                  <div className="font-medium">"Implement a function to reverse a linked list"</div>
+                  <div className="text-sm text-blue-200 mb-2">
+                    Current Question:
+                  </div>
+                  <div className="font-medium">
+                    "Implement a function to reverse a linked list"
+                  </div>
                 </div>
-                
+
                 <div className="grid grid-cols-2 gap-4">
                   <div className="bg-white/10 rounded-lg p-3 text-center">
                     <div className="text-2xl font-bold">45:32</div>
@@ -72,5 +82,4 @@ const MockInterviewSection: React.FC = () => {
   );
 };
 
-
-export default MockInterviewSection
+export default MockInterviewSection;

@@ -48,7 +48,7 @@ export class CourseService implements ICourseService {
           courseData as ISession,
         );
     }
-    // const updatedData=await this._courseRepository.updateCourse(Id,courseData,)
+   
     return null;
   }
   async getCourse(courseId: string): Promise<ICourseDTO|null> {
@@ -69,5 +69,23 @@ export class CourseService implements ICourseService {
     const data=await this._courseRepository.getMentorDraftedCourses(id)
     let mappedCourseList=data?.map((course)=>courseDTO(course as ICoursesPopulated ))
     return mappedCourseList?mappedCourseList:null
+  }
+  async addSessions(courseId: string, session: ISession): Promise<ICourseDTO> {
+    const id=parseObjectId(courseId)
+    
+      if(!id){
+        throw createHttpError(HttpStatus.BAD_REQUEST,HttpResponse.INVALID_ID)
+      }
+      const courseData=await this._courseRepository.addSession(id,session)
+      return courseDTO(courseData as ICoursesPopulated)
+  }
+  async addLectures(courseId: string, sessionId: string, lecture: ILecture): Promise<ICourseDTO> {
+      const CourseId=parseObjectId(courseId)
+      const SessionId=parseObjectId(sessionId)
+      if(!CourseId||!SessionId){
+        throw createHttpError(HttpStatus.BAD_REQUEST,HttpResponse.INVALID_ID)
+      }
+      const courseData=await this._courseRepository.addLecture(CourseId,SessionId,lecture)
+      return courseDTO(courseData as ICoursesPopulated)
   }
 }

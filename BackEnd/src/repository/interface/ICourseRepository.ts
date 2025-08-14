@@ -17,4 +17,5 @@ export interface ICourseRepository {
   // updateBaseInfo(courseId:Types.ObjectId,baseInfo:Partial<ICourses>):Promise<ICourses|null>
   getCourse(courseId:Types.ObjectId):Promise<ICourses|null>
   getMentorDraftedCourses(mentorId:Types.ObjectId):Promise<ICourses[]|null>
+  addLecture(courseId:Types.ObjectId,sessionId:Types.ObjectId,lecture:ILecture):Promise<ICourses|null>
 }

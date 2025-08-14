@@ -8,7 +8,7 @@ import { ISession } from "../types/courses.type";
 
 export function courseListDTO(course: ICoursesPopulated): ICourseListDTO {
   return {
-    id: course.id,
+    id: course.id as string,
     title: course.title,
     thumbnail: course.thumbnail,
     category:
@@ -28,7 +28,7 @@ export function courseListDTO(course: ICoursesPopulated): ICourseListDTO {
 
 export function courseDTO(course:ICoursesPopulated):ICourseDTO{
   return{
-    id: course.id,
+    id: course.id as string,
     title: course.title,
     description:course.description?course.description:'',
     thumbnail: course.thumbnail,

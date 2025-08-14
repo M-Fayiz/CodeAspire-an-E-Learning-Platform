@@ -7,7 +7,7 @@ export interface ICoursesPopulated extends ICourses {
 }
 
 export interface ICourseListDTO {
-  id: Types.ObjectId;
+  id: Types.ObjectId|string;
   title: string;
   thumbnail?: string;
   category: string;

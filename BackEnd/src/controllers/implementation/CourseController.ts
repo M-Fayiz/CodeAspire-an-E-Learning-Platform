@@ -1,12 +1,13 @@
 import { Request, Response, NextFunction } from "express";
 import { ICourseService } from "../../services/interface/ICourseService";
-import { ICourseCategory } from "../interface/ICourseController";
+import { ICourseController } from "../interface/ICourseController";
 import { HttpStatus } from "../../const/http-status";
 import { successResponse } from "../../utility/response.util";
 import { HttpResponse } from "../../const/error-message";
 import { updatePart } from "../../types/courses.type";
+import { session } from "passport";
 
-export class CourseController implements ICourseCategory {
+export class CourseController implements ICourseController {
   constructor(private _courseService: ICourseService) {}
 
   addCourse = async (
@@ -15,11 +16,12 @@ export class CourseController implements ICourseCategory {
     next: NextFunction,
   ): Promise<void> => {
     try {
-      console.log(req.body.courseData);
+      
 
       const createdCourseData = await this._courseService.createCourses(
         req.body.courseData,
       );
+      console.log('❌❌❌',createdCourseData)
       res
         .status(HttpStatus.OK)
         .json(successResponse(HttpResponse.OK, { createdCourseData }));
@@ -88,5 +90,30 @@ export class CourseController implements ICourseCategory {
       } catch (error) {
         next(error)
       }
+  }
+  addSession=async(req: Request, res: Response, next: NextFunction): Promise<void> =>{
+    try {
+      
+      const {id}=req.params
+      const {session}=req.body
+      console.log('😶‍🌫️😶‍🌫️',session)
+      const addedSessionData=await this._courseService.addSessions(id,session)  
+      res.status(HttpStatus.OK).json(successResponse(HttpResponse.OK,{addedSessionData}))
+    } catch (error) {
+      next(error)
+    }
+  }
+  addLecture=async(req: Request, res: Response, next: NextFunction): Promise<void>=> {
+    try {
+      
+      const {courseId}=req.params
+      const {sessionId}=req.query
+      const {lecture}=req.body
+      console.log(courseId,'😶‍🌫️',sessionId,'🍉',lecture)
+      const addedLectureData=await this._courseService.addLectures(courseId,sessionId as string,lecture)
+      res.status(HttpStatus.OK).json(successResponse(HttpResponse.OK,{addedLectureData}))
+    } catch (error) {
+      next(error)
+    }
   }
 }

@@ -1,6 +1,6 @@
 import { Types } from "mongoose";
 import { courseModel } from "../../models/courses.model";
-import { ICourses, ISession } from "../../types/courses.type";
+import { ICourses, ILecture, ISession } from "../../types/courses.type";
 import { BaseRepository } from "../baseRepository";
 import { ICourseRepository } from "../interface/ICourseRepository";
 
@@ -33,6 +33,9 @@ export class CourseRepository
     return await this.findById(courseId,["categoryId", "subCategoryId"])
   }
   async getMentorDraftedCourses(mentorId: Types.ObjectId): Promise<ICourses[]| null> {
-      return this.find({mentorsId:mentorId})
+    return await this.find({mentorsId:mentorId})
+  }
+  async addLecture(courseId: Types.ObjectId, sessionId: Types.ObjectId, lecture: ILecture): Promise<ICourses | null> {
+    return await this.PushToArray({_id:courseId,"sessions._id":sessionId},'lectures',lecture)
   }
 }

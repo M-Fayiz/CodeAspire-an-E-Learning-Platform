@@ -8,20 +8,18 @@ interface NotFoundProps {
   error?: string;
 }
 
-
-const NotFound :React.FC<NotFoundProps> =({error}) => {
+const NotFound: React.FC<NotFoundProps> = ({ error }) => {
   const location = useLocation();
   const [animateCode, setAnimateCode] = useState(false);
 
-  const errr=error? ` ${error} `: '✗ Error: Route not found'
-  
+  const errr = error ? ` ${error} ` : "✗ Error: Route not found";
 
   useEffect(() => {
     console.error(
       "404 Error: User attempted to access non-existent route:",
-      location.pathname
+      location.pathname,
     );
-    
+
     // Trigger code animation after component mounts
     const timer = setTimeout(() => setAnimateCode(true), 500);
     return () => clearTimeout(timer);
@@ -35,13 +33,12 @@ const NotFound :React.FC<NotFoundProps> =({error}) => {
     "$ git checkout main",
     "✓ Switched to main branch",
     "$ npm run build",
-    "✓ Build successful!"
+    "✓ Build successful!",
   ];
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-50 via-purple-50 to-pink-50 flex items-center justify-center p-4">
       <div className="max-w-4xl w-full grid lg:grid-cols-2 gap-8 items-center">
-        
         {/* Left side - Error Message */}
         <div className="text-center lg:text-left space-y-6">
           <div className="space-y-4">
@@ -49,7 +46,7 @@ const NotFound :React.FC<NotFoundProps> =({error}) => {
               <Code2 size={32} />
               <span className="text-2xl font-bold">TechMaster</span>
             </div>
-            
+
             <div className="space-y-2">
               <h1 className="text-6xl lg:text-8xl font-bold bg-gradient-to-r from-blue-600 via-purple-600 to-pink-600 bg-clip-text text-transparent">
                 404
@@ -58,24 +55,25 @@ const NotFound :React.FC<NotFoundProps> =({error}) => {
                 Oops! Page Not Found
               </h2>
             </div>
-            
+
             <p className="text-lg text-gray-600 max-w-md mx-auto lg:mx-0">
-              Looks like this page got lost in the code! Don't worry, even the best developers encounter bugs. 
-              Let's get you back on track to master those tech skills.
+              Looks like this page got lost in the code! Don't worry, even the
+              best developers encounter bugs. Let's get you back on track to
+              master those tech skills.
             </p>
           </div>
 
           <div className="flex flex-col sm:flex-row gap-4 justify-center lg:justify-start">
-            < button className="group bg-gradient-to-r from-blue-600 to-purple-600 text-white px-8 py-2 rounded-full text-lg font-semibold hover:shadow-2xl transform hover:scale-105 transition-all duration-300 flex ">
-             <Link
+            <button className="group bg-gradient-to-r from-blue-600 to-purple-600 text-white px-8 py-2 rounded-full text-lg font-semibold hover:shadow-2xl transform hover:scale-105 transition-all duration-300 flex ">
+              <Link
                 to="/auth/signup"
                 className="group bg-gradient-to-r from-blue-600 to-purple-600 text-white px-8 py-2 rounded-full text-lg font-semibold hover:shadow-2xl transform hover:scale-105 transition-all duration-300 flex items-center gap-2 w-fit"
-                >
+              >
                 <Home size={20} />
                 Back to Home
-                </Link>
+              </Link>
             </button>
-            <button >
+            <button>
               <ArrowLeft size={20} />
               Go Back
             </button>
@@ -120,30 +118,34 @@ const NotFound :React.FC<NotFoundProps> =({error}) => {
                   <div
                     key={index}
                     className={`transition-all duration-500 ${
-                      animateCode ? 'opacity-100 translate-x-0' : 'opacity-0 translate-x-4'
+                      animateCode
+                        ? "opacity-100 translate-x-0"
+                        : "opacity-0 translate-x-4"
                     }`}
                     style={{ transitionDelay: `${index * 200}ms` }}
                   >
-                    {line.startsWith('$') ? (
+                    {line.startsWith("$") ? (
                       <div className="text-green-400">{line}</div>
-                    ) : line.startsWith('✓') ? (
+                    ) : line.startsWith("✓") ? (
                       <div className="text-green-400">{line}</div>
-                    ) : line.startsWith('✗') ? (
+                    ) : line.startsWith("✗") ? (
                       <div className="text-red-400">{line}</div>
                     ) : (
                       <div className="text-blue-400">{line}</div>
                     )}
                   </div>
                 ))}
-                
-                <div 
+
+                <div
                   className={`flex items-center gap-2 pt-4 transition-all duration-500 ${
-                    animateCode ? 'opacity-100' : 'opacity-0'
+                    animateCode ? "opacity-100" : "opacity-0"
                   }`}
-                  style={{ transitionDelay: '2000ms' }}
+                  style={{ transitionDelay: "2000ms" }}
                 >
                   <Terminal size={16} className="text-green-400" />
-                  <span className="text-green-400">Ready for next command...</span>
+                  <span className="text-green-400">
+                    Ready for next command...
+                  </span>
                   <span className="animate-pulse text-green-400">|</span>
                 </div>
               </div>
@@ -153,13 +155,22 @@ const NotFound :React.FC<NotFoundProps> =({error}) => {
       </div>
 
       {/* Floating Elements */}
-      <div className="fixed top-20 left-20 opacity-20 animate-bounce" style={{ animationDelay: '0s' }}>
+      <div
+        className="fixed top-20 left-20 opacity-20 animate-bounce"
+        style={{ animationDelay: "0s" }}
+      >
         <Bug size={24} className="text-purple-600" />
       </div>
-      <div className="fixed top-40 right-32 opacity-20 animate-bounce" style={{ animationDelay: '1s' }}>
+      <div
+        className="fixed top-40 right-32 opacity-20 animate-bounce"
+        style={{ animationDelay: "1s" }}
+      >
         <Code2 size={32} className="text-blue-600" />
       </div>
-      <div className="fixed bottom-32 left-32 opacity-20 animate-bounce" style={{ animationDelay: '2s' }}>
+      <div
+        className="fixed bottom-32 left-32 opacity-20 animate-bounce"
+        style={{ animationDelay: "2s" }}
+      >
         <Terminal size={28} className="text-pink-600" />
       </div>
     </div>

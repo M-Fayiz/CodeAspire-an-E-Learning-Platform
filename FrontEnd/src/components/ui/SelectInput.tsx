@@ -1,30 +1,40 @@
-import { Select, SelectTrigger,SelectValue,SelectContent,SelectItem,} from "@/components/ui/select"
+import {
+  Select,
+  SelectTrigger,
+  SelectValue,
+  SelectContent,
+  SelectItem,
+} from "@/components/ui/select";
 
 interface Option {
-  label: string
-  value: string
+  label: string;
+  value: string;
 }
 
-interface SelectInputProps <T=string> {
-  name: string
-  placeholder?: string
-  value: T
-  onChange: (e: { target: { name: string; value: T } }) => void
-  options: Option[]
+interface SelectInputProps<T = string> {
+  name: string;
+  placeholder?: string;
+  value: T;
+  onChange: (e: { target: { name: string; value: T } }) => void;
+  options: Option[];
 }
 
-export const SelectInput =<T extends string = string> ({ name,placeholder = "Select an option", value,onChange,options,}:  SelectInputProps<T>) => {
-  
+export const SelectInput = <T extends string = string>({
+  name,
+  placeholder = "Select an option",
+  value,
+  onChange,
+  options,
+}: SelectInputProps<T>) => {
   return (
-    <Select  
+    <Select
       value={value === "" ? undefined : value}
-      onValueChange={(val) => onChange({ target: { name, value: val as T} })}
+      onValueChange={(val) => onChange({ target: { name, value: val as T } })}
     >
       <SelectTrigger className="w-full">
         <SelectValue placeholder={placeholder} />
       </SelectTrigger>
-      <SelectContent >
-        
+      <SelectContent>
         {options.map((opt) => (
           <SelectItem key={opt.value} value={opt.value}>
             {opt.label}
@@ -32,5 +42,5 @@ export const SelectInput =<T extends string = string> ({ name,placeholder = "Sel
         ))}
       </SelectContent>
     </Select>
-  )
-}
+  );
+};
