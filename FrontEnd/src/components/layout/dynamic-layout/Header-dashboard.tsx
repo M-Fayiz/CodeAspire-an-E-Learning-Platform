@@ -59,15 +59,6 @@ const Header: React.FC<IHeaderProbs> = ({
         <div className="hidden lg:block">
           <h1 className="text-xl font-semibold text-gray-900">Tech Master</h1>
         </div>
-
-        <div className="hidden md:flex items-center relative">
-          <Search className="w-4 h-4 absolute left-3 text-gray-400" />
-          <input
-            type="text"
-            placeholder="Search courses, users, content..."
-            className="pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent w-64 lg:w-80"
-          />
-        </div>
       </div>
 
       <div className="flex items-center space-x-3">
@@ -86,7 +77,6 @@ const Header: React.FC<IHeaderProbs> = ({
             </span>
           </button>
 
-          {/* Notifications Dropdown */}
           {showNotifications && (
             <div className="absolute right-0 mt-2 w-80 bg-white rounded-lg shadow-lg border border-gray-200 py-2 z-50">
               <div className="px-4 py-2 border-b border-gray-200">

@@ -8,8 +8,13 @@ import {
   ICourseDTO,
   ICourseListDTO,
   ICoursesPopulated,
+  IFormCourseDTO,
 } from "../../types/dtos.type/course.dtos.type";
-import { courseDTO, courseListDTO } from "../../dtos/course.dtos";
+import {
+  courseDTO,
+  courseListDTO,
+  formCourseDto,
+} from "../../dtos/course.dtos";
 import { createHttpError } from "../../utility/http-error";
 import { HttpStatus } from "../../const/http-status";
 import { HttpResponse } from "../../const/error-message";
@@ -48,44 +53,102 @@ export class CourseService implements ICourseService {
           courseData as ISession,
         );
     }
-   
+
     return null;
   }
-  async getCourse(courseId: string): Promise<ICourseDTO|null> {
-      let id=parseObjectId(courseId)
-      if(!id){
-        throw createHttpError(HttpStatus.OK,HttpResponse.INVALID_ID)
-      }
-      const courseData= await this._courseRepository.getCourse(id)
-      if(!courseData) return null
-      return courseDTO(courseData as ICoursesPopulated)
-  }
-  async getDraftedCourses(mentorId: string): Promise<ICourseDTO[] | null> {
-    console.log('🔥🔥',mentorId)
-    const id=parseObjectId(mentorId)
-    if(!id){
-      throw createHttpError(HttpStatus.OK,HttpResponse.INVALID_ID)
+  async getCourse(courseId: string): Promise<ICourseDTO | null> {
+    let id = parseObjectId(courseId);
+    if (!id) {
+      throw createHttpError(HttpStatus.OK, HttpResponse.INVALID_ID);
     }
-    const data=await this._courseRepository.getMentorDraftedCourses(id)
-    let mappedCourseList=data?.map((course)=>courseDTO(course as ICoursesPopulated ))
-    return mappedCourseList?mappedCourseList:null
+    const courseData = await this._courseRepository.getCourse(id);
+    if (!courseData) return null;
+    return courseDTO(courseData as ICoursesPopulated);
+  }
+  async getDraftedCourses(mentorId: string): Promise<IFormCourseDTO[] | null> {
+    const id = parseObjectId(mentorId);
+    if (!id) {
+      throw createHttpError(HttpStatus.OK, HttpResponse.INVALID_ID);
+    }
+    const data = await this._courseRepository.getMentorDraftedCourses(id);
+    let mappedCourseList = data?.map((course) =>
+      formCourseDto(course as ICoursesPopulated),
+    );
+    return mappedCourseList ? mappedCourseList : null;
   }
   async addSessions(courseId: string, session: ISession): Promise<ICourseDTO> {
-    const id=parseObjectId(courseId)
-    
-      if(!id){
-        throw createHttpError(HttpStatus.BAD_REQUEST,HttpResponse.INVALID_ID)
-      }
-      const courseData=await this._courseRepository.addSession(id,session)
-      return courseDTO(courseData as ICoursesPopulated)
+    const id = parseObjectId(courseId);
+
+    if (!id) {
+      throw createHttpError(HttpStatus.BAD_REQUEST, HttpResponse.INVALID_ID);
+    }
+    const isExist = await this._courseRepository.findSession(id, session.title);
+    if (isExist) {
+      throw createHttpError(HttpStatus.CONFLICT, HttpResponse.ITEM_EXIST);
+    }
+    const courseData = await this._courseRepository.addSession(id, session);
+    return courseDTO(courseData as ICoursesPopulated);
   }
-  async addLectures(courseId: string, sessionId: string, lecture: ILecture): Promise<ICourseDTO> {
-      const CourseId=parseObjectId(courseId)
-      const SessionId=parseObjectId(sessionId)
-      if(!CourseId||!SessionId){
-        throw createHttpError(HttpStatus.BAD_REQUEST,HttpResponse.INVALID_ID)
-      }
-      const courseData=await this._courseRepository.addLecture(CourseId,SessionId,lecture)
-      return courseDTO(courseData as ICoursesPopulated)
+  async addLectures(
+    courseId: string,
+    sessionId: string,
+    lecture: ILecture,
+  ): Promise<ICourseDTO> {
+    const CourseId = parseObjectId(courseId);
+    const SessionId = parseObjectId(sessionId);
+    if (!CourseId || !SessionId) {
+      throw createHttpError(HttpStatus.BAD_REQUEST, HttpResponse.INVALID_ID);
+    }
+    const isExist = await this._courseRepository.findLecture(
+      CourseId,
+      SessionId,
+      lecture.title,
+    );
+    if (isExist) {
+      throw createHttpError(HttpStatus.CONFLICT, HttpResponse.ITEM_EXIST);
+    }
+    const courseData = await this._courseRepository.addLecture(
+      CourseId,
+      SessionId,
+      lecture,
+    );
+
+    return courseDTO(courseData as ICoursesPopulated);
+  }
+  async editLecture(
+    courseId: string,
+    sessionId: string,
+    lectureId: string,
+    lecture: ILecture,
+  ): Promise<ICourseDTO> {
+    const CourseId = parseObjectId(courseId);
+    const SessionId = parseObjectId(sessionId);
+    const LectureId = parseObjectId(lectureId);
+    if (!CourseId || !SessionId || !LectureId) {
+      throw createHttpError(HttpStatus.BAD_REQUEST, HttpResponse.INVALID_ID);
+    }
+    // const isExist=await this._courseRepository.findLecture(CourseId,lecture.title)
+    // if(isExist&&isExist.sessions.lectures!==lecture)
+    const coursedata = await this._courseRepository.editLecture(
+      CourseId,
+      SessionId,
+      LectureId,
+      lecture,
+    );
+    return courseDTO(coursedata as ICoursesPopulated);
+  }
+  async updateBaseCourseInfo(
+    courseId: string,
+    baseInfo: ICourses,
+  ): Promise<ICourseDTO> {
+    const id = parseObjectId(courseId);
+    if (!id) {
+      throw createHttpError(HttpStatus.BAD_REQUEST, HttpResponse.INVALID_ID);
+    }
+    const updatedData = await this._courseRepository.updateBaseInfo(
+      id,
+      baseInfo,
+    );
+    return courseDTO(updatedData as ICoursesPopulated);
   }
 }

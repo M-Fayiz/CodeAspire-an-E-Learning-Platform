@@ -11,5 +11,9 @@ sharedRouter.get(
   "/s3/presigned-url/upload",
   sharedController.createS3BucketUplaodURL,
 );
+sharedRouter.get(
+  "/s3/presigned-url/download",
+  sharedController.createS3BucketDownloadURL,
+);
 
 export default sharedRouter;

@@ -3,7 +3,7 @@ import type { ReactNode } from "react";
 interface TapsProps {
   Click: (tap: string) => void;
   label: string;
-  tap: String;
+  tap: string;
   icon: ReactNode;
   activeTap: string;
 }

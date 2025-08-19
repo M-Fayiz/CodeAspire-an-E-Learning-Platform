@@ -65,7 +65,7 @@ const Sidebar: React.FC<ISidebarProps> = ({ user, isOpen, onClose }) => {
         } lg:translate-x-0`}
       >
         <div className="flex flex-col h-full">
-          <div className="px-4 py-4 border-b border-gray-200">
+          {/* <div className="px-4 py-4 border-b border-gray-200">
             <div className="flex items-center space-x-3">
               <img
                 src={`${user.profile ? user.profile : "/illustration/Avatar.jpeg"}`}
@@ -90,7 +90,7 @@ const Sidebar: React.FC<ISidebarProps> = ({ user, isOpen, onClose }) => {
                 {user.role}
               </div>
             </div>
-          </div>
+          </div> */}
 
           <nav className="flex-1 px-4 py-4 space-y-6 overflow-auto ">
             <div>

@@ -4,6 +4,7 @@ import { ISharedService } from "../../services/interface/ISharedService";
 import { HttpStatus } from "../../const/http-status";
 import { successResponse } from "../../utility/response.util";
 import { HttpResponse } from "../../const/error-message";
+import logger from "../../config/logger.config";
 
 export class SharedController implements ISharedController {
   constructor(private _sharedService: ISharedService) {}
@@ -20,15 +21,33 @@ export class SharedController implements ISharedController {
           fileName as string,
           type as string,
         );
-        res
-          .status(HttpStatus.OK)
-          .json(
-            successResponse(HttpResponse.OK, {
-              uploadURL: uploadUrls.uploadURL,
-              fileURL: uploadUrls.fileURL,
-            }),
-          );
+        res.status(HttpStatus.OK).json(
+          successResponse(HttpResponse.OK, {
+            uploadURL: uploadUrls.uploadURL,
+            fileURL: uploadUrls.fileURL,
+          }),
+        );
       }
+    } catch (error) {
+      next(error);
+    }
+  };
+  createS3BucketDownloadURL = async (
+    req: Request,
+    res: Response,
+    next: NextFunction,
+  ): Promise<void> => {
+    try {
+      const { key } = req.query;
+      logger.debug("key key key", key);
+
+      const get_fileURL = await this._sharedService.generatePresignedGetUrl(
+        key as string,
+      );
+
+      res
+        .status(HttpStatus.OK)
+        .json(successResponse(HttpResponse.OK, { get_fileURL }));
     } catch (error) {
       next(error);
     }

@@ -22,7 +22,6 @@ export const API = {
   SHARED: {
     UPLOAD_PUT_PRESIGNED_URL: "/shared/s3/presigned-url/upload",
     DOWNLOAD_GET_PRESIGNED_URL: "/shared/s3/presigned-url/download",
-    
   },
   ADMIN: {
     FETCH_ALL_USERS: "/admin/users",
@@ -42,7 +41,11 @@ export const API = {
       `/courses/${courseId}?course_part=${updatePart}`,
     GET_COURSE: (id: string) => `/courses/${id}`,
     GET_MENTOR_DRAFTED_COURSE: `/courses/drafted-courses`,
-    ADD_SESSION:(id:string)=>`/courses/${id}/sessions`,
-    ADD_LECTURE:(id:string,sessionId:string)=>`/courses/${id}/sessions/${sessionId}`
+    ADD_SESSION: (id: string) => `/courses/${id}/sessions`,
+    ADD_LECTURE: (id: string, sessionId: string) =>
+      `/courses/${id}/sessions/${sessionId}`,
+    EDIT_LECTURE: (courseId: string, sessionId: string, lectureId: string) =>
+      `/courses/${courseId}/sessions/${sessionId}/lectures/${lectureId}`,
+    UPDATE_BASE_COURSE_INFO:(courseId:string)=>`/courses/${courseId}`
   },
 };

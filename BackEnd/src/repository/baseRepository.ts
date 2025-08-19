@@ -6,6 +6,7 @@ import {
   UpdateQuery,
   PopulateOptions,
   ModifyResult,
+  QueryOptions,
 } from "mongoose";
 type PopulateFieldType =
   | string
@@ -33,26 +34,32 @@ export abstract class BaseRepository<T extends Document> {
     const document = new this.model(data);
     return document.save();
   }
-  async findById(id: Types.ObjectId,populateFields?:PopulateFieldType): Promise<T | null> {
-    let query= this.model.findById(id);
+  async findById(
+    id: Types.ObjectId,
+    populateFields?: PopulateFieldType,
+  ): Promise<T | null> {
+    let query = this.model.findById(id);
     if (populateFields) {
       if (Array.isArray(populateFields)) {
         query = query.populate(populateFields);
       }
     }
-    return query.exec()
+    return query.exec();
   }
   async findUserByEmail(email: string): Promise<T | null> {
     return this.model.findOne({ email });
   }
-  async find(filter:FilterQuery<T>,populateFields?:PopulateFieldType):Promise<T[]|null>{
-    let query=this.model.find(filter)
-    if(populateFields){
-      if(Array.isArray(populateFields)){
-        query=query.populate(populateFields)
+  async find(
+    filter: FilterQuery<T>,
+    populateFields?: PopulateFieldType,
+  ): Promise<T[] | null> {
+    let query = this.model.find(filter);
+    if (populateFields) {
+      if (Array.isArray(populateFields)) {
+        query = query.populate(populateFields);
       }
     }
-    return query.exec()
+    return query.exec();
   }
   async findUserAndUpdate(
     filter: FilterQuery<T>,
@@ -90,5 +97,12 @@ export abstract class BaseRepository<T extends Document> {
       .findOneAndUpdate(filter, update, { new: true })
       .lean<T>()
       .exec();
+  }
+  async findItemAndUpdate(
+    filter: FilterQuery<T>,
+    update: UpdateQuery<T>,
+    options: QueryOptions = { new: true },
+  ): Promise<T | null> {
+    return this.model.findOneAndUpdate(filter, update, options);
   }
 }

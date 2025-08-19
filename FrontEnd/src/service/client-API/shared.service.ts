@@ -34,4 +34,20 @@ export const sharedService = {
       }
     }
   },
+  getPreSignedDownloadURL: async (fileName: string) => {
+    try {
+      const response = await axiosInstance.get(
+        API.SHARED.DOWNLOAD_GET_PRESIGNED_URL,
+        {
+          params: { key: fileName },
+        },
+      );
+      console.log("v v v ", response.data.get_fileURL);
+      return response.data.get_fileURL;
+    } catch (error) {
+      if (error instanceof Error) {
+        throw new Error(error.message);
+      }
+    }
+  },
 };

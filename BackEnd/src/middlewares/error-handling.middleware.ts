@@ -9,7 +9,6 @@ export const errorHandler = (
   res: Response,
   next: NextFunction,
 ) => {
-
   let statusCode = HttpStatus.INTERNAL_SERVER_ERROR;
   let message: string = HttpResponse.SERVER_ERROR;
 

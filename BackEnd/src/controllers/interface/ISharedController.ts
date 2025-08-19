@@ -6,4 +6,9 @@ export interface ISharedController {
     res: Response,
     next: NextFunction,
   ): Promise<void>;
+  createS3BucketDownloadURL(
+    req: Request,
+    res: Response,
+    next: NextFunction,
+  ): Promise<void>;
 }

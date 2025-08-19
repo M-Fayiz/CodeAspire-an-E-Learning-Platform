@@ -1,6 +1,5 @@
 import mongoose from "mongoose";
 import { ICourses } from "../types/courses.type";
-import { string } from "zod";
 
 const courseSchema = new mongoose.Schema<ICourses>(
   {
@@ -72,10 +71,10 @@ const courseSchema = new mongoose.Schema<ICourses>(
         },
       },
     ],
-    status:{
-      type:String,
-      enum:['inProgress' , 'draft' , 'published']
-    }
+    status: {
+      type: String,
+      enum: ["inProgress", "draft", "published"],
+    },
   },
   { timestamps: true },
 );

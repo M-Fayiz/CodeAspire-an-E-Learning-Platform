@@ -1,11 +1,11 @@
 export interface ILecture {
-  id?:string
+  _id?: string;
   title: string;
   lectureType: "video" | "pdf" | "none";
-  lectureContent:File|string;
+  lectureContent: File | string;
 }
 export interface ISession {
-  id?:string
+  _id?: string;
   title: string;
   lectures: ILecture[];
   review?: {
@@ -45,7 +45,7 @@ export interface ICourseDTO extends ICourseListDTO {
 }
 
 export interface CourseForm {
-  id?: string;
+  _id?: string;
   title: string;
   description?: string;
   thumbnail?: File | string;
@@ -56,4 +56,20 @@ export interface CourseForm {
   price: string;
   mentorsId: string;
   sessions?: ISession[];
+  status?: "inProgress" | "draft" | "published";
+}
+
+export interface IFormCourse {
+  _id: string;
+  title: string;
+  thumbnail: string;
+  categoryId: string;
+  subCategoryId: string;
+  language: string;
+  level: "Beginner" | "Intermediate" | "Advanced";
+  price: number;
+  mentorsId: string;
+  sessions: ISession[];
+  description: string;
+  status: "inProgress" | "draft" | "published";
 }

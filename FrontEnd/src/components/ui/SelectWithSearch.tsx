@@ -75,7 +75,7 @@ export function Combobox({
                     value={data.label}
                     onSelect={() => {
                       const newValue = data.key === value ? "" : data.key;
-                      console.log('new valuew',newValue)
+                      console.log("new valuew", newValue);
                       onChange?.(name, newValue);
                       setOpen(false);
                     }}

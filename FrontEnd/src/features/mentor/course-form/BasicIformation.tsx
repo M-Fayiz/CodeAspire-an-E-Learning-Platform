@@ -1,26 +1,27 @@
-import ImageUploadPreview from "@/components/ui/ImageFile";
 import { Input } from "@/components/ui/Inputs";
 import { Combobox } from "@/components/ui/SelectWithSearch";
 import {
   COURSE_LANGUAGE,
   COURSE_LEVEL,
 } from "@/constants/courseInputs.constant";
-import { useAuth } from "@/context/auth.context";
+
 import { useCourseFormContext } from "@/context/courseForm.context";
 import categoryService from "@/service/client-API/admin/category.service";
 import type { ICategoryTree } from "@/types/category.types";
 import React, { useEffect, useMemo, useState } from "react";
-
+import { FileUp } from "lucide-react";
+import { sharedService } from "@/service/client-API/shared.service";
+import { Spinner } from "@/components/ui/shadcn-io/spinner";
 interface BaseCaourseProps {
   handleTap?: (tap: "basic" | "curriculum" | "publish") => void;
-  
 }
 
 const BasicCourseInformation: React.FC<BaseCaourseProps> = () => {
   const [categories, setCategories] = useState<ICategoryTree[]>([]);
   const [selectedCategory, setSelectedCategory] = useState("");
-
-  const { formData, updateBaseField, OnSubmit, setField,zodError } =
+  const [image, setImage] = useState("");
+  const [spin,setSpin]=useState(false)
+  const { formData, updateBaseField, OnSubmit, setField, zodError } =
     useCourseFormContext();
   useEffect(() => {
     const fetchCategories = async () => {
@@ -32,28 +33,43 @@ const BasicCourseInformation: React.FC<BaseCaourseProps> = () => {
     fetchCategories();
   }, []);
 
+  useEffect(() => {
+    async function getImageUrl() {
+      if (typeof formData.thumbnail == "string") {
+        const resultURl = await sharedService.getPreSignedDownloadURL(
+          formData.thumbnail,
+        );
+
+        setImage(resultURl);
+      } else if (formData.thumbnail instanceof File) {
+        setImage(URL.createObjectURL(formData.thumbnail as File));
+      }
+    }
+    getImageUrl();
+  }, [formData.thumbnail]);
+
   const handleSubCategory = (selectedLabel: string | undefined) => {
     if (selectedLabel) {
       setSelectedCategory(selectedLabel);
     }
   };
 
+  const { categoryOptions, subCategoryOptions } = useMemo(() => {
+    const categoryOptions = categories.map((category) => ({
+      key: category.key,
+      label: category.label,
+    }));
 
-const { categoryOptions, subCategoryOptions } = useMemo(() => {
-  const categoryOptions = categories.map((category) => ({
-    key: category.key,
-    label: category.label,
-  }));
+    const subCategoryOptions =
+      categories
+        .find((c) => c.label === selectedCategory)
+        ?.children?.map((child) => ({
+          key: child.key,
+          label: child.label,
+        })) || [];
 
-  const subCategoryOptions =
-    categories.find((c) => c.label === selectedCategory)?.children?.map((child) => ({
-      key: child.key,
-      label: child.label,
-    })) || [];
-
-  return { categoryOptions, subCategoryOptions };
-}, [categories, selectedCategory]);
-
+    return { categoryOptions, subCategoryOptions };
+  }, [categories, selectedCategory]);
 
   return (
     <div className="p-4 sm:p-6">
@@ -84,7 +100,7 @@ const { categoryOptions, subCategoryOptions } = useMemo(() => {
           />
 
           <Input
-            type="number"
+            type="text"
             placeholder="Enter Course Price"
             label="Course Price"
             name="price"
@@ -104,13 +120,12 @@ const { categoryOptions, subCategoryOptions } = useMemo(() => {
                 onChange={setField}
               />
               <p className="text-red-400 text-sm">{zodError.categoryId}</p>
-              
             </div>
             {subCategoryOptions.length > 0 && (
               <>
                 <Combobox
                   label="Choose a SubCategory"
-                  value={formData.subCategoryId||""}
+                  value={formData.subCategoryId || ""}
                   boxOptions={subCategoryOptions}
                   name="subCategoryId"
                   onChange={setField}
@@ -151,9 +166,46 @@ const { categoryOptions, subCategoryOptions } = useMemo(() => {
               <p className="text-red-400 text-sm">{zodError.level}</p>
             </div>
           </div>
-          <div className="col-span-1 md:col-span-2">
-            <input type="file" name="thumbnail" onChange={updateBaseField} />
-            <p className="text-red-400 text-sm">{zodError.thumbnail}</p>
+          <div className="border-2 border-dashed border-gray-400 rounded-2xl flex flex-col items-center justify-center    hover:border-blue-500 transition cursor-pointer bg-gray-50">
+            <div className="col-span-1 md:col-span-2">
+              <div className=" border-gray-400 rounded-2xl flex flex-col items-center justify-center p-3   hover:border-blue-500 transition cursor-pointer bg-gray-50">
+                <div className="mb-1 flex items-center justify-center w-12 h-12 rounded-full bg-blue-100">
+                  <FileUp className="text-blue-500 w-8 h-8" />
+                </div>
+
+                <p className="text-gray-700 font-medium mb-2">
+                  Upload Thumbnail
+                </p>
+
+                <input
+                  type="file"
+                  name="thumbnail"
+                  accept="image/*"
+                  onChange={updateBaseField}
+                  className="block w-full text-sm text-gray-600 
+                          file:mr-4 file:py-2 file:px-4 
+                          file:rounded-lg file:border-0 
+                          file:text-sm file:font-semibold 
+                          file:bg-blue-100 file:text-blue-600 
+                          hover:file:bg-blue-200"
+                />
+
+                {zodError?.thumbnail && (
+                  <p className="text-red-500 text-sm mt-2">
+                    {zodError.thumbnail}
+                  </p>
+                )}
+              </div>
+            </div>
+            {image && (
+              <div>
+                <img
+                  src={image}
+                  alt="Preview"
+                  className="w-64 h-64 object-cover rounded-sm shadow"
+                />
+              </div>
+            )}
           </div>
         </div>
 
@@ -162,6 +214,7 @@ const { categoryOptions, subCategoryOptions } = useMemo(() => {
             type="submit"
             className="w-full sm:w-auto px-8 py-3 text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 rounded-md shadow-sm transition-colors"
           >
+           { spin&&<Spinner />}
             Save as Draft & Next
           </button>
         </div>

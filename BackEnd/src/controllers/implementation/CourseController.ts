@@ -6,6 +6,7 @@ import { successResponse } from "../../utility/response.util";
 import { HttpResponse } from "../../const/error-message";
 import { updatePart } from "../../types/courses.type";
 import { session } from "passport";
+import logger from "../../config/logger.config";
 
 export class CourseController implements ICourseController {
   constructor(private _courseService: ICourseService) {}
@@ -16,12 +17,10 @@ export class CourseController implements ICourseController {
     next: NextFunction,
   ): Promise<void> => {
     try {
-      
-
       const createdCourseData = await this._courseService.createCourses(
         req.body.courseData,
       );
-      console.log('❌❌❌',createdCourseData)
+      console.log("❌❌❌", createdCourseData);
       res
         .status(HttpStatus.OK)
         .json(successResponse(HttpResponse.OK, { createdCourseData }));
@@ -70,50 +69,123 @@ export class CourseController implements ICourseController {
       next(error);
     }
   };
-  getCourse=async(req: Request, res: Response, next: NextFunction): Promise<void>=>{
-      try {
-        const courseId=req.params.id
-        const course=await this._courseService.getCourse(courseId)
-        res.status(HttpStatus.OK).json(successResponse(HttpResponse.OK,{course}))
-      } catch (error) {
-        next(error)
-      }
-  }
-  getMentorDraftedCourseList=async(req: Request, res: Response, next: NextFunction): Promise<void>=> {
-      try {
-        console.log('🔥🔥 kjdaij')
-        const {mentorId}=req.query
-        console.warn(mentorId)
-        const draftCoursList=await this._courseService.getDraftedCourses(mentorId as string)
-        console.log('🍉🍉',draftCoursList)
-        res.status(HttpStatus.OK).json(successResponse(HttpResponse.OK,{draftCoursList}))
-      } catch (error) {
-        next(error)
-      }
-  }
-  addSession=async(req: Request, res: Response, next: NextFunction): Promise<void> =>{
+  getCourse = async (
+    req: Request,
+    res: Response,
+    next: NextFunction,
+  ): Promise<void> => {
     try {
-      
-      const {id}=req.params
-      const {session}=req.body
-      console.log('😶‍🌫️😶‍🌫️',session)
-      const addedSessionData=await this._courseService.addSessions(id,session)  
-      res.status(HttpStatus.OK).json(successResponse(HttpResponse.OK,{addedSessionData}))
+      const courseId = req.params.id;
+      const course = await this._courseService.getCourse(courseId);
+      res
+        .status(HttpStatus.OK)
+        .json(successResponse(HttpResponse.OK, { course }));
     } catch (error) {
-      next(error)
+      next(error);
     }
-  }
-  addLecture=async(req: Request, res: Response, next: NextFunction): Promise<void>=> {
+  };
+  getMentorDraftedCourseList = async (
+    req: Request,
+    res: Response,
+    next: NextFunction,
+  ): Promise<void> => {
     try {
-      
-      const {courseId}=req.params
-      const {sessionId}=req.query
-      const {lecture}=req.body
-      console.log(courseId,'😶‍🌫️',sessionId,'🍉',lecture)
-      const addedLectureData=await this._courseService.addLectures(courseId,sessionId as string,lecture)
-      res.status(HttpStatus.OK).json(successResponse(HttpResponse.OK,{addedLectureData}))
+      const { mentorId } = req.query;
+      console.warn(mentorId);
+      const draftCoursList = await this._courseService.getDraftedCourses(
+        mentorId as string,
+      );
+
+      res
+        .status(HttpStatus.OK)
+        .json(successResponse(HttpResponse.OK, { draftCoursList }));
     } catch (error) {
-      next(error)
+      next(error);
     }
-  }
+  };
+  addSession = async (
+    req: Request,
+    res: Response,
+    next: NextFunction,
+  ): Promise<void> => {
+    try {
+      const { id } = req.params;
+      const { session } = req.body;
+
+      const addedSessionData = await this._courseService.addSessions(
+        id,
+        session,
+      );
+      console.warn(addedSessionData);
+      res
+        .status(HttpStatus.OK)
+        .json(successResponse(HttpResponse.OK, { addedSessionData }));
+    } catch (error) {
+      next(error);
+    }
+  };
+  addLecture = async (
+    req: Request,
+    res: Response,
+    next: NextFunction,
+  ): Promise<void> => {
+    try {
+      const { courseId, sessionId } = req.params;
+      const { lecture } = req.body;
+
+      const addedLectureData = await this._courseService.addLectures(
+        courseId,
+        sessionId as string,
+        lecture,
+      );
+      res
+        .status(HttpStatus.OK)
+        .json(successResponse(HttpResponse.OK, { addedLectureData }));
+    } catch (error) {
+      next(error);
+    }
+  };
+  editLecture = async (
+    req: Request,
+    res: Response,
+    next: NextFunction,
+  ): Promise<void> => {
+    try {
+      const { courseId, lectureId, sessionId } = req.params;
+
+      const { lecture } = req.body;
+
+      const updatedData = await this._courseService.editLecture(
+        courseId,
+        sessionId,
+        lectureId,
+        lecture,
+      );
+      res
+        .status(HttpStatus.OK)
+        .json(successResponse(HttpResponse.OK, { updatedData }));
+    } catch (error) {
+      next(error);
+    }
+  };
+  updateBaseInfo = async (
+    req: Request,
+    res: Response,
+    next: NextFunction,
+  ): Promise<void> => {
+    try {
+      logger.info("just get into updateInfo");
+      const { courseId } = req.params;
+      const { courseData } = req.body;
+      const updatedData = await this._courseService.updateBaseCourseInfo(
+        courseId,
+        courseData,
+      );
+      res
+        .status(HttpStatus.OK)
+        .json(successResponse(HttpResponse.OK, { updatedData }));
+    } catch (error) {
+      next(error);
+    }
+  };
 }

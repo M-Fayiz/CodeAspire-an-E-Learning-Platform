@@ -1,10 +1,10 @@
 import { useAuth } from "@/context/auth.context";
 import { useEffect, useState } from "react";
 import courseService from "@/service/client-API/mentor/course.service";
-import type { ICourseDTO } from "@/types/courses.types";
+import type { CourseForm, ICourseDTO } from "@/types/courses.types";
 
 export default function DraftTable() {
-  const [draftCourse, setDraftCourse] = useState<ICourseDTO[]>([]);
+  const [draftCourse, setDraftCourse] = useState<CourseForm[]>([]);
   const { user } = useAuth();
   console.log("user from context", user);
   useEffect(() => {
@@ -22,7 +22,7 @@ export default function DraftTable() {
         {draftCourse &&
           draftCourse.map((course) => (
             <div
-              key={course.id}
+              key={course._id}
               className="bg-white rounded-2xl shadow-md hover:shadow-lg transition-shadow p-5 cursor-pointer"
             >
               <h2 className="text-lg font-semibold text-gray-800 mb-2">

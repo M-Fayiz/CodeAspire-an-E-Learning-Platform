@@ -27,14 +27,12 @@ export class AdminController implements IAdminController {
         name,
         role,
       );
-      res
-        .status(HttpStatus.OK)
-        .json(
-          successResponse(HttpResponse.OK, {
-            users: allUsers.safeUsers,
-            totalPage: allUsers.totalPage,
-          }),
-        );
+      res.status(HttpStatus.OK).json(
+        successResponse(HttpResponse.OK, {
+          users: allUsers.safeUsers,
+          totalPage: allUsers.totalPage,
+        }),
+      );
     } catch (error) {
       next(error);
     }

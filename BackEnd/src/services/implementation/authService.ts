@@ -234,9 +234,7 @@ export class AuthService implements IAuthService {
     return result.email;
   }
 
-  async generateToken(
-    user: IUser | IMentor | ILearner | IAdmin,
-  ): Promise<{
+  async generateToken(user: IUser | IMentor | ILearner | IAdmin): Promise<{
     accessToken: string;
     refreshToken: string;
     payload: JwtPayload;

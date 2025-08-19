@@ -3,6 +3,8 @@ import { courseModel } from "../../models/courses.model";
 import { ICourses, ILecture, ISession } from "../../types/courses.type";
 import { BaseRepository } from "../baseRepository";
 import { ICourseRepository } from "../interface/ICourseRepository";
+import { AxiosHeaders } from "axios";
+import logger from "../../config/logger.config";
 
 export class CourseRepository
   extends BaseRepository<ICourses>
@@ -23,19 +25,81 @@ export class CourseRepository
   ): Promise<ICourses | null> {
     return await this.findByIDAndUpdate(courseId, courseData);
   }
+  async getCourse(courseId: Types.ObjectId): Promise<ICourses | null> {
+    return await this.findById(courseId, ["categoryId", "subCategoryId"]);
+  }
+  async getMentorDraftedCourses(
+    mentorId: Types.ObjectId,
+  ): Promise<ICourses[] | null> {
+    return await this.find({ mentorsId: mentorId });
+  }
   async addSession(
     courseId: Types.ObjectId,
     session: ISession,
   ): Promise<ICourses | null> {
     return await this.PushToArray(courseId, "sessions", session);
   }
-  async getCourse(courseId: Types.ObjectId): Promise<ICourses | null> {
-    return await this.findById(courseId,["categoryId", "subCategoryId"])
+  async addLecture(
+    courseId: Types.ObjectId,
+    sessionId: Types.ObjectId,
+    lecture: ILecture,
+  ): Promise<ICourses | null> {
+    return await this.PushToArray(
+      { _id: courseId, "sessions._id": sessionId },
+      "sessions.$.lectures",
+      lecture,
+    );
   }
-  async getMentorDraftedCourses(mentorId: Types.ObjectId): Promise<ICourses[]| null> {
-    return await this.find({mentorsId:mentorId})
+  async findSession(
+    courseId: Types.ObjectId,
+    title: string,
+  ): Promise<ICourses | null> {
+    return await this.findOne({
+      _id: courseId,
+      "sessions.title": { $regex: title, $options: "i" },
+    });
   }
-  async addLecture(courseId: Types.ObjectId, sessionId: Types.ObjectId, lecture: ILecture): Promise<ICourses | null> {
-    return await this.PushToArray({_id:courseId,"sessions._id":sessionId},'lectures',lecture)
+  async findLecture(
+    courseId: Types.ObjectId,
+    sessionId: Types.ObjectId,
+    title: string,
+  ): Promise<ICourses | null> {
+    return await this.findOne({
+      _id: courseId,
+      sessions: {
+        $elemMatch: {
+          _id: sessionId,
+          lectures: { $elemMatch: { title: { $regex: title, $options: "i" } } },
+        },
+      },
+    });
+  }
+  async editLecture(
+    courseId: Types.ObjectId,
+    sessionId: Types.ObjectId,
+    lectureId: Types.ObjectId,
+    lecture: ILecture,
+  ): Promise<ICourses | null> {
+    logger.info("lecture", lecture);
+    return await this.findItemAndUpdate(
+      { _id: courseId },
+      {
+        $set: {
+          "sessions.$[s].lectures.$[l].title": lecture.title,
+          "sessions.$[s].lectures.$[l].lectureType": lecture.lectureType,
+          "sessions.$[s].lectures.$[l].lectureContent": lecture.lectureContent,
+        },
+      },
+      {
+        new: true,
+        arrayFilters: [{ "s._id": sessionId }, { "l._id": lectureId }],
+      },
+    );
+  }
+  async updateBaseInfo(
+    courseId: Types.ObjectId,
+    baseInfo: ICourses,
+  ): Promise<ICourses | null> {
+    return await this.findByIDAndUpdate(courseId, baseInfo);
   }
 }

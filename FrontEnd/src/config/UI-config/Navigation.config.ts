@@ -86,7 +86,11 @@ export const navigationConfig = {
       { icon: Home, label: "Dashboard", path: "/mentor/dashboard" },
       { icon: Book, label: "My Courses", path: "/mentor/courses" },
       { icon: Users, label: "Students", path: "/mentor/students" },
-      { icon: PlusCircle, label: "Create Course", path: "/mentor/create" },
+      {
+        icon: PlusCircle,
+        label: "Create Course",
+        path: "/mentor/courses/create",
+      },
       {
         icon: MessageSquare,
         label: "Messages",

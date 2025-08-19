@@ -1,6 +1,7 @@
 import { Document, Types } from "mongoose";
 
 export interface ILecture {
+  _id?: Types.ObjectId;
   title: string;
   lectureType: "video" | "pdf";
   lectureContent: string;
@@ -14,7 +15,7 @@ export interface ISession {
   };
 }
 export interface ICourses extends Document {
-  id?:string
+  id?: string;
   title: string;
   description?: string;
   thumbnail?: string;
@@ -25,10 +26,9 @@ export interface ICourses extends Document {
   price: number;
   mentorsId: Types.ObjectId;
   sessions?: ISession[];
-  isActive: boolean;
-  isDraft: boolean;
-  status:'inProgress' | 'draft' | 'published'
-
+  isActive?: boolean;
+  isDraft?: boolean;
+  status: "inProgress" | "draft" | "published";
 }
 
 export type updatePart = "sessions" | "lecture" | "baseInformation";

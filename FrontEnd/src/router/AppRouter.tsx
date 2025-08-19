@@ -1,4 +1,4 @@
-import { createBrowserRouter, Navigate } from "react-router";
+import { createBrowserRouter, Navigate, Outlet } from "react-router";
 
 import Landing from "../pages/Landing/Landing";
 
@@ -22,11 +22,19 @@ import { useProfileLoader } from "../pages/Admin Page/user-management/profile.lo
 import MentorDataForm from "../components/auth-components/MentorInformation";
 
 import CategoryManagement from "@/pages/Admin Page/category";
-import BasicCourseInformation from "@/features/mentor/course-form/BasicIformation";
-import CourseCurriculum from "@/features/mentor/course-form/CourseCurriculum";
 import CourseCreation from "@/pages/Mentor_Page/course_creation/Index";
 import CourseLayout from "@/features/courses_list/CourseLayout";
 import { fetchCourses } from "@/features/courses_list/CourseLoader";
+import DraftCourses from "@/pages/Mentor_Page/course_creation/DraftCourses";
+import CourseFormProvider from "@/context/courseForm.context";
+
+function Form_Courses_Provider() {
+  return (
+    <CourseFormProvider>
+      <Outlet />
+    </CourseFormProvider>
+  );
+}
 
 export const router = createBrowserRouter([
   {
@@ -72,7 +80,14 @@ export const router = createBrowserRouter([
       { path: "dashboard", element: <DashboardContent /> },
       { path: "profile", element: <ProfileManagement /> },
       { path: "data", element: <MentorDataForm /> },
-      { path: "create", element: <CourseCreation /> },
+      {
+        path: "courses",
+        element: <Form_Courses_Provider />,
+        children: [
+          { path: "create", element: <CourseCreation /> },
+          { path: "drafted-courses", element: <DraftCourses /> },
+        ],
+      },
     ],
   },
   {

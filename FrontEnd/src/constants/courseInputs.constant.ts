@@ -1,8 +1,4 @@
-export const COURSE_LEVEL = [
-  "Beginner",
-  "Intermediate",
-  "Advanced",
-];
+export const COURSE_LEVEL = ["Beginner", "Intermediate", "Advanced"];
 
 export const COURSE_LANGUAGE = [
   "English",

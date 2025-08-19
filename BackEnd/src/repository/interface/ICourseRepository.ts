@@ -13,9 +13,30 @@ export interface ICourseRepository {
     courseId: Types.ObjectId,
     session: ISession,
   ): Promise<ICourses | null>;
-  // addLecture(courseId:Types.ObjectId,lecture:ILecture):Promise<ILecture|null>
-  // updateBaseInfo(courseId:Types.ObjectId,baseInfo:Partial<ICourses>):Promise<ICourses|null>
-  getCourse(courseId:Types.ObjectId):Promise<ICourses|null>
-  getMentorDraftedCourses(mentorId:Types.ObjectId):Promise<ICourses[]|null>
-  addLecture(courseId:Types.ObjectId,sessionId:Types.ObjectId,lecture:ILecture):Promise<ICourses|null>
+  updateBaseInfo(
+    courseId: Types.ObjectId,
+    baseInfo: ICourses,
+  ): Promise<ICourses | null>;
+  getCourse(courseId: Types.ObjectId): Promise<ICourses | null>;
+  getMentorDraftedCourses(mentorId: Types.ObjectId): Promise<ICourses[] | null>;
+  addLecture(
+    courseId: Types.ObjectId,
+    sessionId: Types.ObjectId,
+    lecture: ILecture,
+  ): Promise<ICourses | null>;
+  findSession(
+    courseId: Types.ObjectId,
+    title: string,
+  ): Promise<ICourses | null>;
+  findLecture(
+    courseId: Types.ObjectId,
+    sessionsId: Types.ObjectId,
+    title: string,
+  ): Promise<ICourses | null>;
+  editLecture(
+    courseId: Types.ObjectId,
+    sessionId: Types.ObjectId,
+    lectureId: Types.ObjectId,
+    lecture: ILecture,
+  ): Promise<ICourses | null>;
 }

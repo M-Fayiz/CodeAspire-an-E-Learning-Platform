@@ -10,7 +10,6 @@ import { clearCookies } from "../../utility/clearCookies.util";
 import { setAccessToken, setRefreshToken } from "../../utility/cookie.util";
 import { IUserModel } from "../../models/user.model";
 import { env } from "../../config/env.config";
-import { log } from "console";
 
 export class AuthController implements IAuthController {
   constructor(private _authSerive: IAuthService) {}
@@ -34,13 +33,11 @@ export class AuthController implements IAuthController {
       const token = await this._authSerive.verifyEmail(req.body);
       setAccessToken(res, token.accessToken);
       setRefreshToken(res, token.refreshToken);
-      res
-        .status(HttpStatus.OK)
-        .json(
-          successResponse(HttpResponse.LOGGED_IN_SUCCESSFULLY, {
-            token: token,
-          }),
-        );
+      res.status(HttpStatus.OK).json(
+        successResponse(HttpResponse.LOGGED_IN_SUCCESSFULLY, {
+          token: token,
+        }),
+      );
     } catch (error) {
       next(error);
     }
@@ -100,6 +97,7 @@ export class AuthController implements IAuthController {
   async login(req: Request, res: Response, next: NextFunction): Promise<void> {
     try {
       const { email, password } = req.body;
+
       const tokens = await this._authSerive.login(email, password);
       setAccessToken(res, tokens.accessToken);
       setRefreshToken(res, tokens.refreshToken);

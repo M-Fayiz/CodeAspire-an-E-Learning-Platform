@@ -1,14 +1,14 @@
-import { title } from "process";
+import { ICourses } from "../types/courses.type";
 import {
   ICourseDTO,
   ICourseListDTO,
   ICoursesPopulated,
+  IFormCourseDTO,
 } from "../types/dtos.type/course.dtos.type";
-import { ISession } from "../types/courses.type";
 
 export function courseListDTO(course: ICoursesPopulated): ICourseListDTO {
   return {
-    id: course.id as string,
+    _id: course.id as string,
     title: course.title,
     thumbnail: course.thumbnail,
     category:
@@ -25,12 +25,11 @@ export function courseListDTO(course: ICoursesPopulated): ICourseListDTO {
   };
 }
 
-
-export function courseDTO(course:ICoursesPopulated):ICourseDTO{
-  return{
-    id: course.id as string,
+export function courseDTO(course: ICoursesPopulated): ICourseDTO {
+  return {
+    _id: course._id as string,
     title: course.title,
-    description:course.description?course.description:'',
+    description: course.description ? course.description : "",
     thumbnail: course.thumbnail,
     category:
       typeof course.categoryId == "object" && "title" in course.categoryId
@@ -43,6 +42,23 @@ export function courseDTO(course:ICoursesPopulated):ICourseDTO{
     language: course.language,
     level: course.level,
     price: course.price,
-    sessions:course.sessions?course.sessions:null
-  }
+    sessions: course.sessions ? course.sessions : null,
+  };
+}
+
+export function formCourseDto(course: ICourses): IFormCourseDTO {
+  return {
+    _id: String(course._id),
+    title: course.title || "",
+    description: course.description || "",
+    thumbnail: course.thumbnail || "",
+    categoryId: String(course.categoryId),
+    subCategoryId: String(course.subCategoryId),
+    language: course.language,
+    level: course.level,
+    price: course.price,
+    mentorsId: String(course.mentorsId),
+    sessions: course.sessions ?? [],
+    status: course.status,
+  };
 }

@@ -7,7 +7,7 @@ export interface ICoursesPopulated extends ICourses {
 }
 
 export interface ICourseListDTO {
-  id: Types.ObjectId|string;
+  _id: Types.ObjectId | string;
   title: string;
   thumbnail?: string;
   category: string;
@@ -17,7 +17,22 @@ export interface ICourseListDTO {
   price: number;
 }
 
-export interface ICourseDTO extends ICourseListDTO{
-  sessions:ISession[]|null
-  description:string
+export interface ICourseDTO extends ICourseListDTO {
+  sessions: ISession[] | null;
+  description: string;
+}
+
+export interface IFormCourseDTO {
+  _id: Types.ObjectId | string;
+  title: string;
+  thumbnail: string;
+  categoryId: string;
+  subCategoryId: string;
+  language: string;
+  level: "Beginner" | "Intermediate" | "Advanced";
+  price: number;
+  mentorsId: string;
+  sessions: ISession[];
+  description: string;
+  status: "inProgress" | "draft" | "published";
 }

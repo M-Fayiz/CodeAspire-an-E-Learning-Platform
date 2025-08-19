@@ -1,25 +1,31 @@
 import { useEffect, useState } from "react";
-import BasicCourseInformation from "./BasicIformation";
-
 import { ClipboardPen, Layers, CloudUpload } from "lucide-react";
-import CourseCurriculum from "./CourseCurriculum";
-import DraftTable from "./ProgressCourseCreation";
 import Taps from "@/components/common/Taps";
 import { useCourseFormContext } from "@/context/courseForm.context";
+import { toast } from "sonner";
+
+import CourseCurriculum from "./CourseCurriculum";
+import DraftTable from "./ProgressCourseCreation";
+import BasicCourseInformation from "./BasicIformation";
 
 export default function CourseCreateLayout() {
   const [activeTab, setActiveTab] = useState("basic");
-  const {courseId}=useCourseFormContext()
-  const [tap, setTaps] = useState(false);
+  const { courseId } = useCourseFormContext();
+
   const handleActiveTap = (tap: string) => {
+    if (tap !== "basic" && !courseId) {
+      toast.info("Please Fillout Basic Course Information!");
+      return;
+    }
     setActiveTab(tap);
   };
-  useEffect(()=>{
-    if(courseId){
-      console.log('coursId',courseId)
-      setActiveTab('curriculum')
+
+  useEffect(() => {
+    if (courseId) {
+      console.info("coursId", courseId);
+      setActiveTab("curriculum");
     }
-  },[courseId])
+  }, [courseId]);
 
   return (
     <div className="w-full bg-white rounded-sm border ">
@@ -53,9 +59,7 @@ export default function CourseCreateLayout() {
         </div>
       </div>
       {activeTab === "basic" ? (
-        <BasicCourseInformation
-          handleTap={handleActiveTap}
-        />
+        <BasicCourseInformation handleTap={handleActiveTap} />
       ) : activeTab === "curriculum" ? (
         <CourseCurriculum />
       ) : activeTab == "draft" ? (

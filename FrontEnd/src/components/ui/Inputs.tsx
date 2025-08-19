@@ -92,7 +92,6 @@ export const Input: React.FC<IInputProps> = ({
       </div>
       {error && (
         <div className="mt-2 text-red-400 text-sm flex items-center">
-          
           {error}
         </div>
       )}
