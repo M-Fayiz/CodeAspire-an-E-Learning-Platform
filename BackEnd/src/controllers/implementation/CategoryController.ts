@@ -45,8 +45,7 @@ export class CategoryController implements ICategoryController {
   ): Promise<void> => {
     try {
       const slug = req.params.id;
-      let { title, parentId } = req.body;
-      if (!parentId) parentId = null;
+      const { title, parentId } = req.body;
       const editedData = await this._categoryService.editCategory(
         slug,
         title,

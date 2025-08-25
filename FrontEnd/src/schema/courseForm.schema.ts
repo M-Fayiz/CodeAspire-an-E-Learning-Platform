@@ -16,13 +16,16 @@ export const courseFormSchema = z.object({
 
   language: z.string().min(3, { message: "language is required" }),
 
-  thumbnail: z
-    .string().or(
-      z.instanceof(File, { message: "Please choose a thumbnail" })
-      .refine((file) => file && ["image/jpeg", "image/png"].includes(file.type), {
-        message: "Only JPEG and PNG files are allowed",
-      }),
-    ),
+  thumbnail: z.string().or(
+    z
+      .instanceof(File, { message: "Please choose a thumbnail" })
+      .refine(
+        (file) => file && ["image/jpeg", "image/png"].includes(file.type),
+        {
+          message: "Only JPEG and PNG files are allowed",
+        },
+      ),
+  ),
   categoryId: z.string().min(3, { message: "select a category" }),
 
   subCategoryId: z

@@ -3,7 +3,6 @@ import { courseModel } from "../../models/courses.model";
 import { ICourses, ILecture, ISession } from "../../types/courses.type";
 import { BaseRepository } from "../baseRepository";
 import { ICourseRepository } from "../interface/ICourseRepository";
-import { AxiosHeaders } from "axios";
 import logger from "../../config/logger.config";
 
 export class CourseRepository
@@ -17,7 +16,7 @@ export class CourseRepository
     return await this.create(courseData);
   }
   async fetchCourses(): Promise<ICourses[] | null> {
-    return await this.findAll(["categoryId", "subCategoryId"]);
+    return await this.find({status:'approved'},["categoryId", "subCategoryId"]);
   }
   async updateCourse(
     courseId: Types.ObjectId,
@@ -31,7 +30,7 @@ export class CourseRepository
   async getMentorDraftedCourses(
     mentorId: Types.ObjectId,
   ): Promise<ICourses[] | null> {
-    return await this.find({ mentorsId: mentorId });
+    return await this.find({ mentorsId: mentorId },["categoryId", "subCategoryId"]);
   }
   async addSession(
     courseId: Types.ObjectId,
@@ -102,4 +101,21 @@ export class CourseRepository
   ): Promise<ICourses | null> {
     return await this.findByIDAndUpdate(courseId, baseInfo);
   }
+  async getAdminCoursList(): Promise<ICourses[] | null> {
+    
+    return await this.find({status:{$in:["published","rejected",'approved']}},['categoryId','subCategoryId','mentorsId'])
+  }
+  async getCourseDetails(courseId: Types.ObjectId): Promise<ICourses[] | null> {
+      return await this.find({_id:courseId},['categoryId','subCategoryId','mentorsId'])
+  }
+  async appproveCourse(courseId: Types.ObjectId): Promise<ICourses | null> {
+      return await this.findByIDAndUpdate(courseId,{status:'approved'})
+  }
+  async rejectCourse(courseId: Types.ObjectId): Promise<ICourses | null> {
+    return await this.findByIDAndUpdate(courseId,{status:'rejected'})
+  }
+  async publishCourse(courseId: Types.ObjectId): Promise<ICourses | null> {
+     return await this.findByIDAndUpdate(courseId,{status:'published'})
+  }
+  
 }

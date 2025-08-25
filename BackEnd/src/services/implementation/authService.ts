@@ -57,7 +57,7 @@ export class AuthService implements IAuthService {
   async verifyEmail(
     data: IAuth,
   ): Promise<{ accessToken: string; refreshToken: string }> {
-    try {
+
       const key = `${redisPrefix.VERIFY_EMAIL}:${data.token}`;
       const result = await redisClient.get(key);
 
@@ -92,9 +92,7 @@ export class AuthService implements IAuthService {
       const payload = payloadDTO(newUser);
 
       return generateTokens(payload);
-    } catch (error) {
-      throw error;
-    }
+    
   }
 
   async authMe(token: string): Promise<IUserDTO> {

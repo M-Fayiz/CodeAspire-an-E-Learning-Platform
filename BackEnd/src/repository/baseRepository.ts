@@ -5,7 +5,6 @@ import {
   FilterQuery,
   UpdateQuery,
   PopulateOptions,
-  ModifyResult,
   QueryOptions,
 } from "mongoose";
 type PopulateFieldType =

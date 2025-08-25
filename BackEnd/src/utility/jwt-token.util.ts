@@ -5,7 +5,7 @@ const ACCESS_TOKEN = env.ACCESS_TOKEN as string;
 const REFRESH_TOKEN = env.REFRESH_TOKEN as string;
 
 export function generateTokens(payload: object) {
-  const accessToken = jwt.sign(payload, ACCESS_TOKEN, { expiresIn: "15m" });
+  const accessToken = jwt.sign(payload, ACCESS_TOKEN, { expiresIn: "2m" });
   const refreshToken = jwt.sign(payload, REFRESH_TOKEN, { expiresIn: "7d" });
 
   return { accessToken, refreshToken };

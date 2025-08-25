@@ -8,7 +8,6 @@ import SignupPage from "../pages/Auth Page/SignupPage";
 import VerifyEmail from "../components/auth-components/verifyEmail";
 import ForgotPassword from "../components/auth-components/ForgotPassword";
 import ResetPassword from "../components/auth-components/ResetPassword";
-
 import NotFound from "../pages/not-found/Not-Found";
 import ErrorFallback from "../components/common/ErrorFallback";
 import DynamicLayout from "../pages/Daynamic-Layout/Dynamic-Dashboard";
@@ -16,17 +15,17 @@ import DashboardContent from "../components/layout/dynamic-layout/Dashboard-Cont
 import { Protected_Router } from "../components/protectedRouter/ProtectedRouter";
 import ProfileManagement from "../pages/Profile Page/Profile";
 import UserManagement from "../pages/Admin Page/user-management/UserMangement";
-
 import AdminUserProfile from "../pages/Admin Page/user-management/UserProfile";
 import { useProfileLoader } from "../pages/Admin Page/user-management/profile.loader";
 import MentorDataForm from "../components/auth-components/MentorInformation";
-
 import CategoryManagement from "@/pages/Admin Page/category";
 import CourseCreation from "@/pages/Mentor_Page/course_creation/Index";
 import CourseLayout from "@/features/courses_list/CourseLayout";
 import { fetchCourses } from "@/features/courses_list/CourseLoader";
-import DraftCourses from "@/pages/Mentor_Page/course_creation/DraftCourses";
 import CourseFormProvider from "@/context/courseForm.context";
+import CourseManagement from "@/pages/Admin Page/Course-Managemenr/CourseManagement";
+import CourseDetails from "@/pages/Admin Page/Course-Managemenr/CourseDetails";
+import MYCourses from "@/pages/Mentor_Page/course_creation/MyCourses";
 
 function Form_Courses_Provider() {
   return (
@@ -84,8 +83,8 @@ export const router = createBrowserRouter([
         path: "courses",
         element: <Form_Courses_Provider />,
         children: [
+          { path: "my-courses", element: <MYCourses /> },
           { path: "create", element: <CourseCreation /> },
-          { path: "drafted-courses", element: <DraftCourses /> },
         ],
       },
     ],
@@ -108,6 +107,8 @@ export const router = createBrowserRouter([
         loader: useProfileLoader,
       },
       { path: "category", element: <CategoryManagement /> },
+      { path: "courses", element: <CourseManagement />, loader: fetchCourses },
+      { path: "courses/:id", element: <CourseDetails /> },
     ],
   },
   {

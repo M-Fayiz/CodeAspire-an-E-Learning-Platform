@@ -20,7 +20,7 @@ const BasicCourseInformation: React.FC<BaseCaourseProps> = () => {
   const [categories, setCategories] = useState<ICategoryTree[]>([]);
   const [selectedCategory, setSelectedCategory] = useState("");
   const [image, setImage] = useState("");
-  const [spin,setSpin]=useState(false)
+  const [spin, setSpin] = useState(false);
   const { formData, updateBaseField, OnSubmit, setField, zodError } =
     useCourseFormContext();
   useEffect(() => {
@@ -214,7 +214,7 @@ const BasicCourseInformation: React.FC<BaseCaourseProps> = () => {
             type="submit"
             className="w-full sm:w-auto px-8 py-3 text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 rounded-md shadow-sm transition-colors"
           >
-           { spin&&<Spinner />}
+            {spin && <Spinner />}
             Save as Draft & Next
           </button>
         </div>

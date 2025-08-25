@@ -4,7 +4,6 @@ import {
   IAdminModel,
   ILearnerModel,
   IMenterModel,
-  IUserModel,
 } from "../../models/user.model";
 import { createHttpError } from "../../utility/http-error";
 import { HttpStatus } from "../../const/http-status";
@@ -65,7 +64,7 @@ export class UserService implements IUserService {
       currentPassword,
       user.password,
     );
-    console.log("is password is match", passwordIsMatch);
+   
     if (!passwordIsMatch) {
       throw createHttpError(
         HttpStatus.NOT_FOUND,

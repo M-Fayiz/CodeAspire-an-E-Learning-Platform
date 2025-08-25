@@ -11,7 +11,7 @@ import type { CourseForm, ISession } from "@/types/courses.types";
 import courseService from "@/service/client-API/mentor/course.service";
 import { useAuth } from "./auth.context";
 
-import {toast} from 'sonner'
+import { toast } from "sonner";
 
 interface FomrContextProps {
   formData: CourseForm;
@@ -27,6 +27,7 @@ interface FomrContextProps {
   courseId: string;
   setFormData: Dispatch<SetStateAction<CourseForm>>;
   setCourseId: Dispatch<SetStateAction<string>>;
+  resetForm:()=>void
 }
 const CourseFormCourseContext = createContext<FomrContextProps | undefined>(
   undefined,
@@ -80,7 +81,7 @@ const CourseFormProvider = ({ children }: { children: ReactNode }) => {
     const fieldErrors: Record<string, string> = {};
     try {
       console.log("Validation result", formData);
-      formData.price=String(formData.price)
+      formData.price = String(formData.price);
       const courseData = courseFormSchema.safeParse(formData);
 
       if (!courseData.success) {
@@ -91,21 +92,24 @@ const CourseFormProvider = ({ children }: { children: ReactNode }) => {
         setErrors(fieldErrors);
         return;
       }
-      console.log('get into the update Base')
+      console.log("get into the update Base");
       const idToUpdate = courseId || formData._id;
       console.log("courseId:", courseId, "formData._id:", formData._id);
 
-      if(idToUpdate){
-        console.log('get into the update Base')
-        const updatedData=await courseService.updateBaseInformation(idToUpdate,{
-          ...courseData.data,
-          mentorsId: user!.id,
-        })
-        if(updatedData){
-          setFormData(updatedData)
-          toast.success('Base Information Updated Successfully')
+      if (idToUpdate) {
+        console.log("get into the update Base");
+        const updatedData = await courseService.updateBaseInformation(
+          idToUpdate,
+          {
+            ...courseData.data,
+            mentorsId: user!.id,
+          },
+        );
+        if (updatedData) {
+          setFormData(updatedData);
+          toast.success("Base Information Updated Successfully");
         }
-        return
+        return;
       }
 
       const savedCourseData = await courseService.createCourse({
@@ -121,7 +125,21 @@ const CourseFormProvider = ({ children }: { children: ReactNode }) => {
       }
     }
   };
-
+  const resetForm=()=>{
+    setFormData({
+    _id: "",
+    title: "",
+    categoryId: "",
+    language: "",
+    level: "Beginner",
+    price: "",
+    mentorsId: "",
+    subCategoryId: "",
+    description: "",
+    sessions: [],
+    thumbnail: "",
+  })
+  }
   return (
     <CourseFormCourseContext.Provider
       value={{
@@ -134,6 +152,7 @@ const CourseFormProvider = ({ children }: { children: ReactNode }) => {
         courseId,
         setFormData,
         setCourseId,
+        resetForm
       }}
     >
       {children}

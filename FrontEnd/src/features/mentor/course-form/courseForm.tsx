@@ -5,8 +5,8 @@ import { useCourseFormContext } from "@/context/courseForm.context";
 import { toast } from "sonner";
 
 import CourseCurriculum from "./CourseCurriculum";
-import DraftTable from "./ProgressCourseCreation";
 import BasicCourseInformation from "./BasicIformation";
+import Publish from "./Publish";
 
 export default function CourseCreateLayout() {
   const [activeTab, setActiveTab] = useState("basic");
@@ -58,15 +58,19 @@ export default function CourseCreateLayout() {
           />
         </div>
       </div>
-      {activeTab === "basic" ? (
+      {activeTab === "basic" && (
         <BasicCourseInformation handleTap={handleActiveTap} />
-      ) : activeTab === "curriculum" ? (
-        <CourseCurriculum />
-      ) : activeTab == "draft" ? (
-        <DraftTable />
-      ) : (
-        <p>nothing</p>
       )}
+      {activeTab === "curriculum" && (
+        <CourseCurriculum />
+      ) }
+      {activeTab=='publish'&&(
+
+        <Publish/>
+      )
+      } 
+      
+
     </div>
   );
 }

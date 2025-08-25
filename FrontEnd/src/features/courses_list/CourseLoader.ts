@@ -3,8 +3,6 @@ import { S3BucketUtil } from "@/utility/S3Bucket.util";
 
 export async function fetchCourses() {
   try {
-    console.log("🍉🍉🍉🍉🍉");
-
     const response = await courseService.fetchCourses();
     response?.map(async (cours) => {
       cours.thumbnail = await S3BucketUtil.getPreSignedURL(
@@ -14,6 +12,14 @@ export async function fetchCourses() {
     console.log(response);
 
     return response;
+  } catch (error) {
+    throw new Error(`User not found ${error}`);
+  }
+}
+
+export async function courseDetails() {
+  try {
+    const data = await courseService.getAdminCourList();
   } catch (error) {
     throw new Error(`User not found ${error}`);
   }

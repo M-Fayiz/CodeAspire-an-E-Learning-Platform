@@ -1,6 +1,5 @@
 import { IUser, IAuth } from "../../types/user.types";
 import { JwtPayload } from "jsonwebtoken";
-import { IPayload } from "../../models/user.model";
 import { IUserDTO } from "../../types/dtos.type/dto.types";
 
 export interface IAuthService {

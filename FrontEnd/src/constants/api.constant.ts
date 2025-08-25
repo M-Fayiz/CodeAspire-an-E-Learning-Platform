@@ -40,12 +40,17 @@ export const API = {
     ADD_OR_UPDATE_SESSION: (courseId: string, updatePart: string) =>
       `/courses/${courseId}?course_part=${updatePart}`,
     GET_COURSE: (id: string) => `/courses/${id}`,
-    GET_MENTOR_DRAFTED_COURSE: `/courses/drafted-courses`,
+    GET_MENTOR_DRAFTED_COURSE: `/courses/my-courses`,
     ADD_SESSION: (id: string) => `/courses/${id}/sessions`,
     ADD_LECTURE: (id: string, sessionId: string) =>
       `/courses/${id}/sessions/${sessionId}`,
     EDIT_LECTURE: (courseId: string, sessionId: string, lectureId: string) =>
       `/courses/${courseId}/sessions/${sessionId}/lectures/${lectureId}`,
-    UPDATE_BASE_COURSE_INFO:(courseId:string)=>`/courses/${courseId}`
+    UPDATE_BASE_COURSE_INFO: (courseId: string) => `/courses/${courseId}`,
+    PUBLISH_COURSE:(courseId:string)=>`/courses/publish/${courseId}`,
+    ADMIN_COURSE_LIST: "/courses/admin-courses",
+    COURSE_DETAILS: (courseId: string) => `/courses/admin/${courseId}`,
+    APPROVE_CURSE:(courseId:string)=>`/courses/admin/approve/${courseId}`,
+    REJECT_COURSE:(courseId:string)=>`/courses/admin/reject/${courseId}`
   },
 };

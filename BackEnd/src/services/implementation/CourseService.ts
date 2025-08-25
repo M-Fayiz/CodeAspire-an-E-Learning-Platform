@@ -18,6 +18,8 @@ import {
 import { createHttpError } from "../../utility/http-error";
 import { HttpStatus } from "../../const/http-status";
 import { HttpResponse } from "../../const/error-message";
+import { sendMail } from "../../utility/send-mail.util";
+
 
 export class CourseService implements ICourseService {
   constructor(
@@ -57,7 +59,7 @@ export class CourseService implements ICourseService {
     return null;
   }
   async getCourse(courseId: string): Promise<ICourseDTO | null> {
-    let id = parseObjectId(courseId);
+    const id = parseObjectId(courseId);
     if (!id) {
       throw createHttpError(HttpStatus.OK, HttpResponse.INVALID_ID);
     }
@@ -65,17 +67,20 @@ export class CourseService implements ICourseService {
     if (!courseData) return null;
     return courseDTO(courseData as ICoursesPopulated);
   }
+
   async getDraftedCourses(mentorId: string): Promise<IFormCourseDTO[] | null> {
     const id = parseObjectId(mentorId);
     if (!id) {
       throw createHttpError(HttpStatus.OK, HttpResponse.INVALID_ID);
     }
     const data = await this._courseRepository.getMentorDraftedCourses(id);
-    let mappedCourseList = data?.map((course) =>
-      formCourseDto(course as ICoursesPopulated),
+      console.log('datat  taat',data)
+    const mappedCourseList = data?.map((course) =>
+      formCourseDto(course as ICourses),
     );
     return mappedCourseList ? mappedCourseList : null;
   }
+
   async addSessions(courseId: string, session: ISession): Promise<ICourseDTO> {
     const id = parseObjectId(courseId);
 
@@ -150,5 +155,46 @@ export class CourseService implements ICourseService {
       baseInfo,
     );
     return courseDTO(updatedData as ICoursesPopulated);
+  }
+  async getAdminCourse( ): Promise<IFormCourseDTO[]|null> {
+    const adminCoursList= await this._courseRepository.getAdminCoursList( )
+    console.log('service✅',adminCoursList)
+
+    return adminCoursList?adminCoursList.map(course => formCourseDto(course as ICoursesPopulated)):null
+  }
+  async getCourseDetails(courseId: string): Promise<IFormCourseDTO | null> {
+     const id=parseObjectId(courseId)
+     if(!id){
+      throw createHttpError(HttpStatus.BAD_REQUEST, HttpResponse.INVALID_ID);
+     }
+    const courseDetails=await this._courseRepository.getCourseDetails(id)
+    return courseDetails?formCourseDto(courseDetails[0]):null
+  }
+  async approveCourse(courseId: string): Promise<string|null> {
+      const id=parseObjectId(courseId)
+     if(!id){
+      throw createHttpError(HttpStatus.BAD_REQUEST, HttpResponse.INVALID_ID);
+     } 
+     const courseDetails=await this._courseRepository.appproveCourse(id)
+     return courseDetails?courseDetails.status:null
+  }
+  async rejectCourse(courseId: string, feedBack: string,email:string): Promise<string | null> {
+      const id=parseObjectId(courseId)
+     if(!id){
+      throw createHttpError(HttpStatus.BAD_REQUEST, HttpResponse.INVALID_ID);
+     } 
+     const courseDetails=await this._courseRepository.rejectCourse(id)
+     if(courseDetails?.status=='rejected'){
+      await sendMail(email,"Feedback On Your Course",feedBack)
+     }
+     return courseDetails?courseDetails.status:null
+  }
+  async publishCourse(courseId: string): Promise<string | null> {
+       const id=parseObjectId(courseId)
+     if(!id){
+      throw createHttpError(HttpStatus.BAD_REQUEST, HttpResponse.INVALID_ID);
+     } 
+     const courseDetails=await this._courseRepository.publishCourse(id)
+     return courseDetails?courseDetails.status:null
   }
 }

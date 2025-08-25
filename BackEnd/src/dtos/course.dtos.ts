@@ -1,3 +1,4 @@
+import { ICategory } from "../types/category.types";
 import { ICourses } from "../types/courses.type";
 import {
   ICourseDTO,
@@ -5,6 +6,7 @@ import {
   ICoursesPopulated,
   IFormCourseDTO,
 } from "../types/dtos.type/course.dtos.type";
+import { IUser } from "../types/user.types";
 
 export function courseListDTO(course: ICoursesPopulated): ICourseListDTO {
   return {
@@ -46,19 +48,31 @@ export function courseDTO(course: ICoursesPopulated): ICourseDTO {
   };
 }
 
+
 export function formCourseDto(course: ICourses): IFormCourseDTO {
   return {
     _id: String(course._id),
     title: course.title || "",
     description: course.description || "",
     thumbnail: course.thumbnail || "",
-    categoryId: String(course.categoryId),
-    subCategoryId: String(course.subCategoryId),
+    category: {
+      _id: String((course.categoryId as ICategory)._id),
+      title: (course.categoryId as ICategory).title,
+    },
+    subCategory: {
+      _id:  String((course.subCategoryId as ICategory)._id),
+      title:(course.subCategoryId as ICategory).title,
+    },
     language: course.language,
     level: course.level,
     price: course.price,
-    mentorsId: String(course.mentorsId),
+    mentorsId:{
+      _id:String((course.mentorsId as IUser)._id),
+      name:(course.mentorsId as IUser).name,
+      email:(course.mentorsId as IUser).email,
+    } ,
     sessions: course.sessions ?? [],
     status: course.status,
+    updated: course.updatedAt.toISOString(), 
   };
 }

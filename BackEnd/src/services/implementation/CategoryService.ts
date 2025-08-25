@@ -4,7 +4,6 @@ import { ICategoryService } from "../interface/ICategoryService";
 import slugify from "slugify";
 import {
   ICategory,
-  ICategoryEdit,
   ICaregoryTree,
 } from "../../types/category.types";
 import { startCase } from "lodash";

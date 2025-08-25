@@ -38,7 +38,7 @@ export const navigationConfig = {
         active: true,
       },
       { icon: Users, label: "User Management", path: "/admin/users" },
-      { icon: Book, label: "Course Management", path: "/course/courses" },
+      { icon: Book, label: "Course Management", path: "/admin/courses" },
       { icon: Layers, label: "Category Management", path: "/admin/category" },
       { icon: MessageSquare, label: "Messages", path: "/admin/messages" },
       { icon: Settings, label: "System Settings", path: "/admin/settings" },
@@ -84,13 +84,13 @@ export const navigationConfig = {
   mentor: {
     primary: [
       { icon: Home, label: "Dashboard", path: "/mentor/dashboard" },
-      { icon: Book, label: "My Courses", path: "/mentor/courses" },
+      { icon: Book, label: "My Courses", path: "/mentor/courses/my-courses" },
       { icon: Users, label: "Students", path: "/mentor/students" },
-      {
-        icon: PlusCircle,
-        label: "Create Course",
-        path: "/mentor/courses/create",
-      },
+      // {
+      //   icon: PlusCircle,
+      //   label: "Create Course",
+      //   path: "/mentor/courses/create",
+      // },
       {
         icon: MessageSquare,
         label: "Messages",

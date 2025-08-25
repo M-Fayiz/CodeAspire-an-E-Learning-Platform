@@ -56,7 +56,7 @@ export interface CourseForm {
   price: string;
   mentorsId: string;
   sessions?: ISession[];
-  status?: "inProgress" | "draft" | "published";
+  status?: "inProgress" | "draft" | "published" | "approved" | "rejected";
 }
 
 export interface IFormCourse {
@@ -71,5 +71,31 @@ export interface IFormCourse {
   mentorsId: string;
   sessions: ISession[];
   description: string;
-  status: "inProgress" | "draft" | "published";
+  status: "inProgress" | "draft" | "published" | "rejected";
+}
+
+export interface IFormCourseDTO {
+  _id: string;
+  title: string;
+  thumbnail: string;
+  category: {
+    _id: string;
+    title: string;
+  };
+  subCategory: {
+    _id: string;
+    title: string;
+  };
+  language: string;
+  level: "Beginner" | "Intermediate" | "Advanced";
+  price: number;
+  mentorsId: {
+    _id: string;
+    name: string;
+    email:string
+  };
+  sessions: ISession[];
+  description: string;
+  status: "inProgress" | "draft" | "published" | "approved" | "rejected";
+  updated: string;
 }

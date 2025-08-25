@@ -31,4 +31,10 @@ export interface ICourseService {
     courseId: string,
     baseInfo: ICourses,
   ): Promise<ICourseDTO>;
+  getAdminCourse():Promise<IFormCourseDTO[]|null>
+  getCourseDetails(courseId:string):Promise<IFormCourseDTO|null>
+  approveCourse(courseId:string):Promise<string|null>
+  rejectCourse(courseId: string, feedBack: string,email:string):Promise<string|null>
+  publishCourse(courseId:string):Promise<string|null>
+
 }

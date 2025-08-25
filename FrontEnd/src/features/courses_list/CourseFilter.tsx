@@ -1,23 +1,61 @@
+import categoryService from "@/service/client-API/admin/category.service";
+import type { ICategoryTree } from "@/types/category.types";
 import { ChevronDown, ChevronUp, Filter } from "lucide-react";
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import type { ReactNode } from "react";
+type ExpandedSections = {
+  categories: boolean;
+  level: boolean;
+};
 
-const FilterSidebar = ({ filters, onFilterChange }) => {
-  const [expandedSections, setExpandedSections] = useState({
-    category: true,
-    tools: true,
-    rating: true,
+type FilterSectionProps = {
+  title: string;
+  children: ReactNode;
+  sectionKey: keyof ExpandedSections;
+};
+
+interface FiltersProps {
+  filters: {
+    categories: string[];
+    level: string[];
+  };
+  onToggleFilter: (key: "categories" | "level", value: string) => void;
+  onUpdatwFilter: (key: string, value: any) => void;
+}
+const FilterSidebar: React.FC<FiltersProps> = ({ filters, onToggleFilter }) => {
+  const [expandedSections, setExpandedSections] = useState<ExpandedSections>({
+    categories: true,
+
     level: true,
-    price: true,
   });
 
-  const toggleSection = (section) => {
+  const [category, setCategory] = useState<ICategoryTree[]>([]);
+  const [filter, setFilter] = useState({
+    categories: [],
+    level: [],
+  });
+  useEffect(() => {
+    async function fetchCategory() {
+      const categoryData = await categoryService.listCategory();
+      if (categoryData) {
+        setCategory(categoryData);
+      }
+    }
+    fetchCategory();
+  }, []);
+
+  const toggleSection = (section: keyof ExpandedSections) => {
     setExpandedSections((prev) => ({
       ...prev,
       [section]: !prev[section],
     }));
   };
 
-  const FilterSection = ({ title, children, sectionKey }) => (
+  const FilterSection: React.FC<FilterSectionProps> = ({
+    title,
+    children,
+    sectionKey,
+  }) => (
     <div className="border-b border-gray-200 pb-4 mb-4">
       <button
         onClick={() => toggleSection(sectionKey)}
@@ -41,53 +79,48 @@ const FilterSidebar = ({ filters, onFilterChange }) => {
         <h2 className="text-lg font-semibold text-gray-900">Filters</h2>
       </div>
 
-      <FilterSection title="CATEGORY" sectionKey="category">
+      <FilterSection title="CATEGORY" sectionKey="categories">
         <div className="space-y-2">
-          {[
-            "Development",
-            "Data Science",
-            "Design",
-            "Business",
-            "Marketing",
-          ].map((category) => (
-            <label
-              key={category}
-              className="flex items-center space-x-2 cursor-pointer hover:text-blue-600"
-            >
-              <input
-                type="checkbox"
-                className="rounded border-gray-300 text-blue-600 focus:ring-blue-500"
-              />
-              <span className="text-sm text-gray-700">{category}</span>
-              <span className="text-xs text-gray-500 ml-auto">
-                ({Math.floor(Math.random() * 500) + 50})
-              </span>
-            </label>
-          ))}
+          {category &&
+            category.map((cat) => (
+              <label
+                key={cat.key}
+                className="flex items-center space-x-2 cursor-pointer hover:text-blue-600"
+              >
+                <input
+                  type="checkbox"
+                  // checked={filter.categories.includes(cat.key)}
+                  onChange={() => onToggleFilter("categories", cat.key)}
+                  className="rounded border-gray-300 text-blue-600 focus:ring-blue-500"
+                />
+                <span className="text-sm text-gray-700">{cat.label}</span>
+                {/* <span className="text-xs text-gray-500 ml-auto">
+                  ({Math.floor(Math.random() * 500) + 50})
+                </span> */}
+              </label>
+            ))}
         </div>
       </FilterSection>
 
       <FilterSection title="LEVEL" sectionKey="level">
         <div className="space-y-2">
-          {["All Level", "Beginner", "Intermediate", "Advanced", "Expert"].map(
-            (level) => (
-              <label
-                key={level}
-                className="flex items-center space-x-2 cursor-pointer hover:text-blue-600"
-              >
-                <input
-                  type="radio"
-                  name="level"
-                  className="text-blue-600 focus:ring-blue-500"
-                />
-                <span className="text-sm text-gray-700">{level}</span>
-              </label>
-            ),
-          )}
+          {["Beginner", "Intermediate", "Advanced"].map((level) => (
+            <label
+              key={level}
+              className="flex items-center space-x-2 cursor-pointer hover:text-blue-600"
+            >
+              <input
+                type="radio"
+                name="level"
+                className="text-blue-600 focus:ring-blue-500"
+              />
+              <span className="text-sm text-gray-700">{level}</span>
+            </label>
+          ))}
         </div>
       </FilterSection>
 
-      <FilterSection title="PRICE" sectionKey="price">
+      {/* <FilterSection title="PRICE" sectionKey="price">
         <div className="space-y-3">
           <div className="flex items-center space-x-2">
             <input
@@ -118,7 +151,7 @@ const FilterSidebar = ({ filters, onFilterChange }) => {
             </label>
           </div>
         </div>
-      </FilterSection>
+      </FilterSection> */}
     </div>
   );
 };

@@ -1,6 +1,6 @@
-import { IUserModel } from "../../models/user.model";
+
 import { ILearnerDTO, IMentorDTO } from "../../types/dtos.type/dto.types";
-import { mentorApprovalStatus, ProfileData } from "../../types/user.types";
+import { mentorApprovalStatus } from "../../types/user.types";
 import { UserFetchResponse } from "../implementation/AdminService";
 
 export interface IAdminService {

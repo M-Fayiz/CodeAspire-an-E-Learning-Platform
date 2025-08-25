@@ -27,3 +27,26 @@ export const sendToken = async (
     console.log(error);
   }
 };
+export const sendMail = async (
+  email: string,
+  title:string,
+  message: string,
+) => {
+  try {
+    const option = {
+      from: "",
+      to: email,
+      subject: "",
+      html: `
+                <h1>${title}</h1>
+                <p>${message}.</p><br />
+                <p>.</p>
+                <p>— TechMaster Team</p>
+            `,
+    };
+
+    await transport.sendMail(option);
+  } catch (error) {
+    console.log(error);
+  }
+};

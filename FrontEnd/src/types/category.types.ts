@@ -18,3 +18,11 @@ export interface ICategoryEdit {
   title: string;
   parentId: string;
 }
+
+export interface ICategoryDTO {
+  _id: string;
+  title: string;
+  slug: string;
+  parentId: string | null;
+  children?: ICategoryDTO[];
+}

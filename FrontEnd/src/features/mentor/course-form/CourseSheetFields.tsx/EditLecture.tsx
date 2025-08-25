@@ -152,7 +152,9 @@ export function EditLecture({
         name="lectureContent"
         onChange={handleLectureChage}
       />
-      {errors.lectureContent&&<p className="text-red-400">{errors.lectureContent}</p>}
+      {errors.lectureContent && (
+        <p className="text-red-400">{errors.lectureContent}</p>
+      )}
       <div className="p-4">
         {videoURL && (
           <video

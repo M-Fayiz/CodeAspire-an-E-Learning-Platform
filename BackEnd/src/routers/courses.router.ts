@@ -14,13 +14,15 @@ const courseController = new CourseController(courseService);
 const courseRouter = express.Router();
 
 courseRouter.use(verifyUser);
-courseRouter.use(authorizedRole("mentor"));
+courseRouter.use(authorizedRole("mentor","admin"));
 courseRouter.post("/", courseController.addCourse);
 courseRouter.get("/", courseController.fetchCourse);
 courseRouter.get(
-  "/drafted-courses",
+  "/my-courses",
   courseController.getMentorDraftedCourseList,
 );
+courseRouter.get('/admin-courses',courseController.getAdminCoursList)
+courseRouter.get("/admin/:courseId",courseController.getCourseDetails)
 courseRouter.get("/:id", courseController.getCourse);
 // courseRouter.put("/:id", courseController.updateCourse);
 courseRouter.put("/:courseId", courseController.updateBaseInfo);
@@ -30,5 +32,7 @@ courseRouter.put(
   "/:courseId/sessions/:sessionId/lectures/:lectureId",
   courseController.editLecture,
 );
-
+courseRouter.patch('/publish/:courseId',courseController.publishCourse)
+courseRouter.patch('/admin/approve/:courseId',courseController.approveCourse)
+courseRouter.patch('/admin/reject/:courseId',courseController.approveCourse)
 export default courseRouter;

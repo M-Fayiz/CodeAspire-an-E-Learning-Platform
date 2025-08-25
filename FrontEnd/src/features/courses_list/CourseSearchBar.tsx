@@ -1,6 +1,5 @@
 import { Search, TrendingUp } from "lucide-react";
 
-// { searchQuery, onSearchChange, resultCount, sortBy, onSortChange }
 const SearchHeader = () => {
   return (
     <div className="bg-white p-6 rounded-lg shadow-sm mb-6">

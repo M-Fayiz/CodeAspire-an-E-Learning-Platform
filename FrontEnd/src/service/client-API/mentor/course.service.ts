@@ -4,12 +4,14 @@ import type {
   CourseForm,
   ICourseData,
   ICourseDTO,
+  IFormCourseDTO,
   ILecture,
   ISession,
 } from "@/types/courses.types";
 import type { AxiosError } from "axios";
 import { sharedService } from "../shared.service";
 import { S3BucketUtil } from "@/utility/S3Bucket.util";
+
 
 const courseService = {
   createCourse: async (courseData: ICourseData): Promise<ICourseData> => {
@@ -117,7 +119,7 @@ const courseService = {
       throw new Error(errorMessage);
     }
   },
-  getMentorDraftedCourse: async (userId: string): Promise<CourseForm[]> => {
+  getMentorCourse: async (userId: string): Promise<IFormCourseDTO[]> => {
     try {
       const response = await axiosInstance.get(
         API.COURSE.GET_MENTOR_DRAFTED_COURSE,
@@ -165,11 +167,13 @@ const courseService = {
       throw new Error(errorMessage);
     }
   },
-  updateBaseInformation:async(courseId:string,courseData:ICourseData):Promise<CourseForm>=>{
+  updateBaseInformation: async (
+    courseId: string,
+    courseData: ICourseData,
+  ): Promise<CourseForm> => {
     try {
-      console.log('ronaldo',API.COURSE.UPDATE_BASE_COURSE_INFO(courseId))
-      if(courseData.thumbnail instanceof File){
-         const uploadAndFileUrl = await sharedService.getS3BucketUploadUrl(
+      if (courseData.thumbnail instanceof File) {
+        const uploadAndFileUrl = await sharedService.getS3BucketUploadUrl(
           courseData.thumbnail as File,
         );
         await S3BucketUtil.uploadToS3(
@@ -180,8 +184,92 @@ const courseService = {
           courseData.thumbnail = uploadAndFileUrl.fileURL as string;
         }
       }
-      const response=await axiosInstance.put(API.COURSE.UPDATE_BASE_COURSE_INFO(courseId),{courseData})
-      return response.data.updatedData
+      const response = await axiosInstance.put(
+        API.COURSE.UPDATE_BASE_COURSE_INFO(courseId),
+        { courseData },
+      );
+      return response.data.updatedData;
+    } catch (error) {
+      const err = error as AxiosError<{ error: string }>;
+      const errorMessage =
+        err.response?.data?.error || "Something Went wrong Please try again";
+      throw new Error(errorMessage);
+    }
+  },
+  getAdminCourList: async (): Promise<IFormCourseDTO[]> => {
+    try {
+      const response = await axiosInstance.get(API.COURSE.ADMIN_COURSE_LIST);
+      await Promise.all(
+        response.data.coursList.map(async (course: IFormCourseDTO) => {
+          course.thumbnail = await sharedService.getPreSignedDownloadURL(
+            course.thumbnail,
+          );
+        }),
+      );
+
+      return response.data.coursList;
+    } catch (error) {
+      const err = error as AxiosError<{ error: string }>;
+      const errorMessage =
+        err.response?.data?.error || "Something Went wrong Please try again";
+      throw new Error(errorMessage);
+    }
+  },
+  getCourseDetails: async (courseId: string): Promise<IFormCourseDTO> => {
+    try {
+      const response = await axiosInstance.get(
+        API.COURSE.COURSE_DETAILS(courseId),
+      );
+
+      response.data.courseDetails.thumbnail =
+        await sharedService.getPreSignedDownloadURL(
+          response.data.courseDetails.thumbnail,
+        );
+
+      for (const session of response.data.courseDetails.sessions) {
+        for (const lecture of session.lectures) {
+          lecture.lectureContent = await sharedService.getPreSignedDownloadURL(
+            lecture.lectureContent,
+          );
+        }
+      }
+      return response.data.courseDetails;
+    } catch (error) {
+      const err = error as AxiosError<{ error: string }>;
+      const errorMessage =
+        err.response?.data?.error || "Something Went wrong Please try again";
+      throw new Error(errorMessage);
+    }
+  },
+
+  approveCourse:async(coursId:string):Promise<"inProgress" | "draft" | "published" | "approved" | "rejected">=>{
+    try {
+      const response=await axiosInstance.patch(API.COURSE.APPROVE_CURSE(coursId))
+      return response.data.status
+    } catch (error) {
+      const err = error as AxiosError<{ error: string }>;
+      const errorMessage =
+        err.response?.data?.error || "Something Went wrong Please try again";
+      throw new Error(errorMessage);
+    }
+  },
+  rejectCourse:async(coursId:string,feedBack:string,mentorEmail:string):Promise<"inProgress" | "draft" | "published" | "approved" | "rejected">=>{
+     try {
+      const response=await axiosInstance.patch(API.COURSE.REJECT_COURSE(coursId),{
+        mentorEmail,feedBack
+      })
+      return response.data.status
+    } catch (error) {
+      const err = error as AxiosError<{ error: string }>;
+      const errorMessage =
+        err.response?.data?.error || "Something Went wrong Please try again";
+      throw new Error(errorMessage);
+    }
+  },
+  publishCourse:async(coursId:string)=>{
+    try {
+      const response=await axiosInstance.patch(API.COURSE.PUBLISH_COURSE(coursId))
+      return response.data.status
     } catch (error) {
       const err = error as AxiosError<{ error: string }>;
       const errorMessage =

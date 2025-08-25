@@ -39,10 +39,11 @@ export interface IUserDTO {
 }
 
 export interface ICategoryDTO {
-  _id: Types.ObjectId;
+  _id: string;
   title: string;
-  parentId: Types.ObjectId | null;
-  children: ICategoryDTO[];
+  slug:string
+  parentId: string | null;
+  children?: ICategoryDTO[];
 }
 
 export interface IPayloadDTO {

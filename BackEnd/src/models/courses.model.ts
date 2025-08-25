@@ -34,7 +34,7 @@ const courseSchema = new mongoose.Schema<ICourses>(
     },
     mentorsId: {
       type: mongoose.Schema.Types.ObjectId,
-      ref: "users",
+      ref: "User",
     },
     isActive: {
       type: Boolean,
@@ -73,7 +73,8 @@ const courseSchema = new mongoose.Schema<ICourses>(
     ],
     status: {
       type: String,
-      enum: ["inProgress", "draft", "published"],
+      enum: ["inProgress", "draft", "published","approved",'rejected'],
+      default:'draft'
     },
   },
   { timestamps: true },

@@ -36,14 +36,14 @@ const CategoryManagement = () => {
   }, [toFetch]);
 
   const editCategry = async (editData: ICategoryEdit) => {
-    console.log("edit category :", editCategry);
+    
     try {
       const result = await categoryService.editCategory(
         editData.slug,
         editData,
       );
       if (result) {
-        setToFetch(true);
+        setToFetch(prv=>!prv);
         setSheetOpen(false);
       }
     } catch (error) {
@@ -57,7 +57,7 @@ const CategoryManagement = () => {
     try {
       const result = await categoryService.createCategory(title, parentId);
       if (result) {
-        setToFetch(true);
+        setToFetch(prv=>!prv);
       }
     } catch (error) {
       if (error instanceof Error) {

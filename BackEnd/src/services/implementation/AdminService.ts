@@ -9,7 +9,6 @@ import { LearnerDTO, MentorDTO } from "../../dtos/role.dto";
 import {
   ILearnerDTO,
   IMentorDTO,
-  IBaseRoleDTO,
 } from "../../types/dtos.type/dto.types";
 import { mentorApprovalStatus } from "../../types/user.types";
 

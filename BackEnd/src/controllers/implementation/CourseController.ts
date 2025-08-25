@@ -4,9 +4,9 @@ import { ICourseController } from "../interface/ICourseController";
 import { HttpStatus } from "../../const/http-status";
 import { successResponse } from "../../utility/response.util";
 import { HttpResponse } from "../../const/error-message";
-import { updatePart } from "../../types/courses.type";
-import { session } from "passport";
+import { updatePart } from "../../types/courses.type";  
 import logger from "../../config/logger.config";
+
 
 export class CourseController implements ICourseController {
   constructor(private _courseService: ICourseService) {}
@@ -20,7 +20,8 @@ export class CourseController implements ICourseController {
       const createdCourseData = await this._courseService.createCourses(
         req.body.courseData,
       );
-      console.log("❌❌❌", createdCourseData);
+   
+
       res
         .status(HttpStatus.OK)
         .json(successResponse(HttpResponse.OK, { createdCourseData }));
@@ -34,9 +35,9 @@ export class CourseController implements ICourseController {
     next: NextFunction,
   ): Promise<void> => {
     try {
-      let courseId = req.params.id;
-      let updatedPart = req.query.course_part;
-      let courseData = req.body;
+      const courseId = req.params.id;
+      const updatedPart = req.query.course_part;
+      const courseData = req.body;
       console.log(courseId, updatedPart, courseData);
       const updatedCourseData = await this._courseService.updateCourseData(
         courseId,
@@ -46,7 +47,7 @@ export class CourseController implements ICourseController {
       res
         .status(HttpStatus.OK)
         .json(successResponse(HttpResponse.OK, { updatedCourseData }));
-      console.log(updatedCourseData);
+      
     } catch (error) {
       next(error);
     }
@@ -60,7 +61,7 @@ export class CourseController implements ICourseController {
 
     try {
       const courseListData = await this._courseService.fetchCourses();
-      console.log(courseListData);
+
 
       res
         .status(HttpStatus.OK)
@@ -188,4 +189,62 @@ export class CourseController implements ICourseController {
       next(error);
     }
   };
+  getAdminCoursList=async(req: Request, res: Response, next: NextFunction): Promise<void> =>{
+      try {
+        logger.info('get into admin course')
+
+        const coursList =await this._courseService.getAdminCourse()
+        res
+        .status(HttpStatus.OK)
+        .json(successResponse(HttpResponse.OK, { coursList }));
+      } catch (error) {
+        next(error)
+      }
+  }
+  getCourseDetails=async(req: Request, res: Response, next: NextFunction): Promise<void>=>{
+      try {
+        const {courseId}=req.params
+        console.log('get in to contr cour det',courseId)
+       const courseDetails=await this._courseService.getCourseDetails(courseId) 
+        res
+        .status(HttpStatus.OK)
+        .json(successResponse(HttpResponse.OK, { courseDetails }));
+      } catch (error) {
+        next(error)
+      }
+  }
+  approveCourse=async(req: Request, res: Response, next: NextFunction): Promise<void> =>{
+      try {
+        const {courseId}=req.params
+        const status=await this._courseService.approveCourse(courseId)
+        res
+        .status(HttpStatus.OK)
+        .json(successResponse(HttpResponse.OK, { status }));
+      } catch (error) {
+        next(error)
+      }
+  }
+  rejectCourse=async(req: Request, res: Response, next: NextFunction): Promise<void>=>{
+      try {
+        const {courseId}=req.params
+        const {feedback,email}=req.body
+        const status=await this._courseService.rejectCourse(courseId,feedback,email)
+        res
+        .status(HttpStatus.OK)
+        .json(successResponse(HttpResponse.OK, { status }));
+      } catch (error) {
+        next(error)
+      }
+  }
+  publishCourse=async(req: Request, res: Response, next: NextFunction): Promise<void> =>{
+      try {
+        const {courseId}=req.params
+        const status=await this._courseService.publishCourse(courseId)
+        res
+        .status(HttpStatus.OK)
+        .json(successResponse(HttpResponse.OK, { status }));
+      } catch (error) {
+        next(error)
+      }
+  }
 }

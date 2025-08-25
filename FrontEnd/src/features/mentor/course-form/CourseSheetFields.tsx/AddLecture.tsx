@@ -104,6 +104,7 @@ export function AddLecture({
         name="title"
         value={lecture.title}
         onChange={handleLectureChage}
+        error={errors.title}
       />
       <div>
         <label className="font-semibold text-gray-600">
@@ -133,6 +134,7 @@ export function AddLecture({
         name="lectureContent"
         onChange={handleLectureChage}
       />
+      {errors.lectureContent&&(<p className="text-red-400">{errors.lectureContent}</p>)}
       <div className="p-4">
         {videoURL && (
           <video
