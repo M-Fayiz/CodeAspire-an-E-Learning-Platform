@@ -18,53 +18,54 @@ import {
 import { useEffect, useState } from "react";
 import { Link, useSearchParams } from "react-router";
 
-
-export interface QueryProps{
-  page:number,
-  limit:number,
-  search:string
+export interface QueryProps {
+  page: number;
+  limit: number;
+  search: string;
 }
 function CourseManagement() {
   const [courses, setCourse] = useState<IFormCourseDTO[]>([]);
-  const [totalPage,setTotalPage]=useState(1)
-  const [searchParams, setSearchParams] = useSearchParams()
-  const currentPage= Number(searchParams.get("page")) || 1
-   const SearchQuery = searchParams.get("search") || ""
-   let debounced=useDebounce(SearchQuery,500)
+  const [totalPage, setTotalPage] = useState(1);
+  const [searchParams, setSearchParams] = useSearchParams();
+  const currentPage = Number(searchParams.get("page")) || 1;
+  const SearchQuery = searchParams.get("search") || "";
+  let debounced = useDebounce(SearchQuery, 500);
   useEffect(() => {
     (async () => {
-      const data = await courseService.getAdminCourList()
+      const data = await courseService.getAdminCourList();
 
       if (data) {
         setCourse(data);
         // setTotalPage()
       }
     })();
-  },[]);
+  }, []);
 
- const onSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-  setSearchParams({
-    page: "1",
-    search: e.target.value,
-  });
-};
+  const onSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setSearchParams({
+      page: "1",
+      search: e.target.value,
+    });
+  };
 
-
-const handlePageChange = (e: React.ChangeEvent<unknown>,page: number) => {
-  setSearchParams({
-    page: String(page),
-    search: SearchQuery
-  });
-};
-
-
+  const handlePageChange = (e: React.ChangeEvent<unknown>, page: number) => {
+    setSearchParams({
+      page: String(page),
+      search: SearchQuery,
+    });
+  };
 
   return (
     <ManagementLayout
       title="Course Management"
       description="Review and Manage Courses"
     >
-      <SearchBar placeHolder="Courses" name="title" onChange={onSearchChange}  searchQuery={SearchQuery} />
+      <SearchBar
+        placeHolder="Courses"
+        name="title"
+        onChange={onSearchChange}
+        searchQuery={SearchQuery}
+      />
       {courses.length > 0 ? (
         courses.map((course) => (
           <div

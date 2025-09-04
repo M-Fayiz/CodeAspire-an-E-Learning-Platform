@@ -92,7 +92,7 @@ export interface IFormCourseDTO {
   mentorsId: {
     _id: string;
     name: string;
-    email:string
+    email: string;
   };
   sessions: ISession[];
   description: string;

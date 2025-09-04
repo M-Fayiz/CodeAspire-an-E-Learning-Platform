@@ -33,7 +33,7 @@ passport.use(
       done: VerifyCallback,
     ) => {
       try {
-        const role = ((req.session as any).role as IUserRole) || "learner";
+        const role = (req.session.role as IUserRole) || "learner";
         const user = await userRepo.findOrCreateUser(profile, role);
         if (!user) {
           throw new Error("Internal Error");

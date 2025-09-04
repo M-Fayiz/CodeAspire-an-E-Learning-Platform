@@ -9,17 +9,17 @@ interface CourseCardProps {
 }
 
 const MyCourseCard: React.FC<CourseCardProps> = ({ course, onEdit }) => {
-
-  const [image,setImage]=useState('')
-  useEffect(()=>{
-    (async()=>{
-
-      const imageUrl=await sharedService.getPreSignedDownloadURL(course.thumbnail)
-      if(imageUrl){
-        setImage(imageUrl)
+  const [image, setImage] = useState("");
+  useEffect(() => {
+    (async () => {
+      const imageUrl = await sharedService.getPreSignedDownloadURL(
+        course.thumbnail,
+      );
+      if (imageUrl) {
+        setImage(imageUrl);
       }
-    })()
-  },[course])
+    })();
+  }, [course]);
   return (
     <div className="bg-white rounded-xl shadow-md hover:shadow-xl transition-all duration-300 overflow-hidden group">
       <div className="relative">
@@ -29,7 +29,7 @@ const MyCourseCard: React.FC<CourseCardProps> = ({ course, onEdit }) => {
           className="w-full h-48 object-cover group-hover:scale-105 transition-transform duration-300"
         />
         <div className="absolute top-3 left-3">
-         <span
+          <span
             className={`px-2 py-1 rounded text-xs font-semibold text-white
               ${course.status === "draft" ? "bg-amber-400" : ""}
               ${course.status === "published" ? "bg-blue-500" : ""}

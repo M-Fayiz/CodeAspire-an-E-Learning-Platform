@@ -15,10 +15,10 @@ import {
 import AdminCourseActions from "@/features/admin/Course/AdminAction";
 import { toast } from "sonner";
 
-function CourseDetails() {
+function AdminCourseDetails() {
   const { id } = useParams();
   const [course, setCourses] = useState<IFormCourseDTO | null>(null);
-  const [videoUrl, setVideoUrl] = useState({url:"",title:''});
+  const [videoUrl, setVideoUrl] = useState({ url: "", title: "" });
   const [activeTab, setActiveTab] = useState("Curriculum");
   console.log(id, " of course  ");
   useEffect(() => {
@@ -35,31 +35,34 @@ function CourseDetails() {
   }
 
   const handleTaps = (tap: string) => {
-    if(tap!=='Curriculum'){
-      setVideoUrl({url:'',title:''})
+    if (tap !== "Curriculum") {
+      setVideoUrl({ url: "", title: "" });
     }
     setActiveTab(tap);
-    
   };
 
-  const setVideo=(url:string,title:string)=>{
-    setVideoUrl(prev=>({...prev,url,title}))
-  }
+  const setVideo = (url: string, title: string) => {
+    setVideoUrl((prev) => ({ ...prev, url, title }));
+  };
 
-  const handleApprove=async()=>{
-    const status=await courseService.approveCourse(course._id)
-     if (status && course) {
-    toast.success("Course status successfully approved");
-    setCourses(prev => prev ? { ...prev, status } : prev);
-  }
-  }
-  const handlereject=async(feedback:string)=>{
-    const status=await courseService.rejectCourse(course._id,feedback,course.mentorsId.email)
-     if (status && course) {
-    toast.success("Course status successfully rejected");
-    setCourses(prev => prev ? { ...prev, status } : prev);
-  }
-  }
+  const handleApprove = async () => {
+    const status = await courseService.approveCourse(course._id);
+    if (status && course) {
+      toast.success("Course status successfully approved");
+      setCourses((prev) => (prev ? { ...prev, status } : prev));
+    }
+  };
+  const handlereject = async (feedback: string) => {
+    const status = await courseService.rejectCourse(
+      course._id,
+      feedback,
+      course.mentorsId.email,
+    );
+    if (status && course) {
+      toast.success("Course status successfully rejected");
+      setCourses((prev) => (prev ? { ...prev, status } : prev));
+    }
+  };
 
   return (
     <>
@@ -67,27 +70,24 @@ function CourseDetails() {
         {!videoUrl.url ? (
           <HeroSection courses={course} />
         ) : (
-         <div className="relative max-w-5xl mx-auto bg-white  rounded-2xl overflow-hidden border border-gray-200">
-
-              <div className="bg-gradient-to-r from-blue-100 via-blue-50 to-purple-50 p-4">
-                <video
-                  key={videoUrl.url}
-                  controls
-                  className="w-full rounded-xl shadow-md"
-                >
-                  <source src={videoUrl.url} />
-                  Your browser does not support the video tag.
-                </video>
-              </div>
-
-              {/* Title Section */}
-              <div className="px-6 py-4 bg-gray-50 border-t border-gray-200">
-                <h2 className="text-lg font-semibold text-gray-800 text-center">
-                  {videoUrl.title}
-                </h2>
-              </div>
+          <div className="relative max-w-5xl mx-auto bg-white  rounded-2xl overflow-hidden border border-gray-200">
+            <div className="bg-gradient-to-r from-blue-100 via-blue-50 to-purple-50 p-4">
+              <video
+                key={videoUrl.url}
+                controls
+                className="w-full rounded-xl shadow-md"
+              >
+                <source src={videoUrl.url} />
+                Your browser does not support the video tag.
+              </video>
             </div>
 
+            <div className="px-6 py-4 bg-gray-50 border-t border-gray-200">
+              <h2 className="text-lg font-semibold text-gray-800 text-center">
+                {videoUrl.title}
+              </h2>
+            </div>
+          </div>
         )}
         <div className="flex border-b mt-2 border-gray-200 px-6">
           {/* <Taps
@@ -163,7 +163,10 @@ function CourseDetails() {
                               key={lecture._id}
                               className="w-full flex items-center justify-between px-6 py-3 hover:bg-gray-50 focus:bg-blue-50 transition-colors"
                               onClick={() =>
-                                setVideo(lecture.lectureContent as string,lecture.title)
+                                setVideo(
+                                  lecture.lectureContent as string,
+                                  lecture.title,
+                                )
                               }
                             >
                               <div className="flex items-center gap-3">
@@ -184,8 +187,8 @@ function CourseDetails() {
           )}
         </div>
         <div>
-          {activeTab==="Action"&&(
-           <AdminCourseActions
+          {activeTab === "Action" && (
+            <AdminCourseActions
               courseId={course._id}
               onAppprove={handleApprove}
               onReject={handlereject}
@@ -198,4 +201,4 @@ function CourseDetails() {
   );
 }
 
-export default CourseDetails;
+export default AdminCourseDetails;

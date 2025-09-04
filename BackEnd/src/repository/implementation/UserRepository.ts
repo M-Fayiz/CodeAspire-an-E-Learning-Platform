@@ -125,4 +125,7 @@ export class UserRepository
   ): Promise<IUserModel | IMenterModel | ILearnerModel | IAdminModel | null> {
     return await this.findByIDAndUpdate(id, { profileData });
   }
+  async getUserProfile(userId: Types.ObjectId): Promise<IUserModel | IMenterModel | ILearnerModel | IAdminModel | null> {
+    return await this.findOne({_id:userId})
+  }
 }

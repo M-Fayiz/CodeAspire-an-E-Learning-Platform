@@ -59,7 +59,6 @@ function HeroSection({ courses }: HeroSectionProps) {
             </div>
           </div>
 
-          {/* Instructors */}
           <div className="flex items-center gap-4 mb-8">
             <div className="flex items-center gap-3">
               {/* <img

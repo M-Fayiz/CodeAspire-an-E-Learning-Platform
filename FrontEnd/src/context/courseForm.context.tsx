@@ -27,7 +27,7 @@ interface FomrContextProps {
   courseId: string;
   setFormData: Dispatch<SetStateAction<CourseForm>>;
   setCourseId: Dispatch<SetStateAction<string>>;
-  resetForm:()=>void
+  resetForm: () => void;
 }
 const CourseFormCourseContext = createContext<FomrContextProps | undefined>(
   undefined,
@@ -125,21 +125,21 @@ const CourseFormProvider = ({ children }: { children: ReactNode }) => {
       }
     }
   };
-  const resetForm=()=>{
+  const resetForm = () => {
     setFormData({
-    _id: "",
-    title: "",
-    categoryId: "",
-    language: "",
-    level: "Beginner",
-    price: "",
-    mentorsId: "",
-    subCategoryId: "",
-    description: "",
-    sessions: [],
-    thumbnail: "",
-  })
-  }
+      _id: "",
+      title: "",
+      categoryId: "",
+      language: "",
+      level: "Beginner",
+      price: "",
+      mentorsId: "",
+      subCategoryId: "",
+      description: "",
+      sessions: [],
+      thumbnail: "",
+    });
+  };
   return (
     <CourseFormCourseContext.Provider
       value={{
@@ -152,7 +152,7 @@ const CourseFormProvider = ({ children }: { children: ReactNode }) => {
         courseId,
         setFormData,
         setCourseId,
-        resetForm
+        resetForm,
       }}
     >
       {children}

@@ -4,8 +4,8 @@ import { IUserRole } from "../types/user.types";
 const authRouter = express.Router();
 import { Request, Response, NextFunction } from "express";
 import { UserRepository } from "../repository/implementation/UserRepository";
-import { AuthService } from "../services/implementation/AuthService";
-import { AuthController } from "../controllers/implementation/AuthController";
+import { AuthService } from "../services/implementation/authService";   
+import { AuthController } from "../controllers/implementation/authController"; 
 import { registerSchema } from "../utility/zod";
 import passport from "../utility/passport.util";
 import { env } from "../config/env.config";
@@ -44,7 +44,7 @@ authRouter.get(
   "/google",
   (req: Request, res: Response, next: NextFunction) => {
     const { role } = req.query as { role?: IUserRole };
-    (req.session as any).role = role || "learner";
+    req.session.role = role || "learner";
     next();
   },
   passport.authenticate("google", {

@@ -137,26 +137,39 @@ export class UserService implements IUserService {
     }
 
     switch (user.role) {
-      case "mentor":
+      case "mentor": {
         const updatedMentor = await this._mentorRepository.updateMentorProfile(
           userId,
           userData as IMenterModel,
         );
         return updatedMentor ? MentorDTO(updatedMentor) : null;
-      case "admin":
+      }
+      case "admin": {
         const updatedAdmin = await this._userRep.updateUserprofile(
           userId,
           userData as IAdminModel,
         );
         return updatedAdmin ? AdminDTO(updatedAdmin as IAdminModel) : null;
-      case "learner":
+      }
+      case "learner": {
         const updatedLearner = await this._userRep.updateUserprofile(
           userId,
           userData as ILearnerModel,
         );
-        return updatedLearner
-          ? LearnerDTO(updatedLearner as ILearnerModel)
-          : null;
+        return updatedLearner ? LearnerDTO(updatedLearner as ILearnerModel) : null;
+      }
     }
+  }
+  async getUserProfile(userId: string): Promise<IAdminDTO | ILearnerDTO | IMentorDTO|null> {
+      const id=parseObjectId(userId)
+      if(!id){
+        throw createHttpError(HttpStatus.NOT_FOUND,HttpResponse.INVALID_ID)
+      }
+
+      const userData=await this._userRep.getUserProfile(id)
+      if(userData?.role=='admin') return AdminDTO(userData as IAdminModel)
+      if(userData?.role=='mentor') return MentorDTO(userData as IMenterModel)
+      if(userData?.role=='learner') return LearnerDTO(userData as ILearnerModel)
+        return null
   }
 }

@@ -3,11 +3,16 @@ import type React from "react";
 
 interface SearchBarProps {
   placeHolder: string;
-  searchQuery:string
-  onChange:(e: React.ChangeEvent<HTMLInputElement>)=>void
-  name:string
+  searchQuery: string;
+  onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
+  name: string;
 }
-const SearchBar: React.FC<SearchBarProps> = ({ placeHolder,searchQuery,onChange,name }) => {
+const SearchBar: React.FC<SearchBarProps> = ({
+  placeHolder,
+  searchQuery,
+  onChange,
+  name,
+}) => {
   return (
     <div className="bg-white p-4 rounded-lg shadow-sm mb-3">
       <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between space-y-4 lg:space-y-0">

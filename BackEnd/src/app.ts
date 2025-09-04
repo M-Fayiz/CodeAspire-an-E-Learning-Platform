@@ -15,6 +15,8 @@ import adminRouter from "./routers/adminRouter";
 import categoryRouter from "./routers/category.router";
 import courseRouter from "./routers/courses.router";
 import sharedRouter from "./routers/shared.router";
+import {orderRouter, webhookRouter} from "./routers/order.router";
+
 dotenv.config();
 
 const app = express();
@@ -22,6 +24,10 @@ const secrete = env.SESSION_SECRET as string;
 // MIddlewares
 app.use(cookieParser());
 app.use(morgan("dev")); //morgan
+
+/// exceptional case 
+app.use('/api/v1/webhook',express.raw({ type: "application/json" }),webhookRouter)
+
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(
@@ -43,6 +49,7 @@ app.use("/api/v1/admin", adminRouter);
 app.use("/api/v1/categories", categoryRouter);
 app.use("/api/v1/courses", courseRouter);
 app.use("/api/v1/shared", sharedRouter);
+app.use("/api/v1/orders",orderRouter)
 
 const port = env.port;
 dbConnect();

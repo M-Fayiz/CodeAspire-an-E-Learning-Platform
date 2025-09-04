@@ -4,14 +4,18 @@ import { S3BucketUtil } from "@/utility/S3Bucket.util";
 export async function fetchCourses() {
   try {
     const response = await courseService.fetchCourses();
-    response?.map(async (cours) => {
-      cours.thumbnail = await S3BucketUtil.getPreSignedURL(
-        cours.thumbnail as string,
-      );
-    });
-    console.log(response);
+    if (!response) return [];
+    const updated = Promise.all(
+      response?.map(async (cours) => {
+        cours.thumbnail = await S3BucketUtil.getPreSignedURL(
+          cours.thumbnail as string,
+        );
+        return cours;
+      }),
+    );
+    console.log(updated);
 
-    return response;
+    return updated;
   } catch (error) {
     throw new Error(`User not found ${error}`);
   }

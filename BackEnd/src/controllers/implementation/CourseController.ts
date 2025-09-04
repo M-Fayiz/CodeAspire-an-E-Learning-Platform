@@ -57,7 +57,7 @@ export class CourseController implements ICourseController {
     res: Response,
     next: NextFunction,
   ): Promise<void> => {
-    console.log("fetcourses");
+
 
     try {
       const courseListData = await this._courseService.fetchCourses();
@@ -78,6 +78,7 @@ export class CourseController implements ICourseController {
     try {
       const courseId = req.params.id;
       const course = await this._courseService.getCourse(courseId);
+      console.log(course)
       res
         .status(HttpStatus.OK)
         .json(successResponse(HttpResponse.OK, { course }));

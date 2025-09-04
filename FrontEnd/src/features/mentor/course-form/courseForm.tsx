@@ -61,16 +61,8 @@ export default function CourseCreateLayout() {
       {activeTab === "basic" && (
         <BasicCourseInformation handleTap={handleActiveTap} />
       )}
-      {activeTab === "curriculum" && (
-        <CourseCurriculum />
-      ) }
-      {activeTab=='publish'&&(
-
-        <Publish/>
-      )
-      } 
-      
-
+      {activeTab === "curriculum" && <CourseCurriculum />}
+      {activeTab == "publish" && <Publish />}
     </div>
   );
 }

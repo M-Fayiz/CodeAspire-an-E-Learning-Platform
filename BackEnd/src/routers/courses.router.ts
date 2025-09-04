@@ -13,17 +13,18 @@ const courseController = new CourseController(courseService);
 
 const courseRouter = express.Router();
 
-courseRouter.use(verifyUser);
-courseRouter.use(authorizedRole("mentor","admin"));
-courseRouter.post("/", courseController.addCourse);
 courseRouter.get("/", courseController.fetchCourse);
+
+courseRouter.use(verifyUser);
+courseRouter.use(authorizedRole("mentor","admin",'learner'));
+courseRouter.post("/", courseController.addCourse);
 courseRouter.get(
   "/my-courses",
   courseController.getMentorDraftedCourseList,
 );
+courseRouter.get("/:id", courseController.getCourse);
 courseRouter.get('/admin-courses',courseController.getAdminCoursList)
 courseRouter.get("/admin/:courseId",courseController.getCourseDetails)
-courseRouter.get("/:id", courseController.getCourse);
 // courseRouter.put("/:id", courseController.updateCourse);
 courseRouter.put("/:courseId", courseController.updateBaseInfo);
 courseRouter.put("/:id/sessions", courseController.addSession);

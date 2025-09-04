@@ -12,7 +12,6 @@ import type { AxiosError } from "axios";
 import { sharedService } from "../shared.service";
 import { S3BucketUtil } from "@/utility/S3Bucket.util";
 
-
 const courseService = {
   createCourse: async (courseData: ICourseData): Promise<ICourseData> => {
     try {
@@ -110,6 +109,7 @@ const courseService = {
   getCourse: async (courseId: string): Promise<ICourseDTO[] | null> => {
     try {
       if (!courseId) return null;
+      console.log(courseId, "this is the course id");
       const response = await axiosInstance.get(API.COURSE.GET_COURSE(courseId));
       return response.data.course;
     } catch (error) {
@@ -221,19 +221,19 @@ const courseService = {
         API.COURSE.COURSE_DETAILS(courseId),
       );
 
-      response.data.courseDetails.thumbnail =
+      response.data.course.thumbnail =
         await sharedService.getPreSignedDownloadURL(
-          response.data.courseDetails.thumbnail,
+          response.data.course.thumbnail,
         );
 
-      for (const session of response.data.courseDetails.sessions) {
+      for (const session of response.data.course.sessions) {
         for (const lecture of session.lectures) {
           lecture.lectureContent = await sharedService.getPreSignedDownloadURL(
             lecture.lectureContent,
           );
         }
       }
-      return response.data.courseDetails;
+      return response.data.course;
     } catch (error) {
       const err = error as AxiosError<{ error: string }>;
       const errorMessage =
@@ -242,10 +242,16 @@ const courseService = {
     }
   },
 
-  approveCourse:async(coursId:string):Promise<"inProgress" | "draft" | "published" | "approved" | "rejected">=>{
+  approveCourse: async (
+    coursId: string,
+  ): Promise<
+    "inProgress" | "draft" | "published" | "approved" | "rejected"
+  > => {
     try {
-      const response=await axiosInstance.patch(API.COURSE.APPROVE_CURSE(coursId))
-      return response.data.status
+      const response = await axiosInstance.patch(
+        API.COURSE.APPROVE_CURSE(coursId),
+      );
+      return response.data.status;
     } catch (error) {
       const err = error as AxiosError<{ error: string }>;
       const errorMessage =
@@ -253,12 +259,22 @@ const courseService = {
       throw new Error(errorMessage);
     }
   },
-  rejectCourse:async(coursId:string,feedBack:string,mentorEmail:string):Promise<"inProgress" | "draft" | "published" | "approved" | "rejected">=>{
-     try {
-      const response=await axiosInstance.patch(API.COURSE.REJECT_COURSE(coursId),{
-        mentorEmail,feedBack
-      })
-      return response.data.status
+  rejectCourse: async (
+    coursId: string,
+    feedBack: string,
+    mentorEmail: string,
+  ): Promise<
+    "inProgress" | "draft" | "published" | "approved" | "rejected"
+  > => {
+    try {
+      const response = await axiosInstance.patch(
+        API.COURSE.REJECT_COURSE(coursId),
+        {
+          mentorEmail,
+          feedBack,
+        },
+      );
+      return response.data.status;
     } catch (error) {
       const err = error as AxiosError<{ error: string }>;
       const errorMessage =
@@ -266,17 +282,19 @@ const courseService = {
       throw new Error(errorMessage);
     }
   },
-  publishCourse:async(coursId:string)=>{
+  publishCourse: async (coursId: string) => {
     try {
-      const response=await axiosInstance.patch(API.COURSE.PUBLISH_COURSE(coursId))
-      return response.data.status
+      const response = await axiosInstance.patch(
+        API.COURSE.PUBLISH_COURSE(coursId),
+      );
+      return response.data.status;
     } catch (error) {
       const err = error as AxiosError<{ error: string }>;
       const errorMessage =
         err.response?.data?.error || "Something Went wrong Please try again";
       throw new Error(errorMessage);
     }
-  }
+  },
 };
 
 export default courseService;

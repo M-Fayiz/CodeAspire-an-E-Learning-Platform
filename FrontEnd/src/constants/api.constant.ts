@@ -18,6 +18,7 @@ export const API = {
     GET_PRESIGNED_URL: "/users/s3-getPresigned-url",
     UPDATE_MENTOR_PROFILE: (id: string) => `/users/${id}/mentor-profile`,
     UPDATE_PROFILE_DATA: (id: string) => `/users/${id}/profile-data`,
+    GET_USER_PROFILE: (id: string) => `/users/${id}/profile`,
   },
   SHARED: {
     UPLOAD_PUT_PRESIGNED_URL: "/shared/s3/presigned-url/upload",
@@ -47,10 +48,13 @@ export const API = {
     EDIT_LECTURE: (courseId: string, sessionId: string, lectureId: string) =>
       `/courses/${courseId}/sessions/${sessionId}/lectures/${lectureId}`,
     UPDATE_BASE_COURSE_INFO: (courseId: string) => `/courses/${courseId}`,
-    PUBLISH_COURSE:(courseId:string)=>`/courses/publish/${courseId}`,
+    PUBLISH_COURSE: (courseId: string) => `/courses/publish/${courseId}`,
     ADMIN_COURSE_LIST: "/courses/admin-courses",
-    COURSE_DETAILS: (courseId: string) => `/courses/admin/${courseId}`,
-    APPROVE_CURSE:(courseId:string)=>`/courses/admin/approve/${courseId}`,
-    REJECT_COURSE:(courseId:string)=>`/courses/admin/reject/${courseId}`
+    COURSE_DETAILS: (courseId: string) => `/courses/${courseId}`,
+    APPROVE_CURSE: (courseId: string) => `/courses/admin/approve/${courseId}`,
+    REJECT_COURSE: (courseId: string) => `/courses/admin/reject/${courseId}`,
+  },
+  PAYMENT: {
+    CREATE_PAYMENT_INTENT: "/orders/create-payment-intent",
   },
 };

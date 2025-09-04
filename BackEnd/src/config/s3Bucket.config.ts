@@ -24,7 +24,7 @@ export async function getObjectURL(key: string) {
     Bucket: bucketName,
     Key: key,
   });
-  const getURL = await getSignedUrl(s3Bucket, command, { expiresIn: 300 });
+  const getURL = await getSignedUrl(s3Bucket, command, { expiresIn: 60 });
 
   return getURL;
 }

@@ -37,20 +37,18 @@ function MYCourses() {
   };
 
   return (
-    <ManagementLayout
-      title="My Course List"
-      description="Manage your courses"
-    >
+    <ManagementLayout title="My Course List" description="Manage your courses">
       <div className="flex  p-6">
-      <Link to={'/mentor/courses/create'}
-        className="flex bg-blue-500 gap-2 px-6 py-3 p-4 rounded-2xl shadow-md text-white transition-transform hover:scale-105"
-      >
-        <PlusCircle className="w-5 h-5" />
-        Create Course
-      </Link>
-    </div>
+        <Link
+          to={"/mentor/courses/create"}
+          className="flex bg-blue-500 gap-2 px-6 py-3 p-4 rounded-2xl shadow-md text-white transition-transform hover:scale-105"
+        >
+          <PlusCircle className="w-5 h-5" />
+          Create Course
+        </Link>
+      </div>
       {loading ? (
-        <Spinner fullScreen variant="theme"/>
+        <Spinner fullScreen variant="theme" />
       ) : courses && courses.length > 0 ? (
         <div className="grid gap-6 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3">
           {courses.map((course) => (

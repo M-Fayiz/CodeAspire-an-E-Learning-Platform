@@ -5,6 +5,7 @@ import { HttpStatus } from "../../const/http-status";
 import { successResponse } from "../../utility/response.util";
 import { HttpResponse } from "../../const/error-message";
 
+
 export class UserController implements IUserController {
   constructor(private _userService: IUserService) {}
 
@@ -123,4 +124,15 @@ export class UserController implements IUserController {
       next(error);
     }
   };
+  getUserProfile=async(req: Request, res: Response, next: NextFunction): Promise<void>=> {
+      try {
+        const {id}=req.params
+        const userData=await this._userService.getUserProfile(id)
+        res
+        .status(HttpStatus.OK)
+        .json(successResponse(HttpResponse.OK, { userData }));
+      } catch (error) {
+        next(error)
+      }
+  }
 }

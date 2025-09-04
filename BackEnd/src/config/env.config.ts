@@ -47,4 +47,10 @@ export const env = {
   get AWS_s3_BUCKET_NAME() {
     return process.env.AWS_S3_BUCKET_NAME;
   },
+  get STRIPE_SECRETE_KEY(){
+    return process.env.STRIPE_SECRETE_KEY
+  },
+  get WEB_HOOK_SECRETE_KEY(){
+    return process.env.WEB_HOOK_SECRET_KEY
+  }
 };

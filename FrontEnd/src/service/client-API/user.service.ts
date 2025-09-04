@@ -4,6 +4,7 @@ import { API } from "../../constants/api.constant";
 import type { AnyUser, BaseUser } from "../../types/users.type";
 import type { IMentorProps } from "../../types/mentor.types";
 import { S3BucketUtil } from "../../utility/S3Bucket.util";
+import { sharedService } from "./shared.service";
 
 const UserService = {
   fetchProfile: async (email: string): Promise<AnyUser> => {
@@ -83,6 +84,27 @@ const UserService = {
         { ...userData },
       );
       return response.data;
+    } catch (error) {
+      const err = error as AxiosError<{ error: string }>;
+      const errorMessage = err.response?.data.error;
+      throw new Error(errorMessage);
+    }
+  },
+  getUserProfile: async (userId: string) => {
+    console.log(" j j j  ", userId);
+    try {
+      const response = await axiosInstance.get(
+        API.USER.GET_USER_PROFILE(userId),
+      );
+      const imageURL = await sharedService.getPreSignedDownloadURL(
+        response.data.userData.profilePicture,
+      );
+      console.log(imageURL);
+      if (imageURL) {
+        response.data.userData.profilePicture = imageURL;
+      }
+      console.log(response.data.userData);
+      return response.data.userData;
     } catch (error) {
       const err = error as AxiosError<{ error: string }>;
       const errorMessage = err.response?.data.error;

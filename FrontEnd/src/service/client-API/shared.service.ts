@@ -42,7 +42,7 @@ export const sharedService = {
           params: { key: fileName },
         },
       );
-     
+
       return response.data.get_fileURL;
     } catch (error) {
       if (error instanceof Error) {

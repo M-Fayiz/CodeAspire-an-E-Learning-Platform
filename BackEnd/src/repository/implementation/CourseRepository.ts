@@ -117,5 +117,7 @@ export class CourseRepository
   async publishCourse(courseId: Types.ObjectId): Promise<ICourses | null> {
      return await this.findByIDAndUpdate(courseId,{status:'published'})
   }
-  
+  async findCourse(courseId: Types.ObjectId): Promise<ICourses | null> {
+      return await this.findById(courseId)
+  }
 }

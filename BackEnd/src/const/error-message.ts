@@ -16,4 +16,5 @@ export const HttpResponse = {
   ACCESS_DENIED: "Access Denied!",
   ITEM_EXIST: "Item Already Exist",
   INVALID_ID: "Invalid id",
+  ITEM_NOT_FOUND:''
 };

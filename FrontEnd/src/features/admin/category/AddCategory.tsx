@@ -13,8 +13,6 @@ import type { ICategoryTree } from "@/types/category.types";
 import { SelectInput } from "@/components/ui/SelectInput";
 import { categorySchema } from "@/schema/categorySchema";
 
-
-
 interface IAddCategoryProps {
   allCategories: ICategoryTree[];
   addCat: (title: string, parentId: string) => void;
@@ -33,16 +31,16 @@ const AddCategoryAccordion: React.FC<IAddCategoryProps> = ({
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    const result=categorySchema.safeParse({title:formData.title})
-    let fieldErros:Record<string,string>={}
+    const result = categorySchema.safeParse({ title: formData.title });
+    let fieldErros: Record<string, string> = {};
     if (!result.success) {
-        result.error.issues.forEach((err) => {
-          let fieldName = err.path.join(".");
-          fieldErros[fieldName] = err.message;
-        });
-        setErros(fieldErros);
-        return;
-      }
+      result.error.issues.forEach((err) => {
+        let fieldName = err.path.join(".");
+        fieldErros[fieldName] = err.message;
+      });
+      setErros(fieldErros);
+      return;
+    }
     addCat(formData.title, formData.parentId);
   };
 
@@ -60,9 +58,8 @@ const AddCategoryAccordion: React.FC<IAddCategoryProps> = ({
               value={formData.title}
               onChange={handleChange}
               required
-              
             />
-              {errors&&<p className="text-red-400 text-sm">{errors.tile}</p>}
+            {errors && <p className="text-red-400 text-sm">{errors.tile}</p>}
             <SelectInput
               name="parentId"
               value={formData.parentId}

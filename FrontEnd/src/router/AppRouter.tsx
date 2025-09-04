@@ -20,12 +20,17 @@ import { useProfileLoader } from "../pages/Admin Page/user-management/profile.lo
 import MentorDataForm from "../components/auth-components/MentorInformation";
 import CategoryManagement from "@/pages/Admin Page/category";
 import CourseCreation from "@/pages/Mentor_Page/course_creation/Index";
-import CourseLayout from "@/features/courses_list/CourseLayout";
-import { fetchCourses } from "@/features/courses_list/CourseLoader";
+import CourseLayout from "@/pages/Course/CourseList";
+import { fetchCourses } from "@/features/courses_list/List/CourseLoader";
 import CourseFormProvider from "@/context/courseForm.context";
 import CourseManagement from "@/pages/Admin Page/Course-Managemenr/CourseManagement";
-import CourseDetails from "@/pages/Admin Page/Course-Managemenr/CourseDetails";
+import { Elements } from "@stripe/react-stripe-js";
+import { loadStripe } from "@stripe/stripe-js";
 import MYCourses from "@/pages/Mentor_Page/course_creation/MyCourses";
+import AdminCourseDetails from "@/pages/Admin Page/Course-Managemenr/AdminCourseDetails";
+import CourseDetails from "@/pages/Course/CourseDetails";
+import CheckoutPage from "@/pages/Course/CheckoutPage";
+const stripePromis = loadStripe(import.meta.env.VITE_STRIPE_PUBLISHABLE_KEY);
 
 function Form_Courses_Provider() {
   return (
@@ -108,7 +113,7 @@ export const router = createBrowserRouter([
       },
       { path: "category", element: <CategoryManagement /> },
       { path: "courses", element: <CourseManagement />, loader: fetchCourses },
-      { path: "courses/:id", element: <CourseDetails /> },
+      { path: "courses/:id", element: <AdminCourseDetails /> },
     ],
   },
   {
@@ -129,10 +134,24 @@ export const router = createBrowserRouter([
       },
     ],
   },
+  // {
+  //   path: "/courses",
+  //   element: <CourseLayout />,
+  //   loader: fetchCourses,
+  // },
+  // {
+  //   path: "/courses/:id",
+  //   element: <AdminCourseDetails />,
+
+  // },
   {
     path: "/courses",
-    element: <CourseLayout />,
-    loader: fetchCourses,
+    element: <Outlet />,
+    children: [
+      { index: true, element: <CourseLayout />, loader: fetchCourses },
+      { path: ":id",element: <CourseDetails /> },
+      { path: "checkout/:id",element: <CheckoutPage /> },
+    ],
   },
   {
     path: "*",

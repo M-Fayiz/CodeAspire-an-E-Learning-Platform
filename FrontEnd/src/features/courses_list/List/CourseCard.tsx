@@ -1,7 +1,7 @@
-import type { ICourseListDTO } from "@/types/courses.types";
+import type { ICourseData } from "@/types/courses.types";
 
 interface CourseCardProps {
-  course: ICourseListDTO;
+  course: ICourseData;
 }
 const CourseCard: React.FC<CourseCardProps> = ({ course }) => {
   return (
@@ -22,7 +22,7 @@ const CourseCard: React.FC<CourseCardProps> = ({ course }) => {
         </div> */}
         <div className="absolute bottom-3 left-3">
           <span className="bg-blue-600 text-white px-2 py-1 rounded text-xs font-medium">
-            {course.category}
+            {/* {course.category} */}
           </span>
         </div>
       </div>

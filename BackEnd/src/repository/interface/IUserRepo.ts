@@ -53,4 +53,5 @@ export interface IUserRepo {
       IUserModel | IMenterModel | ILearnerModel | IAdminModel
     >,
   ): Promise<IUserModel | IMenterModel | ILearnerModel | IAdminModel | null>;
+  getUserProfile(userId:Types.ObjectId): Promise<IUserModel | IMenterModel | ILearnerModel | IAdminModel | null>;
 }

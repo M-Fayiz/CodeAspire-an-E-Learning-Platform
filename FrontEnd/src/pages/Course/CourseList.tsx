@@ -1,15 +1,15 @@
-import { useLoaderData, useSearchParams } from "react-router";
-import CourseCard from "./CourseCard";
-import type { ICourseListDTO } from "@/types/courses.types";
+import { Link, useLoaderData, useSearchParams } from "react-router";
+import CourseCard from "../../features/courses_list/List/CourseCard";
+import type { ICourseData, ICourseListDTO } from "@/types/courses.types";
 import { useEffect, useMemo, useState } from "react";
-import { useParams } from "react-router";
-import SearchHeader from "./CourseSearchBar";
-import FilterSidebar from "./CourseFilter";
+import { useParams } from "react-router-dom";
+import SearchHeader from "../../features/courses_list/List/CourseSearchBar";
+import FilterSidebar from "../../features/courses_list/List/CourseFilter";
 import debounce from "lodash.debounce";
 import useDebounce from "@/hooks/useDebounce";
 
 function CourseLayout() {
-  const courses = useLoaderData() as ICourseListDTO[];
+  const courses = useLoaderData() as ICourseData[];
   const [searchParams, setSearchParams] = useSearchParams();
 
   const [filters, setFilters] = useState({
@@ -57,14 +57,14 @@ function CourseLayout() {
         <div className="max-w-7xl mx-auto">
           <SearchHeader />
           <div className="grid grid-cols-1 lg:grid-cols-4 gap-6">
-            <div className="lg:col-span-1">
-              <FilterSidebar />
-            </div>
+            <div className="lg:col-span-1">{/* <FilterSidebar /> */}</div>
 
             <div className="lg:col-span-3">
               <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6 mb-8">
-                {courses.map((course) => (
-                  <CourseCard key={course.id} course={course} />
+                {courses.map((course, ind) => (
+                  <Link key={ind} to={`${course._id}`}>
+                    <CourseCard course={course} />
+                  </Link>
                 ))}
               </div>
             </div>

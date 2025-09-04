@@ -34,7 +34,6 @@ const Header: React.FC = () => {
             </span>
           </div>
 
-          {/* Desktop Navigation */}
           <nav className="hidden md:flex items-center space-x-8">
             <A_tag href="#courses" label="Courses" />
             <A_tag href="#interviews" label="Mock Interviews" />
@@ -79,12 +78,12 @@ const Header: React.FC = () => {
         {isMenuOpen && (
           <div className="md:hidden bg-white border-t border-gray-200 py-4">
             <nav className="flex flex-col space-y-4">
-              <a
-                href="#courses"
+              <Link
+                to="/courses"
                 className="text-gray-700 hover:text-blue-600 transition-colors font-medium"
               >
                 Courses
-              </a>
+              </Link>
               <a
                 href="#interviews"
                 className="text-gray-700 hover:text-blue-600 transition-colors font-medium"

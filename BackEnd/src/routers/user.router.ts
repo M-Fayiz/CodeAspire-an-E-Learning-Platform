@@ -1,10 +1,10 @@
 import express from "express";
 const userRouter = express.Router();
-import { UserController } from "../controllers/implementation/UserController";
+import { UserController } from "../controllers/implementation/userController";
 import { UserRepository } from "../repository/implementation/UserRepository";
-import { UserService } from "../services/implementation/UserService";
+import { UserService } from "../services/implementation/userService"; 
 import { verifyUser } from "../middlewares/authentication.middleware";
-import { MentorRepository } from "../repository/implementation/MentorRepository";
+import { MentorRepository } from "../repository/implementation/mentorRepository";
 
 const userRepository = new UserRepository();
 const mentorRepository = new MentorRepository();
@@ -20,5 +20,6 @@ userRouter.get("/s3-getPresigned-url", userController.get_preSignedURL);
 userRouter.put("/:id/profile-picture", userController.updateProfileImage);
 userRouter.put("/me/:id", userController.updateUserProfile);
 userRouter.put("/:id/mentor-profile", userController.updateUserProfile);
+userRouter.get("/:id/profile",userController.getUserProfile)
 
 export default userRouter;

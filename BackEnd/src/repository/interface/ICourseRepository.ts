@@ -44,4 +44,5 @@ export interface ICourseRepository {
   appproveCourse(courseId:Types.ObjectId):Promise<ICourses|null>
   rejectCourse(courseId:Types.ObjectId):Promise<ICourses|null>
   publishCourse(courseId:Types.ObjectId):Promise<ICourses|null>
+  findCourse(courseId:Types.ObjectId):Promise<ICourses|null>
 }

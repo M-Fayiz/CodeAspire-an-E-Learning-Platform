@@ -23,4 +23,9 @@ export interface IUserController {
     res: Response,
     next: NextFunction,
   ): Promise<void>;
+  getUserProfile(
+    req: Request,
+    res: Response,
+    next: NextFunction,
+  ): Promise<void>;
 }
