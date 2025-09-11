@@ -16,23 +16,30 @@ export class CourseRepository
   async createCourses(courseData: ICourses): Promise<ICourses | null> {
     return await this.create(courseData);
   }
-  async fetchCourses(limit:number,skip:number,search?:string, category?:Types.ObjectId,subcategory?:Types.ObjectId,level?:string, ): Promise<ICourses[] | null> {
-    let query:FilterQuery<ICourses>={}
-    if(search){
-      query['title']={$regex:search,$options:'i'}
+  async fetchCourses(
+    limit: number,
+    skip: number,
+    search?: string,
+    category?: Types.ObjectId,
+    subcategory?: Types.ObjectId,
+    level?: string,
+  ): Promise<ICourses[] | null> {
+    let query: FilterQuery<ICourses> = {};
+    if (search) {
+      query["title"] = { $regex: search, $options: "i" };
     }
-    if(category){
-      query['categoryId']=category
+    if (category) {
+      query["categoryId"] = category;
     }
-    if(subcategory){
-      query['subCategoryId']=subcategory
+    if (subcategory) {
+      query["subCategoryId"] = subcategory;
     }
-    if(level){
-      query['level']=level
+    if (level) {
+      query["level"] = level;
     }
-    query['status']='approved'
+    query["status"] = "approved";
 
-    return await this.findAll(query,limit,skip, [
+    return await this.findAll(query, limit, skip, [
       "categoryId",
       "subCategoryId",
     ]);
@@ -152,21 +159,26 @@ export class CourseRepository
       "mentorsId",
     ]);
   }
-  async findDocumentCount(search?: string, category?: Types.ObjectId, subcategory?: Types.ObjectId, level?: string): Promise<number> {
-      let query:FilterQuery<ICourses>={}
-    if(search){
-      query['title']={$regex:search,$options:'i'}
+  async findDocumentCount(
+    search?: string,
+    category?: Types.ObjectId,
+    subcategory?: Types.ObjectId,
+    level?: string,
+  ): Promise<number> {
+    let query: FilterQuery<ICourses> = {};
+    if (search) {
+      query["title"] = { $regex: search, $options: "i" };
     }
-    if(category){
-      query['categoryId']=category
+    if (category) {
+      query["categoryId"] = category;
     }
-    if(subcategory){
-      query['subCategoryId']=subcategory
+    if (subcategory) {
+      query["subCategoryId"] = subcategory;
     }
-    if(level){
-      query['level']=level
+    if (level) {
+      query["level"] = level;
     }
-    query['status']='approved'
-    return await this.countDocuments(query)
+    query["status"] = "approved";
+    return await this.countDocuments(query);
   }
 }

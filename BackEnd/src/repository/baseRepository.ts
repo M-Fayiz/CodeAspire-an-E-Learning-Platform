@@ -15,9 +15,14 @@ type PopulateFieldType =
 export abstract class BaseRepository<T extends Document> {
   constructor(protected model: Model<T>) {}
 
-  async findAll(filter?:FilterQuery<T>,limit?:number,skip?:number,populateFields?: PopulateFieldType): Promise<T[]> {
-    let query = this.model.find(filter || {})
-     if (limit !== undefined) {
+  async findAll(
+    filter?: FilterQuery<T>,
+    limit?: number,
+    skip?: number,
+    populateFields?: PopulateFieldType,
+  ): Promise<T[]> {
+    let query = this.model.find(filter || {});
+    if (limit !== undefined) {
       query = query.limit(limit);
     }
     if (skip !== undefined) {
@@ -31,9 +36,9 @@ export abstract class BaseRepository<T extends Document> {
 
     return query.exec();
   }
- async countDocuments(filter?: FilterQuery<T>): Promise<number> {
-  return this.model.countDocuments(filter || {}).exec();
-}
+  async countDocuments(filter?: FilterQuery<T>): Promise<number> {
+    return this.model.countDocuments(filter || {}).exec();
+  }
 
   async findOne(filter: FilterQuery<T>): Promise<T | null> {
     return this.model.findOne(filter);

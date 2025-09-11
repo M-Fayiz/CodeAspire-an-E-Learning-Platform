@@ -2,16 +2,19 @@ import { Search, TrendingUp } from "lucide-react";
 import type React from "react";
 import { useState } from "react";
 
-interface SearchBarProps{
-  placeholder:string
-  handleSearch:(query:string)=>void
+interface SearchBarProps {
+  placeholder: string;
+  handleSearch: (query: string) => void;
 }
 
-const SearchHeader :React.FC<SearchBarProps>= ({placeholder,handleSearch}) => {
-   const [search, setSearch] = useState('');
-   const handleChange = (value: string) => {
-    setSearch(value);        
-    handleSearch(value);    
+const SearchHeader: React.FC<SearchBarProps> = ({
+  placeholder,
+  handleSearch,
+}) => {
+  const [search, setSearch] = useState("");
+  const handleChange = (value: string) => {
+    setSearch(value);
+    handleSearch(value);
   };
   return (
     <div className="bg-white p-6 rounded-lg shadow-sm mb-6">
@@ -22,7 +25,7 @@ const SearchHeader :React.FC<SearchBarProps>= ({placeholder,handleSearch}) => {
             type="text"
             placeholder={placeholder}
             value={search}
-            onChange={(e)=>handleChange(e.target.value)}
+            onChange={(e) => handleChange(e.target.value)}
             className="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
           />
         </div>

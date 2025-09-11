@@ -24,12 +24,14 @@ const enrolledSchema = new mongoose.Schema<IEnrolledModel>({
     type: Date,
   },
   progress: {
-  completedSessions: { type: [mongoose.Schema.Types.ObjectId], default: [] },
-  completedLectures: { type: [mongoose.Schema.Types.ObjectId], default: [] },
-  lastAccessedLecture: { type: mongoose.Schema.Types.ObjectId, default: null },
-  completionPercentage: { type: Number, default: 0 },
-},
-
+    completedSessions: { type: [mongoose.Schema.Types.ObjectId], default: [] },
+    completedLectures: { type: [mongoose.Schema.Types.ObjectId], default: [] },
+    lastAccessedLecture: {
+      type: mongoose.Schema.Types.ObjectId,
+      default: null,
+    },
+    completionPercentage: { type: Number, default: 0 },
+  },
 });
 
 export const EnrolleModel = mongoose.model<IEnrolledModel>(

@@ -1,6 +1,6 @@
-import React from 'react';
-import { CheckCircle, Download, Calendar, Mail } from 'lucide-react';
-import { Link } from 'react-router';
+import React from "react";
+import { CheckCircle, Download, Calendar, Mail } from "lucide-react";
+import { Link } from "react-router";
 
 interface Course {
   id: string;
@@ -26,20 +26,22 @@ const PaymentSuccess: React.FC<PaymentSuccessProps> = ({
     title: "Complete Web Development Bootcamp",
     instructor: "Sarah Johnson",
     duration: "40 hours",
-    thumbnail: "https://images.unsplash.com/photo-1516321318423-f06f85e504b3?w=300&h=200&fit=crop"
+    thumbnail:
+      "https://images.unsplash.com/photo-1516321318423-f06f85e504b3?w=300&h=200&fit=crop",
   },
   purchaseDate = new Date().toLocaleDateString(),
-  email = "student@example.com"
+  email = "student@example.com",
 }) => {
   return (
     <div className="min-h-screen bg-gray-50 flex items-center justify-center p-4">
       <div className="max-w-2xl w-full">
-
         <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-8 text-center mb-6">
           <div className="flex justify-center mb-4">
             <CheckCircle className="w-16 h-16 text-green-500" />
           </div>
-          <h1 className="text-3xl font-bold text-gray-900 mb-2">Payment Successful!</h1>
+          <h1 className="text-3xl font-bold text-gray-900 mb-2">
+            Payment Successful!
+          </h1>
           <p className="text-lg text-gray-600 mb-4">
             Thank you for your purchase. You now have access to your course.
           </p>
@@ -48,9 +50,10 @@ const PaymentSuccess: React.FC<PaymentSuccessProps> = ({
           </div>
         </div>
 
-
         <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6 mb-6">
-          <h2 className="text-xl font-semibold text-gray-900 mb-4">Course Details</h2>
+          <h2 className="text-xl font-semibold text-gray-900 mb-4">
+            Course Details
+          </h2>
           <div className="flex flex-col sm:flex-row gap-4">
             <img
               src={course.thumbnail}
@@ -58,7 +61,9 @@ const PaymentSuccess: React.FC<PaymentSuccessProps> = ({
               className="w-full sm:w-32 h-24 object-cover rounded-lg"
             />
             <div className="flex-1">
-              <h3 className="font-semibold text-gray-900 mb-1">{course.title}</h3>
+              <h3 className="font-semibold text-gray-900 mb-1">
+                {course.title}
+              </h3>
               <p className="text-gray-600 mb-2">by {course.instructor}</p>
               <div className="flex items-center gap-4 text-sm text-gray-500">
                 <span className="flex items-center gap-1">
@@ -74,7 +79,9 @@ const PaymentSuccess: React.FC<PaymentSuccessProps> = ({
         </div>
 
         <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6 mb-6">
-          <h2 className="text-xl font-semibold text-gray-900 mb-4">Purchase Summary</h2>
+          <h2 className="text-xl font-semibold text-gray-900 mb-4">
+            Purchase Summary
+          </h2>
           <div className="space-y-3">
             <div className="flex justify-between">
               <span className="text-gray-600">Course Price:</span>
@@ -100,10 +107,12 @@ const PaymentSuccess: React.FC<PaymentSuccessProps> = ({
           </div>
         </div>
 
-
         <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6 mb-6">
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-            <Link to={'/learner/enrolled-courses'} className="flex items-center justify-center gap-2 bg-blue-600 hover:bg-blue-700 text-white font-medium py-3 px-4 rounded-lg transition-colors">
+            <Link
+              to={"/learner/enrolled-courses"}
+              className="flex items-center justify-center gap-2 bg-blue-600 hover:bg-blue-700 text-white font-medium py-3 px-4 rounded-lg transition-colors"
+            >
               <Calendar className="w-5 h-5" />
               Start Learning
             </Link>
@@ -132,10 +141,12 @@ const PaymentSuccess: React.FC<PaymentSuccessProps> = ({
           </ul>
         </div>
 
-
         <div className="text-center mt-8">
           <p className="text-gray-500 text-sm">
-            Need help? <a href="#" className="text-blue-600 hover:underline">Contact Support</a>
+            Need help?{" "}
+            <a href="#" className="text-blue-600 hover:underline">
+              Contact Support
+            </a>
           </p>
         </div>
       </div>

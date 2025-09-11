@@ -44,7 +44,8 @@ export class EnrolledService implements IEnrolledService {
       }),
     );
 
-    
-    return populatedEnrolledCourse.map(course=>enrolledListDTO(course as IEnrolledModel))
+    return populatedEnrolledCourse.map((course) =>
+      enrolledListDTO(course as IEnrolledModel),
+    );
   }
 }

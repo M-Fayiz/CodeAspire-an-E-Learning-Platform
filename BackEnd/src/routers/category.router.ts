@@ -11,7 +11,6 @@ const categoryRepository = new CategoryRepository();
 const categoryService = new CategoryService(categoryRepository);
 const categoryController = new CategoryController(categoryService);
 
-
 categoryRouter.get("/", categoryController.listCategories);
 categoryRouter.use(verifyUser);
 categoryRouter.use(authorizedRole("admin", "mentor"));

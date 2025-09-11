@@ -19,7 +19,3 @@ export const buildUserFilter = (query: searchProps): FilterQuery<IAnyUser> => {
 
   return filter;
 };
-
-
-
-

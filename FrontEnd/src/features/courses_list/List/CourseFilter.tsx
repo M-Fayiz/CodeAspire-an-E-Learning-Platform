@@ -15,20 +15,23 @@ type FilterSectionProps = {
 };
 
 interface FiltersProps {
-  handleCategory:(cat:string[])=>void
-  handleSubCategory:(cat:string[])=>void
-  handleLevel:(cat:string[])=>void
+  handleCategory: (cat: string[]) => void;
+  handleSubCategory: (cat: string[]) => void;
+  handleLevel: (cat: string[]) => void;
 }
-const FilterSidebar: React.FC<FiltersProps> = ({ handleCategory, handleSubCategory,handleLevel }) => {
+const FilterSidebar: React.FC<FiltersProps> = ({
+  handleCategory,
+  handleSubCategory,
+  handleLevel,
+}) => {
   const [expandedSections, setExpandedSections] = useState<ExpandedSections>({
     categories: true,
 
     level: true,
   });
-  const [searchCategory,setSearchcategory]=useState<string[]>([])
-  const [searchSubCat,setSearchSubCat]=useState<string[]>([])
-  const [levels,setLevel]=useState<string[]>([])
-
+  const [searchCategory, setSearchcategory] = useState<string[]>([]);
+  const [searchSubCat, setSearchSubCat] = useState<string[]>([]);
+  const [levels, setLevel] = useState<string[]>([]);
 
   const [category, setCategory] = useState<ICategoryTree[]>([]);
   useEffect(() => {
@@ -44,24 +47,28 @@ const FilterSidebar: React.FC<FiltersProps> = ({ handleCategory, handleSubCatego
   const toggleSection = (section: keyof ExpandedSections) => {
     setExpandedSections((prev) => ({
       ...prev,
-      [section]: !prev[section],  
+      [section]: !prev[section],
     }));
   };
   const handleSelectedCategory = (category: string, checked: boolean) => {
-  setSearchcategory(prev => {
-    const updated = checked ? [...prev, category] : prev.filter(c => c !== category);
-    handleCategory(updated); 
-    return updated;
-  });
-};
+    setSearchcategory((prev) => {
+      const updated = checked
+        ? [...prev, category]
+        : prev.filter((c) => c !== category);
+      handleCategory(updated);
+      return updated;
+    });
+  };
 
-const handleSelectedLevel = (level: string, checked: boolean) => {
-  setLevel(prev => {
-    const updated = checked ? [...prev, level] : prev.filter(l => l !== level);
-    handleLevel(updated); 
-    return updated;
-  });
-};
+  const handleSelectedLevel = (level: string, checked: boolean) => {
+    setLevel((prev) => {
+      const updated = checked
+        ? [...prev, level]
+        : prev.filter((l) => l !== level);
+      handleLevel(updated);
+      return updated;
+    });
+  };
   const FilterSection: React.FC<FilterSectionProps> = ({
     title,
     children,
@@ -101,7 +108,9 @@ const handleSelectedLevel = (level: string, checked: boolean) => {
                 <input
                   type="checkbox"
                   checked={searchCategory.includes(cat.key)}
-                  onChange={(e) => handleSelectedCategory(cat.key, e.target.checked)}
+                  onChange={(e) =>
+                    handleSelectedCategory(cat.key, e.target.checked)
+                  }
                   className="rounded border-gray-300 text-blue-600 focus:ring-blue-500"
                 />
                 <span className="text-sm text-gray-700">{cat.label}</span>
@@ -122,9 +131,8 @@ const handleSelectedLevel = (level: string, checked: boolean) => {
             >
               <input
                 type="checkbox"
-                  checked={levels.includes(level)}
-                  onChange={(e) => handleSelectedLevel(level, e.target.checked)}
-                
+                checked={levels.includes(level)}
+                onChange={(e) => handleSelectedLevel(level, e.target.checked)}
                 className="text-blue-600 focus:ring-blue-500"
               />
               <span className="text-sm text-gray-700">{level}</span>

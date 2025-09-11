@@ -3,7 +3,14 @@ import { ICourses, ILecture, ISession } from "../../types/courses.type";
 
 export interface ICourseRepository {
   createCourses(courseData: ICourses): Promise<ICourses | null>;
-  fetchCourses( limit:number,skip:number,search?:string, category?:Types.ObjectId,subcategory?:Types.ObjectId,level?:string): Promise<ICourses[] | null>;
+  fetchCourses(
+    limit: number,
+    skip: number,
+    search?: string,
+    category?: Types.ObjectId,
+    subcategory?: Types.ObjectId,
+    level?: string,
+  ): Promise<ICourses[] | null>;
   updateCourse(
     courseId: Types.ObjectId,
     courseData: Partial<ICourses>,
@@ -44,5 +51,10 @@ export interface ICourseRepository {
   rejectCourse(courseId: Types.ObjectId): Promise<ICourses | null>;
   publishCourse(courseId: Types.ObjectId): Promise<ICourses | null>;
   findCourse(courseId: Types.ObjectId): Promise<ICourses | null>;
-  findDocumentCount(search?:string, category?:Types.ObjectId,subcategory?:Types.ObjectId,level?:string): Promise<number>;
+  findDocumentCount(
+    search?: string,
+    category?: Types.ObjectId,
+    subcategory?: Types.ObjectId,
+    level?: string,
+  ): Promise<number>;
 }

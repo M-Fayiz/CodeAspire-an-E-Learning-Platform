@@ -10,7 +10,7 @@ export const OrderService = {
     orderId: string;
     checkoutURL: string;
   }> => {
-    console.log('🍉',courseId,userId)
+    console.log("🍉", courseId, userId);
     try {
       const response = await axiosInstance.post(
         "/orders/payment/create-checkout-session",

@@ -67,7 +67,7 @@ export const router = createBrowserRouter([
       { path: "dashboard", element: <DashboardContent /> },
       { path: "profile", element: <ProfileManagement /> },
       { path: "courses", element: <CourseLayout /> },
-      { path: "enrolled-courses", element: <CourseEnrolledList/> },
+      { path: "enrolled-courses", element: <CourseEnrolledList /> },
     ],
   },
   {
@@ -110,7 +110,7 @@ export const router = createBrowserRouter([
         loader: useProfileLoader,
       },
       { path: "category", element: <CategoryManagement /> },
-      { path: "courses", element: <CourseManagement />},
+      { path: "courses", element: <CourseManagement /> },
       { path: "courses/:id", element: <AdminCourseDetails /> },
     ],
   },
@@ -146,9 +146,9 @@ export const router = createBrowserRouter([
     path: "/courses",
     element: <Outlet />,
     children: [
-      { index: true, element: <CourseLayout />},
+      { index: true, element: <CourseLayout /> },
       { path: ":id", element: <CourseDetails /> },
-      { path:'payment-success' , element:<PaymentSuccess/>}
+      { path: "payment-success", element: <PaymentSuccess /> },
     ],
   },
   {

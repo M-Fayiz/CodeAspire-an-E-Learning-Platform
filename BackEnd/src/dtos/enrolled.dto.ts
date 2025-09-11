@@ -7,7 +7,7 @@ export const enrolledListDTO = (
 ): IEnrolledListDto => {
   return {
     _id: enrolledData._id,
-    completedPercentage: enrolledData.progress?.completionPercentage??0,
+    completedPercentage: enrolledData.progress?.completionPercentage ?? 0,
     course: enrolledData.courseId as IFormCourseDTO,
   };
 };

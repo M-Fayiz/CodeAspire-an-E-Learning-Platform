@@ -21,9 +21,12 @@ const CourseCard: React.FC<CourseCardProps> = ({ course }) => {
           </button>
         </div> */}
         <div className="absolute bottom-3 left-3">
-          <span className="bg-blue-600 text-white px-2 py-1 rounded text-xs font-medium">
+          {course.isEnrolled&&(
+
+          <span className="bg-blue-200 text-blue-600 px-2 py-1 rounded text-xs font-medium">
             {/* {course.category} */}
           </span>
+          )}
         </div>
       </div>
 
@@ -52,7 +55,7 @@ const CourseCard: React.FC<CourseCardProps> = ({ course }) => {
         <div className="flex items-center justify-between">
           <div className="flex items-center space-x-2">
             <span className="text-lg font-bold text-orange-600">
-              ${course.price}
+              ₹{course.price}
             </span>
           </div>
           <button className="bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700 transition-colors text-sm font-medium">

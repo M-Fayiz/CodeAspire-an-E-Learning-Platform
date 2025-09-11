@@ -20,36 +20,74 @@ import { HttpStatus } from "../../const/http-status";
 import { HttpResponse } from "../../const/error-message";
 import { sendMail } from "../../utility/send-mail.util";
 import { Types } from "mongoose";
-import { threadId } from "worker_threads";
+import { IEnrolledRepository } from "../../repository/interface/IEnrolledRepositoy";
+import logger from "../../config/logger.config";
 
 export class CourseService implements ICourseService {
   constructor(
     private _courseRepository: ICourseRepository,
     private _categoryRepository: ICategoryRepository,
+    private _enrolledRepository: IEnrolledRepository,
   ) {}
 
   async createCourses(course: ICourses): Promise<ICourses | null> {
     return await this._courseRepository.createCourses(course);
   }
-  async fetchCourses(page:number,limit:number,search?:string, category?:string,subcategory?:string,level?:string): Promise<{courseData:ICourseListDTO[] | null,totalDocument:number}> {
-    let category_Id
-    let subCategory_id
-    if(category){
-      category_Id=parseObjectId(category)
+  async fetchCourses(
+    page: number,
+    limit: number,
+    search?: string,
+    category?: string,
+    subcategory?: string,
+    level?: string,
+    learnerId?: string,
+  ): Promise<{ courseData: ICourseListDTO[] | null; totalDocument: number }> {
+    let category_Id;
+    let subCategory_id;
+    let learner_Id;
+  
+    if (category) {
+      category_Id = parseObjectId(category);
     }
-    if(subcategory){
-      subCategory_id=parseObjectId(subcategory )
+    if (subcategory) {
+      subCategory_id = parseObjectId(subcategory);
     }
-    let skip=(page-1)*limit
-    const [courseList,totalDocument] = await Promise.all([this._courseRepository.fetchCourses(limit,skip,search,category_Id as Types.ObjectId,subCategory_id as Types.ObjectId,level ),this._courseRepository.findDocumentCount(search,category_Id as Types.ObjectId,subCategory_id as Types.ObjectId,level )]) ;
+    if (learnerId) {
+      learner_Id = parseObjectId(learnerId);
+    }
+    let skip = (page - 1) * limit;
+    const [courseList, totalDocument] = await Promise.all([
+      this._courseRepository.fetchCourses(
+        limit,
+        skip,
+        search,
+        category_Id as Types.ObjectId,
+        subCategory_id as Types.ObjectId,
+        level,
+      ),
+      this._courseRepository.findDocumentCount(
+        search,
+        category_Id as Types.ObjectId,
+        subCategory_id as Types.ObjectId,
+        level,
+      ),
+    ]);
+    let enrolledCourse
+    if(learner_Id){
+      enrolledCourse=await this._enrolledRepository.getEnrolledCourses(learner_Id)
+      
+    }
     if (!courseList) {
-      throw createHttpError(HttpStatus.NOT_FOUND,HttpResponse.ITEM_NOT_FOUND)
-    } 
-
+      throw createHttpError(HttpStatus.NOT_FOUND, HttpResponse.ITEM_NOT_FOUND);
+    }
+    const enrolledIds = new Set(
+    enrolledCourse?.map((c) => c.courseId.toString()) 
+  );
     const mappedCourseList = courseList.map((course) =>
-      courseListDTO(course as ICoursesPopulated),
+      courseListDTO(course as ICoursesPopulated,enrolledIds),
     );
-    return {courseData:mappedCourseList,totalDocument}
+  
+    return { courseData: mappedCourseList, totalDocument };
   }
   async updateCourseData(
     courseId: string,
@@ -76,6 +114,7 @@ export class CourseService implements ICourseService {
       throw createHttpError(HttpStatus.OK, HttpResponse.INVALID_ID);
     }
     const courseData = await this._courseRepository.getCourse(id);
+
     if (!courseData) return null;
     return courseDTO(courseData as ICoursesPopulated);
   }

@@ -28,6 +28,7 @@ export interface ICourseData {
   sessions?: ISession[];
   isActive?: boolean;
   isDraft?: boolean;
+  isEnrolled?:boolean
 }
 export interface ICourseListDTO {
   id: string;
@@ -100,14 +101,11 @@ export interface IFormCourseDTO {
   updated: string;
 }
 
-
-export interface ISearchQuery{
-  
-    search?: string;
-    category?: string;
-    subcategory?:string
-    level?:string
-    page?: number;
-    limit?: number;
-
+export interface ISearchQuery {
+  search?: string;
+  category?: string;
+  subcategory?: string;
+  level?: string;
+  page?: number;
+  limit?: number;
 }

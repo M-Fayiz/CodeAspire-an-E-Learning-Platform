@@ -15,11 +15,13 @@ export interface ICourseListDTO {
   language: string;
   level: "Beginner" | "Intermediate" | "Advanced";
   price: number;
+  isEnrolled:boolean
 }
 
 export interface ICourseDTO extends ICourseListDTO {
   sessions: ISession[] | null;
   description: string;
+  
 }
 
 export interface IFormCourseDTO {

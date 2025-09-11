@@ -29,19 +29,18 @@ const Banner: React.FC<BannerProps> = ({
   courseId,
 }) => {
   // const navigate = useNavigate();
-  const {user}=useAuth()
-  const handlePaymentPage =async () => {
+  const { user } = useAuth();
+  const handlePaymentPage = async () => {
     // navigate(`/courses/checkout/${courseId}`);
     try {
-      
       const result = await OrderService.createPayment(courseId, user!.id);
-     
-           if (result) {
-             window.location.href = result.checkoutURL;
-           }
+
+      if (result) {
+        window.location.href = result.checkoutURL;
+      }
     } catch (error) {
-      if(error instanceof Error){
-        toast.error(error.message)
+      if (error instanceof Error) {
+        toast.error(error.message);
       }
     }
   };
