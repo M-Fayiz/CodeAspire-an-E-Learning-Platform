@@ -130,4 +130,5 @@ export class UserRepository
   ): Promise<IUserModel | IMenterModel | ILearnerModel | IAdminModel | null> {
     return await this.findOne({ _id: userId });
   }
+  
 }

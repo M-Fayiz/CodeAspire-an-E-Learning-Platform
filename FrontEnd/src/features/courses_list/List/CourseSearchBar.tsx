@@ -31,7 +31,7 @@ const SearchHeader :React.FC<SearchBarProps>= ({placeholder,handleSearch}) => {
           <span className="text-sm text-gray-600">
             {/* {resultCount.toLocaleString()} results found */}
           </span>
-          <div className="flex items-center space-x-2">
+          {/* <div className="flex items-center space-x-2">
             <span className="text-sm text-gray-600">Sort by:</span>
             <select
               //   value={sortBy}
@@ -45,7 +45,7 @@ const SearchHeader :React.FC<SearchBarProps>= ({placeholder,handleSearch}) => {
               <option value="price-high">Price: High to Low</option>
               <option value="popular">Most Popular</option>
             </select>
-          </div>
+          </div> */}
         </div>
       </div>
 

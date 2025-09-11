@@ -7,7 +7,7 @@ import {
 
 export interface ICourseService {
   createCourses(course: ICourses): Promise<ICourses | null>;
-  fetchCourses(): Promise<ICourseListDTO[] | null>;
+  fetchCourses(page:number, limit:number,search?:string, category?:string,subcategory?:string,level?:string): Promise<{courseData:ICourseListDTO[] | null,totalDocument:number}>;
   updateCourseData(
     courseId: string,
     courseData: Partial<ICourses> | ISession | ILecture,

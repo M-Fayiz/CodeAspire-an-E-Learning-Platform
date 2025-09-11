@@ -44,21 +44,24 @@ const FilterSidebar: React.FC<FiltersProps> = ({ handleCategory, handleSubCatego
   const toggleSection = (section: keyof ExpandedSections) => {
     setExpandedSections((prev) => ({
       ...prev,
-      [section]: !prev[section],
+      [section]: !prev[section],  
     }));
   };
-  const handleSelectedCategory=(category:string,checked:boolean)=>{
-    setSearchcategory(prv=>
-      checked?[...prv,category]:prv.filter(c => c !== category)
-    )
-    handleCategory(searchCategory)
-  }
-  const handleSelectedLevel=(level:string,checked:boolean)=>{
-    setLevel(prv=>
-      checked?[...prv,level]:prv.filter(l=> l !== level)
-    )
-    handleLevel(levels)
-  }
+  const handleSelectedCategory = (category: string, checked: boolean) => {
+  setSearchcategory(prev => {
+    const updated = checked ? [...prev, category] : prev.filter(c => c !== category);
+    handleCategory(updated); 
+    return updated;
+  });
+};
+
+const handleSelectedLevel = (level: string, checked: boolean) => {
+  setLevel(prev => {
+    const updated = checked ? [...prev, level] : prev.filter(l => l !== level);
+    handleLevel(updated); 
+    return updated;
+  });
+};
   const FilterSection: React.FC<FilterSectionProps> = ({
     title,
     children,

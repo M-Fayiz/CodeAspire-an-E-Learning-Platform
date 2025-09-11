@@ -6,6 +6,7 @@ import type {
   ICourseDTO,
   IFormCourseDTO,
   ILecture,
+  ISearchQuery,
   ISession,
 } from "@/types/courses.types";
 import type { AxiosError } from "axios";
@@ -15,7 +16,7 @@ import { S3BucketUtil } from "@/utility/S3Bucket.util";
 const courseService = {
   createCourse: async (courseData: ICourseData): Promise<ICourseData> => {
     try {
-      console.log(courseData);
+      
       if (courseData.thumbnail) {
         const uploadAndFileUrl = await sharedService.getS3BucketUploadUrl(
           courseData.thumbnail as File,
@@ -39,18 +40,34 @@ const courseService = {
       throw new Error(errorMessage);
     }
   },
-  fetchCourses: async (): Promise<ICourseData[] | null> => {
-    try {
-      const response = await axiosInstance.get(API.COURSE.FETCH_COURSES);
+  fetchCourses: async (
+  params: ISearchQuery
+): Promise<{ updated: ICourseData[] | null; totalDocument: number }> => {
+  try {
+    const response = await axiosInstance.get(API.COURSE.FETCH_COURSES, {
+      params,
+    });
 
-      return response.data.courseListData;
-    } catch (error) {
-      const err = error as AxiosError<{ error: string }>;
-      const errorMessage =
-        err.response?.data?.error || "Something Went wrong Please try again";
-      throw new Error(errorMessage);
-    }
-  },
+    if (!response) return { updated: null, totalDocument: 0 };
+
+    const updated = await Promise.all(
+      response.data.courseData?.map(async (cours: IFormCourseDTO) => {
+        cours.thumbnail = await S3BucketUtil.getPreSignedURL(
+          cours.thumbnail as string
+        );
+        return cours;
+      }) ?? []
+    );
+
+    return { updated, totalDocument: response.data.totalDocument };
+  } catch (error) {
+    const err = error as AxiosError<{ error: string }>;
+    const errorMessage =
+      err.response?.data?.error || "Something went wrong. Please try again.";
+    throw new Error(errorMessage);
+  }
+},
+
   addSessions: async (
     courseId: string,
     session: Partial<ISession>,

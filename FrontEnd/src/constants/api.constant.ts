@@ -53,6 +53,7 @@ export const API = {
     COURSE_DETAILS: (courseId: string) => `/courses/${courseId}`,
     APPROVE_CURSE: (courseId: string) => `/courses/admin/approve/${courseId}`,
     REJECT_COURSE: (courseId: string) => `/courses/admin/reject/${courseId}`,
+    
   },
   PAYMENT: {
     CREATE_PAYMENT_INTENT: "/orders/create-checkout-session",

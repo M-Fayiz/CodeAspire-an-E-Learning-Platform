@@ -21,7 +21,6 @@ import MentorDataForm from "../components/auth-components/MentorInformation";
 import CategoryManagement from "@/pages/Admin Page/category";
 import CourseCreation from "@/pages/Mentor_Page/course_creation/Index";
 import CourseLayout from "@/pages/Course/CourseList";
-import { fetchCourses } from "@/features/courses_list/List/CourseLoader";
 import CourseFormProvider from "@/context/courseForm.context";
 import CourseManagement from "@/pages/Admin Page/Course-Managemenr/CourseManagement";
 import MYCourses from "@/pages/Mentor_Page/course_creation/MyCourses";
@@ -111,7 +110,7 @@ export const router = createBrowserRouter([
         loader: useProfileLoader,
       },
       { path: "category", element: <CategoryManagement /> },
-      { path: "courses", element: <CourseManagement />, loader: fetchCourses },
+      { path: "courses", element: <CourseManagement />},
       { path: "courses/:id", element: <AdminCourseDetails /> },
     ],
   },
@@ -147,7 +146,7 @@ export const router = createBrowserRouter([
     path: "/courses",
     element: <Outlet />,
     children: [
-      { index: true, element: <CourseLayout />, loader: fetchCourses },
+      { index: true, element: <CourseLayout />},
       { path: ":id", element: <CourseDetails /> },
       { path:'payment-success' , element:<PaymentSuccess/>}
     ],

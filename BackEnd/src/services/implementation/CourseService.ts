@@ -19,6 +19,8 @@ import { createHttpError } from "../../utility/http-error";
 import { HttpStatus } from "../../const/http-status";
 import { HttpResponse } from "../../const/error-message";
 import { sendMail } from "../../utility/send-mail.util";
+import { Types } from "mongoose";
+import { threadId } from "worker_threads";
 
 export class CourseService implements ICourseService {
   constructor(
@@ -29,14 +31,25 @@ export class CourseService implements ICourseService {
   async createCourses(course: ICourses): Promise<ICourses | null> {
     return await this._courseRepository.createCourses(course);
   }
-  async fetchCourses(): Promise<ICourseListDTO[] | null> {
-    const courseList = await this._courseRepository.fetchCourses();
-    if (!courseList) return null;
+  async fetchCourses(page:number,limit:number,search?:string, category?:string,subcategory?:string,level?:string): Promise<{courseData:ICourseListDTO[] | null,totalDocument:number}> {
+    let category_Id
+    let subCategory_id
+    if(category){
+      category_Id=parseObjectId(category)
+    }
+    if(subcategory){
+      subCategory_id=parseObjectId(subcategory )
+    }
+    let skip=(page-1)*limit
+    const [courseList,totalDocument] = await Promise.all([this._courseRepository.fetchCourses(limit,skip,search,category_Id as Types.ObjectId,subCategory_id as Types.ObjectId,level ),this._courseRepository.findDocumentCount(search,category_Id as Types.ObjectId,subCategory_id as Types.ObjectId,level )]) ;
+    if (!courseList) {
+      throw createHttpError(HttpStatus.NOT_FOUND,HttpResponse.ITEM_NOT_FOUND)
+    } 
 
     const mappedCourseList = courseList.map((course) =>
       courseListDTO(course as ICoursesPopulated),
     );
-    return mappedCourseList;
+    return {courseData:mappedCourseList,totalDocument}
   }
   async updateCourseData(
     courseId: string,

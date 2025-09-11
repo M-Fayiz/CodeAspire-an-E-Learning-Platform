@@ -99,3 +99,15 @@ export interface IFormCourseDTO {
   status: "inProgress" | "draft" | "published" | "approved" | "rejected";
   updated: string;
 }
+
+
+export interface ISearchQuery{
+  
+    search?: string;
+    category?: string;
+    subcategory?:string
+    level?:string
+    page?: number;
+    limit?: number;
+
+}

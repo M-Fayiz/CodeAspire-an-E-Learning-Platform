@@ -1,9 +1,10 @@
-import { Types } from "mongoose";
+import { FilterQuery, Types } from "mongoose";
 import { courseModel } from "../../models/courses.model";
 import { ICourses, ILecture, ISession } from "../../types/courses.type";
 import { BaseRepository } from "../baseRepository";
 import { ICourseRepository } from "../interface/ICourseRepository";
 import logger from "../../config/logger.config";
+import { skip } from "node:test";
 
 export class CourseRepository
   extends BaseRepository<ICourses>
@@ -15,8 +16,23 @@ export class CourseRepository
   async createCourses(courseData: ICourses): Promise<ICourses | null> {
     return await this.create(courseData);
   }
-  async fetchCourses(): Promise<ICourses[] | null> {
-    return await this.find({ status: "approved" }, [
+  async fetchCourses(limit:number,skip:number,search?:string, category?:Types.ObjectId,subcategory?:Types.ObjectId,level?:string, ): Promise<ICourses[] | null> {
+    let query:FilterQuery<ICourses>={}
+    if(search){
+      query['title']={$regex:search,$options:'i'}
+    }
+    if(category){
+      query['categoryId']=category
+    }
+    if(subcategory){
+      query['subCategoryId']=subcategory
+    }
+    if(level){
+      query['level']=level
+    }
+    query['status']='approved'
+
+    return await this.findAll(query,limit,skip, [
       "categoryId",
       "subCategoryId",
     ]);
@@ -135,5 +151,22 @@ export class CourseRepository
       "subCategoryId",
       "mentorsId",
     ]);
+  }
+  async findDocumentCount(search?: string, category?: Types.ObjectId, subcategory?: Types.ObjectId, level?: string): Promise<number> {
+      let query:FilterQuery<ICourses>={}
+    if(search){
+      query['title']={$regex:search,$options:'i'}
+    }
+    if(category){
+      query['categoryId']=category
+    }
+    if(subcategory){
+      query['subCategoryId']=subcategory
+    }
+    if(level){
+      query['level']=level
+    }
+    query['status']='approved'
+    return await this.countDocuments(query)
   }
 }

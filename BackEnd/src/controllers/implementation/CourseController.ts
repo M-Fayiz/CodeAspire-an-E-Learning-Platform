@@ -55,11 +55,13 @@ export class CourseController implements ICourseController {
     next: NextFunction,
   ): Promise<void> => {
     try {
-      const courseListData = await this._courseService.fetchCourses();
+      const { search, category,subcategory,level, page = 1, limit = 1 } = req.query;
+   
+      const {courseData,totalDocument} = await this._courseService.fetchCourses( Number(page||1),Number(limit||6),search as string, category as string,subcategory as string,level as string,  );
 
       res
         .status(HttpStatus.OK)
-        .json(successResponse(HttpResponse.OK, { courseListData }));
+        .json(successResponse(HttpResponse.OK, { courseData, totalDocument}));
     } catch (error) {
       next(error);
     }
