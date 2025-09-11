@@ -55,6 +55,9 @@ export const API = {
     REJECT_COURSE: (courseId: string) => `/courses/admin/reject/${courseId}`,
   },
   PAYMENT: {
-    CREATE_PAYMENT_INTENT: "/orders/create-payment-intent",
+    CREATE_PAYMENT_INTENT: "/orders/create-checkout-session",
   },
+  ENROLLEMENT:{
+    GET_ENROLLED_COURSE:(learnerId:string)=>`/enrollements/${learnerId}`  
+  }
 };

@@ -64,7 +64,7 @@ export class UserService implements IUserService {
       currentPassword,
       user.password,
     );
-   
+
     if (!passwordIsMatch) {
       throw createHttpError(
         HttpStatus.NOT_FOUND,
@@ -156,20 +156,25 @@ export class UserService implements IUserService {
           userId,
           userData as ILearnerModel,
         );
-        return updatedLearner ? LearnerDTO(updatedLearner as ILearnerModel) : null;
+        return updatedLearner
+          ? LearnerDTO(updatedLearner as ILearnerModel)
+          : null;
       }
     }
   }
-  async getUserProfile(userId: string): Promise<IAdminDTO | ILearnerDTO | IMentorDTO|null> {
-      const id=parseObjectId(userId)
-      if(!id){
-        throw createHttpError(HttpStatus.NOT_FOUND,HttpResponse.INVALID_ID)
-      }
+  async getUserProfile(
+    userId: string,
+  ): Promise<IAdminDTO | ILearnerDTO | IMentorDTO | null> {
+    const id = parseObjectId(userId);
+    if (!id) {
+      throw createHttpError(HttpStatus.NOT_FOUND, HttpResponse.INVALID_ID);
+    }
 
-      const userData=await this._userRep.getUserProfile(id)
-      if(userData?.role=='admin') return AdminDTO(userData as IAdminModel)
-      if(userData?.role=='mentor') return MentorDTO(userData as IMenterModel)
-      if(userData?.role=='learner') return LearnerDTO(userData as ILearnerModel)
-        return null
+    const userData = await this._userRep.getUserProfile(id);
+    if (userData?.role == "admin") return AdminDTO(userData as IAdminModel);
+    if (userData?.role == "mentor") return MentorDTO(userData as IMenterModel);
+    if (userData?.role == "learner")
+      return LearnerDTO(userData as ILearnerModel);
+    return null;
   }
 }

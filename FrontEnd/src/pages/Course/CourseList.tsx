@@ -7,57 +7,88 @@ import SearchHeader from "../../features/courses_list/List/CourseSearchBar";
 import FilterSidebar from "../../features/courses_list/List/CourseFilter";
 import debounce from "lodash.debounce";
 import useDebounce from "@/hooks/useDebounce";
+import PaginationRounded from "@/components/ui/Pagination";
 
 function CourseLayout() {
   const courses = useLoaderData() as ICourseData[];
+  const [loading,setLoading]=useState(false)
   const [searchParams, setSearchParams] = useSearchParams();
+  const [totalPage,setTotalPage]=useState(1)
+  const searchQuery=useDebounce(searchParams.get('search'), 500)||''
+  const currentPage=parseInt(searchParams.get('page') as string)||1
+  const filterCategory=searchParams.get('category')||''
+  const filterSubcategory=searchParams.get('subCategory')||''
+  const filterLevel=searchParams.get('level')||''
 
-  const [filters, setFilters] = useState({
-    search: searchParams.get("search") || "",
-    categories: searchParams.getAll("categories"),
-    level: searchParams.getAll("levels"),
-    page: Number(searchParams.get("page")) || 1,
-    limit: Number(searchParams.get("limit")) || 10,
-  });
+    // useState(()=>{
+    //   // setLoading(true)
+    //   (async()=>{
+    //     const query=new URLSearchParams(searchParams).toString()
 
-  const debounced = useDebounce(filters.search, 500);
+    //   })
+    // },[])
+  
 
-  useEffect(() => {
-    const params = new URLSearchParams();
-    if (filters.search) params.set("search", filters.search);
-    filters.categories.forEach((cat) => params.append("categories", cat));
-    filters.level.forEach((l) => params.append("level", l));
-    params.set("page", String(filters.page));
-    params.set("limit", String(filters.limit));
-  }, [filters, setSearchParams]);
+  
 
-  const toggleFilter = (key: "categories" | "level", value: string) => {
-    setFilters((prev) => {
-      const values = new Set(prev[key]);
-      if (values.has(value)) {
-        values.delete(value);
-      } else {
-        values.add(value);
-      }
-      return { ...prev, [key]: Array.from(values), page: 1 };
-    });
-  };
+  
 
-  const updateFilter = (key: string, value: any) => {
-    setFilters((prev) => ({
-      ...prev,
-      [key]: value,
-      page: 1,
-    }));
-  };
 
+
+
+  const handleSearch=(query:string)=>{
+    setSearchParams(prv=>{
+      prv.set('search',query)
+      prv.set('page','1')
+      return prv
+    })
+  }
+
+  const handleCategory=(category:string[])=>{
+    setSearchParams(prv=>{
+      prv.delete('category')
+      category.forEach(cat=>{
+        prv.append('category',cat)
+      })
+      prv.set('page','1')
+      return prv
+    })
+  }
+  const handleSubCategory=(subCat:string[])=>{
+    setSearchParams(prv=>{
+      prv.delete('subcategory')
+      subCat.forEach(subcat=>{
+        prv.append('subcategory',subcat)
+      })
+      prv.set('page','1')
+      return prv
+    })
+  }
+   const handleLevel=(levels:string[])=>{
+    setSearchParams(prv=>{
+      prv.delete('level')
+      levels.forEach(level=>{
+        prv.append('level',level)
+      })
+      prv.set('page','1')
+      return prv
+    })
+   }
+   console.log('this is the search params',searchParams.get('search'))
+   console.log('this is the search +++',searchParams.getAll('category'))
+   const handlePage=(event: React.ChangeEvent<unknown>, value:number)=>{
+    setSearchParams(prev => {
+            prev.set('page', String(value));
+            return prev;
+        });
+   }
   return (
     <>
       <div className="min-h-screen bg-gray-50 p-6">
         <div className="max-w-7xl mx-auto">
-          <SearchHeader />
+          <SearchHeader placeholder="search Courses ...." handleSearch={handleSearch}/>
           <div className="grid grid-cols-1 lg:grid-cols-4 gap-6">
-            <div className="lg:col-span-1">{/* <FilterSidebar /> */}</div>
+            <div className="lg:col-span-1"><FilterSidebar handleCategory={handleCategory} handleLevel={handleLevel} handleSubCategory={handleSubCategory}/></div>
 
             <div className="lg:col-span-3">
               <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6 mb-8">
@@ -69,6 +100,16 @@ function CourseLayout() {
               </div>
             </div>
           </div>
+          {courses.length > 0 && (
+            <div className="flex justify-center">
+
+              <PaginationRounded
+                currentPage={currentPage}
+                totalPages={totalPage}
+                onPageChange={handlePage}
+              />
+            </div>
+          )}
         </div>
       </div>
     </>

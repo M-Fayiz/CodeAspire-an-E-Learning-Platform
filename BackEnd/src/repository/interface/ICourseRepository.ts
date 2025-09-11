@@ -1,7 +1,6 @@
 import { Types } from "mongoose";
 import { ICourses, ILecture, ISession } from "../../types/courses.type";
 
-
 export interface ICourseRepository {
   createCourses(courseData: ICourses): Promise<ICourses | null>;
   fetchCourses(): Promise<ICourses[] | null>;
@@ -39,10 +38,10 @@ export interface ICourseRepository {
     lectureId: Types.ObjectId,
     lecture: ILecture,
   ): Promise<ICourses | null>;
-  getAdminCoursList():Promise<ICourses[]|null>
-  getCourseDetails(courseId:Types.ObjectId):Promise<ICourses[]|null>
-  appproveCourse(courseId:Types.ObjectId):Promise<ICourses|null>
-  rejectCourse(courseId:Types.ObjectId):Promise<ICourses|null>
-  publishCourse(courseId:Types.ObjectId):Promise<ICourses|null>
-  findCourse(courseId:Types.ObjectId):Promise<ICourses|null>
+  getAdminCoursList(): Promise<ICourses[] | null>;
+  getCourseDetails(courseId: Types.ObjectId): Promise<ICourses[] | null>;
+  appproveCourse(courseId: Types.ObjectId): Promise<ICourses | null>;
+  rejectCourse(courseId: Types.ObjectId): Promise<ICourses | null>;
+  publishCourse(courseId: Types.ObjectId): Promise<ICourses | null>;
+  findCourse(courseId: Types.ObjectId): Promise<ICourses | null>;
 }

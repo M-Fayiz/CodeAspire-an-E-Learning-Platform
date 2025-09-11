@@ -11,11 +11,11 @@ const categoryRepository = new CategoryRepository();
 const categoryService = new CategoryService(categoryRepository);
 const categoryController = new CategoryController(categoryService);
 
+
+categoryRouter.get("/", categoryController.listCategories);
 categoryRouter.use(verifyUser);
 categoryRouter.use(authorizedRole("admin", "mentor"));
-
 categoryRouter.post("/", categoryController.createCategory);
-categoryRouter.get("/", categoryController.listCategories);
 categoryRouter.put("/:id", categoryController.editCategory);
 
 export default categoryRouter;

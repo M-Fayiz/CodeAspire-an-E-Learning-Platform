@@ -15,25 +15,22 @@ type FilterSectionProps = {
 };
 
 interface FiltersProps {
-  filters: {
-    categories: string[];
-    level: string[];
-  };
-  onToggleFilter: (key: "categories" | "level", value: string) => void;
-  onUpdatwFilter: (key: string, value: any) => void;
+  handleCategory:(cat:string[])=>void
+  handleSubCategory:(cat:string[])=>void
+  handleLevel:(cat:string[])=>void
 }
-const FilterSidebar: React.FC<FiltersProps> = ({ filters, onToggleFilter }) => {
+const FilterSidebar: React.FC<FiltersProps> = ({ handleCategory, handleSubCategory,handleLevel }) => {
   const [expandedSections, setExpandedSections] = useState<ExpandedSections>({
     categories: true,
 
     level: true,
   });
+  const [searchCategory,setSearchcategory]=useState<string[]>([])
+  const [searchSubCat,setSearchSubCat]=useState<string[]>([])
+  const [levels,setLevel]=useState<string[]>([])
+
 
   const [category, setCategory] = useState<ICategoryTree[]>([]);
-  const [filter, setFilter] = useState({
-    categories: [],
-    level: [],
-  });
   useEffect(() => {
     async function fetchCategory() {
       const categoryData = await categoryService.listCategory();
@@ -50,7 +47,18 @@ const FilterSidebar: React.FC<FiltersProps> = ({ filters, onToggleFilter }) => {
       [section]: !prev[section],
     }));
   };
-
+  const handleSelectedCategory=(category:string,checked:boolean)=>{
+    setSearchcategory(prv=>
+      checked?[...prv,category]:prv.filter(c => c !== category)
+    )
+    handleCategory(searchCategory)
+  }
+  const handleSelectedLevel=(level:string,checked:boolean)=>{
+    setLevel(prv=>
+      checked?[...prv,level]:prv.filter(l=> l !== level)
+    )
+    handleLevel(levels)
+  }
   const FilterSection: React.FC<FilterSectionProps> = ({
     title,
     children,
@@ -89,8 +97,8 @@ const FilterSidebar: React.FC<FiltersProps> = ({ filters, onToggleFilter }) => {
               >
                 <input
                   type="checkbox"
-                  // checked={filter.categories.includes(cat.key)}
-                  onChange={() => onToggleFilter("categories", cat.key)}
+                  checked={searchCategory.includes(cat.key)}
+                  onChange={(e) => handleSelectedCategory(cat.key, e.target.checked)}
                   className="rounded border-gray-300 text-blue-600 focus:ring-blue-500"
                 />
                 <span className="text-sm text-gray-700">{cat.label}</span>
@@ -110,8 +118,10 @@ const FilterSidebar: React.FC<FiltersProps> = ({ filters, onToggleFilter }) => {
               className="flex items-center space-x-2 cursor-pointer hover:text-blue-600"
             >
               <input
-                type="radio"
-                name="level"
+                type="checkbox"
+                  checked={levels.includes(level)}
+                  onChange={(e) => handleSelectedLevel(level, e.target.checked)}
+                
                 className="text-blue-600 focus:ring-blue-500"
               />
               <span className="text-sm text-gray-700">{level}</span>

@@ -1,20 +1,20 @@
-
-import mongoose, { Types ,Document, Schema} from "mongoose";
+import mongoose, { Types, Document, Schema } from "mongoose";
 import { ITransaction } from "../types/transaction.type";
 
-export interface ITransaactionModel extends Document<Types.ObjectId>, Omit<ITransaction, "_id"> {}
+export interface ITransaactionModel
+  extends Document<Types.ObjectId>,
+    Omit<ITransaction, "_id"> {}
 
 const TransactionSchema = new mongoose.Schema<ITransaactionModel>(
   {
     orderId: {
       type: Schema.Types.ObjectId,
       required: true,
-      ref: 'orders',
+      ref: "orders",
     },
     status: {
       type: String,
-      enum: ['success','failed','refunded'],
-      
+      enum: ["success", "failed", "refunded"],
     },
     amount: {
       type: Number,
@@ -23,7 +23,7 @@ const TransactionSchema = new mongoose.Schema<ITransaactionModel>(
     userId: {
       type: Schema.Types.ObjectId,
       required: true,
-      ref: 'User',
+      ref: "User",
     },
     gatewayTransactionId: {
       type: String,
@@ -32,8 +32,10 @@ const TransactionSchema = new mongoose.Schema<ITransaactionModel>(
       type: String,
     },
   },
-  { timestamps: true }
+  { timestamps: true },
 );
 
-
-export const transactionModel=mongoose.model<ITransaactionModel>('transactions',TransactionSchema)
+export const transactionModel = mongoose.model<ITransaactionModel>(
+  "transactions",
+  TransactionSchema,
+);

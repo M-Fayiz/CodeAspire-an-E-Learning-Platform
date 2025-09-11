@@ -12,8 +12,6 @@ export async function verifyUser(
 ) {
   try {
     const { accessToken } = req.cookies;
-
-    console.log("get in here ");
     if (!accessToken) {
       throw createHttpError(HttpStatus.UNAUTHORIZED, HttpResponse.UNAUTHORIZED);
     }

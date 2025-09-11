@@ -4,9 +4,8 @@ import { ICourseController } from "../interface/ICourseController";
 import { HttpStatus } from "../../const/http-status";
 import { successResponse } from "../../utility/response.util";
 import { HttpResponse } from "../../const/error-message";
-import { updatePart } from "../../types/courses.type";  
+import { updatePart } from "../../types/courses.type";
 import logger from "../../config/logger.config";
-
 
 export class CourseController implements ICourseController {
   constructor(private _courseService: ICourseService) {}
@@ -20,7 +19,6 @@ export class CourseController implements ICourseController {
       const createdCourseData = await this._courseService.createCourses(
         req.body.courseData,
       );
-   
 
       res
         .status(HttpStatus.OK)
@@ -47,7 +45,6 @@ export class CourseController implements ICourseController {
       res
         .status(HttpStatus.OK)
         .json(successResponse(HttpResponse.OK, { updatedCourseData }));
-      
     } catch (error) {
       next(error);
     }
@@ -57,11 +54,8 @@ export class CourseController implements ICourseController {
     res: Response,
     next: NextFunction,
   ): Promise<void> => {
-
-
     try {
       const courseListData = await this._courseService.fetchCourses();
-
 
       res
         .status(HttpStatus.OK)
@@ -78,7 +72,7 @@ export class CourseController implements ICourseController {
     try {
       const courseId = req.params.id;
       const course = await this._courseService.getCourse(courseId);
-      console.log(course)
+      console.log(course);
       res
         .status(HttpStatus.OK)
         .json(successResponse(HttpResponse.OK, { course }));
@@ -190,62 +184,87 @@ export class CourseController implements ICourseController {
       next(error);
     }
   };
-  getAdminCoursList=async(req: Request, res: Response, next: NextFunction): Promise<void> =>{
-      try {
-        logger.info('get into admin course')
+  getAdminCoursList = async (
+    req: Request,
+    res: Response,
+    next: NextFunction,
+  ): Promise<void> => {
+    try {
+      logger.info("get into admin course");
 
-        const coursList =await this._courseService.getAdminCourse()
-        res
+      const coursList = await this._courseService.getAdminCourse();
+      res
         .status(HttpStatus.OK)
         .json(successResponse(HttpResponse.OK, { coursList }));
-      } catch (error) {
-        next(error)
-      }
-  }
-  getCourseDetails=async(req: Request, res: Response, next: NextFunction): Promise<void>=>{
-      try {
-        const {courseId}=req.params
-        console.log('get in to contr cour det',courseId)
-       const courseDetails=await this._courseService.getCourseDetails(courseId) 
-        res
+    } catch (error) {
+      next(error);
+    }
+  };
+  getCourseDetails = async (
+    req: Request,
+    res: Response,
+    next: NextFunction,
+  ): Promise<void> => {
+    try {
+      const { courseId } = req.params;
+      console.log("get in to contr cour det", courseId);
+      const courseDetails =
+        await this._courseService.getCourseDetails(courseId);
+      res
         .status(HttpStatus.OK)
         .json(successResponse(HttpResponse.OK, { courseDetails }));
-      } catch (error) {
-        next(error)
-      }
-  }
-  approveCourse=async(req: Request, res: Response, next: NextFunction): Promise<void> =>{
-      try {
-        const {courseId}=req.params
-        const status=await this._courseService.approveCourse(courseId)
-        res
+    } catch (error) {
+      next(error);
+    }
+  };
+  approveCourse = async (
+    req: Request,
+    res: Response,
+    next: NextFunction,
+  ): Promise<void> => {
+    try {
+      const { courseId } = req.params;
+      const status = await this._courseService.approveCourse(courseId);
+      res
         .status(HttpStatus.OK)
         .json(successResponse(HttpResponse.OK, { status }));
-      } catch (error) {
-        next(error)
-      }
-  }
-  rejectCourse=async(req: Request, res: Response, next: NextFunction): Promise<void>=>{
-      try {
-        const {courseId}=req.params
-        const {feedback,email}=req.body
-        const status=await this._courseService.rejectCourse(courseId,feedback,email)
-        res
+    } catch (error) {
+      next(error);
+    }
+  };
+  rejectCourse = async (
+    req: Request,
+    res: Response,
+    next: NextFunction,
+  ): Promise<void> => {
+    try {
+      const { courseId } = req.params;
+      const { feedback, email } = req.body;
+      const status = await this._courseService.rejectCourse(
+        courseId,
+        feedback,
+        email,
+      );
+      res
         .status(HttpStatus.OK)
         .json(successResponse(HttpResponse.OK, { status }));
-      } catch (error) {
-        next(error)
-      }
-  }
-  publishCourse=async(req: Request, res: Response, next: NextFunction): Promise<void> =>{
-      try {
-        const {courseId}=req.params
-        const status=await this._courseService.publishCourse(courseId)
-        res
+    } catch (error) {
+      next(error);
+    }
+  };
+  publishCourse = async (
+    req: Request,
+    res: Response,
+    next: NextFunction,
+  ): Promise<void> => {
+    try {
+      const { courseId } = req.params;
+      const status = await this._courseService.publishCourse(courseId);
+      res
         .status(HttpStatus.OK)
         .json(successResponse(HttpResponse.OK, { status }));
-      } catch (error) {
-        next(error)
-      }
-  }
+    } catch (error) {
+      next(error);
+    }
+  };
 }

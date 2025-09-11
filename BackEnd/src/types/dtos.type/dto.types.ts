@@ -41,7 +41,7 @@ export interface IUserDTO {
 export interface ICategoryDTO {
   _id: string;
   title: string;
-  slug:string
+  slug: string;
   parentId: string | null;
   children?: ICategoryDTO[];
 }

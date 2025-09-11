@@ -75,6 +75,8 @@ function AdminCourseDetails() {
               <video
                 key={videoUrl.url}
                 controls
+                controlsList="nodownload"
+                disablePictureInPicture
                 className="w-full rounded-xl shadow-md"
               >
                 <source src={videoUrl.url} />

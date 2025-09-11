@@ -6,10 +6,7 @@ import { createHttpError } from "../../utility/http-error";
 import { IAdminService } from "../interface/IAdminService";
 import { parseObjectId } from "../../mongoose/objectId";
 import { LearnerDTO, MentorDTO } from "../../dtos/role.dto";
-import {
-  ILearnerDTO,
-  IMentorDTO,
-} from "../../types/dtos.type/dto.types";
+import { ILearnerDTO, IMentorDTO } from "../../types/dtos.type/dto.types";
 import { mentorApprovalStatus } from "../../types/user.types";
 
 export type UserFetchResponse = {

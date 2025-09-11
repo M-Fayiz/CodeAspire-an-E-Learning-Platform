@@ -5,11 +5,15 @@ export const OrderService = {
   createPayment: async (
     courseId: string,
     userId: string,
-  ): Promise<{ clientSecret: string; orderId: string }> => {
-    console.log('🤌🤌🤌 ')
+  ): Promise<{
+    clientSecret: string;
+    orderId: string;
+    checkoutURL: string;
+  }> => {
+    console.log('🍉',courseId,userId)
     try {
       const response = await axiosInstance.post(
-        "/orders/payment/create-intent",
+        "/orders/payment/create-checkout-session",
         { courseId, userId },
       );
       return response.data;

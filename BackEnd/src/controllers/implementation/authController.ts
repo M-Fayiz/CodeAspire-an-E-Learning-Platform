@@ -56,7 +56,7 @@ export class AuthController implements IAuthController {
         );
       }
       const user = await this._authSerive.authMe(accessToken);
-      console.log(user);
+
       res
         .status(HttpStatus.OK)
         .json(successResponse(HttpResponse.OK, { user: user }));
@@ -111,7 +111,7 @@ export class AuthController implements IAuthController {
           ),
         );
     } catch (error) {
-      console.log("❌", error);
+      console.log("❌ ", error);
       next(error);
     }
   }

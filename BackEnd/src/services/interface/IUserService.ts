@@ -22,7 +22,7 @@ export interface IUserService {
     id: string,
     userData: ILearner | IMentor | IAdmin,
   ): Promise<IMentorDTO | null>;
-  getUserProfile(userId:string):Promise<IAdminDTO|ILearnerDTO|IMentorDTO|null>
-  
-  
+  getUserProfile(
+    userId: string,
+  ): Promise<IAdminDTO | ILearnerDTO | IMentorDTO | null>;
 }

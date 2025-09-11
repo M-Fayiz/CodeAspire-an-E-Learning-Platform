@@ -24,13 +24,11 @@ import CourseLayout from "@/pages/Course/CourseList";
 import { fetchCourses } from "@/features/courses_list/List/CourseLoader";
 import CourseFormProvider from "@/context/courseForm.context";
 import CourseManagement from "@/pages/Admin Page/Course-Managemenr/CourseManagement";
-import { Elements } from "@stripe/react-stripe-js";
-import { loadStripe } from "@stripe/stripe-js";
 import MYCourses from "@/pages/Mentor_Page/course_creation/MyCourses";
 import AdminCourseDetails from "@/pages/Admin Page/Course-Managemenr/AdminCourseDetails";
 import CourseDetails from "@/pages/Course/CourseDetails";
-import CheckoutPage from "@/pages/Course/CheckoutPage";
-const stripePromis = loadStripe(import.meta.env.VITE_STRIPE_PUBLISHABLE_KEY);
+import PaymentSuccess from "@/pages/Payment page/PaymentSuccess";
+import CourseEnrolledList from "@/pages/Course/CourseEnrolledList";
 
 function Form_Courses_Provider() {
   return (
@@ -70,6 +68,7 @@ export const router = createBrowserRouter([
       { path: "dashboard", element: <DashboardContent /> },
       { path: "profile", element: <ProfileManagement /> },
       { path: "courses", element: <CourseLayout /> },
+      { path: "enrolled-courses", element: <CourseEnrolledList/> },
     ],
   },
   {
@@ -149,8 +148,8 @@ export const router = createBrowserRouter([
     element: <Outlet />,
     children: [
       { index: true, element: <CourseLayout />, loader: fetchCourses },
-      { path: ":id",element: <CourseDetails /> },
-      { path: "checkout/:id",element: <CheckoutPage /> },
+      { path: ":id", element: <CourseDetails /> },
+      { path:'payment-success' , element:<PaymentSuccess/>}
     ],
   },
   {

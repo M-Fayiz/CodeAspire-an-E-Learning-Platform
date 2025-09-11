@@ -33,7 +33,7 @@ export const courseFormSchema = z.object({
     .min(3, { message: "Please select a subcategory" })
     .optional(),
 
-  price: z.string().min(3, { message: "This field is required" }),
+  price: z.number().min(1, { message: "Price must be at least 1" }),
 });
 
 export const sessionSchema = z.object({

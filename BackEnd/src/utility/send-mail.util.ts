@@ -29,7 +29,7 @@ export const sendToken = async (
 };
 export const sendMail = async (
   email: string,
-  title:string,
+  title: string,
   message: string,
 ) => {
   try {

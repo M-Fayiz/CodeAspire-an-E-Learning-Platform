@@ -6,7 +6,7 @@ import courseService from "@/service/client-API/mentor/course.service";
 import type { IFormCourseDTO } from "@/types/courses.types";
 import { ClipboardPen } from "lucide-react";
 import { useEffect, useState } from "react";
-import {  useParams } from "react-router-dom";
+import { useParams } from "react-router-dom";
 
 const CourseDetails = () => {
   const [activeTap, setActiveTap] = useState("overview");
@@ -21,12 +21,7 @@ const CourseDetails = () => {
     })();
   }, [id]);
 
-
-
-
   const handle = (tap: string) => setActiveTap(tap);
-
-
 
   return (
     <div>
@@ -40,26 +35,26 @@ const CourseDetails = () => {
           />
         </div>
 
-   
         <div className="flex justify-center border-b mt-2 p-5 border-gray-200 px-6">
           <Taps
             label="overview"
-            icon={<ClipboardPen className="text-gray-500 w-4 h-4 hidden md:block" />}
+            icon={
+              <ClipboardPen className="text-gray-500 w-4 h-4 hidden md:block" />
+            }
             Click={handle}
             tap="overview"
             activeTap={activeTap}
           />
           <Taps
             label="mentor"
-            icon={<ClipboardPen className="text-gray-500 w-4 h-4 hidden md:block" />}
+            icon={
+              <ClipboardPen className="text-gray-500 w-4 h-4 hidden md:block" />
+            }
             Click={handle}
             tap="mentor"
             activeTap={activeTap}
           />
         </div>
-
-        
-        
 
         <div className="p-2 md:p-5">
           {activeTap === "overview" && <CourseOverview />}
@@ -73,7 +68,3 @@ const CourseDetails = () => {
 };
 
 export default CourseDetails;
-
-
-
-

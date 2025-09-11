@@ -18,8 +18,16 @@ export interface ICourseController {
     res: Response,
     next: NextFunction,
   ): Promise<void>;
-  getAdminCoursList(req: Request, res: Response, next: NextFunction): Promise<void>;
-  getCourseDetails(req: Request, res: Response, next: NextFunction): Promise<void>;
+  getAdminCoursList(
+    req: Request,
+    res: Response,
+    next: NextFunction,
+  ): Promise<void>;
+  getCourseDetails(
+    req: Request,
+    res: Response,
+    next: NextFunction,
+  ): Promise<void>;
   approveCourse(req: Request, res: Response, next: NextFunction): Promise<void>;
   rejectCourse(req: Request, res: Response, next: NextFunction): Promise<void>;
   publishCourse(req: Request, res: Response, next: NextFunction): Promise<void>;

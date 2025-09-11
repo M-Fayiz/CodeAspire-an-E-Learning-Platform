@@ -57,42 +57,40 @@ export class AuthService implements IAuthService {
   async verifyEmail(
     data: IAuth,
   ): Promise<{ accessToken: string; refreshToken: string }> {
+    const key = `${redisPrefix.VERIFY_EMAIL}:${data.token}`;
+    const result = await redisClient.get(key);
 
-      const key = `${redisPrefix.VERIFY_EMAIL}:${data.token}`;
-      const result = await redisClient.get(key);
+    if (!result) {
+      throw createHttpError(
+        HttpStatus.UNAUTHORIZED,
+        HttpResponse.USER_CREATION_FAILED,
+      );
+    }
+    const storedData = JSON.parse(result);
 
-      if (!result) {
-        throw createHttpError(
-          HttpStatus.UNAUTHORIZED,
-          HttpResponse.USER_CREATION_FAILED,
-        );
-      }
-      const storedData = JSON.parse(result);
+    const user = {
+      name: storedData.name,
+      email: storedData.email,
+      phone: storedData.phone,
+      password: storedData.password,
+      role: storedData.role,
+      isActive: true,
+      ApprovalStatus: "pending",
+      isRequested: false,
+    };
 
-      const user = {
-        name: storedData.name,
-        email: storedData.email,
-        phone: storedData.phone,
-        password: storedData.password,
-        role: storedData.role,
-        isActive: true,
-        ApprovalStatus: "pending",
-        isRequested: false,
-      };
+    const newUser = await this._userRepo.createUser(user as IUserModel);
+    await redisClient.del(key);
 
-      const newUser = await this._userRepo.createUser(user as IUserModel);
-      await redisClient.del(key);
+    if (!newUser) {
+      throw createHttpError(
+        HttpStatus.CONFLICT,
+        HttpResponse.USER_CREATION_FAILED,
+      );
+    }
+    const payload = payloadDTO(newUser);
 
-      if (!newUser) {
-        throw createHttpError(
-          HttpStatus.CONFLICT,
-          HttpResponse.USER_CREATION_FAILED,
-        );
-      }
-      const payload = payloadDTO(newUser);
-
-      return generateTokens(payload);
-    
+    return generateTokens(payload);
   }
 
   async authMe(token: string): Promise<IUserDTO> {

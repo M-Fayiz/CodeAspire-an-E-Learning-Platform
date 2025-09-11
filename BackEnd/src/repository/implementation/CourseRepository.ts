@@ -16,7 +16,10 @@ export class CourseRepository
     return await this.create(courseData);
   }
   async fetchCourses(): Promise<ICourses[] | null> {
-    return await this.find({status:'approved'},["categoryId", "subCategoryId"]);
+    return await this.find({ status: "approved" }, [
+      "categoryId",
+      "subCategoryId",
+    ]);
   }
   async updateCourse(
     courseId: Types.ObjectId,
@@ -30,7 +33,10 @@ export class CourseRepository
   async getMentorDraftedCourses(
     mentorId: Types.ObjectId,
   ): Promise<ICourses[] | null> {
-    return await this.find({ mentorsId: mentorId },["categoryId", "subCategoryId"]);
+    return await this.find({ mentorsId: mentorId }, [
+      "categoryId",
+      "subCategoryId",
+    ]);
   }
   async addSession(
     courseId: Types.ObjectId,
@@ -102,22 +108,32 @@ export class CourseRepository
     return await this.findByIDAndUpdate(courseId, baseInfo);
   }
   async getAdminCoursList(): Promise<ICourses[] | null> {
-    
-    return await this.find({status:{$in:["published","rejected",'approved']}},['categoryId','subCategoryId','mentorsId'])
+    return await this.find(
+      { status: { $in: ["published", "rejected", "approved"] } },
+      ["categoryId", "subCategoryId", "mentorsId"],
+    );
   }
   async getCourseDetails(courseId: Types.ObjectId): Promise<ICourses[] | null> {
-      return await this.find({_id:courseId},['categoryId','subCategoryId','mentorsId'])
+    return await this.find({ _id: courseId }, [
+      "categoryId",
+      "subCategoryId",
+      "mentorsId",
+    ]);
   }
   async appproveCourse(courseId: Types.ObjectId): Promise<ICourses | null> {
-      return await this.findByIDAndUpdate(courseId,{status:'approved'})
+    return await this.findByIDAndUpdate(courseId, { status: "approved" });
   }
   async rejectCourse(courseId: Types.ObjectId): Promise<ICourses | null> {
-    return await this.findByIDAndUpdate(courseId,{status:'rejected'})
+    return await this.findByIDAndUpdate(courseId, { status: "rejected" });
   }
   async publishCourse(courseId: Types.ObjectId): Promise<ICourses | null> {
-     return await this.findByIDAndUpdate(courseId,{status:'published'})
+    return await this.findByIDAndUpdate(courseId, { status: "published" });
   }
   async findCourse(courseId: Types.ObjectId): Promise<ICourses | null> {
-      return await this.findById(courseId)
+    return await this.findById(courseId, [
+      "categoryId",
+      "subCategoryId",
+      "mentorsId",
+    ]);
   }
 }

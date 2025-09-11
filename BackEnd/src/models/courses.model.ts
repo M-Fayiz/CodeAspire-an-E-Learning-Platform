@@ -73,8 +73,8 @@ const courseSchema = new mongoose.Schema<ICourses>(
     ],
     status: {
       type: String,
-      enum: ["inProgress", "draft", "published","approved",'rejected'],
-      default:'draft'
+      enum: ["inProgress", "draft", "published", "approved", "rejected"],
+      default: "draft",
     },
   },
   { timestamps: true },

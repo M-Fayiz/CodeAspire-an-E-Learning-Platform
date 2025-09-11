@@ -8,10 +8,13 @@ interface BannerProps {
 }
 
 import { Play } from "lucide-react";
-import { useNavigate } from "react-router";
+// import { useNavigate } from "react-router";
+import { OrderService } from "@/service/client-API/order.service";
+import { useAuth } from "@/context/auth.context";
+import { toast } from "sonner";
 
 interface BannerProps {
-  courseId:string
+  courseId: string;
   title: string;
   description: string;
   imageUrl: string;
@@ -23,12 +26,25 @@ const Banner: React.FC<BannerProps> = ({
   description,
   imageUrl,
   isEnrolled,
-  courseId
+  courseId,
 }) => {
-  const navigate=useNavigate()
-    const handlePaymentPage=()=>{
-    navigate(`/courses/checkout/${courseId}`)
-  }
+  // const navigate = useNavigate();
+  const {user}=useAuth()
+  const handlePaymentPage =async () => {
+    // navigate(`/courses/checkout/${courseId}`);
+    try {
+      
+      const result = await OrderService.createPayment(courseId, user!.id);
+     
+           if (result) {
+             window.location.href = result.checkoutURL;
+           }
+    } catch (error) {
+      if(error instanceof Error){
+        toast.error(error.message)
+      }
+    }
+  };
   return (
     <div className="relative w-full  rounded-4xl bg-gradient-to-br from-blue-200 via-violet-50  to-blue-50  py-5 px-6 md:px-16 lg:px-24">
       <div className="flex flex-col md:flex-row justify-between items-center relative gap-10">
@@ -46,7 +62,10 @@ const Banner: React.FC<BannerProps> = ({
           </p>
 
           <div className="flex gap-2">
-            <button onClick={handlePaymentPage} className="bg-blue-500 hover:bg-blue-600 text-white font-semibold px-6 py-3 rounded-lg shadow-md transition">
+            <button
+              onClick={handlePaymentPage}
+              className="bg-blue-500 hover:bg-blue-600 text-white font-semibold px-6 py-3 rounded-lg shadow-md transition"
+            >
               Enroll Now
             </button>
             <button className="border border-blue-500 text-blue-500 hover:bg-blue-50 font-semibold px-6 py-3 rounded-lg transition">

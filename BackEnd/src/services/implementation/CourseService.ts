@@ -20,7 +20,6 @@ import { HttpStatus } from "../../const/http-status";
 import { HttpResponse } from "../../const/error-message";
 import { sendMail } from "../../utility/send-mail.util";
 
-
 export class CourseService implements ICourseService {
   constructor(
     private _courseRepository: ICourseRepository,
@@ -74,7 +73,7 @@ export class CourseService implements ICourseService {
       throw createHttpError(HttpStatus.OK, HttpResponse.INVALID_ID);
     }
     const data = await this._courseRepository.getMentorDraftedCourses(id);
-      console.log('datat  taat',data)
+    console.log("datat  taat", data);
     const mappedCourseList = data?.map((course) =>
       formCourseDto(course as ICourses),
     );
@@ -156,45 +155,53 @@ export class CourseService implements ICourseService {
     );
     return courseDTO(updatedData as ICoursesPopulated);
   }
-  async getAdminCourse( ): Promise<IFormCourseDTO[]|null> {
-    const adminCoursList= await this._courseRepository.getAdminCoursList( )
-    console.log('service✅',adminCoursList)
+  async getAdminCourse(): Promise<IFormCourseDTO[] | null> {
+    const adminCoursList = await this._courseRepository.getAdminCoursList();
+    console.log("service✅", adminCoursList);
 
-    return adminCoursList?adminCoursList.map(course => formCourseDto(course as ICoursesPopulated)):null
+    return adminCoursList
+      ? adminCoursList.map((course) =>
+          formCourseDto(course as ICoursesPopulated),
+        )
+      : null;
   }
   async getCourseDetails(courseId: string): Promise<IFormCourseDTO | null> {
-     const id=parseObjectId(courseId)
-     if(!id){
+    const id = parseObjectId(courseId);
+    if (!id) {
       throw createHttpError(HttpStatus.BAD_REQUEST, HttpResponse.INVALID_ID);
-     }
-    const courseDetails=await this._courseRepository.getCourseDetails(id)
-    return courseDetails?formCourseDto(courseDetails[0]):null
+    }
+    const courseDetails = await this._courseRepository.getCourseDetails(id);
+    return courseDetails ? formCourseDto(courseDetails[0]) : null;
   }
-  async approveCourse(courseId: string): Promise<string|null> {
-      const id=parseObjectId(courseId)
-     if(!id){
+  async approveCourse(courseId: string): Promise<string | null> {
+    const id = parseObjectId(courseId);
+    if (!id) {
       throw createHttpError(HttpStatus.BAD_REQUEST, HttpResponse.INVALID_ID);
-     } 
-     const courseDetails=await this._courseRepository.appproveCourse(id)
-     return courseDetails?courseDetails.status:null
+    }
+    const courseDetails = await this._courseRepository.appproveCourse(id);
+    return courseDetails ? courseDetails.status : null;
   }
-  async rejectCourse(courseId: string, feedBack: string,email:string): Promise<string | null> {
-      const id=parseObjectId(courseId)
-     if(!id){
+  async rejectCourse(
+    courseId: string,
+    feedBack: string,
+    email: string,
+  ): Promise<string | null> {
+    const id = parseObjectId(courseId);
+    if (!id) {
       throw createHttpError(HttpStatus.BAD_REQUEST, HttpResponse.INVALID_ID);
-     } 
-     const courseDetails=await this._courseRepository.rejectCourse(id)
-     if(courseDetails?.status=='rejected'){
-      await sendMail(email,"Feedback On Your Course",feedBack)
-     }
-     return courseDetails?courseDetails.status:null
+    }
+    const courseDetails = await this._courseRepository.rejectCourse(id);
+    if (courseDetails?.status == "rejected") {
+      await sendMail(email, "Feedback On Your Course", feedBack);
+    }
+    return courseDetails ? courseDetails.status : null;
   }
   async publishCourse(courseId: string): Promise<string | null> {
-       const id=parseObjectId(courseId)
-     if(!id){
+    const id = parseObjectId(courseId);
+    if (!id) {
       throw createHttpError(HttpStatus.BAD_REQUEST, HttpResponse.INVALID_ID);
-     } 
-     const courseDetails=await this._courseRepository.publishCourse(id)
-     return courseDetails?courseDetails.status:null
+    }
+    const courseDetails = await this._courseRepository.publishCourse(id);
+    return courseDetails ? courseDetails.status : null;
   }
 }

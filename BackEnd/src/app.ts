@@ -15,7 +15,8 @@ import adminRouter from "./routers/adminRouter";
 import categoryRouter from "./routers/category.router";
 import courseRouter from "./routers/courses.router";
 import sharedRouter from "./routers/shared.router";
-import {orderRouter, webhookRouter} from "./routers/order.router";
+import { orderRouter, webhookRouter } from "./routers/order.router";
+import enrolledRouter from "./routers/enrolledRouter";
 
 dotenv.config();
 
@@ -25,10 +26,15 @@ const secrete = env.SESSION_SECRET as string;
 app.use(cookieParser());
 app.use(morgan("dev")); //morgan
 
-/// exceptional case 
-app.use('/api/v1/webhook',express.raw({ type: "application/json" }),webhookRouter)
+/// exceptional case
+app.use(
+  "/api/v1/webhook",
+  express.raw({ type: "application/json" }),
+  webhookRouter,
+);
 
 app.use(express.json());
+
 app.use(express.urlencoded({ extended: true }));
 app.use(
   session({
@@ -49,8 +55,8 @@ app.use("/api/v1/admin", adminRouter);
 app.use("/api/v1/categories", categoryRouter);
 app.use("/api/v1/courses", courseRouter);
 app.use("/api/v1/shared", sharedRouter);
-app.use("/api/v1/orders",orderRouter)
-
+app.use("/api/v1/orders", orderRouter);
+app.use("/api/v1/enrollements", enrolledRouter);
 const port = env.port;
 dbConnect();
 
@@ -58,5 +64,5 @@ dbConnect();
 app.use(errorHandler);
 
 app.listen(port, () => {
-  console.log("✅ Server  Running....");
+  console.log(`✅ Server  Running.... at${port} `);
 });

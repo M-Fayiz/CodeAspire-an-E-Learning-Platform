@@ -48,7 +48,6 @@ export function courseDTO(course: ICoursesPopulated): ICourseDTO {
   };
 }
 
-
 export function formCourseDto(course: ICourses): IFormCourseDTO {
   return {
     _id: String(course._id),
@@ -60,19 +59,19 @@ export function formCourseDto(course: ICourses): IFormCourseDTO {
       title: (course.categoryId as ICategory).title,
     },
     subCategory: {
-      _id:  String((course.subCategoryId as ICategory)._id),
-      title:(course.subCategoryId as ICategory).title,
+      _id: String((course.subCategoryId as ICategory)._id),
+      title: (course.subCategoryId as ICategory).title,
     },
     language: course.language,
     level: course.level,
     price: course.price,
-    mentorsId:{
-      _id:String((course.mentorsId as IUser)._id),
-      name:(course.mentorsId as IUser).name,
-      email:(course.mentorsId as IUser).email,
-    } ,
+    mentorsId: {
+      _id: String((course.mentorsId as IUser)._id),
+      name: (course.mentorsId as IUser).name,
+      email: (course.mentorsId as IUser).email,
+    },
     sessions: course.sessions ?? [],
     status: course.status,
-    updated: course.updatedAt.toISOString(), 
+    updated: course.updatedAt.toISOString(),
   };
 }
