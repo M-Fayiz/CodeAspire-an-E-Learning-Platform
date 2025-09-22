@@ -11,7 +11,7 @@ import {
 import { useCourseFormContext } from "@/context/courseForm.context";
 import { lectureSchema } from "@/schema/courseForm.schema";
 import courseService from "@/service/client-API/mentor/course.service";
-import type { ILecture } from "@/types/courses.types";
+import type { ILecture } from "@/types/DTOS/courses.types";
 import { useEffect, useState } from "react";
 import toast from "react-hot-toast";
 

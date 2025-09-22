@@ -35,7 +35,13 @@ const Header: React.FC = () => {
           </div>
 
           <nav className="hidden md:flex items-center space-x-8">
-            <A_tag href="#courses" label="Courses" />
+            {/* <A_tag href="#courses" label="Courses" /> */}
+            <Link
+              to={"courses"}
+              className="text-gray-700 hover:text-blue-600 transition-colors font-medium"
+            >
+              Course
+            </Link>
             <A_tag href="#interviews" label="Mock Interviews" />
             <A_tag href="#about" label="About" />
             {/* <A_tag href="#about" label="About"/> */}

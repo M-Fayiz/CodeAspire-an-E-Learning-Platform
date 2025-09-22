@@ -7,12 +7,6 @@ export interface IUserController {
     res: Response,
     next: NextFunction,
   ): Promise<void>;
-  preSignedURL(req: Request, res: Response, next: NextFunction): Promise<void>;
-  get_preSignedURL(
-    req: Request,
-    res: Response,
-    next: NextFunction,
-  ): Promise<void>;
   updateProfileImage(
     req: Request,
     res: Response,

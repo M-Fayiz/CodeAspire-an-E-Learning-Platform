@@ -1,9 +1,9 @@
+import slugify from "slugify";
+import startCase from "lodash/startCase.js";
 import { parseObjectId } from "../../mongoose/objectId";
 import { ICategoryRepository } from "../../repository/interface/ICategoryRepository";
 import { ICategoryService } from "../interface/ICategoryService";
-import slugify from "slugify";
 import { ICategory, ICaregoryTree } from "../../types/category.types";
-import { startCase } from "lodash";
 import { createHttpError } from "../../utility/http-error";
 import { HttpStatus } from "../../const/http-status";
 import { HttpResponse } from "../../const/error-message";

@@ -7,10 +7,18 @@ import { IEnrolledRepository } from "../../repository/interface/IEnrolledReposit
 import { IFormCourseDTO } from "../../types/dtos.type/course.dtos.type";
 import { createHttpError } from "../../utility/http-error";
 import { formCourseDto } from "../../dtos/course.dtos";
-import type { IEnrolledListDto } from "../../types/dtos.type/enrolled.dto.type";
-import { enrolledListDTO } from "../../dtos/enrolled.dto";
+import type {
+  ICourseProgess,
+  IEnrolledCoursedetailsDTO,
+  IEnrolledListDto,
+} from "../../types/dtos.type/enrolled.dto.type";
+import {
+  enrolledCourseDetailDTO,
+  enrolledListDTO,
+} from "../../dtos/enrolled.dto";
 import { IEnrolledModel } from "../../models/enrolled.model";
 import { IEnrolledService } from "../interface/IEnrolledService";
+import { ICourses } from "../../types/courses.type";
 
 export class EnrolledService implements IEnrolledService {
   constructor(
@@ -44,8 +52,43 @@ export class EnrolledService implements IEnrolledService {
       }),
     );
 
+    // console.log("populated", populatedEnrolledCourse);
     return populatedEnrolledCourse.map((course) =>
       enrolledListDTO(course as IEnrolledModel),
     );
+  }
+  async getEnrolledCourseDetails(
+    enrolledId: string,
+  ): Promise<IEnrolledCoursedetailsDTO | null> {
+    const enrolled_Id = parseObjectId(enrolledId);
+    if (!enrolled_Id) {
+      throw createHttpError(HttpStatus.NOT_FOUND, HttpResponse.INVALID_ID);
+    }
+    const enrolledData =
+      await this._erolledRepository.getEnrolledCOurseDetails(enrolled_Id);
+    if (!enrolledData) {
+      throw createHttpError(HttpStatus.NOT_FOUND, HttpResponse.INVALID_ID);
+    }
+    const courseData = await this._courseRepository.findCourse(
+      enrolledData.courseId as Types.ObjectId,
+    );
+    
+    const populatedCourse = formCourseDto(courseData as ICourses);
+    return enrolledCourseDetailDTO(enrolledData, populatedCourse);
+  }
+  async updatedProgress(enroledId: string, sessionId: string, lectureId: string): Promise<ICourseProgess   | null> {
+      const enrolled_id=parseObjectId(enroledId)
+      const session_id=parseObjectId(sessionId)
+      const lecture_id=parseObjectId(lectureId)
+
+      if(!enrolled_id||!session_id||!lecture_id){
+        throw createHttpError(HttpStatus.BAD_REQUEST,HttpResponse.INVALID_ID)
+      }
+      const enrolledData=await this._erolledRepository.updatedProgress(enrolled_id,session_id,lecture_id)
+      if(!enroledId){
+        throw createHttpError(HttpStatus.NOT_FOUND,HttpResponse.ITEM_NOT_FOUND)
+      }
+     
+      return enrolledData?.progress ??null
   }
 }

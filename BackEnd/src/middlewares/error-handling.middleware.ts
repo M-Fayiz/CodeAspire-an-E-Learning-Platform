@@ -2,6 +2,7 @@ import { NextFunction, Request, Response } from "express";
 import { HttpResponse } from "../const/error-message";
 import { HttpStatus } from "../const/http-status";
 import { HttpError } from "../utility/http-error";
+import logger from "../config/logger.config";
 
 export const errorHandler = (
   err: Error | HttpError,
@@ -16,7 +17,7 @@ export const errorHandler = (
     statusCode = err.statusCode;
     message = err.message;
   }
-  console.error("error from middleware", err);
+  logger.error("error from middleware", err);
 
   res.status(statusCode).json({ error: message });
 };

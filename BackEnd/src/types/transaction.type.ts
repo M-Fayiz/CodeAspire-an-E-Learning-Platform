@@ -5,7 +5,7 @@ export interface ITransaction {
   userId: Types.ObjectId;
   gatewayTransactionId: string;
   amount: number;
-  paymentMethod: string;
+  paymentMethod: 'stripe'|'wallet';
   status: "success" | "failed" | "refunded";
-  createdAt: Date;
+  createdAt?: Date;
 }

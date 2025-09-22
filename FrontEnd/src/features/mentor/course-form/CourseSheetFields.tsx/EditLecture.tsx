@@ -12,7 +12,7 @@ import { useCourseFormContext } from "@/context/courseForm.context";
 import { lectureSchema } from "@/schema/courseForm.schema";
 import courseService from "@/service/client-API/mentor/course.service";
 import { sharedService } from "@/service/client-API/shared.service";
-import type { ILecture, ISession } from "@/types/courses.types";
+import type { ILecture, ISession } from "@/types/DTOS/courses.types";
 import { useEffect, useState } from "react";
 import { toast } from "sonner";
 

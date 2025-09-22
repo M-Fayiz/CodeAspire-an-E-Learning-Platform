@@ -3,15 +3,13 @@ import { axiosInstance } from "../../axios/createInstance";
 import { API } from "../../constants/api.constant";
 import type { AnyUser, BaseUser } from "../../types/users.type";
 import type { IMentorProps } from "../../types/mentor.types";
-import { S3BucketUtil } from "../../utility/S3Bucket.util";
 import { sharedService } from "./shared.service";
 
 const UserService = {
-  fetchProfile: async (email: string): Promise<AnyUser> => {
+  fetchProfile: async (id: string): Promise<AnyUser> => {
     try {
-      const response = await axiosInstance.get(API.USER.FETCH_USER_PROFILE, {
-        params: { email },
-      });
+      const response = await axiosInstance.get(API.USER.FETCH_USER_PROFILE(id));
+
       return response.data.userData;
     } catch (error) {
       const err = error as AxiosError<{ error: string }>;
@@ -43,12 +41,12 @@ const UserService = {
     userId: string,
   ) => {
     try {
-      await S3BucketUtil.uploadToS3(uploadURL, file);
+      await sharedService.uploadToS3(uploadURL, file);
       const response = await axiosInstance.put(
         API.USER.UPDATE_PROFILE_PICTURE(userId),
         { imageURL: fileURL },
       );
-      return await S3BucketUtil.getPreSignedURL(response.data.imgURL);
+      return await sharedService.getPreSignedDownloadURL(response.data.imgURL);
     } catch (error) {
       const err = error as AxiosError<{ error: string }>;
       const errorMessage = err.response?.data.error;
@@ -61,8 +59,13 @@ const UserService = {
   ) => {
     try {
       if (mentorData.resume) {
-        const result = await S3BucketUtil.putPreSignedURL(mentorData.resume);
-        await S3BucketUtil.uploadToS3(result.uploadURL, result.fileURL);
+        const result = await sharedService.getS3BucketUploadUrl(
+          mentorData.resume as File,
+        );
+        await sharedService.uploadToS3(
+          result.uploadURL,
+          mentorData.resume as File,
+        );
         mentorData.resume = result.fileURL;
       }
       const response = await axiosInstance.put(
@@ -78,11 +81,13 @@ const UserService = {
     }
   },
   updateProfile: async (userId: string, userData: Partial<BaseUser>) => {
+    console.log("thisis user data ", userData);
     try {
       const response = await axiosInstance.put(
         API.USER.UPDATE_USER_PROFILE(userId),
         { ...userData },
       );
+
       return response.data;
     } catch (error) {
       const err = error as AxiosError<{ error: string }>;
@@ -91,7 +96,6 @@ const UserService = {
     }
   },
   getUserProfile: async (userId: string) => {
-    console.log(" j j j  ", userId);
     try {
       const response = await axiosInstance.get(
         API.USER.GET_USER_PROFILE(userId),

@@ -5,7 +5,6 @@ import {
   ILearner,
   IAdmin,
 } from "../../types/user.types";
-import { IAuthService } from "../interface/IAuthService";
 import { IUserRepo } from "../../repository/interface/IUserRepo";
 import { hashPassword, comparePassword } from "../../utility/bcrypt.util";
 import { sendToken } from "../../utility/send-mail.util";
@@ -15,6 +14,7 @@ import { HttpStatus } from "../../const/http-status";
 import { HttpResponse } from "../../const/error-message";
 import { createHttpError } from "../../utility/http-error";
 import { generateTokens } from "../../utility/jwt-token.util";
+import { IAuthService } from "../interface/IAuthService";
 import {
   verifyAccesToken,
   verifyRefreshToken,

@@ -63,7 +63,6 @@ export class AdminController implements IAdminController {
       const { id } = req.params;
 
       const userData = await this._adminService.userProfile(id);
-      console.log("🫠", userData);
 
       res
         .status(HttpStatus.OK)

@@ -24,7 +24,7 @@ import {
 import { Input } from "@/components/ui/Inputs";
 
 import { toast } from "sonner";
-import type { ILecture, ISession } from "@/types/courses.types";
+import type { ILecture, ISession } from "@/types/DTOS/courses.types";
 import { useCourseFormContext } from "@/context/courseForm.context";
 import { sessionSchema } from "@/schema/courseForm.schema";
 import courseService from "@/service/client-API/mentor/course.service";

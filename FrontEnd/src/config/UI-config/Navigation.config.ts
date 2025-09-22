@@ -58,7 +58,11 @@ export const navigationConfig = {
         path: "/learner/dashboard",
         active: true,
       },
-      { icon: BookOpen, label: "My Courses", path: "/learner/enrolled-courses" },
+      {
+        icon: BookOpen,
+        label: "My Courses",
+        path: "/learner/enrolled-courses",
+      },
       { icon: Calendar, label: "Schedule", path: "/learner/schedule" },
       {
         icon: Award,

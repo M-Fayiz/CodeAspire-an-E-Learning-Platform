@@ -1,8 +1,12 @@
 import { axiosInstance } from "@/axios/createInstance";
 import { API } from "@/constants/api.constant";
-import type { IEnrolledListDto } from "@/types/DTOS/enrollements.dto";
-import { S3BucketUtil } from "@/utility/S3Bucket.util";
-import type { AxiosError } from "axios";
+import type {
+  ICourseProgess,
+  IEnrolledCoursedetailsDTO,
+  IEnrolledListDto,
+} from "@/types/DTOS/enrollements.dto";
+import { sharedService } from "../shared.service";
+import { throwAxiosError } from "@/utility/throwErrot";
 
 export const EnrolledService = {
   getEnrolledCourse: async (learnerId: string): Promise<IEnrolledListDto[]> => {
@@ -10,23 +14,55 @@ export const EnrolledService = {
       const response = await axiosInstance.get(
         API.ENROLLEMENT.GET_ENROLLED_COURSE(learnerId),
       );
-      
-      
-      const signedCourse = await Promise.all(
-              response.data.enrolledCourseData?.map(async (enrolled: IEnrolledListDto) => {
-                enrolled.course.thumbnail = await S3BucketUtil.getPreSignedURL(
-                  enrolled.course.thumbnail as string,
-                );
-                return enrolled;
-              }) ?? [],
-            );
-      return signedCourse
-    } catch (error) {
-      const err = error as AxiosError<{ error: string }>;
-      const errorMessage =
-        err.response?.data?.error || "Registration Failed, Please try again ";
 
-      throw new Error(errorMessage);
+      const signedCourse = await Promise.all(
+        response.data.enrolledCourseData?.map(
+          async (enrolled: IEnrolledListDto) => {
+            enrolled.course.thumbnail =
+              await sharedService.getPreSignedDownloadURL(
+                enrolled.course.thumbnail as string,
+              );
+            return enrolled;
+          },
+        ) ?? [],
+      );
+      return signedCourse;
+    } catch (error) {
+     throwAxiosError(error)
     }
   },
+  getEnrolledCourseDetails: async (
+    enrolledId: string,
+  ): Promise<IEnrolledCoursedetailsDTO> => {
+    try {
+      const response = await axiosInstance.get(
+        API.ENROLLEMENT.GET_ENROLLD_COURSE_DETAILS(enrolledId),
+      );
+
+      response.data.enrolledDetails.course.thumbnail =
+        await sharedService.getPreSignedDownloadURL(
+          response.data.enrolledDetails.course.thumbnail,
+        );
+
+      for (const session of response.data.enrolledDetails.course.sessions) {
+        for (const lecture of session.lectures) {
+          lecture.lectureContent = await sharedService.getPreSignedDownloadURL(
+            lecture.lectureContent,
+          );
+        }
+      }
+      return response.data.enrolledDetails;
+    } catch (error) {
+     throwAxiosError(error)
+    }
+  },
+  updateProgress:async(enrolledId:string,sessionId:string,lectureId:string):Promise<ICourseProgess>=>{
+    try {
+      const response=await axiosInstance.put(API.ENROLLEMENT.UPDATE_PROGRESS(enrolledId),{sessionId,lectureId})
+      console.log(response.data)
+      return response.data.progressData
+    } catch (error) {
+      throwAxiosError(error)
+    }
+  }
 };

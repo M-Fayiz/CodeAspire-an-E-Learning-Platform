@@ -84,7 +84,7 @@ export class AuthController implements IAuthController {
         await this._authSerive.refreshAccessToken(refreshToken);
       res.cookie("accessToken", newAccessToken, {
         ...options,
-        maxAge: 15 * 60 * 1000,
+        maxAge: Number(env.ACCESS_TOKEN_MAX_AGE_TIME) * 60 * 1000,
       });
       res
         .status(HttpStatus.OK)
@@ -111,7 +111,6 @@ export class AuthController implements IAuthController {
           ),
         );
     } catch (error) {
-      console.log("❌ ", error);
       next(error);
     }
   }

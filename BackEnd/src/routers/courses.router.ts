@@ -5,10 +5,16 @@ import { CourseController } from "../controllers/implementation/CourseController
 import { verifyUser } from "../middlewares/authentication.middleware";
 import { authorizedRole } from "../middlewares/authorisation.middleware";
 import { CategoryRepository } from "../repository/implementation/CategoryRepository";
+import { EnrolledRepository } from "../repository/implementation/EnrolledRepository";
 
 const courseRepository = new CourseRepository();
 const categoryRepository = new CategoryRepository();
-const courseService = new CourseService(courseRepository, categoryRepository);
+const enrolledRepositoy = new EnrolledRepository();
+const courseService = new CourseService(
+  courseRepository,
+  categoryRepository,
+  enrolledRepositoy,
+);
 const courseController = new CourseController(courseService);
 
 const courseRouter = express.Router();

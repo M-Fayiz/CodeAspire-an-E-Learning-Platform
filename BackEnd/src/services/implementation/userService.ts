@@ -11,7 +11,7 @@ import { HttpResponse } from "../../const/error-message";
 import { IAdmin, ILearner } from "../../types/user.types";
 import { parseObjectId } from "../../mongoose/objectId";
 import { comparePassword, hashPassword } from "../../utility/bcrypt.util";
-import { getObjectURL, putObjectURl } from "../../config/s3Bucket.config";
+
 import { IMentorRepository } from "../../repository/interface/IMentorRepository";
 import { AdminDTO, LearnerDTO, MentorDTO } from "../../dtos/role.dto";
 import {
@@ -19,6 +19,7 @@ import {
   ILearnerDTO,
   IMentorDTO,
 } from "../../types/dtos.type/dto.types";
+import logger from "../../config/logger.config";
 
 export class UserService implements IUserService {
   constructor(
@@ -26,10 +27,12 @@ export class UserService implements IUserService {
     private _mentorRepository: IMentorRepository,
   ) {}
 
-  async fetchUser(
-    email: string,
-  ): Promise<ILearnerDTO | IMentorDTO | IAdminDTO> {
-    const userData = await this._userRep.findUserByEmail(email);
+  async fetchUser(id: string): Promise<ILearnerDTO | IMentorDTO | IAdminDTO> {
+    const userId = parseObjectId(id);
+    if (!userId) {
+      throw createHttpError(HttpStatus.NOT_FOUND, HttpResponse.INVALID_ID);
+    }
+    const userData = await this._userRep.getUserProfile(userId);
     if (!userData) {
       throw createHttpError(HttpStatus.NOT_FOUND, HttpResponse.USER_NOT_FOUND);
     }
@@ -75,30 +78,6 @@ export class UserService implements IUserService {
     await this._userRep.updateUserPassword(user.email, hashedPassword);
 
     return true;
-  }
-  async generatePresignedUploadUrl(
-    fileName: string,
-    fileType: string,
-  ): Promise<{ uploadURL: string; fileURL: string }> {
-    const { uploadURL, fileURL } = await putObjectURl(fileName, fileType);
-    if (!uploadURL || !fileURL) {
-      throw createHttpError(
-        HttpStatus.INTERNAL_SERVER_ERROR,
-        HttpResponse.SERVER_ERROR,
-      );
-    }
-    return { uploadURL, fileURL };
-  }
-
-  async generatePresignedGetUrl(fileName: string): Promise<string> {
-    const getURL = await getObjectURL(fileName);
-    if (!getURL) {
-      throw createHttpError(
-        HttpStatus.INTERNAL_SERVER_ERROR,
-        HttpResponse.SERVER_ERROR,
-      );
-    }
-    return getURL;
   }
   async userProfilePitcureUpdate(
     imageURL: string,
@@ -149,6 +128,7 @@ export class UserService implements IUserService {
           userId,
           userData as IAdminModel,
         );
+        logger.info("admin data fron service", { updatedAdmin });
         return updatedAdmin ? AdminDTO(updatedAdmin as IAdminModel) : null;
       }
       case "learner": {

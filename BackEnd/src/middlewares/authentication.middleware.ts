@@ -5,7 +5,7 @@ import { HttpStatus } from "../const/http-status";
 import { HttpResponse } from "../const/error-message";
 import { verifyAccesToken } from "../utility/jwt-token.util";
 
-export async function verifyUser(
+export async function  verifyUser(
   req: Request,
   res: Response,
   next: NextFunction,

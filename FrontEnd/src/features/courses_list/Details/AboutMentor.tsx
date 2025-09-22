@@ -19,7 +19,7 @@ const MentorProfile: React.FC<MentorProps> = ({ id }) => {
     },
     profilePicture: "",
   });
-
+  console.log(id);
   useEffect(() => {
     (async () => {
       const data = await UserService.getUserProfile(id);

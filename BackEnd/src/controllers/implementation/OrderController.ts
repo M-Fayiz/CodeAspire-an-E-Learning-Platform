@@ -14,6 +14,8 @@ export class OrderController implements IOrderController {
     next: NextFunction,
   ): Promise<void> => {
     try {
+
+      console.log('🤌✅✅✅')
       await this._orderService.processEvent(req);
 
       res.status(HttpStatus.OK).send(HttpResponse.OK);
@@ -29,7 +31,8 @@ export class OrderController implements IOrderController {
     try {
       const { userId, courseId } = req.body;
       const { clientSecret, orderId, checkoutURL } =
-        await this._orderService.paymentIntent(userId, courseId);
+      await this._orderService.paymentIntent(userId, courseId);
+      console.warn(userId,courseId)
       res.status(HttpStatus.OK).json(
         successResponse(HttpResponse.OK, {
           clientSecret,

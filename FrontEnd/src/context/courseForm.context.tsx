@@ -7,7 +7,7 @@ import {
   type SetStateAction,
 } from "react";
 import { courseFormSchema } from "@/schema/courseForm.schema";
-import type { CourseForm, ISession } from "@/types/courses.types";
+import type { CourseForm, ISession } from "@/types/DTOS/courses.types";
 import courseService from "@/service/client-API/mentor/course.service";
 import { useAuth } from "./auth.context";
 
@@ -40,7 +40,7 @@ const CourseFormProvider = ({ children }: { children: ReactNode }) => {
     categoryId: "",
     language: "",
     level: "Beginner",
-    price: "",
+    price: 0,
     mentorsId: "",
     subCategoryId: "",
     description: "",
@@ -80,8 +80,6 @@ const CourseFormProvider = ({ children }: { children: ReactNode }) => {
     e.preventDefault();
     const fieldErrors: Record<string, string> = {};
     try {
-      console.log("Validation result", formData);
-      formData.price = String(formData.price);
       const courseData = courseFormSchema.safeParse(formData);
 
       if (!courseData.success) {
@@ -92,12 +90,9 @@ const CourseFormProvider = ({ children }: { children: ReactNode }) => {
         setErrors(fieldErrors);
         return;
       }
-      console.log("get into the update Base");
       const idToUpdate = courseId || formData._id;
-      console.log("courseId:", courseId, "formData._id:", formData._id);
 
       if (idToUpdate) {
-        console.log("get into the update Base");
         const updatedData = await courseService.updateBaseInformation(
           idToUpdate,
           {
@@ -132,7 +127,7 @@ const CourseFormProvider = ({ children }: { children: ReactNode }) => {
       categoryId: "",
       language: "",
       level: "Beginner",
-      price: "",
+      price: 0,
       mentorsId: "",
       subCategoryId: "",
       description: "",

@@ -1,4 +1,4 @@
-import type { CourseForm, IFormCourseDTO } from "../courses.types";
+import type { CourseForm, IFormCourseDTO } from "./courses.types";
 
 export function CourseFormDTO(course: IFormCourseDTO): CourseForm {
   return {
@@ -10,7 +10,7 @@ export function CourseFormDTO(course: IFormCourseDTO): CourseForm {
     subCategoryId: course.category._id,
     language: course.language,
     level: course.level,
-    price: String(course.price),
+    price: Number(course.price),
     mentorsId: course.mentorsId._id,
     sessions: course.sessions || [],
     status: course.status,

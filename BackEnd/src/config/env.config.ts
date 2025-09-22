@@ -53,4 +53,16 @@ export const env = {
   get WEB_HOOK_SECRETE_KEY() {
     return process.env.WEB_HOOK_SECRET_KEY;
   },
+  get ACCESS_TOKEN_MAX_AGE_TIME() {
+    return process.env.ACCESS_TOKEN_MAX_AGE;
+  },
+  get LOGGER_MAX_SIZE() {
+    return process.env.LOGGER_MAX_SIZE;
+  },
+  get LOGGER_MAX_FILES() {
+    return process.env.LOGGER_MAX_FILES;
+  },
+  get S3_Bucket_URL_EXPIRE_IN() {
+    return process.env.S3_Bucket_URL_EXPIRE_IN;
+  },
 };

@@ -8,7 +8,10 @@ import {
 } from "../types/dtos.type/course.dtos.type";
 import { IUser } from "../types/user.types";
 
-export function courseListDTO(course: ICoursesPopulated,enrolledIds?:Set<string>): ICourseListDTO {
+export function courseListDTO(
+  course: ICoursesPopulated,
+  enrolledIds?: Set<string>,
+): ICourseListDTO {
   return {
     _id: course.id as string,
     title: course.title,
@@ -24,12 +27,11 @@ export function courseListDTO(course: ICoursesPopulated,enrolledIds?:Set<string>
     language: course.language,
     level: course.level,
     price: course.price,
-    isEnrolled:enrolledIds?.has(course.id as string) ?? false
-
+    isEnrolled: enrolledIds?.has(course.id as string) ?? false,
   };
 }
 
-export function courseDTO(course: ICoursesPopulated): ICourseDTO {
+export function courseDTO(course: ICoursesPopulated,isEnrolled?:boolean): ICourseDTO {
   return {
     _id: course._id as string,
     title: course.title,
@@ -47,7 +49,7 @@ export function courseDTO(course: ICoursesPopulated): ICourseDTO {
     level: course.level,
     price: course.price,
     sessions: course.sessions ? course.sessions : null,
-    isEnrolled:false
+    isEnrolled: isEnrolled?isEnrolled:false,
   };
 }
 

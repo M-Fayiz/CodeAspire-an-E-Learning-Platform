@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useRef, useState } from "react";
 // import ColorThief from "colorthief";
 
 interface BannerProps {
@@ -28,10 +28,12 @@ const Banner: React.FC<BannerProps> = ({
   isEnrolled,
   courseId,
 }) => {
-  // const navigate = useNavigate();
-  const { user } = useAuth();
+ 
+  const { user } = useAuth()
+
   const handlePaymentPage = async () => {
     // navigate(`/courses/checkout/${courseId}`);
+    console.log("enrolled status :", isEnrolled);
     try {
       const result = await OrderService.createPayment(courseId, user!.id);
 
@@ -44,6 +46,8 @@ const Banner: React.FC<BannerProps> = ({
       }
     }
   };
+
+ 
   return (
     <div className="relative w-full  rounded-4xl bg-gradient-to-br from-blue-200 via-violet-50  to-blue-50  py-5 px-6 md:px-16 lg:px-24">
       <div className="flex flex-col md:flex-row justify-between items-center relative gap-10">
@@ -59,18 +63,27 @@ const Banner: React.FC<BannerProps> = ({
               "Another productive way to use this tool to begin a daily writing routine. One way is to generate a random paragraph with the intention to try to rewrite it while still keeping the original meaning"
             }
           </p>
-
-          <div className="flex gap-2">
+          {isEnrolled && (
             <button
-              onClick={handlePaymentPage}
+              // onClick={handlePaymentPage}
               className="bg-blue-500 hover:bg-blue-600 text-white font-semibold px-6 py-3 rounded-lg shadow-md transition"
             >
-              Enroll Now
+              Continue learing
             </button>
-            <button className="border border-blue-500 text-blue-500 hover:bg-blue-50 font-semibold px-6 py-3 rounded-lg transition">
-              See Curriculum
-            </button>
-          </div>
+          )}
+          {!isEnrolled && (
+            <div className="flex gap-2">
+              <button
+                onClick={handlePaymentPage}
+                className="bg-blue-500 hover:bg-blue-600 text-white font-semibold px-6 py-3 rounded-lg shadow-md transition"
+              >
+                Enroll Now
+              </button>
+              <button className="border border-blue-500 text-blue-500 hover:bg-blue-50 font-semibold px-6 py-3 rounded-lg transition">
+                See Curriculum
+              </button>
+            </div>
+          )}
         </div>
 
         <div className="relative flex-1 max-w-md">

@@ -17,4 +17,5 @@ export const HttpResponse = {
   ITEM_EXIST: "Item Already Exist",
   INVALID_ID: "Invalid id",
   ITEM_NOT_FOUND: "",
+  ORDER_EXIST: " You have already Purchased this Course !",
 };

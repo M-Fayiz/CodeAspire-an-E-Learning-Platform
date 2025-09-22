@@ -15,12 +15,12 @@ interface fetchedUsers {
 export const adminService = {
   fetchAllUsers: async (
     page: number,
-    searchQuery: SearchQuery,
+    searchQuery: string,
   ): Promise<fetchedUsers> => {
-    const queryData = searchFromParser(searchQuery);
+    // const queryData = searchFromParser(searchQuery);
     try {
       const response = await axiosInstance.get(API.ADMIN.FETCH_ALL_USERS, {
-        params: { page, ...queryData },
+        params: { page, searchQuery },
       });
       console.log(response?.data);
 

@@ -6,4 +6,14 @@ export interface IEnrolledController {
     res: Response,
     next: NextFunction,
   ): Promise<void>;
+  getEnrolledDetails(
+    req: Request,
+    res: Response,
+    next: NextFunction,
+  ): Promise<void>;
+  updateProgress(
+    req: Request,
+    res: Response,
+    next: NextFunction,
+  ): Promise<void>;
 }

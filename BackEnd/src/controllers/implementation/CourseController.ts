@@ -90,8 +90,10 @@ export class CourseController implements ICourseController {
   ): Promise<void> => {
     try {
       const courseId = req.params.id;
-      const course = await this._courseService.getCourse(courseId);
-      logger.info(course);
+      const {learnerId}=req.query
+    
+      const course = await this._courseService.getCourse(courseId,learnerId as string);
+
       res
         .status(HttpStatus.OK)
         .json(successResponse(HttpResponse.OK, { course }));
@@ -209,8 +211,6 @@ export class CourseController implements ICourseController {
     next: NextFunction,
   ): Promise<void> => {
     try {
-      logger.info("get into admin course");
-
       const coursList = await this._courseService.getAdminCourse();
       res
         .status(HttpStatus.OK)

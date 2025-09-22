@@ -16,13 +16,13 @@ export interface ICourseService {
     subcategory?: string,
     level?: string,
     learnerId?: string,
-  ): Promise<{ courseData: ICourseListDTO[] | null; totalDocument: number}>;
+  ): Promise<{ courseData: ICourseListDTO[] | null; totalPage: number }>;
   updateCourseData(
     courseId: string,
     courseData: Partial<ICourses> | ISession | ILecture,
     courseUpdatePart: "sessions" | "lecture" | "baseInformation",
   ): Promise<ICourses | null>;
-  getCourse(courseId: string): Promise<ICourseDTO | null>;
+  getCourse(courseId: string,learnerId?:string): Promise<ICourseDTO | null>;
   getDraftedCourses(mentorId: string): Promise<IFormCourseDTO[] | null>;
   addSessions(courseId: string, session: ISession): Promise<ICourseDTO>;
   addLectures(

@@ -16,7 +16,7 @@ import categoryRouter from "./routers/category.router";
 import courseRouter from "./routers/courses.router";
 import sharedRouter from "./routers/shared.router";
 import { orderRouter, webhookRouter } from "./routers/order.router";
-import enrolledRouter from "./routers/enrolledRouter";
+import enrolledRouter from "./routers/enrolled.router";
 
 dotenv.config();
 

@@ -23,12 +23,12 @@ export interface ICourseData {
   subCategoryId?: string;
   language: string;
   level: "Beginner" | "Intermediate" | "Advanced";
-  price: string;
+  price: number;
   mentorsId: string;
   sessions?: ISession[];
   isActive?: boolean;
   isDraft?: boolean;
-  isEnrolled?:boolean
+  isEnrolled?: boolean;
 }
 export interface ICourseListDTO {
   id: string;
@@ -54,7 +54,7 @@ export interface CourseForm {
   subCategoryId?: string;
   language: string;
   level: "Beginner" | "Intermediate" | "Advanced";
-  price: string;
+  price: number;
   mentorsId: string;
   sessions?: ISession[];
   status?: "inProgress" | "draft" | "published" | "approved" | "rejected";
@@ -99,6 +99,7 @@ export interface IFormCourseDTO {
   description: string;
   status: "inProgress" | "draft" | "published" | "approved" | "rejected";
   updated: string;
+  isEnrolled?: boolean;
 }
 
 export interface ISearchQuery {

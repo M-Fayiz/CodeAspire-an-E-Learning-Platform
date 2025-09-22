@@ -4,6 +4,7 @@ import { IUserController } from "../interface/IUserController";
 import { HttpStatus } from "../../const/http-status";
 import { successResponse } from "../../utility/response.util";
 import { HttpResponse } from "../../const/error-message";
+import logger from "../../config/logger.config";
 
 export class UserController implements IUserController {
   constructor(private _userService: IUserService) {}
@@ -14,8 +15,10 @@ export class UserController implements IUserController {
     next: NextFunction,
   ): Promise<void> => {
     try {
-      const email = req.query.email as string;
-      const userData = await this._userService.fetchUser(email);
+      const { id } = req.params;
+      // logger.info('user logged controler',{id})
+      const userData = await this._userService.fetchUser(id);
+
       res
         .status(HttpStatus.OK)
         .json(successResponse(HttpResponse.OK, { userData }));
@@ -38,48 +41,6 @@ export class UserController implements IUserController {
         newPassword,
       );
       res.status(HttpStatus.OK).json(successResponse(HttpResponse.OK));
-    } catch (error) {
-      next(error);
-    }
-  };
-
-  preSignedURL = async (
-    req: Request,
-    res: Response,
-    next: NextFunction,
-  ): Promise<void> => {
-    try {
-      const { fileName, type } = req.query;
-      console.log("filename ", fileName);
-      const { uploadURL, fileURL } =
-        await this._userService.generatePresignedUploadUrl(
-          fileName as string,
-          type as string,
-        );
-      res
-        .status(HttpStatus.OK)
-        .json(successResponse(HttpResponse.OK, { uploadURL, fileURL }));
-    } catch (error) {
-      next(error);
-    }
-  };
-
-  get_preSignedURL = async (
-    req: Request,
-    res: Response,
-    next: NextFunction,
-  ): Promise<void> => {
-    try {
-      const { key } = req.query;
-      console.log("key", key);
-
-      const get_fileURL = await this._userService.generatePresignedGetUrl(
-        key as string,
-      );
-
-      res
-        .status(HttpStatus.OK)
-        .json(successResponse(HttpResponse.OK, { get_fileURL }));
     } catch (error) {
       next(error);
     }

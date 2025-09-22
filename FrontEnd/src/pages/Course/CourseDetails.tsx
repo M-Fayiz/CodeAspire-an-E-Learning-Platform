@@ -1,9 +1,10 @@
 import Taps from "@/components/common/Taps";
+import { useAuth } from "@/context/auth.context";
 import MentorProfile from "@/features/courses_list/Details/AboutMentor";
 import Banner from "@/features/courses_list/Details/Banner";
 import CourseOverview from "@/features/courses_list/Details/OverView";
 import courseService from "@/service/client-API/mentor/course.service";
-import type { IFormCourseDTO } from "@/types/courses.types";
+import type { IFormCourseDTO } from "@/types/DTOS/courses.types";
 import { ClipboardPen } from "lucide-react";
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
@@ -11,16 +12,20 @@ import { useParams } from "react-router-dom";
 const CourseDetails = () => {
   const [activeTap, setActiveTap] = useState("overview");
   const { id } = useParams<{ id: string }>();
+  const { user } = useAuth();
   const [course, setCourse] = useState<IFormCourseDTO | null>(null);
   useEffect(() => {
     (async () => {
-      const result = await courseService.getCourseDetails(id as string);
+      const result = await courseService.getCourseDetails(
+        id as string,
+        user!.id,
+      );
       if (result) {
         setCourse(result);
       }
     })();
   }, [id]);
-
+  
   const handle = (tap: string) => setActiveTap(tap);
 
   return (
@@ -32,6 +37,7 @@ const CourseDetails = () => {
             description={course?.description as string}
             imageUrl={course?.thumbnail as string}
             title={course?.title as string}
+            isEnrolled={course?.isEnrolled}
           />
         </div>
 

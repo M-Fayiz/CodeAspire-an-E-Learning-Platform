@@ -1,4 +1,4 @@
-import type { ICourseData } from "@/types/courses.types";
+import type { ICourseData } from "@/types/DTOS/courses.types";
 
 interface CourseCardProps {
   course: ICourseData;
@@ -21,11 +21,10 @@ const CourseCard: React.FC<CourseCardProps> = ({ course }) => {
           </button>
         </div> */}
         <div className="absolute bottom-3 left-3">
-          {course.isEnrolled&&(
-
-          <span className="bg-blue-200 text-blue-600 px-2 py-1 rounded text-xs font-medium">
-            {/* {course.category} */}
-          </span>
+          {course.isEnrolled && (
+            <span className="bg-blue-200 text-blue-600 px-2 py-1 rounded text-xs font-medium">
+              {/* {course.category} */}
+            </span>
           )}
         </div>
       </div>

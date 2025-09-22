@@ -7,19 +7,20 @@ import { ProfileTabs } from "../../components/profile/ProfileUI/Profile-Taps";
 export type TapsComp = "profile" | "security" | "additional";
 import RoleBadge from "../../components/profile/ProfileUI/RoleBadge";
 import UserService from "../../service/client-API/user.service";
-import { toastService } from "../../components/toast/ToastSystem";
 import { validateFiles } from "../../schema/validateForm";
-import { S3BucketUtil } from "../../utility/S3Bucket.util";
 import { Input } from "@/components/ui/Inputs";
 import type { AnyUser, MentorUser } from "@/types/users.type";
 import AdditionalInformation from "@/components/profile/AdditionalInfo";
+import { sharedService } from "@/service/client-API/shared.service";
+import { useParams } from "react-router";
+import { toast } from "sonner";
 
 const ProfileManagement: React.FC = () => {
   const [updatedFields, setUpdatedFields] = useState<Partial<AnyUser>>({});
   const [profile, setProfile] = useState<AnyUser | null>(null);
   const [isPictureUpdate, setIsPictureUpdate] = useState(false);
 
-  const { user, checkAuth } = useAuth();
+  const { user } = useAuth();
   const [isEditing, setIsEditing] = useState(false);
   const [originalProfile, setOriginalProfile] = useState<AnyUser | null>(null);
   const [errors, setErrors] = useState<{ [key: string]: string }>({});
@@ -28,54 +29,52 @@ const ProfileManagement: React.FC = () => {
   const [signedImageUrl, setSignedImageUrl] = useState<string>("");
 
   const handleEdit = () => {
-    if (!profile) return;
+    if (!profile) {
+      return (
+        <div className="p-6 text-center text-gray-500">Loading profile...</div>
+      );
+    }
+
     setOriginalProfile({ ...profile });
     setIsEditing(true);
   };
+  const { id } = useParams();
 
+  console.log(id);
   useEffect(() => {
     async function fetchUserData() {
+      if (!user?.id) return;
       try {
-        if (!user) {
-          checkAuth();
-          return;
-        }
-
-        const result = await UserService.fetchProfile(user.email);
+        const result = await UserService.fetchProfile(id as string);
         if (result) {
           if (result.profilePicture) {
-            const get_fileURL = await S3BucketUtil.getPreSignedURL(
+            const get_fileURL = await sharedService.getPreSignedDownloadURL(
               result.profilePicture,
             );
             setSignedImageUrl(get_fileURL);
-            if (result) {
-              setProfile(result);
-              setOriginalProfile(result);
-            }
           }
+          setProfile(result);
+          setOriginalProfile(result);
         }
       } catch (error) {
-        if (error instanceof Error) {
-          toastService.error(error.message);
-        }
+        if (error instanceof Error) toast.error(error.message);
       }
     }
-
     fetchUserData();
-  }, [isPictureUpdate]);
+  }, [isPictureUpdate, id, user]);
 
   const handleSave = async (e: React.FormEvent<HTMLFormElement>) => {
     setIsEditing(false);
     e.preventDefault();
-    console.log(" updated Fields :", updatedFields);
+
     try {
       const result = await UserService.updateProfile(user!.id, updatedFields);
       if (result) {
-        toastService.success("Profile updated Successfully");
+        toast.success("Profile updated Successfully");
       }
     } catch (error) {
       if (error instanceof Error) {
-        toastService.error(error.message);
+        toast.error(error.message);
       }
     }
   };
@@ -106,16 +105,13 @@ const ProfileManagement: React.FC = () => {
     }));
   };
 
-  let kk = Object.values(errors).some((msg) => msg);
-  // console.log(errors,kk)
-
   const handleTabs = (tab: TapsComp) => {
     setActiveTab(tab);
   };
 
   const handleProfilePictureUpdate = async (file: File) => {
     try {
-      const result = await S3BucketUtil.putPreSignedURL(file);
+      const result = await sharedService.getS3BucketUploadUrl(file);
       const fileURL = await UserService.uploadImageIntoS3(
         result.uploadURL,
         result.fileURL,
@@ -129,7 +125,7 @@ const ProfileManagement: React.FC = () => {
       console.log(profile);
     } catch (error) {
       if (error instanceof Error) {
-        toastService.error(error.message);
+        toast.error(error.message);
       }
     }
   };
@@ -275,6 +271,7 @@ const ProfileManagement: React.FC = () => {
                 onChange={handleChange}
                 name="bio"
                 textArea
+                disabled={!isEditing}
               />
             </div>
             {isEditing && (

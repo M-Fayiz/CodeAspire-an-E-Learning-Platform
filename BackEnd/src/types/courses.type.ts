@@ -1,4 +1,5 @@
 import { Document, Types } from "mongoose";
+import { IMenterModel } from "../models/user.model";
 
 export interface ILecture {
   _id?: Types.ObjectId;
@@ -24,7 +25,7 @@ export interface ICourses extends Document {
   language: string;
   level: "Beginner" | "Intermediate" | "Advanced";
   price: number;
-  mentorsId: Types.ObjectId | object;
+  mentorsId: Types.ObjectId | IMenterModel;
   sessions?: ISession[];
   isActive?: boolean;
   isDraft?: boolean;

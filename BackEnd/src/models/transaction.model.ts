@@ -29,7 +29,7 @@ const TransactionSchema = new mongoose.Schema<ITransaactionModel>(
       type: String,
     },
     paymentMethod: {
-      type: String,
+      enum: ["stripe",  "wallet"],
     },
   },
   { timestamps: true },

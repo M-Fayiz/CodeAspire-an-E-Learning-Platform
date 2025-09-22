@@ -8,7 +8,7 @@ import type {
   ILecture,
   ISearchQuery,
   ISession,
-} from "@/types/courses.types";
+} from "@/types/DTOS/courses.types";
 import type { AxiosError } from "axios";
 import { sharedService } from "../shared.service";
 import { S3BucketUtil } from "@/utility/S3Bucket.util";
@@ -20,7 +20,7 @@ const courseService = {
         const uploadAndFileUrl = await sharedService.getS3BucketUploadUrl(
           courseData.thumbnail as File,
         );
-        await S3BucketUtil.uploadToS3(
+        await sharedService.uploadToS3(
           uploadAndFileUrl.uploadURL,
           courseData.thumbnail as File,
         );
@@ -41,21 +41,21 @@ const courseService = {
   },
   fetchCourses: async (
     params: ISearchQuery,
-    learnerId?:string
+    learnerId?: string,
   ): Promise<{ updated: ICourseData[] | null; totalDocument: number }> => {
     try {
       const response = await axiosInstance.get(API.COURSE.FETCH_COURSES, {
         params: {
-    ...params,    
-    learnerId,   
-  }
+          ...params,
+          learnerId,
+        },
       });
-
+      console.log(" response fata", response.data);
       if (!response) return { updated: null, totalDocument: 0 };
 
       const updated = await Promise.all(
         response.data.courseData?.map(async (cours: IFormCourseDTO) => {
-          cours.thumbnail = await S3BucketUtil.getPreSignedURL(
+          cours.thumbnail = await sharedService.getPreSignedDownloadURL(
             cours.thumbnail as string,
           );
           return cours;
@@ -235,10 +235,14 @@ const courseService = {
       throw new Error(errorMessage);
     }
   },
-  getCourseDetails: async (courseId: string): Promise<IFormCourseDTO> => {
+  getCourseDetails: async (
+    courseId: string,
+    learnerId: string,
+  ): Promise<IFormCourseDTO> => {
     try {
       const response = await axiosInstance.get(
         API.COURSE.COURSE_DETAILS(courseId),
+        { params: { learnerId } },
       );
 
       response.data.course.thumbnail =

@@ -1,5 +1,6 @@
 import mongoose, { Types, Document } from "mongoose";
 import { IEnrollement } from "../types/enrollment.types";
+import { Schema } from "zod";
 
 export interface IEnrolledModel
   extends Document<Types.ObjectId>,
@@ -24,8 +25,27 @@ const enrolledSchema = new mongoose.Schema<IEnrolledModel>({
     type: Date,
   },
   progress: {
-    completedSessions: { type: [mongoose.Schema.Types.ObjectId], default: [] },
-    completedLectures: { type: [mongoose.Schema.Types.ObjectId], default: [] },
+    progressTrack:[
+      { 
+        _id:{
+          type:mongoose.Schema.Types.ObjectId
+        },
+        title: {
+          type: String,
+        },
+        lectures: [
+         
+          {
+             _id:{
+          type:mongoose.Schema.Types.ObjectId
+        },
+            title: {
+              type: String,
+            },
+          },
+        ],
+      },
+    ] ,
     lastAccessedLecture: {
       type: mongoose.Schema.Types.ObjectId,
       default: null,

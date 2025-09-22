@@ -5,8 +5,10 @@ import {
   FilterQuery,
   UpdateQuery,
   PopulateOptions,
+  
   QueryOptions,
 } from "mongoose";
+
 type PopulateFieldType =
   | string
   | PopulateOptions
@@ -50,8 +52,8 @@ export abstract class BaseRepository<T extends Document> {
   async findById(
     id: Types.ObjectId,
     populateFields?: PopulateFieldType,
-  ): Promise<T | null> {
-    let query = this.model.findById(id);
+  ): Promise<T  | null> {
+    let query = this.model.findById(id)
     if (populateFields) {
       if (Array.isArray(populateFields)) {
         query = query.populate(populateFields);
@@ -117,5 +119,9 @@ export abstract class BaseRepository<T extends Document> {
     options: QueryOptions = { new: true },
   ): Promise<T | null> {
     return this.model.findOneAndUpdate(filter, update, options);
+  }
+  async addTOSet(filter:FilterQuery<T>,arrayPath:string,elements:Types.ObjectId){
+    const update: UpdateQuery<T> = { $addToSet: { [arrayPath]: elements } } as any;
+    return this.model.findOneAndUpdate(filter,update) .lean<T>() .exec();
   }
 }

@@ -4,6 +4,7 @@ import { EnrolleModel, IEnrolledModel } from "../../models/enrolled.model";
 import { IEnrollement } from "../../types/enrollment.types";
 import { Types } from "mongoose";
 
+
 export class EnrolledRepository
   extends BaseRepository<IEnrolledModel>
   implements IEnrolledRepository
@@ -20,5 +21,20 @@ export class EnrolledRepository
     learnerId: Types.ObjectId,
   ): Promise<IEnrolledModel[] | null> {
     return await this.find({ learnerId: learnerId });
+  }
+  async getEnrolledCOurseDetails(
+    enrolledId: Types.ObjectId,
+  ): Promise<IEnrolledModel | null> {
+    return await this.findById(enrolledId);
+  }
+  async isEnrolled(
+    userId: Types.ObjectId,
+    courseId: Types.ObjectId,
+  ): Promise<IEnrolledModel | null> {
+    return await this.findOne({ learnerId: userId, courseId: courseId });
+  }
+  async updatedProgress(enrolledId: Types.ObjectId, sessionId: Types.ObjectId, lectureId: Types.ObjectId): Promise<IEnrolledModel|null> {
+            await this.addTOSet({_id:enrolledId},'progress.completedSessions',sessionId)
+    return  await this.addTOSet({_id:enrolledId},'progress.completedLectures',lectureId)
   }
 }

@@ -28,6 +28,7 @@ import AdminCourseDetails from "@/pages/Admin Page/Course-Managemenr/AdminCourse
 import CourseDetails from "@/pages/Course/CourseDetails";
 import PaymentSuccess from "@/pages/Payment page/PaymentSuccess";
 import CourseEnrolledList from "@/pages/Course/CourseEnrolledList";
+import EnrolledCourseDetails from "@/pages/Course/EnrolledDetails";
 
 function Form_Courses_Provider() {
   return (
@@ -65,9 +66,10 @@ export const router = createBrowserRouter([
     children: [
       { index: true, element: <Navigate to="dashboard" /> },
       { path: "dashboard", element: <DashboardContent /> },
-      { path: "profile", element: <ProfileManagement /> },
+      { path: "profile/:id", element: <ProfileManagement /> },
       { path: "courses", element: <CourseLayout /> },
       { path: "enrolled-courses", element: <CourseEnrolledList /> },
+      { path: "enrolled-courses/:id", element: <EnrolledCourseDetails /> },
     ],
   },
   {
@@ -80,7 +82,7 @@ export const router = createBrowserRouter([
     children: [
       { index: true, element: <Navigate to="dashboard" /> },
       { path: "dashboard", element: <DashboardContent /> },
-      { path: "profile", element: <ProfileManagement /> },
+      { path: "profile/:id", element: <ProfileManagement /> },
       { path: "data", element: <MentorDataForm /> },
       {
         path: "courses",
@@ -102,7 +104,7 @@ export const router = createBrowserRouter([
     children: [
       { index: true, element: <Navigate to="dashboard" /> },
       { path: "dashboard", element: <DashboardContent /> },
-      { path: "profile", element: <ProfileManagement /> },
+      { path: "profile/:id", element: <ProfileManagement /> },
       { path: "users", element: <UserManagement /> },
       {
         path: "user-profile/:id",

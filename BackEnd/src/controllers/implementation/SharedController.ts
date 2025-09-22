@@ -4,7 +4,7 @@ import { ISharedService } from "../../services/interface/ISharedService";
 import { HttpStatus } from "../../const/http-status";
 import { successResponse } from "../../utility/response.util";
 import { HttpResponse } from "../../const/error-message";
-import logger from "../../config/logger.config";
+
 
 export class SharedController implements ISharedController {
   constructor(private _sharedService: ISharedService) {}
@@ -39,8 +39,6 @@ export class SharedController implements ISharedController {
   ): Promise<void> => {
     try {
       const { key } = req.query;
-      logger.debug("key key key", key);
-
       const get_fileURL = await this._sharedService.generatePresignedGetUrl(
         key as string,
       );

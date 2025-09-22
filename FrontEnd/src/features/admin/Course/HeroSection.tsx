@@ -1,4 +1,4 @@
-import type { IFormCourse, IFormCourseDTO } from "@/types/courses.types";
+import type { IFormCourse, IFormCourseDTO } from "@/types/DTOS/courses.types";
 import { Users } from "lucide-react";
 
 interface HeroSectionProps {

@@ -3,7 +3,7 @@ import { Input } from "@/components/ui/input";
 import FormErrorText from "../shared/FormErrorText";
 import { Controller } from "react-hook-form";
 import type { Control, FieldErrors } from "react-hook-form";
-import type { ICourseData } from "@/types/courses.types";
+import type { ICourseData } from "@/types/DTOS/courses.types";
 
 interface Props {
   control: Control<ICourseData>;

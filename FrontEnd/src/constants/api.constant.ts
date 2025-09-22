@@ -10,7 +10,7 @@ export const API = {
     RESET_PASSWORD_URL: "/auth/reset-password",
   },
   USER: {
-    FETCH_USER_PROFILE: "/users/me",
+    FETCH_USER_PROFILE: (id: string) => `/users/me/${id}`,
     UPDATE_USER_PROFILE: (id: string) => `/users/me/${id}`,
     CHANGE_PASSWORD: (id: string) => `/users/${id}/change-password`,
     UPDATE_PROFILE_PICTURE: (id: string) => `/users/${id}/profile-picture`,
@@ -59,5 +59,8 @@ export const API = {
   },
   ENROLLEMENT: {
     GET_ENROLLED_COURSE: (learnerId: string) => `/enrollements/${learnerId}`,
+    GET_ENROLLD_COURSE_DETAILS: (enrolledId: string) =>
+      `/enrollements/course/${enrolledId}`,
+    UPDATE_PROGRESS:(enrolledId:string)=>`/enrollements/${enrolledId}`
   },
 };

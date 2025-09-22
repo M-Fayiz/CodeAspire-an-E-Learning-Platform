@@ -58,7 +58,7 @@ export const Input: React.FC<IInputProps> = ({
             onChange={onChange}
             placeholder={placeholder}
             rows={4}
-            className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent resize-none"
+            className={`w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent resize-none ${disabled ? "bg-gray-100 cursor-not-allowed" : ""}`}
           />
         ) : (
           <input

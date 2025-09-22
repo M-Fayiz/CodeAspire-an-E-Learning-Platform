@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from "react";
 
 import type { IUserType } from "../../../types/users.type";
-import { SearchAndFilter } from "../../../features/admin/userMangement/SerchAndFilter";
 import { TableHeader } from "../../../components/common/TableComponents";
 import { adminService } from "@/service/client-API/admin/admin.service";
 import { toastService } from "../../../components/toast/ToastSystem";
@@ -9,23 +8,26 @@ import TableRow from "../../../features/admin/userMangement/TableData";
 // import { StatsCards } from '../components/admin-components/userMangement/StatusCard
 import PaginationRounded from "../../../components/ui/Pagination";
 import type { SearchQuery } from "../../../types/parser.types";
+import useDebounce from "@/hooks/useDebounce";
 
 const UserManagement: React.FC = () => {
   const [users, setUsers] = useState<IUserType[]>([]);
-
+  const [just, setJust] = useState("");
   const [search, setSearch] = useState<SearchQuery>({
     name: "",
     role: "",
     isActive: "",
   });
 
+  // const [search,setSearch]=use
+
   const [page, setPage] = useState(1);
   const [totalPage, setTotalPage] = useState(1);
-
+  const debounced = useDebounce(just, 1000);
   useEffect(() => {
     async function fetchAllUsers() {
       try {
-        const userData = await adminService.fetchAllUsers(page, search);
+        const userData = await adminService.fetchAllUsers(page, debounced);
         setUsers(userData.users);
         setTotalPage(userData.totalPage);
       } catch (error) {
@@ -36,7 +38,7 @@ const UserManagement: React.FC = () => {
     }
 
     fetchAllUsers();
-  }, [page, search]);
+  }, [page, just]);
 
   const handleDelete = async (id: string) => {
     try {
@@ -67,10 +69,14 @@ const UserManagement: React.FC = () => {
     event: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>,
   ) => {
     const { name, value } = event.target;
+
     setSearch((prv) => ({ ...prv, [name]: value }));
+
     setPage(1);
   };
-
+  const handleDebouncing = (value: string) => {
+    setJust(value);
+  };
   return (
     <div className="min-h-screen bg-gray-50 p-6">
       <div className="max-w-7xl mx-auto">
@@ -87,7 +93,13 @@ const UserManagement: React.FC = () => {
 
         {/* <StatsCards users={users} /> */}
 
-        <SearchAndFilter searchTerm={search} onSearchChange={handleSearch} />
+        {/* <SearchAndFilter searchTerm={search} onSearchChange={handleSearch} /> */}
+        <input
+          className="bg-grey-200 h-[10px]"
+          type="text"
+          value={just}
+          onChange={(e) => handleDebouncing(e.target.value)}
+        />
 
         <div className="flex flex-col justify-center items-center">
           <div className="bg-white shadow rounded-lg overflow-hidden">

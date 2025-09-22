@@ -6,4 +6,12 @@ export interface IEnrolledRepository {
   getEnrolledCourses(
     learnerId: Types.ObjectId,
   ): Promise<IEnrolledModel[] | null>;
+  getEnrolledCOurseDetails(
+    enrolledId: Types.ObjectId,
+  ): Promise<IEnrolledModel | null>;
+  isEnrolled(
+    userId: Types.ObjectId,
+    courseId: Types.ObjectId,
+  ): Promise<IEnrolledModel | null>;
+  updatedProgress(enrolledId:Types.ObjectId,sessionId:Types.ObjectId,lectureId:Types.ObjectId):Promise<IEnrolledModel|null>
 }

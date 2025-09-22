@@ -21,5 +21,16 @@ enrolledRouter.get(
   authorizedRole("learner"),
   enrolledController.getEnrolledCourse,
 );
+enrolledRouter.get(
+  "/course/:enrolledId",
+  verifyUser,
+  authorizedRole("learner"),
+  enrolledController.getEnrolledDetails,
+);
+enrolledRouter.put('/:enrolledId',
+  verifyUser,
+  authorizedRole("learner"),
+   enrolledController.updateProgress,
+)
 
 export default enrolledRouter;

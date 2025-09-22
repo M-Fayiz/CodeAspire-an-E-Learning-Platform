@@ -41,11 +41,11 @@ export class CourseService implements ICourseService {
     subcategory?: string,
     level?: string,
     learnerId?: string,
-  ): Promise<{ courseData: ICourseListDTO[] | null; totalDocument: number }> {
+  ): Promise<{ courseData: ICourseListDTO[] | null; totalPage: number }> {
     let category_Id;
     let subCategory_id;
     let learner_Id;
-  
+
     if (category) {
       category_Id = parseObjectId(category);
     }
@@ -72,22 +72,22 @@ export class CourseService implements ICourseService {
         level,
       ),
     ]);
-    let enrolledCourse
-    if(learner_Id){
-      enrolledCourse=await this._enrolledRepository.getEnrolledCourses(learner_Id)
-      
+    let enrolledCourse;
+    if (learner_Id) {
+      enrolledCourse =
+        await this._enrolledRepository.getEnrolledCourses(learner_Id);
     }
     if (!courseList) {
       throw createHttpError(HttpStatus.NOT_FOUND, HttpResponse.ITEM_NOT_FOUND);
     }
     const enrolledIds = new Set(
-    enrolledCourse?.map((c) => c.courseId.toString()) 
-  );
-    const mappedCourseList = courseList.map((course) =>
-      courseListDTO(course as ICoursesPopulated,enrolledIds),
+      enrolledCourse?.map((c) => c.courseId.toString()),
     );
-  
-    return { courseData: mappedCourseList, totalDocument };
+    const mappedCourseList = courseList.map((course) =>
+      courseListDTO(course as ICoursesPopulated, enrolledIds),
+    );
+    let totalPage=totalDocument/limit
+    return { courseData: mappedCourseList, totalPage  };
   }
   async updateCourseData(
     courseId: string,
@@ -108,15 +108,26 @@ export class CourseService implements ICourseService {
 
     return null;
   }
-  async getCourse(courseId: string): Promise<ICourseDTO | null> {
+  async getCourse(courseId: string,learnerId?:string): Promise<ICourseDTO | null> {
     const id = parseObjectId(courseId);
+    const learner_id=parseObjectId(learnerId as string)
     if (!id) {
       throw createHttpError(HttpStatus.OK, HttpResponse.INVALID_ID);
     }
     const courseData = await this._courseRepository.getCourse(id);
+    let isEnrolled:boolean=false
+    if(learner_id){
+      const enrollData=await this._enrolledRepository.isEnrolled(learner_id,id)
+      if(enrollData){
+        isEnrolled=true
+      }
 
-    if (!courseData) return null;
-    return courseDTO(courseData as ICoursesPopulated);
+    }
+
+    if (!courseData){
+      throw createHttpError(HttpStatus.NOT_FOUND,HttpResponse.ITEM_NOT_FOUND)
+    };
+    return courseDTO(courseData as ICoursesPopulated ,isEnrolled);
   }
 
   async getDraftedCourses(mentorId: string): Promise<IFormCourseDTO[] | null> {
@@ -125,7 +136,7 @@ export class CourseService implements ICourseService {
       throw createHttpError(HttpStatus.OK, HttpResponse.INVALID_ID);
     }
     const data = await this._courseRepository.getMentorDraftedCourses(id);
-    console.log("datat  taat", data);
+
     const mappedCourseList = data?.map((course) =>
       formCourseDto(course as ICourses),
     );
@@ -209,7 +220,7 @@ export class CourseService implements ICourseService {
   }
   async getAdminCourse(): Promise<IFormCourseDTO[] | null> {
     const adminCoursList = await this._courseRepository.getAdminCoursList();
-    console.log("service✅", adminCoursList);
+
 
     return adminCoursList
       ? adminCoursList.map((course) =>

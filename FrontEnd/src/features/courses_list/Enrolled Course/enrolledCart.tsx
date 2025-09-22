@@ -20,19 +20,17 @@ const EnrolledCourseCart: React.FC<EnrolledCourseProps> = ({ course }) => {
         return "bg-gray-100 text-gray-800";
     }
   };
-  
-  
-  const {sessionCount ,lectureCount}=useMemo(()=>{
-    let sessionCount=0
-  let lectureCount=0
- 
-    for(let session of course.course.sessions){
-    sessionCount++
-    lectureCount+=session.lectures.length
-  }
-  return {sessionCount,lectureCount}
-    
-  },[course])
+
+  const { sessionCount, lectureCount } = useMemo(() => {
+    let sessionCount = 0;
+    let lectureCount = 0;
+
+    for (let session of course.course.sessions) {
+      sessionCount++;
+      lectureCount += session.lectures.length;
+    }
+    return { sessionCount, lectureCount };
+  }, [course]);
   return (
     <>
       <div
@@ -49,7 +47,7 @@ const EnrolledCourseCart: React.FC<EnrolledCourseProps> = ({ course }) => {
           />
 
           {hoveredCourse === course._id && (
-            <div className="absolute inset-0 bg-black opacity-40 flex items-center justify-center transition-opacity duration-300">
+            <div className="absolute inset-0  flex items-center justify-center transition-opacity duration-300">
               <button className="bg-white text-gray-900 px-6 py-3 rounded-lg font-medium hover:bg-gray-100 transition-colors flex items-center gap-2">
                 <Play className="w-5 h-5" />
                 Continue Learning
@@ -129,7 +127,7 @@ const EnrolledCourseCart: React.FC<EnrolledCourseProps> = ({ course }) => {
                 Last accessed {course.lastAccessed}
               </div> */}
 
-          <button className="w-full bg-gray-900 hover:bg-gray-800 text-white font-medium py-3 px-4 rounded-lg transition-colors flex items-center justify-center gap-2">
+          <button className="w-full bg-blue-200 hover:bg-blue-0 text-blue-500 font-medium py-3 px-4 rounded-lg transition-colors flex items-center justify-center gap-2">
             <Play className="w-4 h-4" />
             Continue Course
           </button>

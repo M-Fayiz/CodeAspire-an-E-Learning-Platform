@@ -1,12 +1,8 @@
-import { Link, useLoaderData, useSearchParams } from "react-router";
+import { Link, useSearchParams } from "react-router";
 import CourseCard from "../../features/courses_list/List/CourseCard";
-import type {
-  ICourseData,
-  ICourseListDTO,
-  ISearchQuery,
-} from "@/types/courses.types";
+import type { ICourseData, ISearchQuery } from "@/types/DTOS/courses.types";
 import { useEffect, useMemo, useState } from "react";
-import { useParams } from "react-router-dom";
+
 import SearchHeader from "../../features/courses_list/List/CourseSearchBar";
 import FilterSidebar from "../../features/courses_list/List/CourseFilter";
 import debounce from "lodash.debounce";
@@ -15,6 +11,7 @@ import PaginationRounded from "@/components/ui/Pagination";
 import courseService from "@/service/client-API/mentor/course.service";
 import CourseCardSkeleton from "@/components/ui/cartSkelton";
 import { useAuth } from "@/context/auth.context";
+import Header from "@/components/layout/landing/header";
 
 function CourseLayout() {
   const [courses, setCourses] = useState<ICourseData[]>([]);
@@ -28,10 +25,10 @@ function CourseLayout() {
   const filterCategory = searchParams.get("category") || "";
   const filterSubcategory = searchParams.get("subCategory") || "";
   const filterLevel = searchParams.get("level") || "";
-  const {user}=useAuth()
+  const { user } = useAuth();
   useEffect(() => {
     (async () => {
-      setLoading(true)
+      setLoading(true);
       const query: ISearchQuery = {
         search: searchQuery.trim(),
         category: filterCategory,
@@ -42,13 +39,13 @@ function CourseLayout() {
           ? Number(searchParams.get("limit"))
           : 5,
       };
-      console.log('user ID',user?.id)
+      console.log("user ID", user?.id);
 
-      const data = await courseService.fetchCourses(query,user?.id);
+      const data = await courseService.fetchCourses(query, user?.id);
       if (data) {
         setCourses(data.updated as ICourseData[]);
         setTotalPage(data.totalDocument);
-        setLoading(false)
+        setLoading(false);
       }
     })();
   }, [searchParams]);
@@ -101,7 +98,8 @@ function CourseLayout() {
 
   return (
     <>
-      <div className="min-h-screen bg-gray-50 p-6">
+      <Header />
+      <div className="relative top-18 min-h-screen bg-gray-50 p-6">
         <div className="max-w-7xl mx-auto">
           <SearchHeader
             placeholder="search Courses ...."
@@ -118,10 +116,10 @@ function CourseLayout() {
 
             <div className="lg:col-span-3">
               <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6 mb-8">
-
-                {loading&&[1,3,4,5,6].map((_,ind)=>(
-                  <CourseCardSkeleton key={ind}/>
-                ))}
+                {loading &&
+                  [1, 3, 4, 5, 6].map((_, ind) => (
+                    <CourseCardSkeleton key={ind} />
+                  ))}
                 {courses.map((course, ind) => (
                   <Link key={ind} to={`${course._id}`}>
                     <CourseCard course={course} />
