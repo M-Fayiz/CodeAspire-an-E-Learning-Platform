@@ -31,7 +31,10 @@ export function courseListDTO(
   };
 }
 
-export function courseDTO(course: ICoursesPopulated,isEnrolled?:boolean): ICourseDTO {
+export function courseDTO(
+  course: ICoursesPopulated,
+  isEnrolled?: boolean,
+): ICourseDTO {
   return {
     _id: course._id as string,
     title: course.title,
@@ -49,7 +52,7 @@ export function courseDTO(course: ICoursesPopulated,isEnrolled?:boolean): ICours
     level: course.level,
     price: course.price,
     sessions: course.sessions ? course.sessions : null,
-    isEnrolled: isEnrolled?isEnrolled:false,
+    isEnrolled: isEnrolled ? isEnrolled : false,
   };
 }
 

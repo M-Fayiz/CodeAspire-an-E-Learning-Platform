@@ -22,7 +22,7 @@ export class OrderService implements IOrderService {
     private _orderRepository: IOrderRepository,
     private _courseRepository: ICourseRepository,
     private _enrolledRepository: IEnrolledRepository,
-    private _transactionRepository:ITransactionRepository
+    private _transactionRepository: ITransactionRepository,
   ) {
     this._stripe = new Stripe(env.STRIPE_SECRETE_KEY as string);
   }
@@ -30,7 +30,7 @@ export class OrderService implements IOrderService {
   async processEvent(req: Request): Promise<void> {
     const sig = req.headers["stripe-signature"];
     let event;
-    console.log('get inyo proccess envet ')
+    console.log("get inyo proccess envet ");
     try {
       event = this._stripe.webhooks.constructEvent(
         req.body as Buffer,
@@ -48,11 +48,11 @@ export class OrderService implements IOrderService {
               HttpResponse.INVALID_ID,
             );
           }
-          const order =await this._orderRepository.findOrder(order_id);
+          const order = await this._orderRepository.findOrder(order_id);
           if (!order) {
             throw createHttpError(HttpStatus.NOT_FOUND, "Order not found");
           }
-          console.log(1)
+          console.log(1);
           await this._orderRepository.updateOrderStatus(order_id, "completed");
           const course_id = parseObjectId(pi.metadata?.courseId as string);
           const user_id = parseObjectId(pi.metadata?.userId as string);
@@ -60,31 +60,29 @@ export class OrderService implements IOrderService {
           if (!course_id || !user_id || !mentore_id) {
             throw createHttpError(HttpStatus.OK, HttpResponse.OK);
           }
-          console.warn(pi.payment_intent)
-          const transactionData:ITransaction={
-            amount:Number(pi.metadata?.amount),
-            orderId:order_id,
-            userId:user_id,
-            status:'success',
-            paymentMethod:'stripe',
-            gatewayTransactionId:pi.payment_intent as string
-
-          }
-          console.log(2)
-          await this._transactionRepository.createTransaction(transactionData)
-
+          console.warn(pi.payment_intent);
+          const transactionData: ITransaction = {
+            amount: Number(pi.metadata?.amount),
+            orderId: order_id,
+            userId: user_id,
+            status: "success",
+            paymentMethod: "stripe",
+            gatewayTransactionId: pi.payment_intent as string,
+          };
+          console.log(2);
+          await this._transactionRepository.createTransaction(transactionData);
+          console.log('adter transaction')
           const enrollData: IEnrollement = {
             courseId: course_id,
             learnerId: user_id,
             mentorId: mentore_id,
             progress: {
               completedLectures: [],
-              completedSessions: [],
-              completionPercentage: 0,
+              completionPercentage: 0, 
               lastAccessedLecture: null,
             },
           };
-          console.log(4)
+          console.log(4);
           await this._enrolledRepository.enrolleCourse(enrollData);
         }
       }

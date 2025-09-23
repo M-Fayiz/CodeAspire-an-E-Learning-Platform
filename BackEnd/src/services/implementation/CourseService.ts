@@ -86,8 +86,8 @@ export class CourseService implements ICourseService {
     const mappedCourseList = courseList.map((course) =>
       courseListDTO(course as ICoursesPopulated, enrolledIds),
     );
-    let totalPage=totalDocument/limit
-    return { courseData: mappedCourseList, totalPage  };
+    let totalPage = totalDocument / limit;
+    return { courseData: mappedCourseList, totalPage };
   }
   async updateCourseData(
     courseId: string,
@@ -108,26 +108,31 @@ export class CourseService implements ICourseService {
 
     return null;
   }
-  async getCourse(courseId: string,learnerId?:string): Promise<ICourseDTO | null> {
+  async getCourse(
+    courseId: string,
+    learnerId?: string,
+  ): Promise<ICourseDTO | null> {
     const id = parseObjectId(courseId);
-    const learner_id=parseObjectId(learnerId as string)
+    const learner_id = parseObjectId(learnerId as string);
     if (!id) {
       throw createHttpError(HttpStatus.OK, HttpResponse.INVALID_ID);
     }
     const courseData = await this._courseRepository.getCourse(id);
-    let isEnrolled:boolean=false
-    if(learner_id){
-      const enrollData=await this._enrolledRepository.isEnrolled(learner_id,id)
-      if(enrollData){
-        isEnrolled=true
+    let isEnrolled: boolean = false;
+    if (learner_id) {
+      const enrollData = await this._enrolledRepository.isEnrolled(
+        learner_id,
+        id,
+      );
+      if (enrollData) {
+        isEnrolled = true;
       }
-
     }
 
-    if (!courseData){
-      throw createHttpError(HttpStatus.NOT_FOUND,HttpResponse.ITEM_NOT_FOUND)
-    };
-    return courseDTO(courseData as ICoursesPopulated ,isEnrolled);
+    if (!courseData) {
+      throw createHttpError(HttpStatus.NOT_FOUND, HttpResponse.ITEM_NOT_FOUND);
+    }
+    return courseDTO(courseData as ICoursesPopulated, isEnrolled);
   }
 
   async getDraftedCourses(mentorId: string): Promise<IFormCourseDTO[] | null> {
@@ -220,7 +225,6 @@ export class CourseService implements ICourseService {
   }
   async getAdminCourse(): Promise<IFormCourseDTO[] | null> {
     const adminCoursList = await this._courseRepository.getAdminCoursList();
-
 
     return adminCoursList
       ? adminCoursList.map((course) =>

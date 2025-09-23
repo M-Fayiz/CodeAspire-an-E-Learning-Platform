@@ -27,10 +27,11 @@ enrolledRouter.get(
   authorizedRole("learner"),
   enrolledController.getEnrolledDetails,
 );
-enrolledRouter.put('/:enrolledId',
+enrolledRouter.put(
+  "/:enrolledId",
   verifyUser,
   authorizedRole("learner"),
-   enrolledController.updateProgress,
-)
+  enrolledController.updateProgress,
+);
 
 export default enrolledRouter;

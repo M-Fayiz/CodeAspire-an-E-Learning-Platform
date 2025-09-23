@@ -90,9 +90,12 @@ export class CourseController implements ICourseController {
   ): Promise<void> => {
     try {
       const courseId = req.params.id;
-      const {learnerId}=req.query
-    
-      const course = await this._courseService.getCourse(courseId,learnerId as string);
+      const { learnerId } = req.query;
+
+      const course = await this._courseService.getCourse(
+        courseId,
+        learnerId as string,
+      );
 
       res
         .status(HttpStatus.OK)

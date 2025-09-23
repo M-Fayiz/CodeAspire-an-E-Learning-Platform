@@ -10,9 +10,8 @@ import {
 export const enrolledListDTO = (
   enrolledData: IEnrolledModel,
 ): IEnrolledListDto => {
-
   return {
-    _id: enrolledData._doc ._id,
+    _id: enrolledData._doc._id,
     completedPercentage: enrolledData.progress?.completionPercentage ?? 0,
     course: enrolledData.courseId as IFormCourseDTO,
   };
@@ -32,7 +31,3 @@ export const enrolledCourseDetailDTO = (
     progress: enrolledData.progress,
   };
 };
-
-
-
-

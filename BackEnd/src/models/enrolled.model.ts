@@ -25,28 +25,8 @@ const enrolledSchema = new mongoose.Schema<IEnrolledModel>({
     type: Date,
   },
   progress: {
-    progressTrack:[
-      { 
-        _id:{
-          type:mongoose.Schema.Types.ObjectId
-        },
-        title: {
-          type: String,
-        },
-        lectures: [
-         
-          {
-             _id:{
-          type:mongoose.Schema.Types.ObjectId
-        },
-            title: {
-              type: String,
-            },
-          },
-        ],
-      },
-    ] ,
-    lastAccessedLecture: {
+    completedLectures:[{type:mongoose.Schema.ObjectId}],
+    lastAccessedLectures: {
       type: mongoose.Schema.Types.ObjectId,
       default: null,
     },

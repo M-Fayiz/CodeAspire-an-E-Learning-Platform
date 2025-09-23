@@ -28,8 +28,7 @@ const Banner: React.FC<BannerProps> = ({
   isEnrolled,
   courseId,
 }) => {
- 
-  const { user } = useAuth()
+  const { user } = useAuth();
 
   const handlePaymentPage = async () => {
     // navigate(`/courses/checkout/${courseId}`);
@@ -47,7 +46,6 @@ const Banner: React.FC<BannerProps> = ({
     }
   };
 
- 
   return (
     <div className="relative w-full  rounded-4xl bg-gradient-to-br from-blue-200 via-violet-50  to-blue-50  py-5 px-6 md:px-16 lg:px-24">
       <div className="flex flex-col md:flex-row justify-between items-center relative gap-10">

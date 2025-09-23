@@ -28,7 +28,7 @@ export const EnrolledService = {
       );
       return signedCourse;
     } catch (error) {
-     throwAxiosError(error)
+      throwAxiosError(error);
     }
   },
   getEnrolledCourseDetails: async (
@@ -53,16 +53,22 @@ export const EnrolledService = {
       }
       return response.data.enrolledDetails;
     } catch (error) {
-     throwAxiosError(error)
+      throwAxiosError(error);
     }
   },
-  updateProgress:async(enrolledId:string,sessionId:string,lectureId:string):Promise<ICourseProgess>=>{
+  updateProgress: async (
+    enrolledId: string,
+    lectureId: string,
+  ): Promise<ICourseProgess> => {
     try {
-      const response=await axiosInstance.put(API.ENROLLEMENT.UPDATE_PROGRESS(enrolledId),{sessionId,lectureId})
-      console.log(response.data)
-      return response.data.progressData
+      const response = await axiosInstance.put(
+        API.ENROLLEMENT.UPDATE_PROGRESS(enrolledId),
+        { lectureId },
+      );
+      console.log(response.data);
+      return response.data.progressData;
     } catch (error) {
-      throwAxiosError(error)
+      throwAxiosError(error);
     }
-  }
+  },
 };

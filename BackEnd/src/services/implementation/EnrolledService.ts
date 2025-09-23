@@ -11,6 +11,8 @@ import type {
   ICourseProgess,
   IEnrolledCoursedetailsDTO,
   IEnrolledListDto,
+  ILectureProgress,
+  ISessionProgress,
 } from "../../types/dtos.type/enrolled.dto.type";
 import {
   enrolledCourseDetailDTO,
@@ -19,6 +21,7 @@ import {
 import { IEnrolledModel } from "../../models/enrolled.model";
 import { IEnrolledService } from "../interface/IEnrolledService";
 import { ICourses } from "../../types/courses.type";
+import { IProgressTrack } from "../../types/enrollment.types";
 
 export class EnrolledService implements IEnrolledService {
   constructor(
@@ -72,23 +75,29 @@ export class EnrolledService implements IEnrolledService {
     const courseData = await this._courseRepository.findCourse(
       enrolledData.courseId as Types.ObjectId,
     );
-    
+
     const populatedCourse = formCourseDto(courseData as ICourses);
     return enrolledCourseDetailDTO(enrolledData, populatedCourse);
   }
-  async updatedProgress(enroledId: string, sessionId: string, lectureId: string): Promise<ICourseProgess   | null> {
-      const enrolled_id=parseObjectId(enroledId)
-      const session_id=parseObjectId(sessionId)
-      const lecture_id=parseObjectId(lectureId)
+  async updatedProgress(
+    enroledId: string,
+    lecture: string,
+  ): Promise<IProgressTrack | null> {
+    const enrolled_id = parseObjectId(enroledId);
+    const lecture_id = parseObjectId(lecture );
 
-      if(!enrolled_id||!session_id||!lecture_id){
-        throw createHttpError(HttpStatus.BAD_REQUEST,HttpResponse.INVALID_ID)
-      }
-      const enrolledData=await this._erolledRepository.updatedProgress(enrolled_id,session_id,lecture_id)
-      if(!enroledId){
-        throw createHttpError(HttpStatus.NOT_FOUND,HttpResponse.ITEM_NOT_FOUND)
-      }
-     
-      return enrolledData?.progress ??null
+    if (!enrolled_id || !lecture_id) {
+      throw createHttpError(HttpStatus.BAD_REQUEST, HttpResponse.INVALID_ID);
+    }
+  
+    const enrolledData = await this._erolledRepository.updatedProgress(
+      enrolled_id,
+      lecture_id
+    );
+    if (!enroledId) {
+      throw createHttpError(HttpStatus.NOT_FOUND, HttpResponse.ITEM_NOT_FOUND);
+    }
+
+    return enrolledData?.progress ?? null;
   }
 }

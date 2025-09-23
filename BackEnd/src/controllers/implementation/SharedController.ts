@@ -5,7 +5,6 @@ import { HttpStatus } from "../../const/http-status";
 import { successResponse } from "../../utility/response.util";
 import { HttpResponse } from "../../const/error-message";
 
-
 export class SharedController implements ISharedController {
   constructor(private _sharedService: ISharedService) {}
 

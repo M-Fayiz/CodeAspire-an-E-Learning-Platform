@@ -1,15 +1,12 @@
 import { Types } from "mongoose";
 import { IFormCourseDTO } from "./dtos.type/course.dtos.type";
 
+export interface IProgressTrack {
 
-export interface IProgressTrack{
-  _id:Types.ObjectId
-  title: string;
-    lectures: {
-      _id:Types.ObjectId,
-      title:string
-    }[];
-    
+  completedLectures: Types.ObjectId[];
+  lastAccessedLecture: Types.ObjectId | null;
+  completionPercentage: number;
+
 }
 
 export interface IEnrollement {
@@ -17,7 +14,7 @@ export interface IEnrollement {
   courseId: Types.ObjectId | IFormCourseDTO;
   mentorId: Types.ObjectId;
   progress: {
-    progressTrack: IProgressTrack[];
+    completedLectures: Types.ObjectId[];
     lastAccessedLecture: Types.ObjectId | null;
     completionPercentage: number;
   };

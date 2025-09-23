@@ -33,8 +33,15 @@ export class EnrolledRepository
   ): Promise<IEnrolledModel | null> {
     return await this.findOne({ learnerId: userId, courseId: courseId });
   }
-  async updatedProgress(enrolledId: Types.ObjectId, sessionId: Types.ObjectId, lectureId: Types.ObjectId): Promise<IEnrolledModel|null> {
-            await this.addTOSet({_id:enrolledId},'progress.completedSessions',sessionId)
-    return  await this.addTOSet({_id:enrolledId},'progress.completedLectures',lectureId)
+  async updatedProgress(
+    enrolledId: Types.ObjectId,
+    lecture: Types.ObjectId,
+  ): Promise<IEnrolledModel | null> {
+   
+    return await this.addTOSet(
+      { _id: enrolledId },
+      "progress.completedLectures",
+      lecture,
+    );
   }
 }

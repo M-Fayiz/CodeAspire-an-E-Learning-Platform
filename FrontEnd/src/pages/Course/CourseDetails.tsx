@@ -25,7 +25,7 @@ const CourseDetails = () => {
       }
     })();
   }, [id]);
-  
+
   const handle = (tap: string) => setActiveTap(tap);
 
   return (

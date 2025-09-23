@@ -61,6 +61,6 @@ export const API = {
     GET_ENROLLED_COURSE: (learnerId: string) => `/enrollements/${learnerId}`,
     GET_ENROLLD_COURSE_DETAILS: (enrolledId: string) =>
       `/enrollements/course/${enrolledId}`,
-    UPDATE_PROGRESS:(enrolledId:string)=>`/enrollements/${enrolledId}`
+    UPDATE_PROGRESS: (enrolledId: string) => `/enrollements/${enrolledId}`,
   },
 };

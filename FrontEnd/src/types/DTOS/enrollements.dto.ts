@@ -6,10 +6,18 @@ export interface IEnrolledListDto {
   completedPercentage: number;
 }
 
+export interface IProgressTrack {
+  _id: string;
+  title: string;
+  lectures: {
+    _id: string;
+    title: string;
+  }[];
+}
 export interface ICourseProgess {
-  progressTrack: ISession[];
-    lastAccessedLecture: string | null;
-    completionPercentage: number;
+  completedLectures: string[];
+  lastAccessedLecture: string | null;
+  completionPercentage: number;
 }
 export interface IEnrolledCoursedetailsDTO extends IEnrolledListDto {
   courseId: string;
