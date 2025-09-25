@@ -16,4 +16,10 @@ export interface IEnrolledController {
     res: Response,
     next: NextFunction,
   ): Promise<void>;
+  addRating(req: Request, res: Response, next: NextFunction): Promise<void>;
+  getCourseDashboardData(
+    req: Request,
+    res: Response,
+    next: NextFunction,
+  ): Promise<void>;
 }

@@ -18,4 +18,5 @@ export const HttpResponse = {
   INVALID_ID: "Invalid id",
   ITEM_NOT_FOUND: "",
   ORDER_EXIST: " You have already Purchased this Course !",
+  FAILED_TO_CREATE_REVIE: "failed to add your review !",
 };

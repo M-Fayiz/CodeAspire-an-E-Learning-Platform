@@ -1,5 +1,5 @@
 import { AxiosError } from "axios";
-import { axiosInstance } from "../../axios/createInstance";
+import { axiosInstance } from "../axios/createInstance";
 import { API } from "@/constants/api.constant";
 
 export const sharedService = {

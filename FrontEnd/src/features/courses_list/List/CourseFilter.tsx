@@ -1,4 +1,4 @@
-import categoryService from "@/service/client-API/admin/category.service";
+import categoryService from "@/service/admin/category.service";
 import type { ICategoryTree } from "@/types/category.types";
 import { ChevronDown, ChevronUp, Filter } from "lucide-react";
 import { useEffect, useState } from "react";

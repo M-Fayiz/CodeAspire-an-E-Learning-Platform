@@ -8,11 +8,8 @@ import { IFormCourseDTO } from "../../types/dtos.type/course.dtos.type";
 import { createHttpError } from "../../utility/http-error";
 import { formCourseDto } from "../../dtos/course.dtos";
 import type {
-  ICourseProgess,
   IEnrolledCoursedetailsDTO,
   IEnrolledListDto,
-  ILectureProgress,
-  ISessionProgress,
 } from "../../types/dtos.type/enrolled.dto.type";
 import {
   enrolledCourseDetailDTO,
@@ -22,11 +19,15 @@ import { IEnrolledModel } from "../../models/enrolled.model";
 import { IEnrolledService } from "../interface/IEnrolledService";
 import { ICourses } from "../../types/courses.type";
 import { IProgressTrack } from "../../types/enrollment.types";
+import { CourseDashboardDTO } from "../../types/dtos.type/CourseDashboard.dto.type";
+import { ITransactionRepository } from "../../repository/interface/ITransactionRepository";
+import { courseDashboardDTO } from "../../dtos/courseDashboard.dto";
 
 export class EnrolledService implements IEnrolledService {
   constructor(
     private _erolledRepository: IEnrolledRepository,
     private _courseRepository: ICourseRepository,
+    private _transactionRepository: ITransactionRepository,
   ) {}
 
   async getEnrolledCourses(learnerId: string): Promise<IEnrolledListDto[]> {
@@ -55,7 +56,6 @@ export class EnrolledService implements IEnrolledService {
       }),
     );
 
-    // console.log("populated", populatedEnrolledCourse);
     return populatedEnrolledCourse.map((course) =>
       enrolledListDTO(course as IEnrolledModel),
     );
@@ -84,20 +84,59 @@ export class EnrolledService implements IEnrolledService {
     lecture: string,
   ): Promise<IProgressTrack | null> {
     const enrolled_id = parseObjectId(enroledId);
-    const lecture_id = parseObjectId(lecture );
+    const lecture_id = parseObjectId(lecture);
 
     if (!enrolled_id || !lecture_id) {
       throw createHttpError(HttpStatus.BAD_REQUEST, HttpResponse.INVALID_ID);
     }
-  
+
     const enrolledData = await this._erolledRepository.updatedProgress(
       enrolled_id,
-      lecture_id
+      lecture_id,
     );
     if (!enroledId) {
       throw createHttpError(HttpStatus.NOT_FOUND, HttpResponse.ITEM_NOT_FOUND);
     }
 
     return enrolledData?.progress ?? null;
+  }
+  async addRating(enroledId: string, value: number): Promise<number> {
+    const enrolled_id = parseObjectId(enroledId);
+    if (!enrolled_id) {
+      throw createHttpError(HttpStatus.BAD_REQUEST, HttpResponse.INVALID_ID);
+    }
+    const updatedData = await this._erolledRepository.addRating(
+      enrolled_id,
+      value,
+    );
+    if (!updatedData?.rating) {
+      throw createHttpError(
+        HttpStatus.INTERNAL_SERVER_ERROR,
+        HttpResponse.SERVER_ERROR,
+      );
+    }
+    return updatedData.rating;
+  }
+  async getCourseEnrolledDashboardData(
+    courseId: string,
+    mentorId: string,
+  ): Promise<CourseDashboardDTO | null> {
+    const course_id = parseObjectId(courseId);
+    const mentor_id = parseObjectId(mentorId);
+    if (!course_id || !mentor_id) {
+      throw createHttpError(HttpStatus.BAD_REQUEST, HttpResponse.INVALID_ID);
+    }
+    const [studentsAndRating, course, revenue] = await Promise.all([
+      this._erolledRepository.getEnrolledDasgboardData(course_id, mentor_id),
+      this._courseRepository.findCourse(course_id),
+      this._transactionRepository.getDashboardRevenue(course_id),
+    ]);
+    if (!studentsAndRating || !course || !revenue) {
+      throw createHttpError(HttpStatus.NOT_FOUND, HttpResponse.ITEM_NOT_FOUND);
+    }
+
+    const { avgRating = 0, totalStudents = 0 } = studentsAndRating[0] || {};
+
+    return courseDashboardDTO(totalStudents, avgRating, course, revenue[0]);
   }
 }

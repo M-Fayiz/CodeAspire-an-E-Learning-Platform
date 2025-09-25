@@ -2,7 +2,7 @@ import { Lock } from "lucide-react";
 import { useState } from "react";
 import { Input } from "../ui/Inputs";
 import { validatePassword } from "../../schema/validateForm";
-import UserService from "../../service/client-API/user.service";
+import UserService from "../../service/user.service";
 import { toastService } from "../toast/ToastSystem";
 import { Spinner } from "../templates/Spinner";
 import type { TapsComp } from "../../pages/Profile Page/Profile";

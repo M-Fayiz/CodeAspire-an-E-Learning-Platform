@@ -24,4 +24,5 @@ export interface IEnrolledCoursedetailsDTO extends IEnrolledListDto {
   mentorId: string;
   learnerId: string;
   progress: ICourseProgess;
+  rating:number
 }

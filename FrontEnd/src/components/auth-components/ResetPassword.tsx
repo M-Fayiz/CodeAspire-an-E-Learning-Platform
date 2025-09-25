@@ -10,7 +10,7 @@ import {
 import { checkPasswordStrength } from "../../schema/validateForm";
 import { useSearchParams } from "react-router";
 import { useNavigate } from "react-router-dom";
-import { AuthService } from "../../service/client-API/auth.service";
+import { AuthService } from "../../service/auth.service";
 import { toastService } from "../toast/ToastSystem";
 import { Spinner } from "../templates/Spinner";
 

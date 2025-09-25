@@ -6,12 +6,12 @@ import { useAuth } from "../../context/auth.context";
 import { ProfileTabs } from "../../components/profile/ProfileUI/Profile-Taps";
 export type TapsComp = "profile" | "security" | "additional";
 import RoleBadge from "../../components/profile/ProfileUI/RoleBadge";
-import UserService from "../../service/client-API/user.service";
+import UserService from "../../service/user.service";
 import { validateFiles } from "../../schema/validateForm";
 import { Input } from "@/components/ui/Inputs";
 import type { AnyUser, MentorUser } from "@/types/users.type";
 import AdditionalInformation from "@/components/profile/AdditionalInfo";
-import { sharedService } from "@/service/client-API/shared.service";
+import { sharedService } from "@/service/shared.service";
 import { useParams } from "react-router";
 import { toast } from "sonner";
 

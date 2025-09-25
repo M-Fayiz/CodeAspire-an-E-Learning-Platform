@@ -6,11 +6,11 @@ import {
 } from "@/constants/courseInputs.constant";
 
 import { useCourseFormContext } from "@/context/courseForm.context";
-import categoryService from "@/service/client-API/admin/category.service";
+import categoryService from "@/service/admin/category.service";
 import type { ICategoryTree } from "@/types/category.types";
 import React, { useEffect, useMemo, useState } from "react";
 import { FileUp } from "lucide-react";
-import { sharedService } from "@/service/client-API/shared.service";
+import { sharedService } from "@/service/shared.service";
 import { Spinner } from "@/components/ui/shadcn-io/spinner";
 interface BaseCaourseProps {
   handleTap?: (tap: "basic" | "curriculum" | "publish") => void;

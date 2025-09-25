@@ -1,6 +1,6 @@
 import SignupComponent from "../../components/auth-components/SignUp";
 import type { ISignUp, UserRole } from "../../types/auth.types";
-import { AuthService } from "../../service/client-API/auth.service";
+import { AuthService } from "../../service/auth.service";
 import SuccessModal from "../../components/templates/SuccessModal";
 import { useState } from "react";
 import { toastService } from "../../components/toast/ToastSystem";

@@ -8,7 +8,7 @@ import {
 } from "react";
 import { courseFormSchema } from "@/schema/courseForm.schema";
 import type { CourseForm, ISession } from "@/types/DTOS/courses.types";
-import courseService from "@/service/client-API/mentor/course.service";
+import courseService from "@/service/mentor/course.service";
 import { useAuth } from "./auth.context";
 
 import { toast } from "sonner";

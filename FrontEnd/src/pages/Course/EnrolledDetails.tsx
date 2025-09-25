@@ -5,17 +5,15 @@ import {
   AccordionItem,
   AccordionTrigger,
 } from "@/components/ui/accordion";
+import { useAuth } from "@/context/auth.context";
 import MentorProfile from "@/features/courses_list/Details/AboutMentor";
 import Banner from "@/features/courses_list/Details/Banner";
 import CourseOverview from "@/features/courses_list/Details/OverView";
+import CommentsSection from "@/features/courses_list/Details/Review";
 import CurriculumProgress from "@/features/courses_list/Enrolled Course/Progress";
-import { EnrolledService } from "@/service/client-API/Learner/enrolledCourse.service";
-import type { ISession } from "@/types/DTOS/courses.types";
-import type {
-  ICourseProgess,
-  IEnrolledCoursedetailsDTO,
-} from "@/types/DTOS/enrollements.dto";
-import { ClipboardPen, PlayCircle } from "lucide-react";
+import { EnrolledService } from "@/service/Learner/enrolledCourse.service";
+import type { IEnrolledCoursedetailsDTO } from "@/types/DTOS/enrollements.dto";
+import { ClipboardPen, FileStack, PlayCircle, User } from "lucide-react";
 import { useEffect, useState } from "react";
 import { useParams } from "react-router";
 
@@ -24,6 +22,7 @@ const EnrolledCourseDetails = () => {
   const [enrolledCourse, setEnrolledCourse] =
     useState<IEnrolledCoursedetailsDTO | null>(null);
   const [videoUrl, setVideoUrl] = useState({ url: "", title: "", lecture: "" });
+  const { user } = useAuth();
 
   const handleVideoEnd = async (lecture: string) => {
     if (lecture) {
@@ -33,7 +32,7 @@ const EnrolledCourseDetails = () => {
       );
       if (result) {
         setEnrolledCourse((prv) => (prv ? { ...prv, progress: result } : prv));
-        console.log('after the updation :',enrolledCourse)
+        // console.log('after the updation :',enrolledCourse)
       }
     }
   };
@@ -55,13 +54,13 @@ const EnrolledCourseDetails = () => {
     setVideoUrl((prev) => ({ ...prev, url, title, lecture }));
   };
 
-  console.log("sessions :", enrolledCourse?.course.sessions);
+  // console.log("sessions :", enrolledCourse?.course.sessions);
   return (
     <>
-      <div className="flex">
-        <div className="col-span-3">
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 p-4">
+        <div className="lg:col-span-2 space-y-6">
           {!videoUrl.url ? (
-            <div className="bg-white p-2 md:p-5">
+            <div className="bg-white">
               <Banner
                 courseId={enrolledCourse?.courseId as string}
                 description={enrolledCourse?.course.description as string}
@@ -71,7 +70,7 @@ const EnrolledCourseDetails = () => {
               />
             </div>
           ) : (
-            <div className="relative max-w-5xl mx-auto bg-white  rounded-2xl overflow-hidden border border-gray-200">
+            <div className="bg-white rounded-2xl shadow overflow-hidden border border-gray-200">
               <div className="bg-gradient-to-r from-blue-100 via-blue-50 to-purple-50 p-4">
                 <video
                   key={videoUrl.url}
@@ -85,7 +84,6 @@ const EnrolledCourseDetails = () => {
                   Your browser does not support the video tag.
                 </video>
               </div>
-
               <div className="px-6 py-4 bg-gray-50 border-t border-gray-200">
                 <h2 className="text-lg font-semibold text-gray-800 text-center">
                   {videoUrl.title}
@@ -93,7 +91,9 @@ const EnrolledCourseDetails = () => {
               </div>
             </div>
           )}
-          <div className="flex justify-center border-b mt-2 p-5 border-gray-200 px-6">
+
+          {/* Tabs */}
+          <div className="flex justify-center border-b p-4 border-gray-200">
             <Taps
               label="overview"
               icon={
@@ -106,7 +106,7 @@ const EnrolledCourseDetails = () => {
             <Taps
               label="mentor"
               icon={
-                <ClipboardPen className="text-gray-500 w-4 h-4 hidden md:block" />
+                <User className="text-gray-500 w-5 h-5 hidden md:block" />
               }
               Click={handle}
               tap="mentor"
@@ -115,23 +115,31 @@ const EnrolledCourseDetails = () => {
             <Taps
               label="curriculum"
               icon={
-                <ClipboardPen className="text-gray-500 w-4 h-4 hidden md:block" />
+                <FileStack className="text-gray-500 w-5 h-5 hidden md:block" />
               }
               Click={handle}
               tap="curriculum"
               activeTap={activeTap}
             />
+            <Taps
+              label="Reviews"
+              icon={
+                <ClipboardPen className="text-gray-500 w-4 h-4 hidden md:block" />
+              }
+              Click={handle}
+              tap="Reviews"
+              activeTap={activeTap}
+            />
           </div>
 
-          <div className="p-2 md:p-5">
+          {/* Tab Content */}
+          <div className="p-4 md:p-6 gridg-cols-4">
             {activeTap === "overview" && <CourseOverview />}
             {activeTap === "mentor" && (
               <MentorProfile
                 id={enrolledCourse?.course.mentorsId._id as string}
               />
             )}
-          </div>
-          <div>
             {activeTap === "curriculum" && (
               <div className="p-5">
                 <div className="mb-6">
@@ -139,66 +147,77 @@ const EnrolledCourseDetails = () => {
                     Course Curriculum
                   </h2>
                   <p className="text-gray-600">
-                    {enrolledCourse && enrolledCourse.course.sessions.length}{" "}
-                    sections • lessons •
+                    {enrolledCourse?.course.sessions.length} sections • lessons
+                    •
                   </p>
                 </div>
-                <div className="space-y-2 pl-10 pr-10">
-                  {enrolledCourse &&
-                    enrolledCourse.course.sessions.map((session) => (
-                      <Accordion
-                        key={session._id}
-                        className="border border-gray-200 rounded-lg overflow-hidden mb-3 shadow-sm"
-                        type="single"
-                        collapsible
-                      >
-                        <AccordionItem value={`session-${session._id}`}>
-                          <AccordionTrigger className="w-full px-6 py-4 bg-gray-50 hover:bg-gray-100 text-lg flex items-center justify-between text-left transition-colors  text-gray-900">
-                            <div className="flex flex-col">
-                              <span>{session.title}</span>
-                              <span className="text-sm text-gray-500">
-                                {session.lectures.length} lectures
-                              </span>
-                            </div>
-                          </AccordionTrigger>
+                <div className="space-y-2">
+                  {enrolledCourse?.course.sessions.map((session) => (
+                    <Accordion
+                      key={session._id}
+                      className="border border-gray-200 rounded-lg overflow-hidden mb-3 shadow-sm"
+                      type="single"
+                      collapsible
+                    >
+                      <AccordionItem value={`session-${session._id}`}>
+                        <AccordionTrigger className="w-full px-6 py-4 bg-gray-50 hover:bg-gray-100 text-lg flex items-center justify-between text-left transition-colors text-gray-900">
+                          <div className="flex flex-col">
+                            <span>{session.title}</span>
+                            <span className="text-sm text-gray-500">
+                              {session.lectures.length} lectures
+                            </span>
+                          </div>
+                        </AccordionTrigger>
 
-                          <AccordionContent className="bg-white">
-                            <div className="divide-y divide-gray-100">
-                              {session.lectures.map((lecture) => (
-                                <button
-                                  key={lecture._id}
-                                  className="w-full flex items-center justify-between px-6 py-3 hover:bg-gray-50 focus:bg-blue-50 transition-colors"
-                                  onClick={() =>
-                                    setVideo(
-                                      lecture.lectureContent as string,
-                                      lecture.title,
-                                      lecture._id as string,
-                                    )
-                                  }
-                                >
-                                  <div className="flex items-center gap-3">
-                                    <PlayCircle className="w-5 h-5 text-blue-500" />
-                                    <span className="text-gray-800 text-sm">
-                                      {lecture.title}
-                                    </span>
-                                  </div>
-                                </button>
-                              ))}
-                            </div>
-                          </AccordionContent>
-                        </AccordionItem>
-                      </Accordion>
-                    ))}
+                        <AccordionContent className="bg-white">
+                          <div className="divide-y divide-gray-100">
+                            {session.lectures.map((lecture) => (
+                              <button
+                                key={lecture._id}
+                                className="w-full flex items-center justify-between px-6 py-3 hover:bg-gray-50 focus:bg-blue-50 transition-colors"
+                                onClick={() =>
+                                  setVideo(
+                                    lecture.lectureContent as string,
+                                    lecture.title,
+                                    lecture._id as string,
+                                  )
+                                }
+                              >
+                                <div className="flex items-center gap-3">
+                                  <PlayCircle className="w-5 h-5 text-blue-500" />
+                                  <span className="text-gray-800 text-sm">
+                                    {lecture.title}
+                                  </span>
+                                </div>
+                              </button>
+                            ))}
+                          </div>
+                        </AccordionContent>
+                      </AccordionItem>
+                    </Accordion>
+                  ))}
                 </div>
               </div>
             )}
+            {activeTap === "Reviews" && (
+              <CommentsSection
+                userId={user!.id}
+                courseId={enrolledCourse?.course._id as string}
+                enrolledId={enrolledCourse?._id  as string}
+                starRating={enrolledCourse?.rating as number}
+              />
+            )}
           </div>
         </div>
+
+        {/* Right Content */}
         {enrolledCourse?.course?.sessions && (
-          <CurriculumProgress
-            sessions={enrolledCourse.course.sessions}
-            progress={enrolledCourse.progress}
-          />
+          <div className="ls:col-span-1">
+            <CurriculumProgress
+              sessions={enrolledCourse.course.sessions}
+              progress={enrolledCourse.progress}
+            />
+          </div>
         )}
       </div>
     </>

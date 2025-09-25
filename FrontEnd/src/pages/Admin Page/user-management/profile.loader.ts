@@ -1,4 +1,4 @@
-import { adminService } from "@/service/client-API/admin/admin.service";
+import { adminService } from "@/service/admin/admin.service";
 
 import { S3BucketUtil } from "../../../utility/S3Bucket.util";
 

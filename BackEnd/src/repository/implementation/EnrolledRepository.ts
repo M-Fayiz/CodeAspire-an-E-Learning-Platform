@@ -1,9 +1,11 @@
 import { IEnrolledRepository } from "../interface/IEnrolledRepositoy";
 import { BaseRepository } from "../baseRepository";
 import { EnrolleModel, IEnrolledModel } from "../../models/enrolled.model";
-import { IEnrollement } from "../../types/enrollment.types";
+import {
+  IEnrolledAggregation,
+  IEnrollement,
+} from "../../types/enrollment.types";
 import { Types } from "mongoose";
-
 
 export class EnrolledRepository
   extends BaseRepository<IEnrolledModel>
@@ -37,11 +39,35 @@ export class EnrolledRepository
     enrolledId: Types.ObjectId,
     lecture: Types.ObjectId,
   ): Promise<IEnrolledModel | null> {
-   
     return await this.addTOSet(
       { _id: enrolledId },
       "progress.completedLectures",
       lecture,
     );
+  }
+  async addRating(
+    enrolledId: Types.ObjectId,
+    value: number,
+  ): Promise<IEnrolledModel | null> {
+    return await this.findByIDAndUpdate(enrolledId, { rating: value });
+  }
+  async getEnrolledDasgboardData(
+    courseId: Types.ObjectId,
+    mentorId: Types.ObjectId,
+  ): Promise<IEnrolledAggregation[] | null> {
+    return await this.aggregate<IEnrolledAggregation>([
+      { $match: { courseId, mentorId } },
+      {
+        $group: {
+          _id: null,
+          avgRating: {
+            $avg: "$rating",
+          },
+          totalStudents: {
+            $sum: 1,
+          },
+        },
+      },
+    ]);
   }
 }

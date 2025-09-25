@@ -28,6 +28,7 @@ export const enrolledCourseDetailDTO = (
     courseId: enrolledData.courseId as Types.ObjectId,
     learnerId: enrolledData.learnerId,
     mentorId: enrolledData.mentorId,
-    progress: enrolledData.progress,
+    rating: enrolledData.rating,
+    progress: enrolledData.progress ? enrolledData.progress : undefined,
   };
 };

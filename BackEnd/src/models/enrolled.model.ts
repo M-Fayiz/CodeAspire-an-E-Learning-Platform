@@ -1,38 +1,45 @@
 import mongoose, { Types, Document } from "mongoose";
 import { IEnrollement } from "../types/enrollment.types";
-import { Schema } from "zod";
+import { number, Schema } from "zod";
 
 export interface IEnrolledModel
   extends Document<Types.ObjectId>,
     Omit<IEnrollement, "_id"> {}
 
-const enrolledSchema = new mongoose.Schema<IEnrolledModel>({
-  courseId: {
-    type: mongoose.Schema.Types.ObjectId,
-    ref: "courses",
-    required: true,
-  },
-  learnerId: {
-    type: mongoose.Schema.Types.ObjectId,
-    required: true,
-    ref: "User",
-  },
-  mentorId: {
-    type: mongoose.Schema.Types.ObjectId,
-    ref: "User",
-  },
-  createdAt: {
-    type: Date,
-  },
-  progress: {
-    completedLectures:[{type:mongoose.Schema.ObjectId}],
-    lastAccessedLectures: {
+const enrolledSchema = new mongoose.Schema<IEnrolledModel>(
+  {
+    courseId: {
       type: mongoose.Schema.Types.ObjectId,
-      default: null,
+      ref: "courses",
+      required: true,
     },
-    completionPercentage: { type: Number, default: 0 },
+    learnerId: {
+      type: mongoose.Schema.Types.ObjectId,
+      required: true,
+      ref: "User",
+    },
+    mentorId: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "User",
+    },
+    createdAt: {
+      type: Date,
+    },
+    progress: {
+      completedLectures: [{ type: mongoose.Schema.ObjectId }],
+      lastAccessedLectures: {
+        type: mongoose.Schema.Types.ObjectId,
+        default: null,
+      },
+      completionPercentage: { type: Number, default: 0 },
+    },
+    rating: {
+      type: Number,
+      default: 0,
+    },
   },
-});
+  { timestamps: true },
+);
 
 export const EnrolleModel = mongoose.model<IEnrolledModel>(
   "enrolles",

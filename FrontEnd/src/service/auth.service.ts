@@ -1,8 +1,8 @@
 import type { AxiosError } from "axios";
-import { axiosInstance } from "../../axios/createInstance";
-import type { IDecodedUserType, ILogin, ISignUp } from "../../types/auth.types";
-import { API } from "../../constants/api.constant";
-import type { UserRole } from "../../types/auth.types";
+import { axiosInstance } from "../axios/createInstance";
+import type { IDecodedUserType, ILogin, ISignUp } from "../types/auth.types";
+import { API } from "../constants/api.constant";
+import type { UserRole } from "../types/auth.types";
 
 export const AuthService = {
   signUp: async (

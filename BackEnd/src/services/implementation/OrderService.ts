@@ -15,6 +15,7 @@ import logger from "../../config/logger.config";
 import { ITransactionRepository } from "../../repository/interface/ITransactionRepository";
 import { ITransaction } from "../../types/transaction.type";
 import { courseDTO } from "../../dtos/course.dtos";
+import { calculateShares } from "../../utility/calculateSplit.util";
 
 export class OrderService implements IOrderService {
   private _stripe;
@@ -30,7 +31,7 @@ export class OrderService implements IOrderService {
   async processEvent(req: Request): Promise<void> {
     const sig = req.headers["stripe-signature"];
     let event;
-    console.log("get inyo proccess envet ");
+
     try {
       event = this._stripe.webhooks.constructEvent(
         req.body as Buffer,
@@ -52,7 +53,7 @@ export class OrderService implements IOrderService {
           if (!order) {
             throw createHttpError(HttpStatus.NOT_FOUND, "Order not found");
           }
-          console.log(1);
+
           await this._orderRepository.updateOrderStatus(order_id, "completed");
           const course_id = parseObjectId(pi.metadata?.courseId as string);
           const user_id = parseObjectId(pi.metadata?.userId as string);
@@ -60,7 +61,15 @@ export class OrderService implements IOrderService {
           if (!course_id || !user_id || !mentore_id) {
             throw createHttpError(HttpStatus.OK, HttpResponse.OK);
           }
-          console.warn(pi.payment_intent);
+          const adminShare = calculateShares(
+            Number(pi.metadata?.amount),
+            Number(env.ADMIN_SHARE),
+          );
+          const mentorShare = calculateShares(
+            Number(pi.metadata?.amount),
+            Number(env.MENTOR_SHARE),
+          );
+
           const transactionData: ITransaction = {
             amount: Number(pi.metadata?.amount),
             orderId: order_id,
@@ -68,21 +77,24 @@ export class OrderService implements IOrderService {
             status: "success",
             paymentMethod: "stripe",
             gatewayTransactionId: pi.payment_intent as string,
+            adminShare,
+            mentorShare,
+            courseId: course_id,
           };
-          console.log(2);
+
           await this._transactionRepository.createTransaction(transactionData);
-          console.log('adter transaction')
+
           const enrollData: IEnrollement = {
             courseId: course_id,
             learnerId: user_id,
             mentorId: mentore_id,
             progress: {
               completedLectures: [],
-              completionPercentage: 0, 
+              completionPercentage: 0,
               lastAccessedLecture: null,
             },
           };
-          console.log(4);
+
           await this._enrolledRepository.enrolleCourse(enrollData);
         }
       }
@@ -102,6 +114,7 @@ export class OrderService implements IOrderService {
   ): Promise<{ clientSecret: string; orderId: string; checkoutURL: string }> {
     const course_id = parseObjectId(courseId);
     const user_Id = parseObjectId(userId);
+    console.log(" user and course :", user_Id, course_id);
     if (!course_id || !user_Id) {
       throw createHttpError(HttpStatus.NOT_FOUND, HttpResponse.INVALID_ID);
     }
@@ -110,7 +123,7 @@ export class OrderService implements IOrderService {
       user_Id,
       course_id,
     );
-    logger.info("existed", { isEnrolled });
+
     if (isEnrolled) {
       throw createHttpError(HttpStatus.CONFLICT, HttpResponse.ORDER_EXIST);
     }

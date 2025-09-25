@@ -8,7 +8,7 @@ import FilterSidebar from "../../features/courses_list/List/CourseFilter";
 import debounce from "lodash.debounce";
 import useDebounce from "@/hooks/useDebounce";
 import PaginationRounded from "@/components/ui/Pagination";
-import courseService from "@/service/client-API/mentor/course.service";
+import courseService from "@/service/mentor/course.service";
 import CourseCardSkeleton from "@/components/ui/cartSkelton";
 import { useAuth } from "@/context/auth.context";
 import Header from "@/components/layout/landing/header";

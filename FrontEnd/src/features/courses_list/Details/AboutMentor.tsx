@@ -1,4 +1,4 @@
-import UserService from "@/service/client-API/user.service";
+import UserService from "@/service/user.service";
 import type { MentorDTO } from "@/types/DTOS/SharedCourseDetails";
 import React, { useEffect, useState } from "react";
 
@@ -52,13 +52,13 @@ const MentorProfile: React.FC<MentorProps> = ({ id }) => {
             {mentorProfile.bio}
           </p>
 
-          <div className="flex justify-center md:justify-start gap-12 mb-6">
+          {/* <div className="flex justify-center md:justify-start gap-12 mb-6">
             {mentorProfile.expertise.map((stat, index) => (
               <div key={index} className="text-center">
                 <p className="text-3xl font-bold text-green-600">{stat}</p>
               </div>
             ))}
-          </div>
+          </div> */}
 
           {mentorProfile.socialLinks.github && (
             <a

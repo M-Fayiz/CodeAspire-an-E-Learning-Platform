@@ -31,6 +31,13 @@ const TransactionSchema = new mongoose.Schema<ITransaactionModel>(
     paymentMethod: {
       enum: ["stripe", "wallet"],
     },
+    courseId: {
+      type: Schema.Types.ObjectId,
+      required: true,
+      ref: "courses",
+    },
+    adminShare: { type: Number, required: true },
+    mentorShare: { type: Number, required: true },
   },
   { timestamps: true },
 );

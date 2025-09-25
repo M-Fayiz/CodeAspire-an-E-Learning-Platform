@@ -1,8 +1,8 @@
 import type { AxiosError } from "axios";
-import { axiosInstance } from "../../axios/createInstance";
-import { API } from "../../constants/api.constant";
-import type { AnyUser, BaseUser } from "../../types/users.type";
-import type { IMentorProps } from "../../types/mentor.types";
+import { axiosInstance } from "../axios/createInstance";
+import { API } from "../constants/api.constant";
+import type { AnyUser, BaseUser } from "../types/users.type";
+import type { IMentorProps } from "../types/mentor.types";
 import { sharedService } from "./shared.service";
 
 const UserService = {
@@ -72,7 +72,7 @@ const UserService = {
         API.USER.UPDATE_MENTOR_PROFILE(mentorId),
         { ...mentorData, isRequested: true },
       );
-      console.log(response.data);
+
       return response.data;
     } catch (error) {
       const err = error as AxiosError<{ error: string }>;
@@ -81,7 +81,6 @@ const UserService = {
     }
   },
   updateProfile: async (userId: string, userData: Partial<BaseUser>) => {
-    console.log("thisis user data ", userData);
     try {
       const response = await axiosInstance.put(
         API.USER.UPDATE_USER_PROFILE(userId),
@@ -103,11 +102,11 @@ const UserService = {
       const imageURL = await sharedService.getPreSignedDownloadURL(
         response.data.userData.profilePicture,
       );
-      console.log(imageURL);
+
       if (imageURL) {
         response.data.userData.profilePicture = imageURL;
       }
-      console.log(response.data.userData);
+
       return response.data.userData;
     } catch (error) {
       const err = error as AxiosError<{ error: string }>;

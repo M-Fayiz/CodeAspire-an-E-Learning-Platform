@@ -1,6 +1,6 @@
 import axios, { AxiosError } from "axios";
 import type { AxiosInstance } from "axios";
-import { AuthService } from "../service/client-API/auth.service";
+import { AuthService } from "../service/auth.service";
 
 const createInstance = (): AxiosInstance => {
   const instance = axios.create({

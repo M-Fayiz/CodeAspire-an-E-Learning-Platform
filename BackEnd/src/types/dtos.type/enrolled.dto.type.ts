@@ -23,7 +23,6 @@ export interface IProgressTrack {
   }[];
 }
 
-
 export interface IEnrolledCoursedetailsDTO extends IEnrolledListDto {
   courseId: Types.ObjectId;
   mentorId: Types.ObjectId;

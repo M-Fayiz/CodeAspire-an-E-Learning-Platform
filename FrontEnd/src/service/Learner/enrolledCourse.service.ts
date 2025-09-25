@@ -71,4 +71,15 @@ export const EnrolledService = {
       throwAxiosError(error);
     }
   },
+  addRating:async(enrolledId:string,value:number):Promise<number>=>{
+    try {
+      const response=await axiosInstance.put(API.ENROLLEMENT.ADD_RATING(enrolledId),{
+        value
+      })
+      return response.data.ratingResult
+    } catch (error) {
+      throwAxiosError(error);
+    }
+  }
+
 };

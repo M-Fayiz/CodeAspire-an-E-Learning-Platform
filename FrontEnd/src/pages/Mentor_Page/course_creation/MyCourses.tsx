@@ -2,7 +2,7 @@
 import ManagementLayout from "@/components/layout/ManagementLayout";
 import { useEffect, useState } from "react";
 import { useAuth } from "@/context/auth.context";
-import courseService from "@/service/client-API/mentor/course.service";
+import courseService from "@/service/mentor/course.service";
 import type { IFormCourseDTO } from "@/types/DTOS/courses.types";
 import { useCourseFormContext } from "@/context/courseForm.context";
 import { Link, useNavigate } from "react-router";

@@ -9,9 +9,10 @@ interface BannerProps {
 
 import { Play } from "lucide-react";
 // import { useNavigate } from "react-router";
-import { OrderService } from "@/service/client-API/order.service";
+import { OrderService } from "@/service/order.service";
 import { useAuth } from "@/context/auth.context";
 import { toast } from "sonner";
+import { Link } from "react-router";
 
 interface BannerProps {
   courseId: string;
@@ -31,8 +32,7 @@ const Banner: React.FC<BannerProps> = ({
   const { user } = useAuth();
 
   const handlePaymentPage = async () => {
-    // navigate(`/courses/checkout/${courseId}`);
-    console.log("enrolled status :", isEnrolled);
+   
     try {
       const result = await OrderService.createPayment(courseId, user!.id);
 
@@ -47,7 +47,7 @@ const Banner: React.FC<BannerProps> = ({
   };
 
   return (
-    <div className="relative w-full  rounded-4xl bg-gradient-to-br from-blue-200 via-violet-50  to-blue-50  py-5 px-6 md:px-16 lg:px-24">
+    <div className="relative w-full  rounded-sm bg-gradient-to-br from-blue-200 via-violet-50  to-blue-50  py-5 px-6 md:px-16 lg:px-24">
       <div className="flex flex-col md:flex-row justify-between items-center relative gap-10">
         <div className="relative flex-1 p-5">
           <div className="absolute top-10  left-10 w-60 h-60 bg-blue-200 rounded-full blur-3xl -z-10"></div>
@@ -62,12 +62,12 @@ const Banner: React.FC<BannerProps> = ({
             }
           </p>
           {isEnrolled && (
-            <button
+            <Link to={`/learner/enrolled-courses`}
               // onClick={handlePaymentPage}
               className="bg-blue-500 hover:bg-blue-600 text-white font-semibold px-6 py-3 rounded-lg shadow-md transition"
             >
               Continue learing
-            </button>
+            </Link>
           )}
           {!isEnrolled && (
             <div className="flex gap-2">

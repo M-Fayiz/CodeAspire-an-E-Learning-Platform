@@ -62,5 +62,10 @@ export const API = {
     GET_ENROLLD_COURSE_DETAILS: (enrolledId: string) =>
       `/enrollements/course/${enrolledId}`,
     UPDATE_PROGRESS: (enrolledId: string) => `/enrollements/${enrolledId}`,
+    ADD_RATING:(enrolledId:string)=>`/enrollements/${enrolledId}/rating`
+  },
+  REVIEW: {
+    ADD_REVIEW: "/reviews/",
+    GET_REVIEWS: (courseId: string) => `/reviews/${courseId}`,
   },
 };

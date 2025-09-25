@@ -3,7 +3,7 @@ import { useAuth } from "@/context/auth.context";
 import MentorProfile from "@/features/courses_list/Details/AboutMentor";
 import Banner from "@/features/courses_list/Details/Banner";
 import CourseOverview from "@/features/courses_list/Details/OverView";
-import courseService from "@/service/client-API/mentor/course.service";
+import courseService from "@/service/mentor/course.service";
 import type { IFormCourseDTO } from "@/types/DTOS/courses.types";
 import { ClipboardPen } from "lucide-react";
 import { useEffect, useState } from "react";

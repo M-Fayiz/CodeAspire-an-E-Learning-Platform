@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 import { useSearchParams, useNavigate } from "react-router-dom";
-import { AuthService } from "../../service/client-API/auth.service";
+import { AuthService } from "../../service/auth.service";
 import { Spinner } from "../templates/Spinner";
 import { toastService } from "../toast/ToastSystem";
 import { useAuth } from "../../context/auth.context";

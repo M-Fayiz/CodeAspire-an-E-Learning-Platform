@@ -1,6 +1,6 @@
 import ManagementLayout from "@/components/layout/ManagementLayout";
 import AddCategoryAccordion from "@/features/admin/category/AddCategory";
-import categoryService from "@/service/client-API/admin/category.service";
+import categoryService from "@/service/admin/category.service";
 // import type { ICategoryTree } from "@/types/category.types"
 import { useEffect, useState } from "react";
 import { Tree } from "primereact/tree";

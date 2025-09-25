@@ -27,7 +27,7 @@ import { toast } from "sonner";
 import type { ILecture, ISession } from "@/types/DTOS/courses.types";
 import { useCourseFormContext } from "@/context/courseForm.context";
 import { sessionSchema } from "@/schema/courseForm.schema";
-import courseService from "@/service/client-API/mentor/course.service";
+import courseService from "@/service/mentor/course.service";
 import { Spinner } from "@/components/ui/shadcn-io/spinner";
 import { Notebook } from "lucide-react";
 import { AddLecture } from "./CourseSheetFields.tsx/AddLecture";

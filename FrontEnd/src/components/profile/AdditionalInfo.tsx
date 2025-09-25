@@ -9,7 +9,7 @@ import {
   AccordionTrigger,
 } from "@/components/ui/accordion";
 import { Button } from "../ui/button";
-import UserService from "@/service/client-API/user.service";
+import UserService from "@/service/user.service";
 import { useAuth } from "@/context/auth.context";
 import { toastService } from "../toast/ToastSystem";
 

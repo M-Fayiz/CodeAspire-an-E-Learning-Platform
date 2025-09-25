@@ -1,3 +1,4 @@
+import { CourseDashboardDTO } from "../../types/dtos.type/CourseDashboard.dto.type";
 import {
   ICourseProgess,
   IEnrolledCoursedetailsDTO,
@@ -16,4 +17,9 @@ export interface IEnrolledService {
     enroledId: string,
     lecture: string,
   ): Promise<IProgressTrack | null>;
+  addRating(enroledId: string, value: number): Promise<number>;
+  getCourseEnrolledDashboardData(
+    courseId: string,
+    mentorId: string,
+  ): Promise<CourseDashboardDTO | null>;
 }

@@ -7,7 +7,7 @@ import {
 } from "react";
 // import { useNavigate } from "react-router";
 import type { IDecodedUserType } from "../types/auth.types";
-import { AuthService } from "../service/client-API/auth.service";
+import { AuthService } from "../service/auth.service";
 
 interface User extends IDecodedUserType {}
 

@@ -62,6 +62,12 @@ export const env = {
   get LOGGER_MAX_FILES() {
     return process.env.LOGGER_MAX_FILES;
   },
+  get ADMIN_SHARE() {
+    return process.env.ADMIN_SHARE;
+  },
+  get MENTOR_SHARE() {
+    return process.env.MENTOR_SHARE;
+  },
   get S3_Bucket_URL_EXPIRE_IN() {
     return process.env.S3_Bucket_URL_EXPIRE_IN;
   },

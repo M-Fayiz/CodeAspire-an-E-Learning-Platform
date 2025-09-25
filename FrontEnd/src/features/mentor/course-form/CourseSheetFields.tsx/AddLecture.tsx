@@ -10,7 +10,7 @@ import {
 } from "@/components/ui/select";
 import { useCourseFormContext } from "@/context/courseForm.context";
 import { lectureSchema } from "@/schema/courseForm.schema";
-import courseService from "@/service/client-API/mentor/course.service";
+import courseService from "@/service/mentor/course.service";
 import type { ILecture } from "@/types/DTOS/courses.types";
 import { useEffect, useState } from "react";
 import toast from "react-hot-toast";

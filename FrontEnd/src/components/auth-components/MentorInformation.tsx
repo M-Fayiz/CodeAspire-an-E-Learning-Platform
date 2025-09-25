@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { User, Award, Link, Plus, X, FileUp } from "lucide-react";
 import { Input } from "../ui/Inputs";
-import UserService from "../../service/client-API/user.service";
+import UserService from "../../service/user.service";
 import { useAuth } from "../../context/auth.context";
 import type { IMentorProps } from "../../types/mentor.types";
 import { toastService } from "../toast/ToastSystem";

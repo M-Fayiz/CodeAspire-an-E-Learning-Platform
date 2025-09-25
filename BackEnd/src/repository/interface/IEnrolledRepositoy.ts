@@ -1,8 +1,10 @@
 import { Types } from "mongoose";
 import { IEnrolledModel } from "../../models/enrolled.model";
-import { IEnrollement } from "../../types/enrollment.types";
+import {
+  IEnrolledAggregation,
+  IEnrollement,
+} from "../../types/enrollment.types";
 
-import { Type } from "@aws-sdk/client-s3";
 export interface IEnrolledRepository {
   enrolleCourse(enrollData: IEnrollement): Promise<IEnrolledModel | null>;
   getEnrolledCourses(
@@ -19,4 +21,12 @@ export interface IEnrolledRepository {
     enrolledId: Types.ObjectId,
     lecture: Types.ObjectId,
   ): Promise<IEnrolledModel | null>;
+  addRating(
+    enrolledId: Types.ObjectId,
+    value: number,
+  ): Promise<IEnrolledModel | null>;
+  getEnrolledDasgboardData(
+    courseId: Types.ObjectId,
+    mentorId: Types.ObjectId,
+  ): Promise<IEnrolledAggregation[] | null>;
 }

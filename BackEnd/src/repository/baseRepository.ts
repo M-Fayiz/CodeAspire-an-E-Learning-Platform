@@ -6,6 +6,7 @@ import {
   UpdateQuery,
   PopulateOptions,
   QueryOptions,
+  PipelineStage,
 } from "mongoose";
 
 type PopulateFieldType =
@@ -123,6 +124,12 @@ export abstract class BaseRepository<T extends Document> {
     const update: UpdateQuery<T> = {
       $addToSet: { [arrayPath]: elements },
     } as any;
-    return this.model.findOneAndUpdate(filter, update, { new: true }).lean<T>().exec();
+    return this.model
+      .findOneAndUpdate(filter, update, { new: true })
+      .lean<T>()
+      .exec();
+  }
+  async aggregate<R = T>(pipeline: PipelineStage[]): Promise<R[]> {
+    return this.model.aggregate(pipeline).exec();
   }
 }

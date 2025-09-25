@@ -16,7 +16,7 @@ const CurriculumProgress: React.FC<CurriculumProgressProps> = ({
     if (!sessions) return 0;
     return sessions.reduce((acc, vl) => acc + (vl.lectures?.length || 0), 0);
   }, [sessions]);
-  let set=new Set(progress.completedLectures)
+  let set = new Set(progress.completedLectures);
 
   return (
     <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6 max-w-md mx-auto">
@@ -37,7 +37,7 @@ const CurriculumProgress: React.FC<CurriculumProgressProps> = ({
         <p className="text-xs text-gray-500 mt-1">{10}% Complete</p>
       </div>
 
-      <div className="space-y-1">
+      <div className="space-y-1 max-h-[350px] overflow-y-auto">
         {sessions &&
           sessions.map((session, ind) => (
             <div key={session._id}>
@@ -54,48 +54,44 @@ const CurriculumProgress: React.FC<CurriculumProgressProps> = ({
                 </h3>
               </div>
 
-              {session.lectures?.map((lecture, index) => {
-      
-  const isCompleted =set.has(lecture._id  as string);
-   console.log('completed ::',isCompleted)
-  return (
-    <div
-      key={lecture._id}
-      className="flex items-center py-3 ml-4 border-l-2 border-gray-100"
-    >
-      <div className="flex-shrink-0 mr-3 -ml-1">
-        {isCompleted ? (
-          <div className="w-6 h-6 rounded-full bg-green-500 flex items-center justify-center">
-            <Check className="w-4 h-4 text-white" />
-          </div>
-        ) : (
-          <div className="w-6 h-6 rounded-full border-2 border-gray-300 bg-white flex items-center justify-center">
-            <Circle className="w-3 h-3 text-gray-300" fill="currentColor" />
-          </div>
-        )}
-      </div>
+              {session.lectures?.map((lecture) => {
+                const isCompleted = set.has(lecture._id as string);
+                return (
+                  <div
+                    key={lecture._id}
+                    className="flex items-center py-3 ml-4 border-l-2 border-gray-100"
+                  >
+                    <div className="flex-shrink-0 mr-3 -ml-1">
+                      {isCompleted ? (
+                        <div className="w-6 h-6 rounded-full bg-green-500 flex items-center justify-center">
+                          <Check className="w-4 h-4 text-white" />
+                        </div>
+                      ) : (
+                        <div className="w-6 h-6 rounded-full border-2 border-gray-300 bg-white flex items-center justify-center">
+                          <Circle
+                            className="w-3 h-3 text-gray-300"
+                            fill="currentColor"
+                          />
+                        </div>
+                      )}
+                    </div>
 
-      <div className="flex-1 min-w-0">
-        <p
-          className={`text-sm ${
-            isCompleted ? "text-gray-900 font-medium" : "text-gray-500"
-          }`}
-        >
-          {lecture.title}
-        </p>
-      </div>
-    </div>
-  );
-})}
-
+                    <div className="flex-1 min-w-0">
+                      <p
+                        className={`text-sm ${
+                          isCompleted
+                            ? "text-gray-900 font-medium"
+                            : "text-gray-500"
+                        }`}
+                      >
+                        {lecture.title}
+                      </p>
+                    </div>
+                  </div>
+                );
+              })}
             </div>
           ))}
-      </div>
-
-      <div className="mt-6 pt-4 border-t border-gray-200">
-        <button className="w-full bg-blue-600 text-white py-2 px-4 rounded-md text-sm font-medium hover:bg-blue-700 transition-colors duration-200">
-          Continue Learning
-        </button>
       </div>
     </div>
   );

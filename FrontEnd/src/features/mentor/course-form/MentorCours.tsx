@@ -1,5 +1,5 @@
 // MyCourseCard.tsx
-import { sharedService } from "@/service/client-API/shared.service";
+import { sharedService } from "@/service/shared.service";
 import type { IFormCourseDTO } from "@/types/DTOS/courses.types";
 import { useEffect, useState } from "react";
 

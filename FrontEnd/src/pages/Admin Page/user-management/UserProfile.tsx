@@ -14,7 +14,7 @@ import {
 } from "lucide-react";
 // import type { IUserType } from '../../../types/profile.type';
 import { useLoaderData } from "react-router";
-import { adminService } from "@/service/client-API/admin/admin.service";
+import { adminService } from "@/service/admin/admin.service";
 import { toastService } from "../../../config/Toast.config";
 import type { AnyUser, IUserType } from "../../../types/users.type";
 

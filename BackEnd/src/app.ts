@@ -17,6 +17,7 @@ import courseRouter from "./routers/courses.router";
 import sharedRouter from "./routers/shared.router";
 import { orderRouter, webhookRouter } from "./routers/order.router";
 import enrolledRouter from "./routers/enrolled.router";
+import reviewRouter from "./routers/review.router";
 
 dotenv.config();
 
@@ -57,6 +58,7 @@ app.use("/api/v1/courses", courseRouter);
 app.use("/api/v1/shared", sharedRouter);
 app.use("/api/v1/orders", orderRouter);
 app.use("/api/v1/enrollements", enrolledRouter);
+app.use("/api/v1/reviews", reviewRouter);
 const port = env.port;
 dbConnect();
 

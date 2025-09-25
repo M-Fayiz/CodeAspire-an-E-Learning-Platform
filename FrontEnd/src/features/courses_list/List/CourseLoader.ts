@@ -1,4 +1,4 @@
-import courseService from "@/service/client-API/mentor/course.service";
+import courseService from "@/service/mentor/course.service";
 import { S3BucketUtil } from "@/utility/S3Bucket.util";
 
 // export async function fetchCourses() {

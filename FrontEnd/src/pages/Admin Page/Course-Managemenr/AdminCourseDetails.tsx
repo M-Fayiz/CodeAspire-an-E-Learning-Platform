@@ -1,7 +1,7 @@
 import Taps from "@/components/common/Taps";
 import { Spinner } from "@/components/templates/Spinner";
 import HeroSection from "@/features/admin/Course/HeroSection";
-import courseService from "@/service/client-API/mentor/course.service";
+import courseService from "@/service/mentor/course.service";
 import type { IFormCourseDTO } from "@/types/DTOS/courses.types";
 import { CheckCircle, ClipboardPen, Clock, PlayCircle } from "lucide-react";
 import { useEffect, useMemo, useState } from "react";
