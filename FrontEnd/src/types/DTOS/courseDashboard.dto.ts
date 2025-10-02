@@ -1,5 +1,3 @@
-import { Types } from "mongoose";
-import { ICourseDTO } from "./course.dtos.type";
 export interface IRevenue {
   admin: number;
   mentor: number;
@@ -19,7 +17,7 @@ export interface CourseDashboardDTO {
   revenue: IRevenue;
 }
 
-export interface IChartTrendDTO {
-  date: Date;
+export interface ChartDataDTO {
+  data: Date;
   enrolled: number;
 }

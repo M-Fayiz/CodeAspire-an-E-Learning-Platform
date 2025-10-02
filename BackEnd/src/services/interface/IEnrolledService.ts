@@ -1,12 +1,12 @@
-import { CourseDashboardDTO } from "../../types/dtos.type/CourseDashboard.dto.type";
 import {
-  ICourseProgess,
+  CourseDashboardDTO,
+  IChartTrendDTO,
+} from "../../types/dtos.type/CourseDashboard.dto.type";
+import {
   IEnrolledCoursedetailsDTO,
   IEnrolledListDto,
-  ILectureProgress,
-  ISessionProgress,
 } from "../../types/dtos.type/enrolled.dto.type";
-import { IProgressTrack } from "../../types/enrollment.types";
+import { filter, IProgressTrack } from "../../types/enrollment.types";
 
 export interface IEnrolledService {
   getEnrolledCourses(learnerId: string): Promise<IEnrolledListDto[]>;
@@ -22,4 +22,10 @@ export interface IEnrolledService {
     courseId: string,
     mentorId: string,
   ): Promise<CourseDashboardDTO | null>;
+  getTrendingCourseGraph(
+    courseId: string,
+    filter?: filter,
+    startDate?: string,
+    endDate?: string,
+  ): Promise<IChartTrendDTO[]>;
 }

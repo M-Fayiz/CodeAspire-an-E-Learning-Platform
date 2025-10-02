@@ -56,7 +56,7 @@ const MyCourseCard: React.FC<CourseCardProps> = ({ course, onEdit }) => {
             {course.level || "All Levels"}
           </span>
           <span className="text-lg font-bold text-orange-600">
-            {`$${course.price}`}
+            {`₹${course.price}`}
           </span>
         </div>
 

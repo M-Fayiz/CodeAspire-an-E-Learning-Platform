@@ -65,20 +65,19 @@ export class CourseController implements ICourseController {
         learnerId,
       } = req.query;
 
-      const { courseData, totalDocument } =
-        await this._courseService.fetchCourses(
-          Number(page || 1),
-          Number(limit || 6),
-          search as string,
-          category as string,
-          subcategory as string,
-          level as string,
-          learnerId as string,
-        );
+      const { courseData, totalPage } = await this._courseService.fetchCourses(
+        Number(page || 1),
+        Number(limit || 6),
+        search as string,
+        category as string,
+        subcategory as string,
+        level as string,
+        learnerId as string,
+      );
 
       res
         .status(HttpStatus.OK)
-        .json(successResponse(HttpResponse.OK, { courseData, totalDocument }));
+        .json(successResponse(HttpResponse.OK, { courseData, totalPage }));
     } catch (error) {
       next(error);
     }
@@ -96,7 +95,7 @@ export class CourseController implements ICourseController {
         courseId,
         learnerId as string,
       );
-
+      console.log("this is the course ", course);
       res
         .status(HttpStatus.OK)
         .json(successResponse(HttpResponse.OK, { course }));

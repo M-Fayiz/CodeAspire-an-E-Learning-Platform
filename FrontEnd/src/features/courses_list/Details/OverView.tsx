@@ -1,14 +1,8 @@
-import React from "react";
-import { CheckCircle } from "lucide-react"; // you can use Heroicons, Lucide, or FontAwesome
 
-interface CourseOverviewProps {
-  objectives: string[];
-  overview: string[];
-}
-// React.FC<CourseOverviewProps>
+
 const CourseOverview = () => {
   return (
-    <section className="bg-[#fbfdff] py-10 px-6 md:px-12 p-5  rounded-xl ">
+    <section className=" py-10 px-6 md:px-12 p-5  rounded-xl ">
       <h2 className="text-2xl font-bold text-gray-700 mb-6">
         Learning Objectives
       </h2>

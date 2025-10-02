@@ -5,15 +5,15 @@ import {
   useState,
   type ReactNode,
 } from "react";
-// import { useNavigate } from "react-router";
 import type { IDecodedUserType } from "../types/auth.types";
 import { AuthService } from "../service/auth.service";
+import { toast } from "sonner";
 
 interface User extends IDecodedUserType {}
 
 interface AuthContextProps {
   user: User | null;
-  loading: Boolean;
+  loading: boolean;
   checkAuth: () => Promise<void>;
   setUser: (user: User | null) => void;
   logout: () => Promise<void>;
@@ -33,7 +33,7 @@ interface AuthContext {
 
 export const AuthProvider = ({ children }: AuthContext) => {
   const [user, setUser] = useState<User | null>(null);
-  const [loading, setLoading] = useState<Boolean>(true);
+  const [loading, setLoading] = useState<boolean>(true);
 
   useEffect(() => {
     checkAuth();
@@ -59,12 +59,15 @@ export const AuthProvider = ({ children }: AuthContext) => {
       }
       console.log("data delivered to auth context", result);
     } catch (error) {
+      if(error instanceof Error){
+        toast.error(error.message)
+      }
       setUser(null);
     } finally {
       setLoading(false);
     }
   };
-
+  console.log('USER :',user)
   const logout = async (): Promise<void> => {
     setLoading(true);
     try {

@@ -1,8 +1,8 @@
 import bcrypt from "bcrypt";
+import { env } from "../config/env.config";
 
 export const hashPassword = async (pass: string) => {
-  const salt = 10;
-  return await bcrypt.hash(pass, salt);
+  return await bcrypt.hash(pass, Number(env.HASH_SALT));
 };
 
 export async function comparePassword(

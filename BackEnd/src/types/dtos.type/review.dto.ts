@@ -17,6 +17,7 @@ export interface IReviewDTO {
     name: string;
     profilePicture: string;
   } | null;
+  createdAt?: Date;
 }
 
 export interface IReviewUnpopulatedDTO {
@@ -40,4 +41,5 @@ export interface IReviewPopulatedDTO {
   replies?: {
     mentor: IUser;
   };
+  createdAt?: Date;
 }

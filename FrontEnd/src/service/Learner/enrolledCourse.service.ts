@@ -7,6 +7,7 @@ import type {
 } from "@/types/DTOS/enrollements.dto";
 import { sharedService } from "../shared.service";
 import { throwAxiosError } from "@/utility/throwErrot";
+import type { ChartFilter } from "@/types/enrollent.types";
 
 export const EnrolledService = {
   getEnrolledCourse: async (learnerId: string): Promise<IEnrolledListDto[]> => {
@@ -71,15 +72,51 @@ export const EnrolledService = {
       throwAxiosError(error);
     }
   },
-  addRating:async(enrolledId:string,value:number):Promise<number>=>{
+  addRating: async (enrolledId: string, value: number): Promise<number> => {
     try {
-      const response=await axiosInstance.put(API.ENROLLEMENT.ADD_RATING(enrolledId),{
-        value
-      })
-      return response.data.ratingResult
+      const response = await axiosInstance.put(
+        API.ENROLLEMENT.ADD_RATING(enrolledId),
+        {
+          value,
+        },
+      );
+      return response.data.ratingResult;
     } catch (error) {
       throwAxiosError(error);
     }
-  }
+  },
+  getDashboardData: async (courseId: string, mentorId: string) => {
+    try {
+      const response = await axiosInstance.get(
+        API.ENROLLEMENT.GET_COURSE_DASHBOARD(courseId, mentorId),
+      );
+      return response.data.dashboardData;
+    } catch (error) {
+      throwAxiosError(error);
+    }
+  },
+  FilterGraph: async (
+    courseId: string,
+    filter: ChartFilter,
+    startData?: Date,
+    endDate?: Date,
+  ) => {
+    console.log(" filter ", filter);
+    try {
+      const response = await axiosInstance.get(
+        API.ENROLLEMENT.GET_FILTERED_GRAPH(courseId),
+        {
+          params: {
+            filter,
+            startData,
+            endDate,
+          },
+        },
+      );
 
+      return response.data.chartData;
+    } catch (error) {
+      throwAxiosError(error);
+    }
+  },
 };

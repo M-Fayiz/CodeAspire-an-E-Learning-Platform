@@ -3,17 +3,21 @@ import { Star } from "lucide-react";
 
 type StarRatingProps = {
   max?: number;
-  onRate: (value: number) => void; 
-  starRating:number
+  onRate: (value: number) => void;
+  starRating: number;
 };
 
-const StarRating: React.FC<StarRatingProps> = ({ max = 5, onRate,starRating }) => {
+const StarRating: React.FC<StarRatingProps> = ({
+  max = 5,
+  onRate,
+  starRating,
+}) => {
   const [rating, setRating] = useState(starRating);
   const [hover, setHover] = useState(0);
 
   const handleClick = (value: number) => {
     setRating(value);
-    onRate(value); 
+    onRate(value);
   };
 
   return (
@@ -29,7 +33,7 @@ const StarRating: React.FC<StarRatingProps> = ({ max = 5, onRate,starRating }) =
                 ? "text-yellow-400 fill-yellow-400"
                 : "text-gray-300"
             }`}
-            onClick={() => handleClick(starValue)} 
+            onClick={() => handleClick(starValue)}
             onMouseEnter={() => setHover(starValue)}
             onMouseLeave={() => setHover(0)}
           />

@@ -40,5 +40,6 @@ export function popularedReviewDTO(data: IReviewPopulatedDTO): IReviewDTO {
           profilePicture: data.replies.mentor.profilePicture as string,
         }
       : null,
+    createdAt: data.createdAt,
   };
 }

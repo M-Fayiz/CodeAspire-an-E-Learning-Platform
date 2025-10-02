@@ -2,6 +2,8 @@ import { IEnrolledRepository } from "../interface/IEnrolledRepositoy";
 import { BaseRepository } from "../baseRepository";
 import { EnrolleModel, IEnrolledModel } from "../../models/enrolled.model";
 import {
+  chartAggregation,
+  chartFilter,
   IEnrolledAggregation,
   IEnrollement,
 } from "../../types/enrollment.types";
@@ -68,6 +70,36 @@ export class EnrolledRepository
           },
         },
       },
+    ]);
+  }
+  async getCourseEnrollmentTrend(
+    courseId: Types.ObjectId,
+    filterChart: chartFilter,
+  ): Promise<chartAggregation[]> {
+    return await this.aggregate<chartAggregation>([
+      {
+        $match: {
+          courseId: courseId,
+          createdAt: {
+            $gte: filterChart.start,
+            $lte: filterChart.end,
+          },
+        },
+      },
+      {
+        $group: {
+          _id: {
+            day: {
+              $dateToString: {
+                format: "%Y-%m-%dT00:00:00Z",
+                date: "$createdAt",
+              },
+            },
+          },
+          count: { $sum: 1 },
+        },
+      },
+      { $sort: { "_id.day": 1 } },
     ]);
   }
 }

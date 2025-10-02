@@ -18,10 +18,20 @@ import {
 import { IEnrolledModel } from "../../models/enrolled.model";
 import { IEnrolledService } from "../interface/IEnrolledService";
 import { ICourses } from "../../types/courses.type";
-import { IProgressTrack } from "../../types/enrollment.types";
-import { CourseDashboardDTO } from "../../types/dtos.type/CourseDashboard.dto.type";
+import {
+  chartFilter,
+  filter,
+  IProgressTrack,
+} from "../../types/enrollment.types";
+import {
+  CourseDashboardDTO,
+  IChartTrendDTO,
+} from "../../types/dtos.type/CourseDashboard.dto.type";
 import { ITransactionRepository } from "../../repository/interface/ITransactionRepository";
-import { courseDashboardDTO } from "../../dtos/courseDashboard.dto";
+import {
+  chartTrendDTO,
+  courseDashboardDTO,
+} from "../../dtos/courseDashboard.dto";
 
 export class EnrolledService implements IEnrolledService {
   constructor(
@@ -138,5 +148,57 @@ export class EnrolledService implements IEnrolledService {
     const { avgRating = 0, totalStudents = 0 } = studentsAndRating[0] || {};
 
     return courseDashboardDTO(totalStudents, avgRating, course, revenue[0]);
+  }
+  async getTrendingCourseGraph(
+    courseId: string,
+    filter?: filter,
+    startDate?: string,
+    endDate?: string,
+  ): Promise<IChartTrendDTO[]> {
+    const course_id = parseObjectId(courseId);
+    console.log(courseId);
+    if (!course_id) {
+      throw createHttpError(HttpStatus.BAD_REQUEST, HttpResponse.INVALID_ID);
+    }
+
+    let start: Date;
+    let end: Date = new Date();
+
+    switch (filter) {
+      case "today":
+        start = new Date();
+        start.setHours(0, 0, 0, 0);
+        break;
+
+      case "Last Week":
+        start = new Date();
+        start.setDate(start.getDate() - 7);
+        break;
+
+      case "Last Month":
+        start = new Date();
+        start.setMonth(start.getMonth() - 1);
+        break;
+
+      case "Custom":
+        start = new Date(startDate!);
+        end = new Date(endDate!);
+        break;
+
+      default:
+        start = new Date();
+        start.setHours(0, 0, 0, 0);
+    }
+    const filterChart: chartFilter = {
+      courseId: course_id,
+      start: start,
+      end: end,
+    };
+
+    const graph = await this._erolledRepository.getCourseEnrollmentTrend(
+      course_id,
+      filterChart,
+    );
+    return graph.map((data) => chartTrendDTO(data));
   }
 }

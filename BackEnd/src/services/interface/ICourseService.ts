@@ -22,7 +22,10 @@ export interface ICourseService {
     courseData: Partial<ICourses> | ISession | ILecture,
     courseUpdatePart: "sessions" | "lecture" | "baseInformation",
   ): Promise<ICourses | null>;
-  getCourse(courseId: string, learnerId?: string): Promise<ICourseDTO | null>;
+  getCourse(
+    courseId: string,
+    learnerId?: string,
+  ): Promise<IFormCourseDTO | null>;
   getDraftedCourses(mentorId: string): Promise<IFormCourseDTO[] | null>;
   addSessions(courseId: string, session: ISession): Promise<ICourseDTO>;
   addLectures(

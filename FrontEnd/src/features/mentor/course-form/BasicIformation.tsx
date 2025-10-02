@@ -20,7 +20,7 @@ const BasicCourseInformation: React.FC<BaseCaourseProps> = () => {
   const [categories, setCategories] = useState<ICategoryTree[]>([]);
   const [selectedCategory, setSelectedCategory] = useState("");
   const [image, setImage] = useState("");
-  const [spin, setSpin] = useState(false);
+  const [spin] = useState(false);
   const { formData, updateBaseField, OnSubmit, setField, zodError } =
     useCourseFormContext();
   useEffect(() => {
@@ -104,9 +104,10 @@ const BasicCourseInformation: React.FC<BaseCaourseProps> = () => {
             placeholder="Enter Course Price"
             label="Course Price"
             name="price"
-            value={formData.price}
+            value={Number(formData.price)}
             onChange={updateBaseField}
             error={zodError.price}
+            min="1"
           />
 
           <div className="grid grid-cols-1 md:grid-cols-3 ">

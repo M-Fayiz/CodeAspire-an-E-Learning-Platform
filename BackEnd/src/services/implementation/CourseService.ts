@@ -111,13 +111,13 @@ export class CourseService implements ICourseService {
   async getCourse(
     courseId: string,
     learnerId?: string,
-  ): Promise<ICourseDTO | null> {
+  ): Promise<IFormCourseDTO | null> {
     const id = parseObjectId(courseId);
     const learner_id = parseObjectId(learnerId as string);
     if (!id) {
       throw createHttpError(HttpStatus.OK, HttpResponse.INVALID_ID);
     }
-    const courseData = await this._courseRepository.getCourse(id);
+    const courseData = await this._courseRepository.getCourseDetails(id);
     let isEnrolled: boolean = false;
     if (learner_id) {
       const enrollData = await this._enrolledRepository.isEnrolled(
@@ -132,7 +132,8 @@ export class CourseService implements ICourseService {
     if (!courseData) {
       throw createHttpError(HttpStatus.NOT_FOUND, HttpResponse.ITEM_NOT_FOUND);
     }
-    return courseDTO(courseData as ICoursesPopulated, isEnrolled);
+
+    return courseData ? formCourseDto(courseData[0]) : null;
   }
 
   async getDraftedCourses(mentorId: string): Promise<IFormCourseDTO[] | null> {
@@ -199,8 +200,7 @@ export class CourseService implements ICourseService {
     if (!CourseId || !SessionId || !LectureId) {
       throw createHttpError(HttpStatus.BAD_REQUEST, HttpResponse.INVALID_ID);
     }
-    // const isExist=await this._courseRepository.findLecture(CourseId,lecture.title)
-    // if(isExist&&isExist.sessions.lectures!==lecture)
+
     const coursedata = await this._courseRepository.editLecture(
       CourseId,
       SessionId,

@@ -4,8 +4,6 @@ import { HttpStatus } from "../../const/http-status";
 import { successResponse } from "../../utility/response.util";
 import { HttpResponse } from "../../const/error-message";
 import { IEnrolledService } from "../../services/interface/IEnrolledService";
-import logger from "../../config/logger.config";
-import { AxiosHeaders } from "axios";
 
 export class EnrolledController implements IEnrolledController {
   constructor(private _enrolledService: IEnrolledService) {}
@@ -95,7 +93,30 @@ export class EnrolledController implements IEnrolledController {
           courseId,
           mentorId,
         );
+
       res.status(200).json(successResponse(HttpResponse.OK, { dashboardData }));
+    } catch (error) {
+      next(error);
+    }
+  };
+  getGraphOFCourse = async (
+    req: Request,
+    res: Response,
+    next: NextFunction,
+  ): Promise<void> => {
+    try {
+      const { courseId } = req.params;
+
+      const { filter, startData, endDate } = req.query;
+
+      const chartData = await this._enrolledService.getTrendingCourseGraph(
+        courseId,
+        filter,
+        startData,
+        endDate,
+      );
+
+      res.status(200).json(successResponse(HttpResponse.OK, { chartData }));
     } catch (error) {
       next(error);
     }

@@ -1,5 +1,5 @@
-import React, { useEffect, useRef, useState } from "react";
-// import ColorThief from "colorthief";
+import React from "react";
+
 
 interface BannerProps {
   title: string;
@@ -7,12 +7,12 @@ interface BannerProps {
   imageUrl: string;
 }
 
-import { Play } from "lucide-react";
-// import { useNavigate } from "react-router";
+
 import { OrderService } from "@/service/order.service";
 import { useAuth } from "@/context/auth.context";
 import { toast } from "sonner";
 import { Link } from "react-router";
+import { Badge } from "@/components/ui/shadcn-io/ThemeBadge";
 
 interface BannerProps {
   courseId: string;
@@ -32,7 +32,6 @@ const Banner: React.FC<BannerProps> = ({
   const { user } = useAuth();
 
   const handlePaymentPage = async () => {
-   
     try {
       const result = await OrderService.createPayment(courseId, user!.id);
 
@@ -47,59 +46,54 @@ const Banner: React.FC<BannerProps> = ({
   };
 
   return (
-    <div className="relative w-full  rounded-sm bg-gradient-to-br from-blue-200 via-violet-50  to-blue-50  py-5 px-6 md:px-16 lg:px-24">
-      <div className="flex flex-col md:flex-row justify-between items-center relative gap-10">
-        <div className="relative flex-1 p-5">
-          <div className="absolute top-10  left-10 w-60 h-60 bg-blue-200 rounded-full blur-3xl -z-10"></div>
+    <div className="relative w-full py-5 px-6 md:px-16 lg:px-24">
+      <Badge label={}/>
 
-          <h1 className="text-4xl md:text-5xl font-semibold text-gray-800 mb-6 leading-snug">
-            {title}
-          </h1>
-          <p className="text-sm text-gray-600 mb-6">
-            {description}
-            {
-              "Another productive way to use this tool to begin a daily writing routine. One way is to generate a random paragraph with the intention to try to rewrite it while still keeping the original meaning"
-            }
-          </p>
-          {isEnrolled && (
-            <Link to={`/learner/enrolled-courses`}
-              // onClick={handlePaymentPage}
-              className="bg-blue-500 hover:bg-blue-600 text-white font-semibold px-6 py-3 rounded-lg shadow-md transition"
-            >
-              Continue learing
-            </Link>
-          )}
-          {!isEnrolled && (
-            <div className="flex gap-2">
-              <button
-                onClick={handlePaymentPage}
-                className="bg-blue-500 hover:bg-blue-600 text-white font-semibold px-6 py-3 rounded-lg shadow-md transition"
-              >
-                Enroll Now
-              </button>
-              <button className="border border-blue-500 text-blue-500 hover:bg-blue-50 font-semibold px-6 py-3 rounded-lg transition">
-                See Curriculum
-              </button>
-            </div>
-          )}
-        </div>
 
-        <div className="relative flex-1 max-w-md">
-          <img
-            src={imageUrl}
-            alt="Course preview"
-            className="w-full object-cover rounded-lg shadow-lg"
-          />
-          {!isEnrolled && (
-            <div className="absolute inset-0 flex items-center justify-center">
-              <button className="bg-white bg-opacity-90 hover:bg-opacity-100 rounded-full p-5 shadow-lg transition">
-                <Play className="w-8 h-8 text-blue-500 ml-1" />
-              </button>
-            </div>
-          )}
+  <div className="flex flex-col md:flex-row justify-between items-center relative gap-10">
+    <div className="relative flex-1 p-5">
+      <h1 className="text-4xl md:text-6xl font-bold text-gray-800 mb-6 leading-snug">
+        {title}
+      </h1>
+      <p className="text-sm text-gray-600 mb-6">
+        {description}
+        {
+          "Another productive way to use this tool to begin a daily writing routine. One way is to generate a random paragraph with the intention to try to rewrite it while still keeping the original meaning"
+        }
+      </p>
+
+      {isEnrolled ? (
+        <Link
+          to={`/learner/enrolled-courses`}
+          className="bg-orange-500 hover:bg-orange-600 text-white font-semibold px-6 py-3 rounded-lg shadow-md transition"
+        >
+          Continue learning
+        </Link>
+      ) : (
+        <div className="flex gap-2">
+          <button
+            onClick={handlePaymentPage}
+            className="bg-orange-500 hover:bg-orange-600 text-white font-semibold px-6 py-3 rounded-lg shadow-md transition"
+          >
+            Enroll Now
+          </button>
+          <button className="border border-orange-500 text-orange-500 hover:bg-orange-50 font-semibold px-6 py-3 rounded-lg transition">
+            See Curriculum
+          </button>
         </div>
-      </div>
+      )}
     </div>
+
+    <div className="relative flex-1 max-w-md">
+      <img
+        src={imageUrl}
+        alt="Course preview"
+        className="w-full object-cover rounded-lg shadow-lg relative z-10"
+      />
+    </div>
+  </div>
+</div>
+
   );
 };
 

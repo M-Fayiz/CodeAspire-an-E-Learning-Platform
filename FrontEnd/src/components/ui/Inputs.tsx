@@ -1,10 +1,10 @@
 import React, { useState } from "react";
-import { Eye, EyeOff, X } from "lucide-react";
+import { Eye, EyeOff} from "lucide-react";
 
 interface IInputProps {
   type?: string;
   placeholder?: string;
-  value?: string;
+  value?: string|number;
   name: string;
   onChange?: (
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,

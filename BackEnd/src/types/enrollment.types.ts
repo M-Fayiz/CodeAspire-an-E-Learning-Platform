@@ -25,3 +25,18 @@ export interface IEnrollement {
   createdAt?: Date;
   updatedAt?: Date;
 }
+
+export type filter = "today" | "Last Week" | "Last Month" | "Custom";
+
+export interface chartFilter {
+  courseId: Types.ObjectId;
+  start: Date;
+  end: Date;
+}
+
+export interface chartAggregation {
+  _id: {
+    day: Date;
+  };
+  count: number;
+}

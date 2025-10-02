@@ -4,7 +4,7 @@ import {
   HelpCircle,
   LogOut,
   Menu,
-  Search,
+
   Settings,
   User,
   X,
@@ -62,9 +62,9 @@ const Header: React.FC<IHeaderProbs> = ({
       </div>
 
       <div className="flex items-center space-x-3">
-        <button className="md:hidden p-2 rounded-md hover:bg-gray-100 transition-colors">
-          <Search className="w-5 h-5 text-gray-600" />
-        </button>
+          <div>
+            <Link to={'/'}>Home</Link>
+          </div>
 
         <div className="relative">
           <button

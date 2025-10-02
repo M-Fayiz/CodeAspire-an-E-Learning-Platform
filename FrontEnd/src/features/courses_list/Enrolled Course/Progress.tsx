@@ -16,14 +16,15 @@ const CurriculumProgress: React.FC<CurriculumProgressProps> = ({
     if (!sessions) return 0;
     return sessions.reduce((acc, vl) => acc + (vl.lectures?.length || 0), 0);
   }, [sessions]);
-  let set = new Set(progress.completedLectures);
+  const set = new Set(progress.completedLectures);
+  const progresPercentage = Math.floor((set.size / lectureCount) * 100)
 
   return (
     <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6 max-w-md mx-auto">
       <div className="flex justify-between items-center mb-6">
         <h2 className="text-lg font-semibold text-gray-900">{"title"}</h2>
         <span className="text-sm text-gray-500 font-medium">
-          {/* {progress.completedLectures.length}/{lectureCount} */}
+          {progress.completedLectures.length}/{lectureCount}
         </span>
       </div>
 
@@ -31,10 +32,10 @@ const CurriculumProgress: React.FC<CurriculumProgressProps> = ({
         <div className="w-full bg-gray-200 rounded-full h-2">
           <div
             className="bg-green-500 h-2 rounded-full transition-all duration-300"
-            style={{ width: `${15}%` }}
+            style={{ width: `${progresPercentage}%` }}
           />
         </div>
-        <p className="text-xs text-gray-500 mt-1">{10}% Complete</p>
+        <p className="text-xs text-gray-500 mt-1">{progresPercentage}% Complete</p>
       </div>
 
       <div className="space-y-1 max-h-[350px] overflow-y-auto">

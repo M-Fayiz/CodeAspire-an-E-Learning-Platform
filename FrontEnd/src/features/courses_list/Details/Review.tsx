@@ -1,29 +1,33 @@
 import React, { useEffect, useState } from "react";
 import { ReviewService } from "@/service/review.service";
 import type { IReviewDTO } from "@/types/DTOS/review.dto.type";
-import {  AxiosError } from "axios";
+import { AxiosError } from "axios";
 import { toast } from "sonner";
 import { Spinner } from "@/components/templates/Spinner";
 import StarRating from "../Enrolled Course/StarRating";
 import { EnrolledService } from "@/service/Learner/enrolledCourse.service";
 
-
 interface CommentProps {
   userId: string;
   courseId: string;
-  enrolledId:string;
-  starRating:number
+  enrolledId: string;
+  starRating: number;
 }
-const CommentsSection: React.FC<CommentProps> = ({ userId, courseId,enrolledId,starRating }) => {
+const CommentsSection: React.FC<CommentProps> = ({
+  userId,
+  courseId,
+  enrolledId,
+  starRating,
+}) => {
   const [review, setReview] = useState<IReviewDTO[] | null>(null);
   const [newComment, setNewComment] = useState("");
   const [loading, setLoading] = useState(false);
-  const [rating, setRating]=useState(starRating)
+  const [rating, setRating] = useState(starRating);
 
   useEffect(() => {
     (async () => {
       const data = await ReviewService.getCourseReviews(courseId);
-  
+
       if (data) {
         setReview(data);
       }
@@ -52,18 +56,17 @@ const CommentsSection: React.FC<CommentProps> = ({ userId, courseId,enrolledId,s
     }
   }
 
-  const handleRating = async(value: number) => {
-   try {
-    const data = await EnrolledService.addRating(enrolledId,value)
-    if(data){
-      setRating(data)
+  const handleRating = async (value: number) => {
+    try {
+      const data = await EnrolledService.addRating(enrolledId, value);
+      if (data) {
+        setRating(data);
+      }
+    } catch (error) {
+      if (error instanceof AxiosError) {
+        toast.error(error.message);
+      }
     }
-   } catch (error) {
-    if(error instanceof AxiosError){
-      toast.error(error.message)
-    }
-   }
-    
   };
   return (
     <div className="max-w-4xl mx-auto bg-white rounded-2xl shadow-sm border border-gray-100 p-6">
@@ -88,7 +91,7 @@ const CommentsSection: React.FC<CommentProps> = ({ userId, courseId,enrolledId,s
               Submit
             </button>
             <div>
-              <StarRating starRating={rating} onRate={handleRating}/>
+              <StarRating starRating={rating} onRate={handleRating} />
             </div>
           </div>
         </div>

@@ -31,9 +31,15 @@ enrolledRouter.get(
   enrolledController.getEnrolledDetails,
 );
 enrolledRouter.get(
+  "/course/:courseId/chart",
+  verifyUser,
+  authorizedRole("mentor"),
+  enrolledController.getGraphOFCourse,
+);
+enrolledRouter.get(
   "/course/:courseId/mentor/:mentorId",
-  // verifyUser,
-  // authorizedRole("learner"),
+  verifyUser,
+  authorizedRole("mentor"),
   enrolledController.getCourseDashboardData,
 );
 enrolledRouter.put(

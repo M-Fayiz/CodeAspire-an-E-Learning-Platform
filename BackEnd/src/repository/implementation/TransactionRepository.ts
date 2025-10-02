@@ -7,7 +7,7 @@ import { ITransaction } from "../../types/transaction.type";
 import { BaseRepository } from "../baseRepository";
 import { ITransactionRepository } from "../interface/ITransactionRepository";
 import { IRevenue } from "../../types/dtos.type/CourseDashboard.dto.type";
-import { IRevenueAggregationResult } from "../../types/CourseDashboard.type";
+import { IRevenueAggregationResult } from "../../types/courseDashboard.type";
 
 export class TransactionRepositoy
   extends BaseRepository<ITransaactionModel>

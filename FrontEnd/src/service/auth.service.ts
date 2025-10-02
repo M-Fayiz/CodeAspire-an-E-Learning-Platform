@@ -3,6 +3,8 @@ import { axiosInstance } from "../axios/createInstance";
 import type { IDecodedUserType, ILogin, ISignUp } from "../types/auth.types";
 import { API } from "../constants/api.constant";
 import type { UserRole } from "../types/auth.types";
+import { throwAxiosError } from "@/utility/throwErrot";
+import { sharedService } from "./shared.service";
 
 export const AuthService = {
   signUp: async (
@@ -24,35 +26,37 @@ export const AuthService = {
     token: string | null,
   ): Promise<{ status: number; message: string }> => {
     try {
-      console.log("verify email auth service");
+    
       const response = await axiosInstance.post(API.Auth.VERIFY_EMAIL_URL, {
         token,
         email,
       });
-      console.log("verify email ", response.data);
+      
       return response.data.message;
     } catch (error) {
-      const err = error as AxiosError<{ error: string }>;
-      const errorMessage =
-        err.response?.data.error ||
-        "Failed, something went wrong please try again";
-      throw new Error(errorMessage);
+     throwAxiosError(error)
     }
   },
   authME: async (): Promise<IDecodedUserType> => {
-    console.log("auth me load..");
+
     try {
       const response = await axiosInstance.post(
         API.Auth.AUTH_URL,
         {},
         { withCredentials: true },
       );
+      if(response.data.user.profile){
+
+        const profilrUrl=await sharedService.getPreSignedDownloadURL(response.data.user.profile)
+        console.log(profilrUrl)
+        if(profilrUrl){
+          response.data.user.profile=profilrUrl
+        }
+      }
+      console.log(' this the profile ur; ',response.data.user.profile)
       return response.data?.user;
     } catch (error) {
-      const err = error as AxiosError<{ error: string }>;
-      const errorMessage =
-        err.response?.data?.error || "Something Went wrong Please try again";
-      throw new Error(errorMessage);
+     throwAxiosError(error)
     }
   },
 
@@ -68,9 +72,7 @@ export const AuthService = {
       });
       return response?.data.user;
     } catch (error) {
-      const err = error as AxiosError<{ error: string }>;
-      const errorMessage = err.response?.data.error;
-      throw new Error(errorMessage);
+     throwAxiosError(error)
     }
   },
   login: async (
@@ -87,11 +89,7 @@ export const AuthService = {
 
       return response?.data;
     } catch (error) {
-      const err = error as AxiosError<{ error: string }>;
-      const errorMessage = err.response?.data?.error || "Something went wrong ";
-      // const statusCode=err.response?.status||500
-
-      throw new Error(errorMessage);
+      throwAxiosError(error)
     }
   },
   logOut: async () => {
@@ -104,18 +102,14 @@ export const AuthService = {
 
       if (response.status == 200) return true;
     } catch (error) {
-      const err = error as AxiosError<{ error: string }>;
-      const errorMessage = err.response?.data.error;
-      throw new Error(errorMessage);
+     throwAxiosError(error)
     }
   },
   googleAuth: async (role: UserRole): Promise<void> => {
     try {
       window.location.href = `${import.meta.env.VITE_BASE_URL}/auth/google?role:${role}`;
     } catch (error) {
-      const err = error as AxiosError<{ error: string }>;
-      const errorMessage = err.response?.data.error;
-      throw new Error(errorMessage);
+      throwAxiosError(error)
     }
   },
   forgotPassword: async (
@@ -127,9 +121,7 @@ export const AuthService = {
       });
       return response.data?.email;
     } catch (error) {
-      const err = error as AxiosError<{ error: string }>;
-      const errorMessage = err.response?.data.error;
-      throw new Error(errorMessage);
+      throwAxiosError(error)
     }
   },
   resetPassword: async (
@@ -145,9 +137,7 @@ export const AuthService = {
       });
       return response?.data;
     } catch (error) {
-      const err = error as AxiosError<{ error: string }>;
-      const errorMessage = err.response?.data.error;
-      throw new Error(errorMessage);
+      throwAxiosError(error)
     }
   },
 };

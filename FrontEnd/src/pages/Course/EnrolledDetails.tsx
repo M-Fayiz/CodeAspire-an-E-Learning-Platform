@@ -31,6 +31,7 @@ const EnrolledCourseDetails = () => {
         lecture,
       );
       if (result) {
+        console.log(' this is the result :',result)
         setEnrolledCourse((prv) => (prv ? { ...prv, progress: result } : prv));
         // console.log('after the updation :',enrolledCourse)
       }
@@ -105,9 +106,7 @@ const EnrolledCourseDetails = () => {
             />
             <Taps
               label="mentor"
-              icon={
-                <User className="text-gray-500 w-5 h-5 hidden md:block" />
-              }
+              icon={<User className="text-gray-500 w-5 h-5 hidden md:block" />}
               Click={handle}
               tap="mentor"
               activeTap={activeTap}
@@ -203,7 +202,7 @@ const EnrolledCourseDetails = () => {
               <CommentsSection
                 userId={user!.id}
                 courseId={enrolledCourse?.course._id as string}
-                enrolledId={enrolledCourse?._id  as string}
+                enrolledId={enrolledCourse?._id as string}
                 starRating={enrolledCourse?.rating as number}
               />
             )}

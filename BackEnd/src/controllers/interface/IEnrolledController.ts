@@ -22,4 +22,9 @@ export interface IEnrolledController {
     res: Response,
     next: NextFunction,
   ): Promise<void>;
+  getGraphOFCourse(
+    req: Request,
+    res: Response,
+    next: NextFunction,
+  ): Promise<void>;
 }

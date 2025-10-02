@@ -50,18 +50,24 @@ const CourseFormProvider = ({ children }: { children: ReactNode }) => {
   const [zodError, setErrors] = useState<{ [key: string]: string }>({});
   const [courseId, setCourseId] = useState("");
   const { user } = useAuth();
-
+    
   const updateBaseField = (
     e: React.ChangeEvent<
-      HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement
+    HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement
+  
     >,
   ) => {
     const { name, type, value } = e.target;
-    setFormData((prv) => ({
-      ...prv,
-      [name]:
-        type == "file" ? (e.target as HTMLInputElement).files?.[0] : value,
-    }));
+     
+    setFormData((prev) => ({
+    ...prev,
+    [name]:
+      type === "file"
+        ? (e.target as HTMLInputElement).files?.[0] || "" 
+        : name === "price"
+        ? Number(value) || 0 
+        : value, 
+  }));
   };
   const setField = (name: string, value: string) => {
     setFormData((prev) => ({

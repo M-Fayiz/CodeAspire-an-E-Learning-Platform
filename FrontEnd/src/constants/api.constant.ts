@@ -62,7 +62,11 @@ export const API = {
     GET_ENROLLD_COURSE_DETAILS: (enrolledId: string) =>
       `/enrollements/course/${enrolledId}`,
     UPDATE_PROGRESS: (enrolledId: string) => `/enrollements/${enrolledId}`,
-    ADD_RATING:(enrolledId:string)=>`/enrollements/${enrolledId}/rating`
+    ADD_RATING: (enrolledId: string) => `/enrollements/${enrolledId}/rating`,
+    GET_COURSE_DASHBOARD: (courseId: string, mentorId: string) =>
+      `/enrollements/course/${courseId}/mentor/${mentorId}`,
+    GET_FILTERED_GRAPH: (courseId: string) =>
+      `/enrollements/course/${courseId}/chart`,
   },
   REVIEW: {
     ADD_REVIEW: "/reviews/",

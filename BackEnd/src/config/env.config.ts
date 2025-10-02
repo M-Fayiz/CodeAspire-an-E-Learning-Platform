@@ -71,4 +71,7 @@ export const env = {
   get S3_Bucket_URL_EXPIRE_IN() {
     return process.env.S3_Bucket_URL_EXPIRE_IN;
   },
+  get HASH_SALT() {
+    return process.env.SALT;
+  },
 };

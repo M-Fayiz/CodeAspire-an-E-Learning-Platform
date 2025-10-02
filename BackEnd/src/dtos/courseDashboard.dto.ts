@@ -1,6 +1,10 @@
 import { ICourses } from "../types/courses.type";
-import { CourseDashboardDTO } from "../types/dtos.type/CourseDashboard.dto.type";
-import { IRevenueAggregationResult } from "../types/CourseDashboard.type";
+import {
+  CourseDashboardDTO,
+  IChartTrendDTO,
+} from "../types/dtos.type/CourseDashboard.dto.type";
+import { IRevenueAggregationResult } from "../types/courseDashboard.type";
+import { chartAggregation } from "../types/enrollment.types";
 
 export function courseDashboardDTO(
   enrolledStudents: number,
@@ -13,14 +17,22 @@ export function courseDashboardDTO(
     avgRating,
     course: {
       _id: course.id as string,
-      title: course.thumbnail as string,
+      title: course.title as string,
       description: course.description as string,
       price: course.price,
       thumbnail: course.thumbnail as string,
+      status: course.status as string,
     },
     revenue: {
-      admin: revenue.adminSum,
-      mentor: revenue.mentorSum,
+      admin: revenue.adminSum ?? null,
+      mentor: revenue.mentorSum ?? null,
     },
+  };
+}
+
+export function chartTrendDTO(data: chartAggregation): IChartTrendDTO {
+  return {
+    date: data._id.day,
+    enrolled: data.count,
   };
 }

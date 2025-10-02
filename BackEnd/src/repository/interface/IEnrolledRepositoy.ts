@@ -1,6 +1,8 @@
 import { Types } from "mongoose";
 import { IEnrolledModel } from "../../models/enrolled.model";
 import {
+  chartAggregation,
+  chartFilter,
   IEnrolledAggregation,
   IEnrollement,
 } from "../../types/enrollment.types";
@@ -29,4 +31,8 @@ export interface IEnrolledRepository {
     courseId: Types.ObjectId,
     mentorId: Types.ObjectId,
   ): Promise<IEnrolledAggregation[] | null>;
+  getCourseEnrollmentTrend(
+    courseId: Types.ObjectId,
+    filterChart: chartFilter,
+  ): Promise<chartAggregation[]>;
 }
