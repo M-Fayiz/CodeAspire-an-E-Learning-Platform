@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   Activity,
   Mail,
@@ -8,34 +8,46 @@ import {
   XCircle,
   Ban,
   User,
-  MapPin,
+  // MapPin,
   ExternalLink,
   FileText,
 } from "lucide-react";
-// import type { IUserType } from '../../../types/profile.type';
-import { useLoaderData } from "react-router";
+
 import { adminService } from "@/service/admin/admin.service";
-import { toastService } from "../../../config/Toast.config";
-import type { AnyUser, IUserType } from "../../../types/users.type";
+import type { IUserType } from "../../../types/users.type";
+import { toast } from "sonner";
+import { useParams } from "react-router";
 
 const AdminUserProfile: React.FC = () => {
-  const userData = useLoaderData() as AnyUser;
-  const [profileData, setProfileData] = useState(userData);
+  const {id}=useParams()
+  const [profileData, setProfileData] = useState<IUserType|null>(null);
+  useEffect(()=>{
+    (async()=>{
+      const data=await adminService.userProfile(id as string)
+      if(data){
+        setProfileData(data)
+      }
 
+    })()
+  },[id])
   const handleUnblockUser = async () => {
     try {
-      const result = await adminService.blockUser(userData._id);
-      if (result) {
-        toastService.success(
-          result.isActive
-            ? "User Unblocked Successfully"
-            : "User Blocked Successfully",
-        );
-        setProfileData((prv) => ({ ...prv, isActive: result.isActive }));
+       if (!profileData?.id) return
+      if(profileData.id) {
+
+        const result = await adminService.blockUser(profileData.id);
+        if (result) {
+          toast.success(
+            result.isActive
+              ? "User Unblocked Successfully"
+              : "User Blocked Successfully",
+          );
+           setProfileData((prv) => ({ ...prv!, isActive: result.isActive }));
+        }
       }
     } catch (error) {
       if (error instanceof Error) {
-        toastService.error(error.message);
+        toast.error(error.message);
       }
     }
   };
@@ -62,32 +74,40 @@ const AdminUserProfile: React.FC = () => {
     }
   };
 
-  const approveMentor = async () => {
+  
+  const approveMentor = async (status:string) => {
     try {
-      const result = await adminService.approveMentor(profileData._id);
-      console.log("is Approved", result);
+      const result = await adminService.approveMentor(profileData!.id,status);
+      console.log(' status ID ',result) 
       if (result) {
-        // setUser((prv)=>({...prv,isApproved}))
-        toastService.success("menter has been approved");
+        setProfileData((prv)=>({...prv!,approvalStatus:result.status}))
+        if(result.status=='approved'){
+
+          toast.success("menter has been approved");
+        }else {
+           toast.success("menter has been rejected");
+        }
       }
     } catch (error) {
       if (error instanceof Error) {
-        toastService.error(error.message);
+        toast.error(error.message);
       }
     }
   };
 
   return (
     <div className="min-h-screen bg-gray-50 py-8">
+          {!profileData?<p>loadinf...</p>:(
+
       <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="bg-white rounded-sg shadow-sm border border-gray-200 mb-6">
           <div className="px-6 py-8">
             <div className="flex items-start justify-between">
               <div className="flex items-center space-x-6">
                 <div className="relative">
-                  {profileData.imageURL ? (
+                  {profileData&&profileData.profilePicture ? (
                     <img
-                      src={profileData.imageURL}
+                      src={profileData.profilePicture}
                       alt={profileData.name}
                       className="w-24 h-24 rounded-full object-cover border-4 border-white shadow-lg"
                     />
@@ -99,7 +119,7 @@ const AdminUserProfile: React.FC = () => {
                       className={`flex items-center space-x-1 px-2 py-1 rounded-full text-xs font-medium ${getStatusColor(profileData.isActive)}`}
                     >
                       {getStatusIcon(profileData.isActive)}
-                      {profileData.isActive ? "Active" : "blocked"}
+                      {profileData&&profileData.isActive ? "Active" : "blocked"}
                       <span className="capitalize">{profileData.isActive}</span>
                     </div>
                   </div>
@@ -154,10 +174,10 @@ const AdminUserProfile: React.FC = () => {
                   </span>
                 </div>
                 <div className="flex items-center gap-2">
-                  <MapPin className="w-4 h-4 text-slate-500" />
+                  {/* <MapPin className="w-4 h-4 text-slate-500" />
                   <span className="text-sm text-slate-600">
                     {"currentUser.location"}
-                  </span>
+                  </span> */}
                 </div>
                 <div className="flex items-center gap-2">
                   <User className="w-4 h-4 text-slate-500" />
@@ -243,7 +263,7 @@ const AdminUserProfile: React.FC = () => {
                   <div className="flex ">
                     <div className="flex flex-wrap gap-2">
                       <button
-                        onClick={approveMentor}
+                        onClick={()=>approveMentor('approved')}
                         type="button"
                         className="text-green-700 hover:text-white border border-green-700 hover:bg-green-800 focus:ring-4 focus:outline-none focus:ring-green-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center me-2 mb-2 dark:border-green-500 dark:text-green-500 dark:hover:text-white dark:hover:bg-green-600 dark:focus:ring-green-800"
                       >
@@ -252,11 +272,11 @@ const AdminUserProfile: React.FC = () => {
                     </div>
                     <div className="flex flex-wrap gap-2">
                       <button
-                        onClick={approveMentor}
+                        onClick={()=>approveMentor('rejected')}
                         type="button"
-                        className="text-green-700 hover:text-white border border-green-700 hover:bg-green-800 focus:ring-4 focus:outline-none focus:ring-green-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center me-2 mb-2 dark:border-green-500 dark:text-green-500 dark:hover:text-white dark:hover:bg-green-600 dark:focus:ring-green-800"
+                        className="text-red-700 hover:text-white border border-red-700 hover:bg-red-800 focus:ring-4 focus:outline-none focus:ring-red-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center me-2 mb-2 dark:border-red-500 dark:text-red-500 dark:hover:text-white dark:hover:bg-red-600 dark:focus:ring-red-800"
                       >
-                        Approved
+                        Rejected
                       </button>
                     </div>
                   </div>
@@ -266,6 +286,7 @@ const AdminUserProfile: React.FC = () => {
           </div>
         </div>
       </div>
+          )}
     </div>
   );
 };

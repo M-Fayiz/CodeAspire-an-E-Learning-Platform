@@ -16,6 +16,7 @@ export interface IEnrollement {
   learnerId: Types.ObjectId;
   courseId: Types.ObjectId | IFormCourseDTO;
   mentorId: Types.ObjectId;
+  categoryId:Types.ObjectId
   progress: {
     completedLectures: Types.ObjectId[];
     lastAccessedLecture: Types.ObjectId | null;

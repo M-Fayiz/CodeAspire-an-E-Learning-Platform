@@ -1,4 +1,4 @@
-import { Types } from "mongoose";
+import { FilterQuery, Types } from "mongoose";
 import { ICourses, ILecture, ISession } from "../../types/courses.type";
 
 export interface ICourseRepository {
@@ -24,7 +24,8 @@ export interface ICourseRepository {
     baseInfo: ICourses,
   ): Promise<ICourses | null>;
   getCourse(courseId: Types.ObjectId): Promise<ICourses | null>;
-  getMentorDraftedCourses(mentorId: Types.ObjectId): Promise<ICourses[] | null>;
+  getMentorDraftedCourses(search:string,limit:number,skip:number,
+    mentorId: Types.ObjectId,): Promise<ICourses[] | null>;
   addLecture(
     courseId: Types.ObjectId,
     sessionId: Types.ObjectId,
@@ -52,9 +53,6 @@ export interface ICourseRepository {
   publishCourse(courseId: Types.ObjectId): Promise<ICourses | null>;
   findCourse(courseId: Types.ObjectId): Promise<ICourses | null>;
   findDocumentCount(
-    search?: string,
-    category?: Types.ObjectId,
-    subcategory?: Types.ObjectId,
-    level?: string,
+    query:FilterQuery<ICourses>
   ): Promise<number>;
 }

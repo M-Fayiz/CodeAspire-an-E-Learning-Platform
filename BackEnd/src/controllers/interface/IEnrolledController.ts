@@ -27,4 +27,9 @@ export interface IEnrolledController {
     res: Response,
     next: NextFunction,
   ): Promise<void>;
+  getMentorDashboardData(
+    req: Request,
+    res: Response,
+    next: NextFunction,
+  ): Promise<void>;
 }

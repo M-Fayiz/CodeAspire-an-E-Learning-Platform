@@ -7,7 +7,7 @@ import {
 import { env } from "../config/env.config";
 import { UserRepository } from "../repository/implementation/UserRepository";
 import { Request } from "express";
-import { IUserRole } from "../types/user.types";
+import { IRole } from "../types/user.types";
 import { Types } from "mongoose";
 
 const userRepo = new UserRepository();
@@ -33,7 +33,7 @@ passport.use(
       done: VerifyCallback,
     ) => {
       try {
-        const role = (req.session.role as IUserRole) || "learner";
+        const role = (req.session.role as IRole) || "learner";
         const user = await userRepo.findOrCreateUser(profile, role);
         if (!user) {
           throw new Error("Internal Error");

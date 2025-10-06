@@ -11,7 +11,7 @@ const Footer: React.FC = () => {
                 <Code className="w-6 h-6 text-white" />
               </div>
               <span className="text-2xl font-bold bg-gradient-to-r from-blue-400 to-purple-400 bg-clip-text text-transparent">
-                TechMaster
+                CodeAspire
               </span>
             </div>
             <p className="text-gray-300 mb-6 max-w-md">
@@ -86,7 +86,7 @@ const Footer: React.FC = () => {
 
         <div className="border-t border-gray-800 mt-12 pt-8 text-center text-gray-400">
           <p>
-            &copy; 2024 TechMaster. All rights reserved. Built with ❤️ for
+            &copy; 2024 CodeAspire. All rights reserved. Built with ❤️ for
             developers.
           </p>
         </div>

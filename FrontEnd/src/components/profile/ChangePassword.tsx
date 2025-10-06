@@ -3,9 +3,9 @@ import { useState } from "react";
 import { Input } from "../ui/Inputs";
 import { validatePassword } from "../../schema/validateForm";
 import UserService from "../../service/user.service";
-import { toastService } from "../toast/ToastSystem";
 import { Spinner } from "../templates/Spinner";
 import type { TapsComp } from "../../pages/Profile Page/Profile";
+import { toast } from "sonner";
 
 interface PasswordChangeData {
   currentPassword: string;
@@ -62,14 +62,14 @@ export const PasswordChangeForm: React.FC<passWordsProps> = ({
         passwordData.password,
       );
       if (result) {
-        toastService.success("Password Successfully Updated");
+        toast.success("Password Successfully Updated");
 
         setTabs("profile");
         setIsLoading(false);
       }
     } catch (error) {
       if (error instanceof Error) {
-        toastService.error(error.message);
+        toast.error(error.message);
         setIsLoading(false);
       }
     }

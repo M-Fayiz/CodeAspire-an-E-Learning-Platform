@@ -1,4 +1,4 @@
-import { Activity, TrendingUp } from "lucide-react";
+import { Activity, BookCopy, DollarSign, TrendingUp, Users } from "lucide-react";
 import { useAuth } from "../../../context/auth.context";
 import { Spinner } from "../../templates/Spinner";
 import { Navigate } from "react-router";
@@ -12,15 +12,15 @@ const DashboardContent = () => {
   const getDashboardContent = () => {
     switch (user.role) {
       case "admin":
-        return {
-          title: "Admin Dashboard",
-          stats: [
-            { label: "Total Users", value: "1,234", color: "bg-blue-500" },
-            { label: "Active Courses", value: "89", color: "bg-green-500" },
-            { label: "Revenue", value: "$45,123", color: "bg-purple-500" },
-            { label: "System Health", value: "99.9%", color: "bg-orange-500" },
-          ],
-        };
+          return {
+        title: "Admin Dashboard",
+        stats: [
+          { label: "Total Users", value: "1,234", icon: Users },
+          { label: "Active Courses", value: "89", icon: BookCopy },
+          { label: "Revenue", value: "$45,123", icon: DollarSign },
+          { label: "System Health", value: "99.9%", icon: Activity },
+        ],
+      };
       case "learner":
         return {
           title: "My Learning Dashboard",
@@ -35,10 +35,10 @@ const DashboardContent = () => {
         return {
           title: "Mentor Dashboard",
           stats: [
-            { label: "Students", value: "156", color: "bg-blue-500" },
-            { label: "Courses", value: "12", color: "bg-green-500" },
-            { label: "Rating", value: "4.8", color: "bg-purple-500" },
-            { label: "Earnings", value: "$3,456", color: "bg-orange-500" },
+            { label: "Total Students", value: "156", icon:Users },
+            { label: "Courses", value: "12", icon:BookCopy},
+            // { label: "Rating", value: "4.8", icon: UserStar },
+            // { label: "Earnings", value: "$3,456", icon: DollerSign },
           ],
         };
       default:
@@ -57,10 +57,11 @@ const DashboardContent = () => {
 
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
         {content.stats.map((stat, index) => (
+         
           <div key={index} className="bg-white rounded-lg shadow-sm p-6">
             <div className="flex items-center">
               <div
-                className={`${stat.color} w-12 h-12 rounded-lg flex items-center justify-center mr-4`}
+                className={`${stat.icon} w-12 h-12 rounded-lg flex items-center justify-center mr-4`}
               >
                 <TrendingUp className="w-6 h-6 text-white" />
               </div>

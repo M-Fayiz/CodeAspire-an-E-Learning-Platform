@@ -14,7 +14,7 @@ export interface IUserType {
   expertise?: string[];
   mentorRating?: number;
   imageURL?: string;
-  isApproved?: boolean;
+  approvalStatus?: mentorApprovalStatus;
   socialLinks?: {
     linkedIn: string;
     github: string;

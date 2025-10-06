@@ -8,6 +8,7 @@ import { EnrolledController } from "../controllers/implementation/EnrolledContro
 import { verifyUser } from "../middlewares/authentication.middleware";
 import { authorizedRole } from "../middlewares/authorisation.middleware";
 import { TransactionRepositoy } from "../repository/implementation/TransactionRepository";
+import { IRole } from "../types/user.types";
 const transactionRepository = new TransactionRepositoy();
 const enrolledRepository = new EnrolledRepository();
 const courseRepository = new CourseRepository();
@@ -21,37 +22,44 @@ const enrolledController = new EnrolledController(enrolledService);
 enrolledRouter.get(
   "/:learnerId",
   verifyUser,
-  authorizedRole("learner"),
+  authorizedRole(IRole.Learner),
   enrolledController.getEnrolledCourse,
 );
 enrolledRouter.get(
   "/course/:enrolledId",
   verifyUser,
-  authorizedRole("learner"),
+  authorizedRole(IRole.Learner),
   enrolledController.getEnrolledDetails,
 );
 enrolledRouter.get(
   "/course/:courseId/chart",
   verifyUser,
-  authorizedRole("mentor"),
+  authorizedRole(IRole.Mentor),
   enrolledController.getGraphOFCourse,
 );
 enrolledRouter.get(
   "/course/:courseId/mentor/:mentorId",
   verifyUser,
-  authorizedRole("mentor"),
+  authorizedRole(IRole.Mentor),
   enrolledController.getCourseDashboardData,
 );
+enrolledRouter.get(
+  "/mentor/:mentorId/dashboard",
+  verifyUser,
+  authorizedRole(IRole.Mentor),
+  enrolledController.getMentorDashboardData,
+);
+
 enrolledRouter.put(
   "/:enrolledId",
   verifyUser,
-  authorizedRole("learner"),
+  authorizedRole(IRole.Learner),
   enrolledController.updateProgress,
 );
 enrolledRouter.put(
   "/:enrolledId/rating",
   verifyUser,
-  authorizedRole("learner"),
+  authorizedRole(IRole.Learner),
   enrolledController.addRating,
 );
 

@@ -10,13 +10,13 @@ import {
   HelpCircle,
   Home,
   MessageSquare,
-  PlusCircle,
+
   Settings,
   Shield,
   ShoppingCart,
   Star,
   Users,
-  BarChart3,
+  // BarChart3,
 } from "lucide-react";
 import React from "react";
 
@@ -101,14 +101,14 @@ export const navigationConfig = {
         path: "/mentor/messages",
         badge: 8,
       },
-      { icon: BarChart3, label: "Analytics", path: "/mentor/analytics" },
+      // { icon: BarChart3, label: "Analytics", path: "/mentor/analytics" },
     ],
     secondary: [
       { icon: Calendar, label: "Schedule", path: "/mentor/schedule" },
-      { icon: CreditCard, label: "Earnings", path: "/mentor/earnings" },
-      { icon: Star, label: "Reviews", path: "/mentor/reviews" },
-      { icon: Settings, label: "Settings", path: "/mentor/settings" },
-      { icon: HelpCircle, label: "Help", path: "/mentor/help" },
+      // { icon: CreditCard, label: "Earnings", path: "/mentor/earnings" },
+      // { icon: Star, label: "Reviews", path: "/mentor/reviews" },
+      // { icon: Settings, label: "Settings", path: "/mentor/settings" },
+      // { icon: HelpCircle, label: "Help", path: "/mentor/help" },
     ],
   },
 };

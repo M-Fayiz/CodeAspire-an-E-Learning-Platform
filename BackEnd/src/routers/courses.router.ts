@@ -6,6 +6,7 @@ import { verifyUser } from "../middlewares/authentication.middleware";
 import { authorizedRole } from "../middlewares/authorisation.middleware";
 import { CategoryRepository } from "../repository/implementation/CategoryRepository";
 import { EnrolledRepository } from "../repository/implementation/EnrolledRepository";
+import { IRole } from "../types/user.types";
 
 const courseRepository = new CourseRepository();
 const categoryRepository = new CategoryRepository();
@@ -22,7 +23,7 @@ const courseRouter = express.Router();
 courseRouter.get("/", courseController.fetchCourse);
 
 courseRouter.use(verifyUser);
-courseRouter.use(authorizedRole("mentor", "admin", "learner"));
+courseRouter.use(authorizedRole(IRole.Mentor, IRole.Admin, IRole.Learner));
 courseRouter.post("/", courseController.addCourse);
 courseRouter.get("/my-courses", courseController.getMentorDraftedCourseList);
 courseRouter.get("/admin-courses", courseController.getAdminCoursList);

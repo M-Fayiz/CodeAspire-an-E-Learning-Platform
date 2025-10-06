@@ -1,11 +1,11 @@
 import mongoose, { Types, Document, Schema } from "mongoose";
 import { ITransaction } from "../types/transaction.type";
 
-export interface ITransaactionModel
+export interface ITransactionModel
   extends Document<Types.ObjectId>,
     Omit<ITransaction, "_id"> {}
 
-const TransactionSchema = new mongoose.Schema<ITransaactionModel>(
+const TransactionSchema = new mongoose.Schema<ITransactionModel>(
   {
     orderId: {
       type: Schema.Types.ObjectId,
@@ -21,6 +21,11 @@ const TransactionSchema = new mongoose.Schema<ITransaactionModel>(
       required: true,
     },
     userId: {
+      type: Schema.Types.ObjectId,
+      required: true,
+      ref: "User",
+    },
+    mentorId:{
       type: Schema.Types.ObjectId,
       required: true,
       ref: "User",
@@ -42,7 +47,7 @@ const TransactionSchema = new mongoose.Schema<ITransaactionModel>(
   { timestamps: true },
 );
 
-export const transactionModel = mongoose.model<ITransaactionModel>(
+export const transactionModel = mongoose.model<ITransactionModel>(
   "transactions",
   TransactionSchema,
 );

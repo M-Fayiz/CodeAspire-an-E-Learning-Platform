@@ -7,7 +7,9 @@ import { IAdminService } from "../interface/IAdminService";
 import { parseObjectId } from "../../mongoose/objectId";
 import { LearnerDTO, MentorDTO } from "../../dtos/role.dto";
 import { ILearnerDTO, IMentorDTO } from "../../types/dtos.type/dto.types";
-import { mentorApprovalStatus } from "../../types/user.types";
+import { IRole, mentorApprovalStatus } from "../../types/user.types";
+import { filter } from "../../types/enrollment.types";
+import { timeFilter } from "../../utility/dashFilterGenerator.utils";
 
 export type UserFetchResponse = {
   safeUsers: IMentorDTO | ILearnerDTO[];
@@ -45,9 +47,9 @@ export class AdminService implements IAdminService {
 
     const safeUsers = allUsers.map((user) => {
       switch (user.role) {
-        case "mentor":
+        case IRole.Admin:
           return MentorDTO(user as IMenterModel);
-        case "learner":
+        case IRole.Learner:
           return LearnerDTO(user as ILearnerModel);
         default:
           return {
@@ -104,9 +106,9 @@ export class AdminService implements IAdminService {
     }
 
     switch (profileData.role) {
-      case "mentor":
+      case IRole.Admin:
         return MentorDTO(profileData as IMenterModel);
-      case "learner":
+      case IRole.Learner:
         return LearnerDTO(profileData as ILearnerModel);
       default:
         return {
@@ -124,7 +126,8 @@ export class AdminService implements IAdminService {
   }
   async approveMentor(
     id: string,
-  ): Promise<{ ApprovalStatus: mentorApprovalStatus }> {
+    status:string
+  ): Promise<{ status: mentorApprovalStatus }> {
     const objectId = parseObjectId(id);
     if (!objectId) {
       throw createHttpError(
@@ -132,14 +135,19 @@ export class AdminService implements IAdminService {
         HttpResponse.INVALID_CREDNTIALS,
       );
     }
+    
     const approvedData = await this._userRepo.updateMentorStatus(
       objectId,
-      "approved",
+      status,
     );
     if (!approvedData) {
       throw createHttpError(HttpStatus.NOT_FOUND, HttpResponse.USER_NOT_FOUND);
     }
 
-    return { ApprovalStatus: approvedData.ApprovalStatus };
+    return { status: approvedData.ApprovalStatus };
+  }
+  async getDashboardData(filter?: filter, startDay?: string, endDay?: string): Promise<void> {
+      const {start,end}=timeFilter(filter,startDay,endDay)
+      
   }
 }

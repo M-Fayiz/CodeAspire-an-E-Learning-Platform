@@ -26,7 +26,7 @@ const Sidebar: React.FC<ISidebarProps> = ({ user, isOpen, onClose }) => {
       key={item.path}
       className={`flex items-center px-3 py-2 rounded-lg text-sm font-medium transition-colors relative ${
         isActive(item.path)
-          ? "bg-blue-600 text-white"
+          ? "bg-black text-white"
           : isSecondary
             ? "text-gray-600 hover:text-gray-900 hover:bg-gray-50"
             : "text-gray-700 hover:text-gray-900 hover:bg-gray-100"
@@ -40,7 +40,7 @@ const Sidebar: React.FC<ISidebarProps> = ({ user, isOpen, onClose }) => {
         <span
           className={`ml-2 px-2 py-1 text-xs rounded-full ${
             isActive(item.path)
-              ? "bg-blue-500 text-white"
+              ? "bg-black-500 text-white"
               : "bg-red-500 text-white"
           }`}
         >

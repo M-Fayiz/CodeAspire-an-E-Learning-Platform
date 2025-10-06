@@ -58,7 +58,8 @@ export class OrderService implements IOrderService {
           const course_id = parseObjectId(pi.metadata?.courseId as string);
           const user_id = parseObjectId(pi.metadata?.userId as string);
           const mentore_id = parseObjectId(pi.metadata?.mentorId as string);
-          if (!course_id || !user_id || !mentore_id) {
+          const category_id=parseObjectId(pi.metadata?.categoryId as string)
+          if (!course_id || !user_id || !mentore_id||!category_id) {
             throw createHttpError(HttpStatus.OK, HttpResponse.OK);
           }
           const adminShare = calculateShares(
@@ -74,6 +75,7 @@ export class OrderService implements IOrderService {
             amount: Number(pi.metadata?.amount),
             orderId: order_id,
             userId: user_id,
+            mentorId:mentore_id,
             status: "success",
             paymentMethod: "stripe",
             gatewayTransactionId: pi.payment_intent as string,
@@ -86,6 +88,7 @@ export class OrderService implements IOrderService {
 
           const enrollData: IEnrollement = {
             courseId: course_id,
+            categoryId:category_id ,
             learnerId: user_id,
             mentorId: mentore_id,
             progress: {
@@ -114,7 +117,6 @@ export class OrderService implements IOrderService {
   ): Promise<{ clientSecret: string; orderId: string; checkoutURL: string }> {
     const course_id = parseObjectId(courseId);
     const user_Id = parseObjectId(userId);
-    console.log(" user and course :", user_Id, course_id);
     if (!course_id || !user_Id) {
       throw createHttpError(HttpStatus.NOT_FOUND, HttpResponse.INVALID_ID);
     }
@@ -178,6 +180,7 @@ export class OrderService implements IOrderService {
           userId,
           amount,
           mentorId: String(course.mentorsId._id),
+          categoryId:String(course.categoryId)
         },
       },
       { idempotencyKey: idemKey },

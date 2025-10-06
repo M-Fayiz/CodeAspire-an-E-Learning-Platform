@@ -4,11 +4,11 @@ import type { ISignUp, UserRole } from "../../types/auth.types";
 import { AuthService } from "../../service/auth.service";
 import { useLocation } from "react-router-dom";
 import { useState } from "react";
-import { toastService } from "../../components/toast/ToastSystem";
 import { useNavigate } from "react-router-dom";
 import { HttpError } from "../../utility/error.util";
 import { Spinner } from "../../components/templates/Spinner";
 import { useAuth } from "../../context/auth.context";
+import { toast } from "sonner";
 
 const LoginPage: React.FC = () => {
   const [isLoading, setLoading] = useState(false);
@@ -37,7 +37,7 @@ const LoginPage: React.FC = () => {
       }
     } catch (error) {
       if (error instanceof Error) {
-        toastService.error(error.message);
+        toast.error(error.message);
         if (error.message === "User already exist") {
           navigate("/auth/login");
         }
@@ -45,13 +45,13 @@ const LoginPage: React.FC = () => {
         console.log("error status", error);
         switch (error.status) {
           case 404:
-            toastService.error(`${error.message}. Please sign up.`);
+            toast.error(`${error.message}. Please sign up.`);
             navigate("/auth/signup");
             return;
           case 401:
-            return toastService.error(error.message);
+            return toast.error(error.message);
           default:
-            return toastService.error("Something went wrong");
+            return toast.error("Something went wrong");
         }
       }
     }

@@ -8,7 +8,7 @@ import {
 } from "../../models/user.model";
 import { IUserRepo } from "../interface/IUserRepo";
 import { Profile } from "passport-google-oauth20";
-import { IUserRole, searchProps } from "../../types/user.types";
+import { IRole, searchProps } from "../../types/user.types";
 import { Types } from "mongoose";
 import { buildUserFilter } from "../../utility/searchQuery";
 
@@ -53,7 +53,7 @@ export class UserRepository
   }
   async findOrCreateUser(
     profile: Profile,
-    role?: IUserRole,
+    role?: IRole,
   ): Promise<IUserModel | null> {
     let user = await this.findOne({
       $or: [{ googleId: profile.id }, { email: profile.emails?.[0].value }],

@@ -22,10 +22,10 @@ const NotificationSchema = new mongoose.Schema<INotificationModel>(
     link: {
       type: String,
     },
-      type : {
-        type : String ,
-        enum : ["INFO","WARNING" , "SUCCESS" , "ERROR" ]
-     },
+    type: {
+      type: String,
+      enum: ["INFO", "WARNING", "SUCCESS", "ERROR"],
+    },
     title: {
       type: String,
     },
@@ -33,5 +33,7 @@ const NotificationSchema = new mongoose.Schema<INotificationModel>(
   { timestamps: true },
 );
 
-
-export  const NotificationModel=mongoose.model<INotificationModel>('notification',NotificationSchema)
+export const NotificationModel = mongoose.model<INotificationModel>(
+  "notification",
+  NotificationSchema,
+);

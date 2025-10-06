@@ -3,7 +3,7 @@ import { Mail, ArrowLeft, AlertCircle } from "lucide-react";
 import { Link } from "react-router-dom";
 import { AuthService } from "../../service/auth.service";
 import SuccessModal from "../templates/SuccessModal";
-import { toastService } from "../toast/ToastSystem";
+import { toast } from "sonner";
 
 const ForgotPassword = () => {
   const [email, setEmail] = useState("");
@@ -44,7 +44,7 @@ const ForgotPassword = () => {
       setIsLoading(false);
       if (error instanceof Error) {
         error.message += " ,Please Register";
-        toastService.error(error.message);
+        toast.error(error.message);
       }
     }
   };

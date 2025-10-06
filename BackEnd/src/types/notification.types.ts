@@ -5,7 +5,7 @@ export interface INotification {
   message: string;
   isRead: boolean;
   title: string;
-  type:"info"|"warning" | "success" | "error" 
+  type: "info" | "warning" | "success" | "error";
   link?: string;
   createdAt?: Date;
   updatedAt?: Date;

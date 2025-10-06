@@ -1,11 +1,10 @@
 import { Link, useSearchParams } from "react-router";
 import CourseCard from "../../features/courses_list/List/CourseCard";
 import type { ICourseData, ISearchQuery } from "@/types/DTOS/courses.types";
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useState } from "react";
 
 import SearchHeader from "../../features/courses_list/List/CourseSearchBar";
 import FilterSidebar from "../../features/courses_list/List/CourseFilter";
-import debounce from "lodash.debounce";
 import useDebounce from "@/hooks/useDebounce";
 import PaginationRounded from "@/components/ui/Pagination";
 import courseService from "@/service/mentor/course.service";
@@ -134,7 +133,7 @@ function CourseLayout() {
                 currentPage={currentPage}
                 totalPages={totalPage}
                 onPageChange={handlePage}
-              />
+              />e
             </div>
           )}
         </div>

@@ -12,7 +12,7 @@ export interface IUser {
   password: string;
   phone?: string;
   googleId?: string;
-  role: "admin" | "mentor" | "learner";
+  role: IRole
   profilePicture?: string;
   isActive: boolean;
   createdAt: Date;
@@ -23,7 +23,7 @@ export interface IUser {
 }
 
 export interface IMentor extends IUser {
-  role: "mentor";
+  role: IRole.Mentor;
   expertise: string[];
   bio: string;
   rating: number;
@@ -36,15 +36,15 @@ export interface IMentor extends IUser {
 }
 
 export interface ILearner extends IUser {
-  role: "learner";
+  role: IRole.Learner;
   enrolledCourses: Types.ObjectId[];
 }
 
 export interface IAdmin extends IUser {
-  role: "admin";
+  role: IRole.Admin;
 }
 
-export type IUserRole = "admin" | "learner" | "mentor";
+
 
 export interface IAuth {
   email: string;
@@ -59,4 +59,9 @@ export interface searchProps {
   isActive: boolean | "";
 }
 
-export type IRole = "admin" | "mentor" | "learner";
+export enum IRole {
+  Admin = "admin",
+  Mentor = "mentor",
+  Learner = "learner"
+}
+

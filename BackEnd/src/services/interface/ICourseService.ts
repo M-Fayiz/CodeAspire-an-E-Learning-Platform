@@ -26,7 +26,7 @@ export interface ICourseService {
     courseId: string,
     learnerId?: string,
   ): Promise<IFormCourseDTO | null>;
-  getDraftedCourses(mentorId: string): Promise<IFormCourseDTO[] | null>;
+  getDraftedCourses(search:string,page:string,mentorId: string): Promise<{courseData:IFormCourseDTO[],totalPage:number} | null>;
   addSessions(courseId: string, session: ISession): Promise<ICourseDTO>;
   addLectures(
     courseId: string,

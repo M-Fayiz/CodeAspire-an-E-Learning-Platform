@@ -3,6 +3,7 @@ import { Types } from "mongoose";
 export interface ITransaction {
   orderId: Types.ObjectId;
   userId: Types.ObjectId;
+  mentorId:Types.ObjectId;
   courseId: Types.ObjectId;
   gatewayTransactionId: string;
   amount: number;

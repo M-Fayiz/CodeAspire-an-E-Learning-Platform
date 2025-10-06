@@ -4,7 +4,7 @@ import { ICourses, ILecture, ISession } from "../../types/courses.type";
 import { BaseRepository } from "../baseRepository";
 import { ICourseRepository } from "../interface/ICourseRepository";
 import logger from "../../config/logger.config";
-import { skip } from "node:test";
+
 
 export class CourseRepository
   extends BaseRepository<ICourses>
@@ -53,10 +53,17 @@ export class CourseRepository
   async getCourse(courseId: Types.ObjectId): Promise<ICourses | null> {
     return await this.findById(courseId, ["categoryId", "subCategoryId"]);
   }
-  async getMentorDraftedCourses(
+  async getMentorDraftedCourses(search:string,limit:number,skip:number,
     mentorId: Types.ObjectId,
   ): Promise<ICourses[] | null> {
-    return await this.find({ mentorsId: mentorId }, [
+    let query: FilterQuery<ICourses> = {};
+
+    
+    if (search) {
+      query["title"] = { $regex: search, $options: "i" };
+    }
+    query['mentorsId']=mentorId
+    return await this.findAll(query,limit,skip, [
       "categoryId",
       "subCategoryId",
     ]);
@@ -160,25 +167,9 @@ export class CourseRepository
     ]);
   }
   async findDocumentCount(
-    search?: string,
-    category?: Types.ObjectId,
-    subcategory?: Types.ObjectId,
-    level?: string,
+    query:FilterQuery<ICourses>
   ): Promise<number> {
-    let query: FilterQuery<ICourses> = {};
-    if (search) {
-      query["title"] = { $regex: search, $options: "i" };
-    }
-    if (category) {
-      query["categoryId"] = category;
-    }
-    if (subcategory) {
-      query["subCategoryId"] = subcategory;
-    }
-    if (level) {
-      query["level"] = level;
-    }
-    query["status"] = "approved";
+    
     return await this.countDocuments(query);
   }
 }

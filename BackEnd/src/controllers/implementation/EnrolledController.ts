@@ -4,6 +4,7 @@ import { HttpStatus } from "../../const/http-status";
 import { successResponse } from "../../utility/response.util";
 import { HttpResponse } from "../../const/error-message";
 import { IEnrolledService } from "../../services/interface/IEnrolledService";
+import { filter } from "../../types/enrollment.types";
 
 export class EnrolledController implements IEnrolledController {
   constructor(private _enrolledService: IEnrolledService) {}
@@ -94,7 +95,9 @@ export class EnrolledController implements IEnrolledController {
           mentorId,
         );
 
-      res.status(200).json(successResponse(HttpResponse.OK, { dashboardData }));
+      res
+        .status(HttpStatus.OK)
+        .json(successResponse(HttpResponse.OK, { dashboardData }));
     } catch (error) {
       next(error);
     }
@@ -111,12 +114,29 @@ export class EnrolledController implements IEnrolledController {
 
       const chartData = await this._enrolledService.getTrendingCourseGraph(
         courseId,
-        filter,
-        startData,
-        endDate,
+        filter as filter,
+        startData as string,
+        endDate as string,
       );
 
-      res.status(200).json(successResponse(HttpResponse.OK, { chartData }));
+      res
+        .status(HttpStatus.OK)
+        .json(successResponse(HttpResponse.OK, { chartData }));
+    } catch (error) {
+      next(error);
+    }
+  };
+  getMentorDashboardData = async (
+    req: Request,
+    res: Response,
+    next: NextFunction,
+  ): Promise<void> => {
+    try {
+      const { mentorId } = req.params;
+     
+       const dashboardData= await this._enrolledService.getMentorDashboardData(mentorId);
+    
+      res.status(HttpStatus.OK).json(successResponse(HttpResponse.OK,{dashboardData}));
     } catch (error) {
       next(error);
     }

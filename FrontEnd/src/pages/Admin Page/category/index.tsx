@@ -16,7 +16,7 @@ import {
   SheetTitle,
 } from "@/components/ui/sheet";
 import type { ICategoryEdit, ICategoryTree } from "@/types/category.types";
-import { toastService } from "@/components/toast/ToastSystem";
+import { toast } from "sonner";
 
 const CategoryManagement = () => {
   const [fetchedData, setFetchedData] = useState<ICategoryTree[]>([]);
@@ -47,7 +47,7 @@ const CategoryManagement = () => {
       }
     } catch (error) {
       if (error instanceof Error) {
-        toastService.error(error.message);
+        toast.error(error.message);
       }
     }
   };
@@ -60,14 +60,14 @@ const CategoryManagement = () => {
       }
     } catch (error) {
       if (error instanceof Error) {
-        toastService.error(error.message);
+        toast.error(error.message);
       }
     }
   };
 
   const findCategoryByKey = (key: string) => {
     function serachNode(node: ICategoryTree[]): ICategoryTree | null {
-      for (let elem of node) {
+      for (const elem of node) {
         if (elem.key == key) {
           return elem;
         }

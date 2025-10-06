@@ -28,9 +28,9 @@ export default function CourseCreateLayout() {
   }, [courseId]);
 
   return (
-    <div className="w-full bg-white rounded-sm border ">
-      <div className="overflow-x-auto">
-        <div className="flex border-b border-gray-200 w-full overflow-x-auto scrollbar-hide snap-x">
+    <div className="w-full  bg-white rounded-sm border ">
+      <div className="overflow-x-auto ">
+        <div className="flex justify-center gap-2 p-3  border-b border-gray-200 w-full overflow-x-auto scrollbar-hide snap-x">
           <Taps
             label="Basic Information"
             icon={

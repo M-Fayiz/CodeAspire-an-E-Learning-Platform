@@ -1,16 +1,16 @@
 import { Types } from "mongoose";
 import {
-  ITransaactionModel,
+  ITransactionModel,
   transactionModel,
 } from "../../models/transaction.model";
 import { ITransaction } from "../../types/transaction.type";
 import { BaseRepository } from "../baseRepository";
 import { ITransactionRepository } from "../interface/ITransactionRepository";
-import { IRevenue } from "../../types/dtos.type/CourseDashboard.dto.type";
 import { IRevenueAggregationResult } from "../../types/courseDashboard.type";
+import { IMentorTotalRevanue } from "../../types/mentorDashboard.types";
 
 export class TransactionRepositoy
-  extends BaseRepository<ITransaactionModel>
+  extends BaseRepository<ITransactionModel>
   implements ITransactionRepository
 {
   constructor() {
@@ -21,7 +21,7 @@ export class TransactionRepositoy
   ): Promise<ITransaction> {
     return this.create(transactionData);
   }
-  async getDashboardRevenue(
+  async getCourseDashboardRevenue(
     courseId: Types.ObjectId,
   ): Promise<IRevenueAggregationResult[]> {
     console.log(courseId);
@@ -32,6 +32,25 @@ export class TransactionRepositoy
           _id: null,
           adminSum: { $sum: "$adminShare" },
           mentorSum: { $sum: "$mentorShare" },
+        },
+      },
+    ]);
+  }
+  async getMentorTotalRevenue(
+    mentorId: Types.ObjectId,
+  ): Promise<IMentorTotalRevanue[]> {
+    return await this.aggregate<IMentorTotalRevanue>([
+      {
+        $match: {
+          mentorId: mentorId,
+        },
+      },
+      {
+        $group: {
+          _id: null,
+          revenue: {
+            $sum: "$mentorShare",
+          },
         },
       },
     ]);

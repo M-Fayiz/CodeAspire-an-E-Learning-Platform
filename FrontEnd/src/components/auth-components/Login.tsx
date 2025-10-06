@@ -61,7 +61,7 @@ export const LoginComponent: React.FC<AuthComponentProps> = ({
                 <Code className="w-8 h-8 text-white" />
               </div>
               <span className="text-3xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
-                TechMaster
+                CodeAspire
               </span>
             </div>
             {/* <div className="absolute inset-0 bg-black/1"></div> */}
@@ -72,7 +72,7 @@ export const LoginComponent: React.FC<AuthComponentProps> = ({
                 Welcome Back!
               </h2>
               <p className=" text-blue-800 dark:text-sky-800/100 text-xl mb-3 opacity-90">
-                Continue your journey with TechMaster
+                Continue your journey with CodeAspire
               </p>
             </div>
             <div className="absolute -bottom-10 -right-10 w-40 h-40 bg-white/10 rounded-full" />

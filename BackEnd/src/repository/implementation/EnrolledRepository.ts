@@ -8,6 +8,12 @@ import {
   IEnrollement,
 } from "../../types/enrollment.types";
 import { Types } from "mongoose";
+import {
+  IMentorDashboardData,
+  IMentorTotalRevanue,
+  ITopCategory,
+  ITopCourse,
+} from "../../types/mentorDashboard.types";
 
 export class EnrolledRepository
   extends BaseRepository<IEnrolledModel>
@@ -101,5 +107,116 @@ export class EnrolledRepository
       },
       { $sort: { "_id.day": 1 } },
     ]);
+  }
+  async getMentorDashboardData(
+    mentorId: Types.ObjectId,
+  ): Promise<IMentorDashboardData[]> {
+    return await this.aggregate<IMentorDashboardData>([
+      {
+        $match: {
+          mentorId: mentorId,
+        },
+      },
+      {
+        $group: {
+          _id: null,
+          avgRating: {
+            $avg: "$rating",
+          },
+          totalStudents: {
+            $sum: 1,
+          },
+        },
+      },
+    ]);
+  }
+  async getTopSellingCourse(mentorId?: Types.ObjectId): Promise<ITopCourse[]> {
+    const matchStage = mentorId ? { mentorId } : {}
+    return await this.aggregate<ITopCourse>([
+      {
+        $match: {
+          mentorId: matchStage,
+        },
+      },
+      {
+        $group: {
+          _id: "$courseId",
+          totalStudent: {
+            $sum: 1,
+          },
+        },
+      },
+      {
+        $sort: {
+          totalStudent: -1,
+        },
+      },
+      {
+        $limit: 5,
+      },
+      {
+        $lookup: {
+          from: "courses",
+          localField: "_id",
+          foreignField: "_id",
+          as: "courses",
+        },
+      },
+      {
+        $unwind: "$courses",
+      },
+      {
+        $project: {
+          courseId: "$_id",
+          title: "$courses.title",
+          enrolledStudent: "$totalStudent",
+        },
+      },
+    ]);
+  }
+  async getTopSellingCategory(mentorId?: Types.ObjectId): Promise<ITopCategory[]> {
+      const matchStage = mentorId ? { mentorId } : {}
+      return await this.aggregate<ITopCategory>([
+      {
+        $match: {
+          mentorId: matchStage,
+        },
+      },
+      {
+        $group: {
+          _id: "$categoryId",
+          totalStudent: {
+            $sum: 1,
+          },
+        },
+      },
+      {
+        $sort: {
+          totalStudent: -1,
+        },
+      },
+      {
+        $limit: 5,
+      },
+      {
+        $lookup: {
+          from: "Category",
+          localField: "_id",
+          foreignField: "_id",
+          as: "category",
+        },
+      },
+      {
+        $unwind: "$category",
+      },
+      {
+        $project: {
+          courseId: "$_id",
+          title: "$category.title",
+          enrolledStudent: "$totalStudent",
+        },
+      },
+    ]);
+
   }
 }

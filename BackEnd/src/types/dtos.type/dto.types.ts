@@ -1,12 +1,12 @@
 import { Types } from "mongoose";
-import { mentorApprovalStatus } from "../user.types";
+import { IRole, mentorApprovalStatus } from "../user.types";
 
 export interface IBaseRoleDTO {
   id: Types.ObjectId;
   name: string;
   email: string;
   phone?: string;
-  role: "mentor" | "learner" | "admin";
+  role: IRole;
   profilePicture?: string;
   isActive: boolean;
   bio?: string;
@@ -33,7 +33,7 @@ export interface IUserDTO {
   name?: string;
   email: string;
   profile: string | undefined;
-  role: "learner" | "admin" | "mentor";
+  role: IRole;
   ApprovalStatus?: mentorApprovalStatus;
   isRequested?: boolean;
 }

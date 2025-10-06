@@ -32,6 +32,9 @@ import {
   chartTrendDTO,
   courseDashboardDTO,
 } from "../../dtos/courseDashboard.dto";
+import { IMentorDhasboardDTO } from "../../types/dtos.type/mentorDashboard.dto.type";
+import { mentorDashboardDTO } from "../../dtos/mentorDashboard.dto";
+import { timeFilter } from "../../utility/dashFilterGenerator.utils";
 
 export class EnrolledService implements IEnrolledService {
   constructor(
@@ -139,7 +142,7 @@ export class EnrolledService implements IEnrolledService {
     const [studentsAndRating, course, revenue] = await Promise.all([
       this._erolledRepository.getEnrolledDasgboardData(course_id, mentor_id),
       this._courseRepository.findCourse(course_id),
-      this._transactionRepository.getDashboardRevenue(course_id),
+      this._transactionRepository.getCourseDashboardRevenue(course_id),
     ]);
     if (!studentsAndRating || !course || !revenue) {
       throw createHttpError(HttpStatus.NOT_FOUND, HttpResponse.ITEM_NOT_FOUND);
@@ -156,39 +159,13 @@ export class EnrolledService implements IEnrolledService {
     endDate?: string,
   ): Promise<IChartTrendDTO[]> {
     const course_id = parseObjectId(courseId);
-    console.log(courseId);
+
     if (!course_id) {
       throw createHttpError(HttpStatus.BAD_REQUEST, HttpResponse.INVALID_ID);
     }
 
-    let start: Date;
-    let end: Date = new Date();
-
-    switch (filter) {
-      case "today":
-        start = new Date();
-        start.setHours(0, 0, 0, 0);
-        break;
-
-      case "Last Week":
-        start = new Date();
-        start.setDate(start.getDate() - 7);
-        break;
-
-      case "Last Month":
-        start = new Date();
-        start.setMonth(start.getMonth() - 1);
-        break;
-
-      case "Custom":
-        start = new Date(startDate!);
-        end = new Date(endDate!);
-        break;
-
-      default:
-        start = new Date();
-        start.setHours(0, 0, 0, 0);
-    }
+    let {start,end}=timeFilter(filter,startDate,endDate)
+    
     const filterChart: chartFilter = {
       courseId: course_id,
       start: start,
@@ -200,5 +177,18 @@ export class EnrolledService implements IEnrolledService {
       filterChart,
     );
     return graph.map((data) => chartTrendDTO(data));
+  }
+  async getMentorDashboardData(mentorId: string): Promise<IMentorDhasboardDTO> {
+    const mentor_id = parseObjectId(mentorId);
+    if (!mentor_id) {
+      throw createHttpError(HttpStatus.BAD_REQUEST, HttpResponse.INVALID_ID);
+    }
+
+    const [studentsAndRating, topCourse,revanue] = await Promise.all([
+      this._erolledRepository.getMentorDashboardData(mentor_id),
+      this._erolledRepository.getTopSellingCourse(mentor_id),
+      this._transactionRepository.getMentorTotalRevenue(mentor_id),
+    ]);
+    return mentorDashboardDTO(studentsAndRating[0],topCourse,revanue)
   }
 }

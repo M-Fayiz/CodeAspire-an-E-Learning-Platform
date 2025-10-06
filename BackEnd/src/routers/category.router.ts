@@ -6,6 +6,7 @@ import { CategoryRepository } from "../repository/implementation/CategoryReposit
 import { CategoryService } from "../services/implementation/CategoryService";
 import { verifyUser } from "../middlewares/authentication.middleware";
 import { authorizedRole } from "../middlewares/authorisation.middleware";
+import { IRole } from "../types/user.types";
 
 const categoryRepository = new CategoryRepository();
 const categoryService = new CategoryService(categoryRepository);
@@ -13,7 +14,7 @@ const categoryController = new CategoryController(categoryService);
 
 categoryRouter.get("/", categoryController.listCategories);
 categoryRouter.use(verifyUser);
-categoryRouter.use(authorizedRole("admin", "mentor"));
+categoryRouter.use(authorizedRole(IRole.Mentor, IRole.Admin));
 categoryRouter.post("/", categoryController.createCategory);
 categoryRouter.put("/:id", categoryController.editCategory);
 

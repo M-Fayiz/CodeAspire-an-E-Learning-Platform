@@ -8,7 +8,7 @@ import {
 import { createHttpError } from "../../utility/http-error";
 import { HttpStatus } from "../../const/http-status";
 import { HttpResponse } from "../../const/error-message";
-import { IAdmin, ILearner } from "../../types/user.types";
+import { IAdmin, ILearner, IRole } from "../../types/user.types";
 import { parseObjectId } from "../../mongoose/objectId";
 import { comparePassword, hashPassword } from "../../utility/bcrypt.util";
 
@@ -151,9 +151,9 @@ export class UserService implements IUserService {
     }
 
     const userData = await this._userRep.getUserProfile(id);
-    if (userData?.role == "admin") return AdminDTO(userData as IAdminModel);
-    if (userData?.role == "mentor") return MentorDTO(userData as IMenterModel);
-    if (userData?.role == "learner")
+    if (userData?.role == IRole.Admin) return AdminDTO(userData as IAdminModel);
+    if (userData?.role == IRole.Mentor) return MentorDTO(userData as IMenterModel);
+    if (userData?.role == IRole.Learner)
       return LearnerDTO(userData as ILearnerModel);
     return null;
   }

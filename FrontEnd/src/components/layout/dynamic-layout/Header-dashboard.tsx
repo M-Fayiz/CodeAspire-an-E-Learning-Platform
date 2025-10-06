@@ -57,7 +57,7 @@ const Header: React.FC<IHeaderProbs> = ({
         </button>
 
         <div className="hidden lg:block">
-          <h1 className="text-xl font-semibold text-gray-900">Tech Master</h1>
+          <h1 className="text-xl font-bold text-gray-900">CodeAspire</h1>
         </div>
       </div>
 

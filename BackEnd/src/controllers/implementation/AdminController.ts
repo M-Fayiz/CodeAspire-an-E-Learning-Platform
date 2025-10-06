@@ -78,10 +78,12 @@ export class AdminController implements IAdminController {
   ): Promise<void> => {
     try {
       const { id } = req.params;
-      const result = await this._adminService.approveMentor(id);
+      const {status}=req.body
+      const approveStatus = await this._adminService.approveMentor(id,status);
+      
       res
         .status(HttpStatus.OK)
-        .json(successResponse(HttpResponse.OK, { result }));
+        .json(successResponse(HttpResponse.OK, { status:approveStatus.status }));
     } catch (error) {
       next(error);
     }

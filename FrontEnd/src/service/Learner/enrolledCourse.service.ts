@@ -8,6 +8,7 @@ import type {
 import { sharedService } from "../shared.service";
 import { throwAxiosError } from "@/utility/throwErrot";
 import type { ChartFilter } from "@/types/enrollent.types";
+import type { IMentorDhasboardDTO } from "@/types/DTOS/mentorDashboard.dto";
 
 export const EnrolledService = {
   getEnrolledCourse: async (learnerId: string): Promise<IEnrolledListDto[]> => {
@@ -28,6 +29,7 @@ export const EnrolledService = {
         ) ?? [],
       );
       return signedCourse;
+      console.log('enrolled ',response.data)
     } catch (error) {
       throwAxiosError(error);
     }
@@ -119,4 +121,12 @@ export const EnrolledService = {
       throwAxiosError(error);
     }
   },
+  getMentorDashboardData:async(mentorId:string):Promise<IMentorDhasboardDTO>=>{
+    try {
+      const response=await axiosInstance.get(API.ENROLLEMENT.GET_MENTOR_DASH_DATA(mentorId))
+      return response.data.dashboardData
+    } catch (error) {
+      throwAxiosError(error);
+    }
+  }
 };

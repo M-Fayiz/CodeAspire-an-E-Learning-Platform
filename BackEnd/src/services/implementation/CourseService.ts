@@ -19,9 +19,8 @@ import { createHttpError } from "../../utility/http-error";
 import { HttpStatus } from "../../const/http-status";
 import { HttpResponse } from "../../const/error-message";
 import { sendMail } from "../../utility/send-mail.util";
-import { Types } from "mongoose";
+import { FilterQuery, Types } from "mongoose";
 import { IEnrolledRepository } from "../../repository/interface/IEnrolledRepositoy";
-import logger from "../../config/logger.config";
 
 export class CourseService implements ICourseService {
   constructor(
@@ -56,6 +55,20 @@ export class CourseService implements ICourseService {
       learner_Id = parseObjectId(learnerId);
     }
     let skip = (page - 1) * limit;
+    let query: FilterQuery<ICourses> = {};
+        if (search) {
+          query["title"] = { $regex: search, $options: "i" };
+        }
+        if (category) {
+          query["categoryId"] = category;
+        }
+        if (subcategory) {
+          query["subCategoryId"] = subcategory;
+        }
+        if (level) {
+          query["level"] = level;
+        }
+        query["status"] = "approved";
     const [courseList, totalDocument] = await Promise.all([
       this._courseRepository.fetchCourses(
         limit,
@@ -66,10 +79,7 @@ export class CourseService implements ICourseService {
         level,
       ),
       this._courseRepository.findDocumentCount(
-        search,
-        category_Id as Types.ObjectId,
-        subCategory_id as Types.ObjectId,
-        level,
+       query
       ),
     ]);
     let enrolledCourse;
@@ -136,17 +146,29 @@ export class CourseService implements ICourseService {
     return courseData ? formCourseDto(courseData[0]) : null;
   }
 
-  async getDraftedCourses(mentorId: string): Promise<IFormCourseDTO[] | null> {
+  async getDraftedCourses(search:string,page:string,mentorId: string): Promise<{courseData:IFormCourseDTO[],totalPage:number} | null> {
     const id = parseObjectId(mentorId);
     if (!id) {
       throw createHttpError(HttpStatus.OK, HttpResponse.INVALID_ID);
     }
-    const data = await this._courseRepository.getMentorDraftedCourses(id);
+    let limit=6
+    let skip = (Number(page) - 1) * limit;
+    let query: FilterQuery<ICourses> = {};
+    if (search) {
+      query["title"] = { $regex: search, $options: "i" };
+    }
+    
+    query["mentorsId"] = mentorId;
 
+    console.log('query',query)
+    const [data ,documnetCount]=await Promise.all([this._courseRepository.getMentorDraftedCourses(search,limit,skip,id),this._courseRepository.findDocumentCount(query)])  
+   
     const mappedCourseList = data?.map((course) =>
       formCourseDto(course as ICourses),
     );
-    return mappedCourseList ? mappedCourseList : null;
+    let totalPage =Math.floor(documnetCount / limit) 
+    console.log(totalPage)
+    return mappedCourseList ? {courseData:mappedCourseList,totalPage:totalPage} : null;
   }
 
   async addSessions(courseId: string, session: ISession): Promise<ICourseDTO> {

@@ -1,5 +1,5 @@
 import mongoose, { Document, Types } from "mongoose";
-import { IUser, IAdmin, ILearner, IMentor } from "../types/user.types";
+import { IUser, IAdmin, ILearner, IMentor, IRole } from "../types/user.types";
 
 const option = { discriminatorKey: "role", timeStamps: true };
 
@@ -49,7 +49,7 @@ const MentorSchema = new mongoose.Schema({
   resume: String,
 });
 export const MentorModel = UserModel.discriminator<IMenterModel>(
-  "mentor",
+  IRole.Mentor,
   MentorSchema,
 );
 
@@ -57,7 +57,7 @@ const LearnerSchema = new mongoose.Schema({
   enrolledCourses: [{ type: mongoose.Schema.Types.ObjectId, ref: "Course" }],
 });
 export const LearnerModel = UserModel.discriminator<ILearnerModel>(
-  "learner",
+  IRole.Learner,
   LearnerSchema,
 );
 
@@ -65,7 +65,7 @@ const AdminSchema = new mongoose.Schema({
   permissions: [String],
 });
 export const AdminModel = UserModel.discriminator<IAdminModel>(
-  "admin",
+  IRole.Admin,
   AdminSchema,
 );
 
@@ -82,7 +82,7 @@ export interface IPayload {
   id: Types.ObjectId;
   name?: string;
   email: string;
-  role: "learner" | "admin" | "mentor";
+  role: IRole
   ApprovalStatus?: "pending" | "approved" | "rejected" | "requested";
   isRequested?: boolean;
 }

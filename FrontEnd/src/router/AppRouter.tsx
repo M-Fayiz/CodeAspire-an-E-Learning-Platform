@@ -16,7 +16,6 @@ import { Protected_Router } from "../components/protectedRouter/ProtectedRouter"
 import ProfileManagement from "../pages/Profile Page/Profile";
 import UserManagement from "../pages/Admin Page/user-management/UserMangement";
 import AdminUserProfile from "../pages/Admin Page/user-management/UserProfile";
-import { useProfileLoader } from "../pages/Admin Page/user-management/profile.loader";
 import MentorDataForm from "../components/auth-components/MentorInformation";
 import CategoryManagement from "@/pages/Admin Page/category";
 import CourseCreation from "@/pages/Mentor_Page/course_creation/Index";
@@ -30,6 +29,7 @@ import PaymentSuccess from "@/pages/Payment page/PaymentSuccess";
 import CourseEnrolledList from "@/pages/Course/CourseEnrolledList";
 import EnrolledCourseDetails from "@/pages/Course/EnrolledDetails";
 import CourseDashboard from "@/pages/Mentor_Page/course_creation/CourseDashboard";
+import MentorDashboard from "@/pages/Mentor_Page/MentorDashboard";
 
 function Form_Courses_Provider() {
   return (
@@ -82,7 +82,7 @@ export const router = createBrowserRouter([
     ),
     children: [
       { index: true, element: <Navigate to="dashboard" /> },
-      { path: "dashboard", element: <DashboardContent /> },
+      { path: "dashboard", element: <MentorDashboard /> },
       { path: "profile/:id", element: <ProfileManagement /> },
       { path: "data", element: <MentorDataForm /> },
       {
@@ -111,7 +111,7 @@ export const router = createBrowserRouter([
       {
         path: "user-profile/:id",
         element: <AdminUserProfile />,
-        loader: useProfileLoader,
+       
       },
       { path: "category", element: <CategoryManagement /> },
       { path: "courses", element: <CourseManagement /> },
@@ -128,24 +128,11 @@ export const router = createBrowserRouter([
             <CourseCreation />
           </Protected_Router>
         ),
-        // children:[
-        //     {path:'',element:<Navigate to='basic'/>},
-        //     {path:'basic',element:<BasicCourseInformation/>},
-        //     {path:'curriculum',element:<CourseCurriculum/>},
-        // ]
+        
       },
     ],
   },
-  // {
-  //   path: "/courses",
-  //   element: <CourseLayout />,
-  //   loader: fetchCourses,
-  // },
-  // {
-  //   path: "/courses/:id",
-  //   element: <AdminCourseDetails />,
 
-  // },
   {
     path: "/courses",
     element: <Outlet />,

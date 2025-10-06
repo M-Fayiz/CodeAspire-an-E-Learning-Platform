@@ -17,7 +17,7 @@ const StatsSection: React.FC = () => {
           </h2>
           <p className="text-xl text-gray-500 max-w-3xl mx-auto">
             Join a community of successful developers who have transformed their
-            careers with TechMaster.
+            careers with CodeAspire.
           </p>
         </div>
 

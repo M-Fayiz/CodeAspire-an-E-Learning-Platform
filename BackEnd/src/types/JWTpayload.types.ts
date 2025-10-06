@@ -1,6 +1,8 @@
+import { IRole } from "./user.types";
+
 export interface IJwtPayload {
   id: string;
-  role: "admin" | "mentor" | "learner";
+  role: IRole;
   isActive: boolean;
   isApproved?: boolean;
   isRequested?: boolean;

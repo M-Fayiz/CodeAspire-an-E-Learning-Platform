@@ -1,6 +1,6 @@
 import express from "express";
 import { Validate } from "../middlewares/validate";
-import { IUserRole } from "../types/user.types";
+import { IRole } from "../types/user.types";
 const authRouter = express.Router();
 import { Request, Response, NextFunction } from "express";
 import { UserRepository } from "../repository/implementation/UserRepository";
@@ -43,8 +43,8 @@ authRouter.patch(
 authRouter.get(
   "/google",
   (req: Request, res: Response, next: NextFunction) => {
-    const { role } = req.query as { role?: IUserRole };
-    req.session.role = role || "learner";
+    const { role } = req.query as { role?: IRole };
+    req.session.role = role ||IRole.Learner;
     next();
   },
   passport.authenticate("google", {

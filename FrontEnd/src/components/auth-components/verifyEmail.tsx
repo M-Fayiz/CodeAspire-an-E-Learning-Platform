@@ -2,9 +2,9 @@ import { useEffect, useRef, useState } from "react";
 import { useSearchParams, useNavigate } from "react-router-dom";
 import { AuthService } from "../../service/auth.service";
 import { Spinner } from "../templates/Spinner";
-import { toastService } from "../toast/ToastSystem";
 import { useAuth } from "../../context/auth.context";
 import NotFound from "../../pages/not-found/Not-Found";
+import { toast } from "sonner";
 
 function VerifyEmail() {
   const [params] = useSearchParams();
@@ -24,14 +24,14 @@ function VerifyEmail() {
 
       try {
         const res = await AuthService.verifyEmail(email, token);
-        console.log("response from verify", res);
-        toastService.success(res.message);
+     
+        toast.success(res.message);
         checkAuth();
         setTimeout(() => {
           navigate("/");
         }, 3000);
       } catch (err) {
-        if (err instanceof Error) toastService.error(err.message);
+        if (err instanceof Error) toast.error(err.message);
         // navigate('*')
         setError("Verification failed. Try again .");
       }

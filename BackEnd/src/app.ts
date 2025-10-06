@@ -11,7 +11,7 @@ import cookieParser from "cookie-parser";
 import session from "express-session";
 import passport from "passport";
 import userRouter from "./routers/user.router";
-import adminRouter from "./routers/adminRouter";
+import adminRouter from "./routers/admin.router";
 import categoryRouter from "./routers/category.router";
 import courseRouter from "./routers/courses.router";
 import sharedRouter from "./routers/shared.router";

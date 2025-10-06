@@ -1,4 +1,5 @@
 import Taps from "@/components/common/Taps";
+import Header from "@/components/layout/landing/header";
 import BannerSkeleton from "@/components/skelton/courseDetailSkelton";
 import { TabSkeleton } from "@/components/skelton/TapSkelton";
 import { useAuth } from "@/context/auth.context";
@@ -35,18 +36,20 @@ const CourseDetails = () => {
   console.log(' this is the course ',course)
   return (
     <div>
-      <div className="col-span-3 ">
-          <div className="absolute -top-12 right-20 w-80 h-126 bg-orange-400 rounded-2xl rotate-12 "></div>
+      <Header/>
+      <div className="relative top-14 col-span-3 ">
+          <div className="absolute -top-25 right-25 w-80 h-150 bg-orange-400  rounded-2xl rotate-12 "></div>
         <div className="bg-white p-2 md:p-5">
            {/* <div className="w-10 h-10 bg-orange-500 rounded-full flex items-center justify-center"> */}
            {loading&&<BannerSkeleton/>}
           {!loading&&(
-<Banner     
+            <Banner     
             courseId={course?._id as string}
             description={course?.description as string}
             imageUrl={course?.thumbnail as string}
             title={course?.title as string}
             isEnrolled={course?.isEnrolled}
+            course={course as IFormCourseDTO}
           />
           )}
         </div>

@@ -4,9 +4,9 @@ import { Input } from "../ui/Inputs";
 import UserService from "../../service/user.service";
 import { useAuth } from "../../context/auth.context";
 import type { IMentorProps } from "../../types/mentor.types";
-import { toastService } from "../toast/ToastSystem";
 import MentorApprovalCard from "../Mentor/mentor-approval/MentorApproval";
 import { useNavigate } from "react-router";
+import { toast } from "sonner";
 
 const MentorDataForm = () => {
   const { user } = useAuth();
@@ -77,7 +77,7 @@ const MentorDataForm = () => {
       setNewExpertise("");
     }
   };
-  console.log(formData);
+
   const removeExpertise = (index: number) => {
     setFormData((prev) => ({
       ...prev,
@@ -86,26 +86,34 @@ const MentorDataForm = () => {
   };
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-    try {
-      const result = await UserService.updateMentorInformation(
-        user!.id,
-        formData,
-      );
-      console.log("result from resulr", result);
-      if (result) {
-        setWaithingCard(true);
-      }
-    } catch (error) {
-      if (error instanceof Error) {
-        toastService.error(error.message);
-      }
-    }
-  };
+  e.preventDefault();
 
-  const nextStep = () => {
-    if (currentStep < 2) setCurrentStep(currentStep + 1);
-  };
+  if (!formData.expertise.length || !formData.experience || !formData.bio.trim()) {
+    toast.error("Please complete all required fields.");
+    return;
+  }
+
+  try {
+    const result = await UserService.updateMentorInformation(user!.id, formData);
+    if (result) setWaithingCard(true);
+  } catch (error) {
+    if (error instanceof Error) {
+      toast.error(error.message);
+    }
+  }
+};
+
+
+const nextStep = () => {
+  if (currentStep === 1) {
+    if (!formData.expertise.length || !formData.experience || !formData.bio.trim()) {
+      toast.error("Please fill in all required fields before proceeding.");
+      return;
+    }
+  }
+  if (currentStep < 2) setCurrentStep(currentStep + 1);
+};
+
 
   const prevStep = () => {
     if (currentStep > 1) setCurrentStep(currentStep - 1);

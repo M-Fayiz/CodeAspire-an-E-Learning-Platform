@@ -9,6 +9,7 @@ import { EnrolledRepository } from "../repository/implementation/EnrolledReposit
 import { verifyUser } from "../middlewares/authentication.middleware";
 import { authorizedRole } from "../middlewares/authorisation.middleware";
 import { TransactionRepositoy } from "../repository/implementation/TransactionRepository";
+import { IRole } from "../types/user.types";
 const transactionRepository = new TransactionRepositoy();
 const orderRepository = new OrderRepositoy();
 const courseRepository = new CourseRepository();
@@ -25,7 +26,7 @@ const orderController = new OrderController(orderService);
 orderRouter.post(
   "/payment/create-checkout-session",
   // verifyUser,
-  // authorizedRole("learner"),
+  // authorizedRole(IRole.Learner),
   orderController.create_intent,
 );
 
@@ -33,7 +34,7 @@ const webhookRouter = express.Router();
 webhookRouter.post(
   "/payment",
   // verifyUser,
-  // authorizedRole("learner"),
+  // authorizedRole(IRole.Learner)
   orderController.paymentWebhok,
 );
 

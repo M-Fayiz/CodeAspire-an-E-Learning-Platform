@@ -13,6 +13,7 @@ import { useAuth } from "@/context/auth.context";
 import { toast } from "sonner";
 import { Link } from "react-router";
 import { Badge } from "@/components/ui/shadcn-io/ThemeBadge";
+import type { IFormCourseDTO } from "@/types/DTOS/courses.types";
 
 interface BannerProps {
   courseId: string;
@@ -20,6 +21,7 @@ interface BannerProps {
   description: string;
   imageUrl: string;
   isEnrolled?: boolean;
+  course:IFormCourseDTO
 }
 
 const Banner: React.FC<BannerProps> = ({
@@ -28,6 +30,8 @@ const Banner: React.FC<BannerProps> = ({
   imageUrl,
   isEnrolled,
   courseId,
+  course
+  
 }) => {
   const { user } = useAuth();
 
@@ -44,18 +48,18 @@ const Banner: React.FC<BannerProps> = ({
       }
     }
   };
-
+  
   return (
     <div className="relative w-full py-5 px-6 md:px-16 lg:px-24">
-      <Badge label={}/>
-
+      {course&&<Badge label={course.level} type="info" />}
+      
 
   <div className="flex flex-col md:flex-row justify-between items-center relative gap-10">
     <div className="relative flex-1 p-5">
       <h1 className="text-4xl md:text-6xl font-bold text-gray-800 mb-6 leading-snug">
         {title}
       </h1>
-      <p className="text-sm text-gray-600 mb-6">
+      <p className="text-lg text-gray-600 mb-6">
         {description}
         {
           "Another productive way to use this tool to begin a daily writing routine. One way is to generate a random paragraph with the intention to try to rewrite it while still keeping the original meaning"
@@ -73,11 +77,11 @@ const Banner: React.FC<BannerProps> = ({
         <div className="flex gap-2">
           <button
             onClick={handlePaymentPage}
-            className="bg-orange-500 hover:bg-orange-600 text-white font-semibold px-6 py-3 rounded-lg shadow-md transition"
+            className="bg-orange-500  hover:bg-orange-600 text-white font-semibold px-6 py-3 rounded-lg shadow-md transition"
           >
             Enroll Now
           </button>
-          <button className="border border-orange-500 text-orange-500 hover:bg-orange-50 font-semibold px-6 py-3 rounded-lg transition">
+          <button className="border border-white  text-white md:border-orange-500  md:text-orange-500  hover:bg-orange-50 font-semibold px-6 py-3 rounded-lg transition">
             See Curriculum
           </button>
         </div>

@@ -5,7 +5,7 @@ import {
   ILearnerModel,
   IAdminModel,
 } from "../../models/user.model";
-import { IUserRole, searchProps } from "../../types/user.types";
+import { IRole,  searchProps } from "../../types/user.types";
 import { Types } from "mongoose";
 
 export interface IUserRepo {
@@ -19,7 +19,7 @@ export interface IUserRepo {
   ): Promise<IUserModel | IMenterModel | ILearnerModel | IAdminModel | null>;
   findOrCreateUser(
     profile: Profile,
-    role?: IUserRole,
+    role?: IRole,
   ): Promise<IUserModel | IMenterModel | ILearnerModel | IAdminModel | null>;
   findAllUsers(
     limit: number,

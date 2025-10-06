@@ -139,16 +139,16 @@ const courseService = {
       throw new Error(errorMessage);
     }
   },
-  getMentorCourse: async (userId: string): Promise<IFormCourseDTO[]> => {
+  getMentorCourse: async (search:string,page:string,userId: string): Promise<{courseData:IFormCourseDTO[],totalPage:number}> => {
     try {
       const response = await axiosInstance.get(
         API.COURSE.GET_MENTOR_DRAFTED_COURSE,
         {
-          params: { mentorId: userId },
+          params: { mentorId: userId ,search,page},
         },
       );
-      console.log(userId, "reawsf", response.data);
-      return response.data.draftCoursList;
+      console.log(response.data)
+      return response.data;
     } catch (error) {
       const err = error as AxiosError<{ error: string }>;
       const errorMessage =

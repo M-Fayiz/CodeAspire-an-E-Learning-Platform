@@ -109,15 +109,17 @@ export class CourseController implements ICourseController {
     next: NextFunction,
   ): Promise<void> => {
     try {
-      const { mentorId } = req.query;
-      console.warn(mentorId);
+      const { mentorId ,search,page} = req.query;
+      
       const draftCoursList = await this._courseService.getDraftedCourses(
+        search as string,
+        page as string,
         mentorId as string,
       );
 
       res
         .status(HttpStatus.OK)
-        .json(successResponse(HttpResponse.OK, { draftCoursList }));
+        .json(successResponse(HttpResponse.OK, {courseData: draftCoursList?.courseData,totalPage:draftCoursList?.totalPage }));
     } catch (error) {
       next(error);
     }

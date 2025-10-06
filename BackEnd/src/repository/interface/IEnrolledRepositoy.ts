@@ -6,6 +6,11 @@ import {
   IEnrolledAggregation,
   IEnrollement,
 } from "../../types/enrollment.types";
+import {
+  IMentorDashboardData,
+  ITopCategory,
+  ITopCourse,
+} from "../../types/mentorDashboard.types";
 
 export interface IEnrolledRepository {
   enrolleCourse(enrollData: IEnrollement): Promise<IEnrolledModel | null>;
@@ -35,4 +40,9 @@ export interface IEnrolledRepository {
     courseId: Types.ObjectId,
     filterChart: chartFilter,
   ): Promise<chartAggregation[]>;
+  getMentorDashboardData(
+    mentorId: Types.ObjectId,
+  ): Promise<IMentorDashboardData[]>;
+  getTopSellingCourse(mentorId?: Types.ObjectId): Promise<ITopCourse[]>;
+  getTopSellingCategory(mentorId?: Types.ObjectId): Promise<ITopCategory[]>;
 }

@@ -3,9 +3,9 @@ import type { ISignUp, UserRole } from "../../types/auth.types";
 import { AuthService } from "../../service/auth.service";
 import SuccessModal from "../../components/templates/SuccessModal";
 import { useState } from "react";
-import { toastService } from "../../components/toast/ToastSystem";
 import { useNavigate } from "react-router-dom";
 import { HttpError } from "../../utility/error.util";
+import { toast } from "sonner";
 // import { Spinner } from '../../components/templates/Spinner';
 
 const SignupPage: React.FC = () => {
@@ -20,7 +20,7 @@ const SignupPage: React.FC = () => {
   };
 
   const handleAuthSubmit = async (data: ISignUp) => {
-    console.log("data from sign up", data);
+
     try {
       const result = await AuthService.signUp(data);
 
@@ -30,20 +30,20 @@ const SignupPage: React.FC = () => {
       }
     } catch (error) {
       if (error instanceof Error) {
-        toastService.error(error.message);
+        toast.error(error.message);
         if (error.message === "User already exist") {
           navigate("/auth/login");
         }
       } else if (error instanceof HttpError) {
         switch (error.status) {
           case 404:
-            toastService.error(`${error.message}. Please sign up.`);
+            toast.error(`${error.message}. Please sign up.`);
             navigate("/auth/signup");
             return;
           case 401:
-            return toastService.error(error.message);
+            return toast.error(error.message);
           default:
-            return toastService.error("Something went wrong");
+            return toast.error("Something went wrong");
         }
       }
     }
@@ -51,12 +51,12 @@ const SignupPage: React.FC = () => {
 
   const handleGoogleAuth = async (role: UserRole) => {
     try {
-      const result = await AuthService.googleAuth(role);
-      console.log("sign", result);
+      await AuthService.googleAuth(role);
+   
     } catch (error) {
-      console.log(error);
+
       if (error instanceof Error) {
-        toastService.error(error.message);
+        toast.error(error.message);
       }
     }
   };
@@ -66,7 +66,7 @@ const SignupPage: React.FC = () => {
       {showModal && (
         <SuccessModal
           show={showModal}
-          title="Welcome to Tech Master!"
+          title="Welcome to Tech CodeAspire!"
           message="We have sent a verification mail to your email."
           email={modalEmail || ""}
           onClose={closeModal}

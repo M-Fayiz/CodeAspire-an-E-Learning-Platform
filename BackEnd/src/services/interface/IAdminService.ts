@@ -1,4 +1,5 @@
 import { ILearnerDTO, IMentorDTO } from "../../types/dtos.type/dto.types";
+import { filter } from "../../types/enrollment.types";
 import { mentorApprovalStatus } from "../../types/user.types";
 import { UserFetchResponse } from "../implementation/AdminService";
 
@@ -11,5 +12,6 @@ export interface IAdminService {
   ): Promise<UserFetchResponse>;
   blockUser(id: string): Promise<{ isActive: boolean; id: string }>;
   userProfile(id: string): Promise<ILearnerDTO | IMentorDTO | null>;
-  approveMentor(id: string): Promise<{ ApprovalStatus: mentorApprovalStatus }>;
+  approveMentor(id: string,status:string): Promise<{ status: mentorApprovalStatus }>;
+  getDashboardData(filter?:filter,start?:string,end?:string):Promise<void>
 }

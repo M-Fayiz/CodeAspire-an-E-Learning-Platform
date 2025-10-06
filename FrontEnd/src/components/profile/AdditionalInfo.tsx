@@ -11,7 +11,7 @@ import {
 import { Button } from "../ui/button";
 import UserService from "@/service/user.service";
 import { useAuth } from "@/context/auth.context";
-import { toastService } from "../toast/ToastSystem";
+import { toast } from "sonner";
 
 interface MentorInfoProps {
   MentorData: MentorUser;
@@ -49,11 +49,11 @@ const AdditionalInformation: React.FC<MentorInfoProps> = ({ MentorData }) => {
         formData,
       );
       if (result) {
-        toastService.success("profile updated successfully");
+        toast.success("profile updated successfully");
       }
     } catch (error) {
       if (error instanceof Error) {
-        toastService.error(error.message);
+        toast.error(error.message);
       }
     }
   };

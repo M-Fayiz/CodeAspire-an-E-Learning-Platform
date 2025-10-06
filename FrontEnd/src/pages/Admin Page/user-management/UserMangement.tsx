@@ -3,12 +3,12 @@ import React, { useState, useEffect } from "react";
 import type { IUserType } from "../../../types/users.type";
 import { TableHeader } from "../../../components/common/TableComponents";
 import { adminService } from "@/service/admin/admin.service";
-import { toastService } from "../../../components/toast/ToastSystem";
 import TableRow from "../../../features/admin/userMangement/TableData";
 // import { StatsCards } from '../components/admin-components/userMangement/StatusCard
 import PaginationRounded from "../../../components/ui/Pagination";
 import type { SearchQuery } from "../../../types/parser.types";
 import useDebounce from "@/hooks/useDebounce";
+import { toast } from "sonner";
 
 const UserManagement: React.FC = () => {
   const [users, setUsers] = useState<IUserType[]>([]);
@@ -32,7 +32,7 @@ const UserManagement: React.FC = () => {
         setTotalPage(userData.totalPage);
       } catch (error) {
         if (error instanceof Error) {
-          toastService.error(error.message);
+          toast.error(error.message);
         }
       }
     }
@@ -45,7 +45,7 @@ const UserManagement: React.FC = () => {
       const result = await adminService.blockUser(id);
 
       if (result) {
-        toastService.success(
+        toast.success(
           result ? "User Unblocked Successfully" : "User Blocked Successfully",
         );
       }
@@ -56,7 +56,7 @@ const UserManagement: React.FC = () => {
       );
     } catch (error) {
       if (error instanceof Error) {
-        toastService.error(error.message);
+        toast.error(error.message);
       }
     }
   };

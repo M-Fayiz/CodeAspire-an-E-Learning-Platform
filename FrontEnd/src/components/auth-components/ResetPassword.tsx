@@ -11,8 +11,8 @@ import { checkPasswordStrength } from "../../schema/validateForm";
 import { useSearchParams } from "react-router";
 import { useNavigate } from "react-router-dom";
 import { AuthService } from "../../service/auth.service";
-import { toastService } from "../toast/ToastSystem";
 import { Spinner } from "../templates/Spinner";
+import { toast } from "sonner";
 
 const ResetPassword = () => {
   const [formData, setFormData] = useState({
@@ -71,7 +71,7 @@ const ResetPassword = () => {
     setErrors({});
 
     if (!email || !token) {
-      toastService.error("Invalid or Missing Like , Please try again");
+      toast.error("Invalid or Missing Like , Please try again");
       return;
     }
 
@@ -82,7 +82,7 @@ const ResetPassword = () => {
         formData.password,
       );
       if (result) {
-        toastService.success("Password Reseted Succesfully!");
+        toast.success("Password Reseted Succesfully!");
         setTimeout(() => {
           setIsLoading(false);
           navigate("/auth/login", { replace: true });
@@ -90,7 +90,7 @@ const ResetPassword = () => {
       }
     } catch (error) {
       if (error instanceof Error) {
-        toastService.error(error.message);
+        toast.error(error.message);
       }
     }
   };

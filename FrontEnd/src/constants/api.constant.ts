@@ -67,6 +67,7 @@ export const API = {
       `/enrollements/course/${courseId}/mentor/${mentorId}`,
     GET_FILTERED_GRAPH: (courseId: string) =>
       `/enrollements/course/${courseId}/chart`,
+    GET_MENTOR_DASH_DATA:(mentorId:string)=>`/enrollements/mentor/${mentorId}/dashboard`
   },
   REVIEW: {
     ADD_REVIEW: "/reviews/",

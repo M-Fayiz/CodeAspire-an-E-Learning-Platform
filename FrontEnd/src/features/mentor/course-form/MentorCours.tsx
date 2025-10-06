@@ -1,6 +1,7 @@
 // MyCourseCard.tsx
 import { sharedService } from "@/service/shared.service";
 import type { IFormCourseDTO } from "@/types/DTOS/courses.types";
+import { Eye } from "lucide-react";
 import { useEffect, useState } from "react";
 
 interface CourseCardProps {
@@ -40,14 +41,14 @@ const MyCourseCard: React.FC<CourseCardProps> = ({ course, onEdit }) => {
           </span>
         </div>
         <div className="absolute bottom-3 left-3">
-          <span className="bg-blue-600 text-white px-2 py-1 rounded text-xs font-medium">
+          <span className="bg-gray-400 text-white px-2 py-1 rounded text-xs font-medium">
             {course.category.title || "Uncategorized"}
           </span>
         </div>
       </div>
 
       <div className="p-4">
-        <h3 className="font-semibold text-gray-900 mb-2 line-clamp-2 group-hover:text-blue-600 transition-colors">
+        <h3 className="font-semibold text-gray-900 mb-2 line-clamp-2 group-hover:text-orange-600 transition-colors">
           {course.title}
         </h3>
 
@@ -55,17 +56,21 @@ const MyCourseCard: React.FC<CourseCardProps> = ({ course, onEdit }) => {
           <span className="text-xs bg-gray-100 text-gray-700 px-2 py-1 rounded">
             {course.level || "All Levels"}
           </span>
-          <span className="text-lg font-bold text-orange-600">
+          <span className="text-lg font-bold text-black-600">
             {`₹${course.price}`}
           </span>
         </div>
 
         <div className="flex justify-between">
+          <div>
+            
+          </div>
           <button
             onClick={onEdit}
-            className="bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700 transition-colors text-sm font-medium"
+            className="bg-black flex justify-center items-center gap-2 text-white px-4 py-2 rounded-md hover:bg-gray-700 transition-colors text-sm font-medium"
           >
-            Edit Course
+            <Eye className="w-5"/>
+            View Course
           </button>
           {/* <button className="bg-red-500 text-white px-4 py-2 rounded-md hover:bg-red-600 transition-colors text-sm font-medium">
             Delete

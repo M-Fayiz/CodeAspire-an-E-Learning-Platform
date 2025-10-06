@@ -1,4 +1,4 @@
-import { Search, TrendingUp } from "lucide-react";
+import { Search } from "lucide-react";
 import type React from "react";
 import { useState } from "react";
 
@@ -13,11 +13,12 @@ const SearchHeader: React.FC<SearchBarProps> = ({
 }) => {
   const [search, setSearch] = useState("");
   const handleChange = (value: string) => {
+    
     setSearch(value);
     handleSearch(value);
   };
   return (
-    <div className="bg-white p-6 rounded-lg shadow-sm mb-6">
+    <div className="bg-white p-6 rounded-sm shadow-sm mb-6">
       <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between space-y-4 lg:space-y-0">
         <div className="relative flex-1 max-w-2xl">
           <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5" />
