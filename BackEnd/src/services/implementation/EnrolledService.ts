@@ -164,8 +164,8 @@ export class EnrolledService implements IEnrolledService {
       throw createHttpError(HttpStatus.BAD_REQUEST, HttpResponse.INVALID_ID);
     }
 
-    let {start,end}=timeFilter(filter,startDate,endDate)
-    
+    let { start, end } = timeFilter(filter, startDate, endDate);
+
     const filterChart: chartFilter = {
       courseId: course_id,
       start: start,
@@ -184,11 +184,11 @@ export class EnrolledService implements IEnrolledService {
       throw createHttpError(HttpStatus.BAD_REQUEST, HttpResponse.INVALID_ID);
     }
 
-    const [studentsAndRating, topCourse,revanue] = await Promise.all([
+    const [studentsAndRating, topCourse, revanue] = await Promise.all([
       this._erolledRepository.getMentorDashboardData(mentor_id),
       this._erolledRepository.getTopSellingCourse(mentor_id),
       this._transactionRepository.getMentorTotalRevenue(mentor_id),
     ]);
-    return mentorDashboardDTO(studentsAndRating[0],topCourse,revanue)
+    return mentorDashboardDTO(studentsAndRating[0], topCourse, revanue);
   }
 }

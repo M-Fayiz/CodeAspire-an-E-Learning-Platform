@@ -4,6 +4,7 @@ import { IAdminService } from "../../services/interface/IAdminService";
 import { HttpStatus } from "../../const/http-status";
 import { successResponse } from "../../utility/response.util";
 import { HttpResponse } from "../../const/error-message";
+import { sendToUser } from "../../utility/socket.utils";
 
 export class AdminController implements IAdminController {
   constructor(private _adminService: IAdminService) {}
@@ -78,12 +79,16 @@ export class AdminController implements IAdminController {
   ): Promise<void> => {
     try {
       const { id } = req.params;
-      const {status}=req.body
-      const approveStatus = await this._adminService.approveMentor(id,status);
-      
+      const { status } = req.body;
+      const approveStatus = await this._adminService.approveMentor(id, status);
+
+   
+
       res
         .status(HttpStatus.OK)
-        .json(successResponse(HttpResponse.OK, { status:approveStatus.status }));
+        .json(
+          successResponse(HttpResponse.OK, { status: approveStatus.status }),
+        );
     } catch (error) {
       next(error);
     }

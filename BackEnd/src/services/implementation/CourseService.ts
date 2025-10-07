@@ -56,19 +56,19 @@ export class CourseService implements ICourseService {
     }
     let skip = (page - 1) * limit;
     let query: FilterQuery<ICourses> = {};
-        if (search) {
-          query["title"] = { $regex: search, $options: "i" };
-        }
-        if (category) {
-          query["categoryId"] = category;
-        }
-        if (subcategory) {
-          query["subCategoryId"] = subcategory;
-        }
-        if (level) {
-          query["level"] = level;
-        }
-        query["status"] = "approved";
+    if (search) {
+      query["title"] = { $regex: search, $options: "i" };
+    }
+    if (category) {
+      query["categoryId"] = category;
+    }
+    if (subcategory) {
+      query["subCategoryId"] = subcategory;
+    }
+    if (level) {
+      query["level"] = level;
+    }
+    query["status"] = "approved";
     const [courseList, totalDocument] = await Promise.all([
       this._courseRepository.fetchCourses(
         limit,
@@ -78,9 +78,7 @@ export class CourseService implements ICourseService {
         subCategory_id as Types.ObjectId,
         level,
       ),
-      this._courseRepository.findDocumentCount(
-       query
-      ),
+      this._courseRepository.findDocumentCount(query),
     ]);
     let enrolledCourse;
     if (learner_Id) {
@@ -146,29 +144,38 @@ export class CourseService implements ICourseService {
     return courseData ? formCourseDto(courseData[0]) : null;
   }
 
-  async getDraftedCourses(search:string,page:string,mentorId: string): Promise<{courseData:IFormCourseDTO[],totalPage:number} | null> {
+  async getDraftedCourses(
+    search: string,
+    page: string,
+    mentorId: string,
+  ): Promise<{ courseData: IFormCourseDTO[]; totalPage: number } | null> {
     const id = parseObjectId(mentorId);
     if (!id) {
       throw createHttpError(HttpStatus.OK, HttpResponse.INVALID_ID);
     }
-    let limit=6
+    let limit = 6;
     let skip = (Number(page) - 1) * limit;
     let query: FilterQuery<ICourses> = {};
     if (search) {
       query["title"] = { $regex: search, $options: "i" };
     }
-    
+
     query["mentorsId"] = mentorId;
 
-    console.log('query',query)
-    const [data ,documnetCount]=await Promise.all([this._courseRepository.getMentorDraftedCourses(search,limit,skip,id),this._courseRepository.findDocumentCount(query)])  
-   
+    console.log("query", query);
+    const [data, documnetCount] = await Promise.all([
+      this._courseRepository.getMentorDraftedCourses(search, limit, skip, id),
+      this._courseRepository.findDocumentCount(query),
+    ]);
+
     const mappedCourseList = data?.map((course) =>
       formCourseDto(course as ICourses),
     );
-    let totalPage =Math.floor(documnetCount / limit) 
-    console.log(totalPage)
-    return mappedCourseList ? {courseData:mappedCourseList,totalPage:totalPage} : null;
+    let totalPage = Math.floor(documnetCount / limit);
+    console.log(totalPage);
+    return mappedCourseList
+      ? { courseData: mappedCourseList, totalPage: totalPage }
+      : null;
   }
 
   async addSessions(courseId: string, session: ISession): Promise<ICourseDTO> {
@@ -262,13 +269,17 @@ export class CourseService implements ICourseService {
     const courseDetails = await this._courseRepository.getCourseDetails(id);
     return courseDetails ? formCourseDto(courseDetails[0]) : null;
   }
-  async approveCourse(courseId: string): Promise<string | null> {
-    const id = parseObjectId(courseId);
-    if (!id) {
+  async approveCourse(courseId: string): Promise<{status:string|null,notify:{userId:Types.ObjectId,message:string}}> {
+    const course_id = parseObjectId(courseId);
+    if (!course_id) {
       throw createHttpError(HttpStatus.BAD_REQUEST, HttpResponse.INVALID_ID);
     }
-    const courseDetails = await this._courseRepository.appproveCourse(id);
-    return courseDetails ? courseDetails.status : null;
+    const courseDetails = await this._courseRepository.appproveCourse(course_id);
+    const notify = {
+      userId: courseDetails?.mentorsId as Types.ObjectId,
+      message: `your course has been ${courseDetails?.status}`,
+    };
+    return {status:courseDetails?.status?courseDetails?.status:null,notify}
   }
   async rejectCourse(
     courseId: string,

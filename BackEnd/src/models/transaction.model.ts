@@ -25,7 +25,7 @@ const TransactionSchema = new mongoose.Schema<ITransactionModel>(
       required: true,
       ref: "User",
     },
-    mentorId:{
+    mentorId: {
       type: Schema.Types.ObjectId,
       required: true,
       ref: "User",

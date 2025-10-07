@@ -12,6 +12,16 @@ export interface IAdminService {
   ): Promise<UserFetchResponse>;
   blockUser(id: string): Promise<{ isActive: boolean; id: string }>;
   userProfile(id: string): Promise<ILearnerDTO | IMentorDTO | null>;
-  approveMentor(id: string,status:string): Promise<{ status: mentorApprovalStatus }>;
-  getDashboardData(filter?:filter,start?:string,end?:string):Promise<void>
+  approveMentor(
+    id: string,
+    status: string,
+  ): Promise<{
+    status: mentorApprovalStatus;
+    notify: { userId: string; message: string };
+  }>;
+  getDashboardData(
+    filter?: filter,
+    start?: string,
+    end?: string,
+  ): Promise<void>;
 }

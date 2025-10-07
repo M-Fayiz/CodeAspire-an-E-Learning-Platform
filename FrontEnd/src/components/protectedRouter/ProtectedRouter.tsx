@@ -4,6 +4,8 @@ import { Navigate } from "react-router-dom";
 import { useAuth } from "../../context/auth.context";
 import type { UserRole } from "../../types/auth.types";
 import { Spinner } from "../templates/Spinner";
+import { SocketProvider } from "@/context/socket.context";
+import { Notification } from "@/hooks/useNotification";
 
 interface ProtectedProps {
   children: ReactNode;
@@ -38,11 +40,16 @@ export const Protected_Router: React.FC<ProtectedProps> = ({
     console.log("resqured role", requiredRole);
 
     const hasRole = requiredRole.find((role) => user.role == role);
-    console.info("User Role :", hasRole);
+   
     if (!hasRole) {
       return <Navigate to="/unauthorized" replace />;
     }
   }
 
-  return children;
+  return(
+    <SocketProvider userId={user?.id}>
+      <Notification/>
+      {children}
+    </SocketProvider>
+  ) ;
 };

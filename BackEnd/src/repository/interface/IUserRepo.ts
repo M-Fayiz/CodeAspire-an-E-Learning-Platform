@@ -5,7 +5,7 @@ import {
   ILearnerModel,
   IAdminModel,
 } from "../../models/user.model";
-import { IRole,  searchProps } from "../../types/user.types";
+import { IRole, searchProps } from "../../types/user.types";
 import { Types } from "mongoose";
 
 export interface IUserRepo {

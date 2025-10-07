@@ -12,7 +12,7 @@ export interface IUser {
   password: string;
   phone?: string;
   googleId?: string;
-  role: IRole
+  role: IRole;
   profilePicture?: string;
   isActive: boolean;
   createdAt: Date;
@@ -44,8 +44,6 @@ export interface IAdmin extends IUser {
   role: IRole.Admin;
 }
 
-
-
 export interface IAuth {
   email: string;
   token: string;
@@ -62,6 +60,5 @@ export interface searchProps {
 export enum IRole {
   Admin = "admin",
   Mentor = "mentor",
-  Learner = "learner"
+  Learner = "learner",
 }
-

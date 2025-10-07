@@ -8,7 +8,6 @@ import { verifyUser } from "../middlewares/authentication.middleware";
 import { authorizedRole } from "../middlewares/authorisation.middleware";
 import { IRole } from "../types/user.types";
 
-
 const userRepository = new UserRepository();
 const adminService = new AdminService(userRepository);
 const adminController = new AdminController(adminService);

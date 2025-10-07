@@ -13,11 +13,10 @@ const enrolledSchema = new mongoose.Schema<IEnrolledModel>(
       ref: "courses",
       required: true,
     },
-    categoryId:{
+    categoryId: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "Category",
-    }
-    ,
+    },
     learnerId: {
       type: mongoose.Schema.Types.ObjectId,
       required: true,

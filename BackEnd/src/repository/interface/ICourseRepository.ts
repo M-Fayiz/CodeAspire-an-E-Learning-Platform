@@ -24,8 +24,12 @@ export interface ICourseRepository {
     baseInfo: ICourses,
   ): Promise<ICourses | null>;
   getCourse(courseId: Types.ObjectId): Promise<ICourses | null>;
-  getMentorDraftedCourses(search:string,limit:number,skip:number,
-    mentorId: Types.ObjectId,): Promise<ICourses[] | null>;
+  getMentorDraftedCourses(
+    search: string,
+    limit: number,
+    skip: number,
+    mentorId: Types.ObjectId,
+  ): Promise<ICourses[] | null>;
   addLecture(
     courseId: Types.ObjectId,
     sessionId: Types.ObjectId,
@@ -52,7 +56,5 @@ export interface ICourseRepository {
   rejectCourse(courseId: Types.ObjectId): Promise<ICourses | null>;
   publishCourse(courseId: Types.ObjectId): Promise<ICourses | null>;
   findCourse(courseId: Types.ObjectId): Promise<ICourses | null>;
-  findDocumentCount(
-    query:FilterQuery<ICourses>
-  ): Promise<number>;
+  findDocumentCount(query: FilterQuery<ICourses>): Promise<number>;
 }

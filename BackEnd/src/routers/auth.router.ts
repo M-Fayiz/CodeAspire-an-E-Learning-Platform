@@ -44,7 +44,7 @@ authRouter.get(
   "/google",
   (req: Request, res: Response, next: NextFunction) => {
     const { role } = req.query as { role?: IRole };
-    req.session.role = role ||IRole.Learner;
+    req.session.role = role || IRole.Learner;
     next();
   },
   passport.authenticate("google", {

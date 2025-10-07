@@ -126,28 +126,37 @@ export class AdminService implements IAdminService {
   }
   async approveMentor(
     id: string,
-    status:string
-  ): Promise<{ status: mentorApprovalStatus }> {
-    const objectId = parseObjectId(id);
-    if (!objectId) {
+    status: string,
+  ): Promise<{
+    status: mentorApprovalStatus;
+    notify: { userId: string; message: string };
+  }> {
+    const user_Id = parseObjectId(id);
+    if (!user_Id) {
       throw createHttpError(
         HttpStatus.BAD_REQUEST,
         HttpResponse.INVALID_CREDNTIALS,
       );
     }
-    
+
     const approvedData = await this._userRepo.updateMentorStatus(
-      objectId,
+      user_Id,
       status,
     );
     if (!approvedData) {
       throw createHttpError(HttpStatus.NOT_FOUND, HttpResponse.USER_NOT_FOUND);
     }
-
-    return { status: approvedData.ApprovalStatus };
+    const notify = {
+      userId: id,
+      message: `your request has been ${approvedData.ApprovalStatus}`,
+    };
+    return { status: approvedData.ApprovalStatus, notify };
   }
-  async getDashboardData(filter?: filter, startDay?: string, endDay?: string): Promise<void> {
-      const {start,end}=timeFilter(filter,startDay,endDay)
-      
+  async getDashboardData(
+    filter?: filter,
+    startDay?: string,
+    endDay?: string,
+  ): Promise<void> {
+    const { start, end } = timeFilter(filter, startDay, endDay);
   }
 }

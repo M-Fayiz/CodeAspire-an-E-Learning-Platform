@@ -152,7 +152,8 @@ export class UserService implements IUserService {
 
     const userData = await this._userRep.getUserProfile(id);
     if (userData?.role == IRole.Admin) return AdminDTO(userData as IAdminModel);
-    if (userData?.role == IRole.Mentor) return MentorDTO(userData as IMenterModel);
+    if (userData?.role == IRole.Mentor)
+      return MentorDTO(userData as IMenterModel);
     if (userData?.role == IRole.Learner)
       return LearnerDTO(userData as ILearnerModel);
     return null;

@@ -133,10 +133,13 @@ export class EnrolledController implements IEnrolledController {
   ): Promise<void> => {
     try {
       const { mentorId } = req.params;
-     
-       const dashboardData= await this._enrolledService.getMentorDashboardData(mentorId);
-    
-      res.status(HttpStatus.OK).json(successResponse(HttpResponse.OK,{dashboardData}));
+
+      const dashboardData =
+        await this._enrolledService.getMentorDashboardData(mentorId);
+
+      res
+        .status(HttpStatus.OK)
+        .json(successResponse(HttpResponse.OK, { dashboardData }));
     } catch (error) {
       next(error);
     }

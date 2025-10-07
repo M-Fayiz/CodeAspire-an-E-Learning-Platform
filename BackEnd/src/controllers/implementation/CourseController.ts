@@ -6,6 +6,7 @@ import { successResponse } from "../../utility/response.util";
 import { HttpResponse } from "../../const/error-message";
 import { updatePart } from "../../types/courses.type";
 import logger from "../../config/logger.config";
+import { sendToUser } from "../../utility/socket.utils";
 
 export class CourseController implements ICourseController {
   constructor(private _courseService: ICourseService) {}
@@ -109,8 +110,8 @@ export class CourseController implements ICourseController {
     next: NextFunction,
   ): Promise<void> => {
     try {
-      const { mentorId ,search,page} = req.query;
-      
+      const { mentorId, search, page } = req.query;
+
       const draftCoursList = await this._courseService.getDraftedCourses(
         search as string,
         page as string,
@@ -119,7 +120,12 @@ export class CourseController implements ICourseController {
 
       res
         .status(HttpStatus.OK)
-        .json(successResponse(HttpResponse.OK, {courseData: draftCoursList?.courseData,totalPage:draftCoursList?.totalPage }));
+        .json(
+          successResponse(HttpResponse.OK, {
+            courseData: draftCoursList?.courseData,
+            totalPage: draftCoursList?.totalPage,
+          }),
+        );
     } catch (error) {
       next(error);
     }
@@ -248,9 +254,11 @@ export class CourseController implements ICourseController {
     try {
       const { courseId } = req.params;
       const status = await this._courseService.approveCourse(courseId);
+
+         sendToUser(String(status.notify.userId), status.notify.message);
       res
         .status(HttpStatus.OK)
-        .json(successResponse(HttpResponse.OK, { status }));
+        .json(successResponse(HttpResponse.OK, { status:status.status }));
     } catch (error) {
       next(error);
     }
@@ -268,6 +276,7 @@ export class CourseController implements ICourseController {
         feedback,
         email,
       );
+
       res
         .status(HttpStatus.OK)
         .json(successResponse(HttpResponse.OK, { status }));

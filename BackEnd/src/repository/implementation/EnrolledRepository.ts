@@ -131,7 +131,7 @@ export class EnrolledRepository
     ]);
   }
   async getTopSellingCourse(mentorId?: Types.ObjectId): Promise<ITopCourse[]> {
-    const matchStage = mentorId ? { mentorId } : {}
+    const matchStage = mentorId ? { mentorId } : {};
     return await this.aggregate<ITopCourse>([
       {
         $match: {
@@ -174,9 +174,11 @@ export class EnrolledRepository
       },
     ]);
   }
-  async getTopSellingCategory(mentorId?: Types.ObjectId): Promise<ITopCategory[]> {
-      const matchStage = mentorId ? { mentorId } : {}
-      return await this.aggregate<ITopCategory>([
+  async getTopSellingCategory(
+    mentorId?: Types.ObjectId,
+  ): Promise<ITopCategory[]> {
+    const matchStage = mentorId ? { mentorId } : {};
+    return await this.aggregate<ITopCategory>([
       {
         $match: {
           mentorId: matchStage,
@@ -217,6 +219,5 @@ export class EnrolledRepository
         },
       },
     ]);
-
   }
 }

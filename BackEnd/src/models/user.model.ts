@@ -82,7 +82,7 @@ export interface IPayload {
   id: Types.ObjectId;
   name?: string;
   email: string;
-  role: IRole
+  role: IRole;
   ApprovalStatus?: "pending" | "approved" | "rejected" | "requested";
   isRequested?: boolean;
 }

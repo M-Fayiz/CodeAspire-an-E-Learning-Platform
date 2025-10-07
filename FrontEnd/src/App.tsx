@@ -4,12 +4,15 @@ import { AuthProvider } from "./context/auth.context";
 import { Toaster } from "sonner";
 
 function App() {
+ 
   return (
     <>
-      
+
         <AuthProvider>
+          
           <RouterProvider router={router} />
           <Toaster richColors position="top-right" />
+          
         </AuthProvider>
      
     </>

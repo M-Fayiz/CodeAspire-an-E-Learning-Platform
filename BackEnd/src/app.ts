@@ -18,11 +18,14 @@ import sharedRouter from "./routers/shared.router";
 import { orderRouter, webhookRouter } from "./routers/order.router";
 import enrolledRouter from "./routers/enrolled.router";
 import reviewRouter from "./routers/review.router";
+import http from "http";
+import { sessionConfig } from "./config/session.config";
+import { initializeSocket } from "./config/socket.config";
 
 dotenv.config();
 
 const app = express();
-const secrete = env.SESSION_SECRET as string;
+
 // MIddlewares
 app.use(cookieParser());
 app.use(morgan("dev")); //morgan
@@ -37,16 +40,14 @@ app.use(
 app.use(express.json());
 
 app.use(express.urlencoded({ extended: true }));
-app.use(
-  session({
-    secret: secrete,
-    resave: false,
-    saveUninitialized: true,
-    cookie: { secure: false },
-  }),
-);
+app.use(session(sessionConfig));
+
+const server = http.createServer(app)
+initializeSocket(server);
+
 app.use(passport.initialize());
 app.use(passport.session());
+
 app.use(cors(corsSetUp));
 
 // Routers
@@ -65,6 +66,6 @@ dbConnect();
 // Error Handler
 app.use(errorHandler);
 
-app.listen(port, () => {
+server.listen(port, () => {
   console.log(`✅ Server  Running.... at${port} `);
 });

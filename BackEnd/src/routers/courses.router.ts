@@ -39,5 +39,5 @@ courseRouter.put(
 );
 courseRouter.patch("/publish/:courseId", courseController.publishCourse);
 courseRouter.patch("/admin/approve/:courseId", courseController.approveCourse);
-courseRouter.patch("/admin/reject/:courseId", courseController.approveCourse);
+courseRouter.patch("/admin/reject/:courseId", courseController.rejectCourse);
 export default courseRouter;

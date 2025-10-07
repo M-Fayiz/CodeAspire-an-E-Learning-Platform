@@ -5,7 +5,6 @@ import { BaseRepository } from "../baseRepository";
 import { ICourseRepository } from "../interface/ICourseRepository";
 import logger from "../../config/logger.config";
 
-
 export class CourseRepository
   extends BaseRepository<ICourses>
   implements ICourseRepository
@@ -53,17 +52,19 @@ export class CourseRepository
   async getCourse(courseId: Types.ObjectId): Promise<ICourses | null> {
     return await this.findById(courseId, ["categoryId", "subCategoryId"]);
   }
-  async getMentorDraftedCourses(search:string,limit:number,skip:number,
+  async getMentorDraftedCourses(
+    search: string,
+    limit: number,
+    skip: number,
     mentorId: Types.ObjectId,
   ): Promise<ICourses[] | null> {
     let query: FilterQuery<ICourses> = {};
 
-    
     if (search) {
       query["title"] = { $regex: search, $options: "i" };
     }
-    query['mentorsId']=mentorId
-    return await this.findAll(query,limit,skip, [
+    query["mentorsId"] = mentorId;
+    return await this.findAll(query, limit, skip, [
       "categoryId",
       "subCategoryId",
     ]);
@@ -166,10 +167,7 @@ export class CourseRepository
       "mentorsId",
     ]);
   }
-  async findDocumentCount(
-    query:FilterQuery<ICourses>
-  ): Promise<number> {
-    
+  async findDocumentCount(query: FilterQuery<ICourses>): Promise<number> {
     return await this.countDocuments(query);
   }
 }
