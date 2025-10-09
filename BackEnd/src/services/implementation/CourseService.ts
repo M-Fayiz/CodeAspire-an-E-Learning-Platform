@@ -21,12 +21,18 @@ import { HttpResponse } from "../../const/error-message";
 import { sendMail } from "../../utility/send-mail.util";
 import { FilterQuery, Types } from "mongoose";
 import { IEnrolledRepository } from "../../repository/interface/IEnrolledRepositoy";
+import { INotificationRepository } from "../../repository/interface/INotificationRepository";
+import { INotification } from "../../types/notification.types";
+import { NotificationTemplates } from "../../template/notification.template";
+import { INotificationDTO } from "../../types/dtos.type/notification.dto.types";
+import { notificationDto } from "../../dtos/notification.dto";
 
 export class CourseService implements ICourseService {
   constructor(
     private _courseRepository: ICourseRepository,
     private _categoryRepository: ICategoryRepository,
     private _enrolledRepository: IEnrolledRepository,
+    private _notificationRepository: INotificationRepository,
   ) {}
 
   async createCourses(course: ICourses): Promise<ICourses | null> {
@@ -269,32 +275,58 @@ export class CourseService implements ICourseService {
     const courseDetails = await this._courseRepository.getCourseDetails(id);
     return courseDetails ? formCourseDto(courseDetails[0]) : null;
   }
-  async approveCourse(courseId: string): Promise<{status:string|null,notify:{userId:Types.ObjectId,message:string}}> {
+  async approveCourse(courseId: string): Promise<{
+    status: string | null;
+    notifyDTO: INotificationDTO;
+  }> {
     const course_id = parseObjectId(courseId);
     if (!course_id) {
       throw createHttpError(HttpStatus.BAD_REQUEST, HttpResponse.INVALID_ID);
     }
-    const courseDetails = await this._courseRepository.appproveCourse(course_id);
-    const notify = {
-      userId: courseDetails?.mentorsId as Types.ObjectId,
-      message: `your course has been ${courseDetails?.status}`,
+
+    const courseDetails =
+      await this._courseRepository.appproveCourse(course_id);
+
+    const notifyData = NotificationTemplates.courseApproval(
+      courseDetails?.mentorsId as Types.ObjectId,
+      courseDetails?.title as string,
+      `http://localhost:3000/mentor/courses/my-courses`,
+    );
+    const savedNotify =
+      await this._notificationRepository.createNotification(notifyData);
+    const notifyDTO = notificationDto(savedNotify);
+    return {
+      status: courseDetails?.status ? courseDetails?.status : null,
+      notifyDTO,
     };
-    return {status:courseDetails?.status?courseDetails?.status:null,notify}
   }
   async rejectCourse(
     courseId: string,
     feedBack: string,
     email: string,
-  ): Promise<string | null> {
+  ): Promise<{ courseStatus: string | null; notifyDTO: INotificationDTO }> {
     const id = parseObjectId(courseId);
     if (!id) {
       throw createHttpError(HttpStatus.BAD_REQUEST, HttpResponse.INVALID_ID);
     }
     const courseDetails = await this._courseRepository.rejectCourse(id);
+    const notifyData = NotificationTemplates.courseRejection(
+      courseDetails?.mentorsId as Types.ObjectId,
+      courseDetails?.title as string,
+      feedBack,
+      `http://localhost:3000/mentor/courses/my-courses`,
+    );
+    const savedNotify =
+      await this._notificationRepository.createNotification(notifyData);
+    const notifyDTO = notificationDto(savedNotify);
+
     if (courseDetails?.status == "rejected") {
       await sendMail(email, "Feedback On Your Course", feedBack);
     }
-    return courseDetails ? courseDetails.status : null;
+    return {
+      courseStatus: courseDetails ? courseDetails.status : null,
+      notifyDTO,
+    };
   }
   async publishCourse(courseId: string): Promise<string | null> {
     const id = parseObjectId(courseId);

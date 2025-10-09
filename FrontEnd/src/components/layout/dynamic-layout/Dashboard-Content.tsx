@@ -1,4 +1,10 @@
-import { Activity, BookCopy, DollarSign, TrendingUp, Users } from "lucide-react";
+import {
+  Activity,
+  BookCopy,
+  DollarSign,
+  TrendingUp,
+  Users,
+} from "lucide-react";
 import { useAuth } from "../../../context/auth.context";
 import { Spinner } from "../../templates/Spinner";
 import { Navigate } from "react-router";
@@ -12,15 +18,15 @@ const DashboardContent = () => {
   const getDashboardContent = () => {
     switch (user.role) {
       case "admin":
-          return {
-        title: "Admin Dashboard",
-        stats: [
-          { label: "Total Users", value: "1,234", icon: Users },
-          { label: "Active Courses", value: "89", icon: BookCopy },
-          { label: "Revenue", value: "$45,123", icon: DollarSign },
-          { label: "System Health", value: "99.9%", icon: Activity },
-        ],
-      };
+        return {
+          title: "Admin Dashboard",
+          stats: [
+            { label: "Total Users", value: "1,234", icon: Users },
+            { label: "Active Courses", value: "89", icon: BookCopy },
+            { label: "Revenue", value: "$45,123", icon: DollarSign },
+            { label: "System Health", value: "99.9%", icon: Activity },
+          ],
+        };
       case "learner":
         return {
           title: "My Learning Dashboard",
@@ -35,8 +41,8 @@ const DashboardContent = () => {
         return {
           title: "Mentor Dashboard",
           stats: [
-            { label: "Total Students", value: "156", icon:Users },
-            { label: "Courses", value: "12", icon:BookCopy},
+            { label: "Total Students", value: "156", icon: Users },
+            { label: "Courses", value: "12", icon: BookCopy },
             // { label: "Rating", value: "4.8", icon: UserStar },
             // { label: "Earnings", value: "$3,456", icon: DollerSign },
           ],
@@ -57,7 +63,6 @@ const DashboardContent = () => {
 
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
         {content.stats.map((stat, index) => (
-         
           <div key={index} className="bg-white rounded-lg shadow-sm p-6">
             <div className="flex items-center">
               <div

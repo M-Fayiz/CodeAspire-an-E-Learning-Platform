@@ -29,7 +29,7 @@ export const EnrolledService = {
         ) ?? [],
       );
       return signedCourse;
-      console.log('enrolled ',response.data)
+      console.log("enrolled ", response.data);
     } catch (error) {
       throwAxiosError(error);
     }
@@ -121,12 +121,16 @@ export const EnrolledService = {
       throwAxiosError(error);
     }
   },
-  getMentorDashboardData:async(mentorId:string):Promise<IMentorDhasboardDTO>=>{
+  getMentorDashboardData: async (
+    mentorId: string,
+  ): Promise<IMentorDhasboardDTO> => {
     try {
-      const response=await axiosInstance.get(API.ENROLLEMENT.GET_MENTOR_DASH_DATA(mentorId))
-      return response.data.dashboardData
+      const response = await axiosInstance.get(
+        API.ENROLLEMENT.GET_MENTOR_DASH_DATA(mentorId),
+      );
+      return response.data.dashboardData;
     } catch (error) {
       throwAxiosError(error);
     }
-  }
+  },
 };

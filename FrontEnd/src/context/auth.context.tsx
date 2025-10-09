@@ -59,15 +59,15 @@ export const AuthProvider = ({ children }: AuthContext) => {
       }
       console.log("data delivered to auth context", result);
     } catch (error) {
-      if(error instanceof Error){
-        toast.error(error.message)
+      if (error instanceof Error) {
+        toast.error(error.message);
       }
       setUser(null);
     } finally {
       setLoading(false);
     }
   };
-  console.log('USER :',user)
+  console.log("USER :", user);
   const logout = async (): Promise<void> => {
     setLoading(true);
     try {

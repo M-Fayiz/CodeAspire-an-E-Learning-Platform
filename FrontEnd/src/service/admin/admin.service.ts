@@ -49,19 +49,19 @@ export const adminService = {
       const response = await axiosInstance.get(API.ADMIN.GET_USER_PROFILE(id), {
         params: { id },
       });
-       if (response.data.userData.profilePicture) {
-            const imageURL = await sharedService.getPreSignedDownloadURL(
-              response.data.userData.profilePicture as string,
-            );
-            response.data.userData.profilePicture = imageURL;
-          }
-      
-          if (response.data.userData.resume) {
-            const resume = await sharedService.getPreSignedDownloadURL(
-              response.data.userData.resume as string,
-            );
-            response.data.userData.resume = resume 
-          }
+      if (response.data.userData.profilePicture) {
+        const imageURL = await sharedService.getPreSignedDownloadURL(
+          response.data.userData.profilePicture as string,
+        );
+        response.data.userData.profilePicture = imageURL;
+      }
+
+      if (response.data.userData.resume) {
+        const resume = await sharedService.getPreSignedDownloadURL(
+          response.data.userData.resume as string,
+        );
+        response.data.userData.resume = resume;
+      }
       return response.data.userData;
     } catch (error) {
       const err = error as AxiosError<{ error: string }>;
@@ -69,14 +69,16 @@ export const adminService = {
       throw new Error(errorMessage);
     }
   },
-  approveMentor: async (id: string,status:string): Promise<{ status: mentorApprovalStatus }> => {
- 
+  approveMentor: async (
+    id: string,
+    status: string,
+  ): Promise<{ status: mentorApprovalStatus }> => {
     try {
-      const response = await axiosInstance.put(API.ADMIN.APPROVE_MENTOR(id),{
-        status
+      const response = await axiosInstance.put(API.ADMIN.APPROVE_MENTOR(id), {
+        status,
       });
-      console.log(response.data)
-      return response.data
+      console.log(response.data);
+      return response.data;
     } catch (error) {
       const err = error as AxiosError<{ error: string }>;
       const errorMessage = err.response?.data.error;

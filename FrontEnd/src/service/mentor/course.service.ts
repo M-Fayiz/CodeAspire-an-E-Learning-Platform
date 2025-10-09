@@ -139,15 +139,19 @@ const courseService = {
       throw new Error(errorMessage);
     }
   },
-  getMentorCourse: async (search:string,page:string,userId: string): Promise<{courseData:IFormCourseDTO[],totalPage:number}> => {
+  getMentorCourse: async (
+    search: string,
+    page: string,
+    userId: string,
+  ): Promise<{ courseData: IFormCourseDTO[]; totalPage: number }> => {
     try {
       const response = await axiosInstance.get(
         API.COURSE.GET_MENTOR_DRAFTED_COURSE,
         {
-          params: { mentorId: userId ,search,page},
+          params: { mentorId: userId, search, page },
         },
       );
-      console.log(response.data)
+      console.log(response.data);
       return response.data;
     } catch (error) {
       const err = error as AxiosError<{ error: string }>;
@@ -237,7 +241,7 @@ const courseService = {
   },
   getCourseDetails: async (
     courseId: string,
-    learnerId: string,
+    learnerId?: string,
   ): Promise<IFormCourseDTO> => {
     try {
       const response = await axiosInstance.get(
@@ -290,6 +294,9 @@ const courseService = {
   ): Promise<
     "inProgress" | "draft" | "published" | "approved" | "rejected"
   > => {
+
+
+
     try {
       const response = await axiosInstance.patch(
         API.COURSE.REJECT_COURSE(coursId),

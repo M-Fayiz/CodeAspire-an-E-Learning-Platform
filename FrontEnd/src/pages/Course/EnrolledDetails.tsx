@@ -31,7 +31,7 @@ const EnrolledCourseDetails = () => {
         lecture,
       );
       if (result) {
-        console.log(' this is the result :',result)
+        console.log(" this is the result :", result);
         setEnrolledCourse((prv) => (prv ? { ...prv, progress: result } : prv));
         // console.log('after the updation :',enrolledCourse)
       }
@@ -62,7 +62,9 @@ const EnrolledCourseDetails = () => {
         <div className="lg:col-span-2 space-y-6">
           {!videoUrl.url ? (
             <div className="bg-white">
+             
               <Banner
+                course={enrolledCourse}
                 courseId={enrolledCourse?.courseId as string}
                 description={enrolledCourse?.course.description as string}
                 imageUrl={enrolledCourse?.course.thumbnail as string}

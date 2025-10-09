@@ -7,14 +7,17 @@ import { authorizedRole } from "../middlewares/authorisation.middleware";
 import { CategoryRepository } from "../repository/implementation/CategoryRepository";
 import { EnrolledRepository } from "../repository/implementation/EnrolledRepository";
 import { IRole } from "../types/user.types";
+import { NotificationRepository } from "../repository/implementation/NotificationRepository";
 
 const courseRepository = new CourseRepository();
 const categoryRepository = new CategoryRepository();
 const enrolledRepositoy = new EnrolledRepository();
+const notificationRepository = new NotificationRepository();
 const courseService = new CourseService(
   courseRepository,
   categoryRepository,
   enrolledRepositoy,
+  notificationRepository,
 );
 const courseController = new CourseController(courseService);
 

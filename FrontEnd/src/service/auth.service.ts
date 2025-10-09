@@ -26,37 +26,36 @@ export const AuthService = {
     token: string | null,
   ): Promise<{ status: number; message: string }> => {
     try {
-    
       const response = await axiosInstance.post(API.Auth.VERIFY_EMAIL_URL, {
         token,
         email,
       });
-      
+
       return response.data.message;
     } catch (error) {
-     throwAxiosError(error)
+      throwAxiosError(error);
     }
   },
   authME: async (): Promise<IDecodedUserType> => {
-
     try {
       const response = await axiosInstance.post(
         API.Auth.AUTH_URL,
         {},
         { withCredentials: true },
       );
-      if(response.data.user.profile){
-
-        const profilrUrl=await sharedService.getPreSignedDownloadURL(response.data.user.profile)
-        console.log(profilrUrl)
-        if(profilrUrl){
-          response.data.user.profile=profilrUrl
+      if (response.data.user.profile) {
+        const profilrUrl = await sharedService.getPreSignedDownloadURL(
+          response.data.user.profile,
+        );
+        console.log(profilrUrl);
+        if (profilrUrl) {
+          response.data.user.profile = profilrUrl;
         }
       }
-      console.log(' this the profile ur; ',response.data.user.profile)
+      console.log(" this the profile ur; ", response.data.user.profile);
       return response.data?.user;
     } catch (error) {
-     throwAxiosError(error)
+      throwAxiosError(error);
     }
   },
 
@@ -72,7 +71,7 @@ export const AuthService = {
       });
       return response?.data.user;
     } catch (error) {
-     throwAxiosError(error)
+      throwAxiosError(error);
     }
   },
   login: async (
@@ -89,7 +88,7 @@ export const AuthService = {
 
       return response?.data;
     } catch (error) {
-      throwAxiosError(error)
+      throwAxiosError(error);
     }
   },
   logOut: async () => {
@@ -102,14 +101,14 @@ export const AuthService = {
 
       if (response.status == 200) return true;
     } catch (error) {
-     throwAxiosError(error)
+      throwAxiosError(error);
     }
   },
   googleAuth: async (role: UserRole): Promise<void> => {
     try {
       window.location.href = `${import.meta.env.VITE_BASE_URL}/auth/google?role:${role}`;
     } catch (error) {
-      throwAxiosError(error)
+      throwAxiosError(error);
     }
   },
   forgotPassword: async (
@@ -121,7 +120,7 @@ export const AuthService = {
       });
       return response.data?.email;
     } catch (error) {
-      throwAxiosError(error)
+      throwAxiosError(error);
     }
   },
   resetPassword: async (
@@ -137,7 +136,7 @@ export const AuthService = {
       });
       return response?.data;
     } catch (error) {
-      throwAxiosError(error)
+      throwAxiosError(error);
     }
   },
 };

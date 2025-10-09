@@ -1,56 +1,57 @@
-import React, { createContext, useContext, useEffect, useState, type ReactNode } from "react";
+// src/context/socket.context.tsx
+import React, { createContext, useContext, useEffect, useMemo, useState, type ReactNode } from "react";
 import { io, Socket } from "socket.io-client";
-
 
 interface SocketContextType {
   socket: Socket | null;
 }
 
-
 const SocketContext = createContext<SocketContextType | undefined>(undefined);
 
 interface SocketProviderProps {
-  userId?: string;    
-  children: ReactNode;  
+  userId?: string;
+  children: ReactNode;
 }
 
 export const SocketProvider: React.FC<SocketProviderProps> = ({ userId, children }) => {
   const [socket, setSocket] = useState<Socket | null>(null);
 
   useEffect(() => {
-      console.log('user id from the ',userId)
-    if (userId) {
-      const newSocket = io('http://localhost:4000', {
-        query: { userId },
-        transports: ["websocket"],
-      });
+    if (!userId) return;
+console.log('base ',import.meta.env.VITE_BASE_URL)
+    const newSocket = io(import.meta.env.VITE_BASE_URL , {
+      query: { userId },
+      transports: ["websocket"],
+      reconnection: true,
+      reconnectionAttempts: 5,
+      reconnectionDelay: 1000,
+    });
 
-       newSocket.on("connect", () => {
-      console.log("✅ Connected to backend with id:", newSocket.id);
-    });
-    newSocket.on("connect_error", (err) => {
-      console.error("❌ Connection Error:", err.message);
-    });
-     newSocket.on("disconnect", (reason) => {
-      console.log("🔌 Disconnected:", reason);
-    });
+    newSocket.on("connect", () => {
+      console.log("✅ Connected with socket ID:", newSocket.id);
       newSocket.emit("join", userId);
+    });
 
-      setSocket(newSocket);
-      console.log("Socket connected for user:", userId);
+    newSocket.on("connect_error", (err) => {
+      console.error("❌ Socket connection error:", err.message);
+    });
 
-      return () => {
-        newSocket.disconnect();
-        console.log("Socket disconnected");
-      };
-    }
+    newSocket.on("disconnect", (reason) => {
+      console.warn("🔌 Socket disconnected:", reason);
+    });
+
+    setSocket(newSocket);
+
+    return () => {
+      console.log("🧹 Cleaning up socket for user:", userId);
+      newSocket.disconnect();
+      setSocket(null);
+    };
   }, [userId]);
 
-  return (
-    <SocketContext.Provider value={{ socket }}>
-      {children}
-    </SocketContext.Provider>
-  );
+  const value = useMemo(() => ({ socket }), [socket]);
+
+  return <SocketContext.Provider value={value}>{children}</SocketContext.Provider>;
 };
 
 

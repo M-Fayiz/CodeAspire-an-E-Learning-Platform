@@ -13,5 +13,5 @@ export interface IReviewDTO {
     name: string;
     profilePicture: string;
   };
-  createdAt?:Date
+  createdAt?: Date;
 }

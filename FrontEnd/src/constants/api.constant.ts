@@ -67,10 +67,15 @@ export const API = {
       `/enrollements/course/${courseId}/mentor/${mentorId}`,
     GET_FILTERED_GRAPH: (courseId: string) =>
       `/enrollements/course/${courseId}/chart`,
-    GET_MENTOR_DASH_DATA:(mentorId:string)=>`/enrollements/mentor/${mentorId}/dashboard`
+    GET_MENTOR_DASH_DATA: (mentorId: string) =>
+      `/enrollements/mentor/${mentorId}/dashboard`,
   },
   REVIEW: {
     ADD_REVIEW: "/reviews/",
     GET_REVIEWS: (courseId: string) => `/reviews/${courseId}`,
   },
+  NOTIFICATION:{
+    GET_NOTIFICATION:(userId:string)=>`/notifications/${userId}`,
+    READ_NOTIFICATION:(notifyId:string)=>`/notifications/${notifyId}`
+  }
 };

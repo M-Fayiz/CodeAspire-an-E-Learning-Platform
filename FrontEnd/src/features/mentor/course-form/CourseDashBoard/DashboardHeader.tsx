@@ -1,22 +1,21 @@
 import { useCourseFormContext } from "@/context/courseForm.context";
 import type { CourseDashboardDTO } from "@/types/DTOS/courseDashboard.dto";
 
-import {  Eye, Star, TrendingUp, Users } from "lucide-react";
+import { Eye, Star, TrendingUp, Users } from "lucide-react";
 import type React from "react";
 
-import {  useNavigate, } from "react-router";
+import { useNavigate } from "react-router";
 interface courseDashboardProps {
   courseData: CourseDashboardDTO;
 }
 const DashBoardHeader: React.FC<courseDashboardProps> = ({ courseData }) => {
-     const { setCourseId } = useCourseFormContext();
-     const navigate=useNavigate()
-     const create=()=>{
-      setCourseId(courseData.course._id)
-  
-      navigate("/mentor/courses/create")
+  const { setCourseId } = useCourseFormContext();
+  const navigate = useNavigate();
+  const create = () => {
+    setCourseId(courseData.course._id);
 
-     }
+    navigate("/mentor/courses/create");
+  };
 
   return (
     <>
@@ -61,7 +60,10 @@ const DashBoardHeader: React.FC<courseDashboardProps> = ({ courseData }) => {
           </div>
 
           <div className="flex gap-3">
-            <button onClick={create} className="flex items-center gap-2 px-4 py-2 bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200 transition-colors">
+            <button
+              onClick={create}
+              className="flex items-center gap-2 px-4 py-2 bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200 transition-colors"
+            >
               <Eye className="w-4 h-4" />
               Preview Course & edit Course
             </button>

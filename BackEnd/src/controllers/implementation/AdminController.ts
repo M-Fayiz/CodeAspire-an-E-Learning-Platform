@@ -82,8 +82,6 @@ export class AdminController implements IAdminController {
       const { status } = req.body;
       const approveStatus = await this._adminService.approveMentor(id, status);
 
-   
-
       res
         .status(HttpStatus.OK)
         .json(

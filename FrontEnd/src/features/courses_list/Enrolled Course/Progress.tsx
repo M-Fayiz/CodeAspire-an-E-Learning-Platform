@@ -17,7 +17,7 @@ const CurriculumProgress: React.FC<CurriculumProgressProps> = ({
     return sessions.reduce((acc, vl) => acc + (vl.lectures?.length || 0), 0);
   }, [sessions]);
   const set = new Set(progress.completedLectures);
-  const progresPercentage = Math.floor((set.size / lectureCount) * 100)
+  const progresPercentage = Math.floor((set.size / lectureCount) * 100);
 
   return (
     <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6 max-w-md mx-auto">
@@ -35,7 +35,9 @@ const CurriculumProgress: React.FC<CurriculumProgressProps> = ({
             style={{ width: `${progresPercentage}%` }}
           />
         </div>
-        <p className="text-xs text-gray-500 mt-1">{progresPercentage}% Complete</p>
+        <p className="text-xs text-gray-500 mt-1">
+          {progresPercentage}% Complete
+        </p>
       </div>
 
       <div className="space-y-1 max-h-[350px] overflow-y-auto">

@@ -14,7 +14,6 @@ import { IEnrollement } from "../../types/enrollment.types";
 import logger from "../../config/logger.config";
 import { ITransactionRepository } from "../../repository/interface/ITransactionRepository";
 import { ITransaction } from "../../types/transaction.type";
-import { courseDTO } from "../../dtos/course.dtos";
 import { calculateShares } from "../../utility/calculateSplit.util";
 
 export class OrderService implements IOrderService {

@@ -20,7 +20,6 @@ const SignupPage: React.FC = () => {
   };
 
   const handleAuthSubmit = async (data: ISignUp) => {
-
     try {
       const result = await AuthService.signUp(data);
 
@@ -52,9 +51,7 @@ const SignupPage: React.FC = () => {
   const handleGoogleAuth = async (role: UserRole) => {
     try {
       await AuthService.googleAuth(role);
-   
     } catch (error) {
-
       if (error instanceof Error) {
         toast.error(error.message);
       }

@@ -118,14 +118,12 @@ export class CourseController implements ICourseController {
         mentorId as string,
       );
 
-      res
-        .status(HttpStatus.OK)
-        .json(
-          successResponse(HttpResponse.OK, {
-            courseData: draftCoursList?.courseData,
-            totalPage: draftCoursList?.totalPage,
-          }),
-        );
+      res.status(HttpStatus.OK).json(
+        successResponse(HttpResponse.OK, {
+          courseData: draftCoursList?.courseData,
+          totalPage: draftCoursList?.totalPage,
+        }),
+      );
     } catch (error) {
       next(error);
     }
@@ -254,11 +252,14 @@ export class CourseController implements ICourseController {
     try {
       const { courseId } = req.params;
       const status = await this._courseService.approveCourse(courseId);
-
-         sendToUser(String(status.notify.userId), status.notify.message);
+      const data = {
+        title: status.notifyDTO.title,
+        message: status.notifyDTO.message,
+      };
+      sendToUser(status.notifyDTO.userId, status.notifyDTO);
       res
         .status(HttpStatus.OK)
-        .json(successResponse(HttpResponse.OK, { status:status.status }));
+        .json(successResponse(HttpResponse.OK, { status: status.status }));
     } catch (error) {
       next(error);
     }
@@ -270,13 +271,22 @@ export class CourseController implements ICourseController {
   ): Promise<void> => {
     try {
       const { courseId } = req.params;
-      const { feedback, email } = req.body;
+      const { feedBack, email } = req.body;
+
       const status = await this._courseService.rejectCourse(
         courseId,
-        feedback,
+        feedBack,
         email,
       );
 
+      console.log("this is the notify :", status.notifyDTO);
+      const data = {
+        title: status.notifyDTO.title,
+        message: status.notifyDTO,
+      };
+
+      console.log("data ", data);
+      sendToUser(status.notifyDTO.userId, status.notifyDTO);
       res
         .status(HttpStatus.OK)
         .json(successResponse(HttpResponse.OK, { status }));

@@ -14,7 +14,7 @@ export interface IMentorTotalRevanue {
   revenue: number;
 }
 export interface ITopCourse {
-  courseId:string;
+  courseId: string;
   title: string;
   enrolledStudent: number;
 }

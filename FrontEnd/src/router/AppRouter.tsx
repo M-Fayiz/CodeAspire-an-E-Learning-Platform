@@ -61,7 +61,6 @@ export const router = createBrowserRouter([
     path: "/learner",
     element: (
       <Protected_Router requiredRole={["learner"]}>
-        
         <DynamicLayout />
       </Protected_Router>
     ),
@@ -83,7 +82,10 @@ export const router = createBrowserRouter([
     ),
     children: [
       { index: true, element: <Navigate to="dashboard" /> },
-      { path: "dashboard", element: <MentorDashboard /> },
+      { path: "dashboard", element:( 
+      
+      <MentorDashboard /> 
+    )},
       { path: "profile/:id", element: <ProfileManagement /> },
       { path: "data", element: <MentorDataForm /> },
       {
@@ -112,7 +114,6 @@ export const router = createBrowserRouter([
       {
         path: "user-profile/:id",
         element: <AdminUserProfile />,
-       
       },
       { path: "category", element: <CategoryManagement /> },
       { path: "courses", element: <CourseManagement /> },
@@ -129,7 +130,6 @@ export const router = createBrowserRouter([
             <CourseCreation />
           </Protected_Router>
         ),
-        
       },
     ],
   },

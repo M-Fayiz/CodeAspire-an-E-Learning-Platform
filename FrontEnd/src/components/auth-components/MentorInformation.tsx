@@ -86,34 +86,43 @@ const MentorDataForm = () => {
   };
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
-  e.preventDefault();
+    e.preventDefault();
 
-  if (!formData.expertise.length || !formData.experience || !formData.bio.trim()) {
-    toast.error("Please complete all required fields.");
-    return;
-  }
-
-  try {
-    const result = await UserService.updateMentorInformation(user!.id, formData);
-    if (result) setWaithingCard(true);
-  } catch (error) {
-    if (error instanceof Error) {
-      toast.error(error.message);
-    }
-  }
-};
-
-
-const nextStep = () => {
-  if (currentStep === 1) {
-    if (!formData.expertise.length || !formData.experience || !formData.bio.trim()) {
-      toast.error("Please fill in all required fields before proceeding.");
+    if (
+      !formData.expertise.length ||
+      !formData.experience ||
+      !formData.bio.trim()
+    ) {
+      toast.error("Please complete all required fields.");
       return;
     }
-  }
-  if (currentStep < 2) setCurrentStep(currentStep + 1);
-};
 
+    try {
+      const result = await UserService.updateMentorInformation(
+        user!.id,
+        formData,
+      );
+      if (result) setWaithingCard(true);
+    } catch (error) {
+      if (error instanceof Error) {
+        toast.error(error.message);
+      }
+    }
+  };
+
+  const nextStep = () => {
+    if (currentStep === 1) {
+      if (
+        !formData.expertise.length ||
+        !formData.experience ||
+        !formData.bio.trim()
+      ) {
+        toast.error("Please fill in all required fields before proceeding.");
+        return;
+      }
+    }
+    if (currentStep < 2) setCurrentStep(currentStep + 1);
+  };
 
   const prevStep = () => {
     if (currentStep > 1) setCurrentStep(currentStep - 1);

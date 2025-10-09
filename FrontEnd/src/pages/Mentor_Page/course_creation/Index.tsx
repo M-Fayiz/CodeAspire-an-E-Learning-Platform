@@ -4,7 +4,6 @@ import CourseForm from "@/features/mentor/course-form/courseForm";
 // import CourseFormProvider from "@/context/courseForm.context";
 
 const CourseCreation = () => {
-  
   return (
     <>
       <ManagementLayout

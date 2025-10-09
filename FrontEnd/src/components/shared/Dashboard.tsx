@@ -1,4 +1,4 @@
-import React from 'react';
+import React from "react";
 
 const MentorDashboardSkeleton = () => {
   const SkeletonStatCard = () => (
@@ -22,9 +22,18 @@ const MentorDashboardSkeleton = () => {
   const SkeletonBar = () => (
     <div className="flex-1 flex flex-col items-center gap-1">
       <div className="w-full flex flex-col justify-end h-full space-y-0.5">
-        <div className="w-full bg-gray-200 rounded-t animate-pulse" style={{ height: '60%' }}></div>
-        <div className="w-full bg-gray-300 animate-pulse" style={{ height: '25%' }}></div>
-        <div className="w-full bg-gray-400 rounded-b animate-pulse" style={{ height: '15%' }}></div>
+        <div
+          className="w-full bg-gray-200 rounded-t animate-pulse"
+          style={{ height: "60%" }}
+        ></div>
+        <div
+          className="w-full bg-gray-300 animate-pulse"
+          style={{ height: "25%" }}
+        ></div>
+        <div
+          className="w-full bg-gray-400 rounded-b animate-pulse"
+          style={{ height: "15%" }}
+        ></div>
       </div>
       <div className="h-3 w-6 bg-gray-200 rounded mt-2 animate-pulse"></div>
     </div>
@@ -79,7 +88,7 @@ const MentorDashboardSkeleton = () => {
                 <div className="h-8 w-32 bg-gray-200 rounded-lg animate-pulse"></div>
               </div>
             </div>
-            
+
             <div className="relative h-64">
               <div className="absolute inset-0 flex items-end justify-between gap-2 px-2">
                 {[...Array(14)].map((_, i) => (
@@ -107,7 +116,7 @@ const MentorDashboardSkeleton = () => {
                 <div className="h-5 w-32 bg-gray-300 rounded animate-pulse"></div>
                 <div className="w-5 h-5 bg-gray-200 rounded animate-pulse"></div>
               </div>
-              
+
               <div className="grid grid-cols-3 gap-4 mb-4">
                 <div className="space-y-2">
                   <div className="h-3 w-20 bg-gray-200 rounded animate-pulse"></div>

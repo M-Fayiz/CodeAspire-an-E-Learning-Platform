@@ -17,64 +17,66 @@ const CourseDetails = () => {
   const { id } = useParams<{ id: string }>();
   const { user } = useAuth();
   const [course, setCourse] = useState<IFormCourseDTO | null>(null);
-  const [loading,setLoading]=useState(false)
+  const [loading, setLoading] = useState(false);
   useEffect(() => {
     (async () => {
-      setLoading(true)
+      setLoading(true);
       const result = await courseService.getCourseDetails(
         id as string,
         user!.id,
       );
       if (result) {
-        setLoading(false)
+        setLoading(false);
         setCourse(result);
       }
     })();
   }, [id]);
 
   const handle = (tap: string) => setActiveTap(tap);
-  console.log(' this is the course ',course)
+  console.log(" this is the course ", course);
   return (
     <div>
-      <Header/>
+      <Header />
       <div className="relative top-14 col-span-3 ">
-          <div className="absolute -top-25 right-25 w-80 h-150 bg-orange-400  rounded-2xl rotate-12 "></div>
+        <div className="absolute -top-25 right-25 w-80 h-150 bg-orange-400  rounded-2xl rotate-12 "></div>
         <div className="bg-white p-2 md:p-5">
-           {/* <div className="w-10 h-10 bg-orange-500 rounded-full flex items-center justify-center"> */}
-           {loading&&<BannerSkeleton/>}
-          {!loading&&(
-            <Banner     
-            courseId={course?._id as string}
-            description={course?.description as string}
-            imageUrl={course?.thumbnail as string}
-            title={course?.title as string}
-            isEnrolled={course?.isEnrolled}
-            course={course as IFormCourseDTO}
-          />
+          {/* <div className="w-10 h-10 bg-orange-500 rounded-full flex items-center justify-center"> */}
+          {loading && <BannerSkeleton />}
+          {!loading && (
+            <Banner
+              courseId={course?._id as string}
+              description={course?.description as string}
+              imageUrl={course?.thumbnail as string}
+              title={course?.title as string}
+              isEnrolled={course?.isEnrolled}
+              course={course as IFormCourseDTO}
+            />
           )}
         </div>
 
         <div className="flex justify-center gap-2 border-b mt-2 p-5  px-6">
-          {loading?<TabSkeleton/>:(
+          {loading ? (
+            <TabSkeleton />
+          ) : (
             <>
-          <Taps
-            label="overview"
-            icon={
-              <ClipboardPen className="text-white-500 w-4 h-4 hidden md:block" />
-            }
-            Click={handle}
-            tap="overview"
-            activeTap={activeTap}
-          />
-          <Taps
-            label="mentor"
-            icon={
-              <User className="text-white-500 w-4 h-4 hidden md:block" />
-            }
-            Click={handle}
-            tap="mentor"
-            activeTap={activeTap}
-          />
+              <Taps
+                label="overview"
+                icon={
+                  <ClipboardPen className="text-white-500 w-4 h-4 hidden md:block" />
+                }
+                Click={handle}
+                tap="overview"
+                activeTap={activeTap}
+              />
+              <Taps
+                label="mentor"
+                icon={
+                  <User className="text-white-500 w-4 h-4 hidden md:block" />
+                }
+                Click={handle}
+                tap="mentor"
+                activeTap={activeTap}
+              />
             </>
           )}
         </div>
@@ -82,7 +84,6 @@ const CourseDetails = () => {
         <div className="p-2 md:p-5">
           {activeTap === "overview" && <CourseOverview />}
           {activeTap === "mentor" && (
-            
             <MentorProfile id={course?.mentorsId._id as string} />
           )}
         </div>

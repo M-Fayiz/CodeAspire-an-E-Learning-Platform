@@ -1,5 +1,3 @@
-
-
 const CourseOverview = () => {
   return (
     <section className=" py-10 px-6 md:px-12 p-5  rounded-xl ">

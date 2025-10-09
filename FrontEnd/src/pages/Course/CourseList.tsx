@@ -133,7 +133,8 @@ function CourseLayout() {
                 currentPage={currentPage}
                 totalPages={totalPage}
                 onPageChange={handlePage}
-              />e
+              />
+              e
             </div>
           )}
         </div>

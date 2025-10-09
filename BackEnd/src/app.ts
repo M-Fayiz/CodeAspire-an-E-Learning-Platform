@@ -21,6 +21,7 @@ import reviewRouter from "./routers/review.router";
 import http from "http";
 import { sessionConfig } from "./config/session.config";
 import { initializeSocket } from "./config/socket.config";
+import notifyRouter from "./routers/notification.router";
 
 dotenv.config();
 
@@ -42,7 +43,7 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(session(sessionConfig));
 
-const server = http.createServer(app)
+const server = http.createServer(app);
 initializeSocket(server);
 
 app.use(passport.initialize());
@@ -60,6 +61,7 @@ app.use("/api/v1/shared", sharedRouter);
 app.use("/api/v1/orders", orderRouter);
 app.use("/api/v1/enrollements", enrolledRouter);
 app.use("/api/v1/reviews", reviewRouter);
+app.use("/api/v1/notifications", notifyRouter);
 const port = env.port;
 dbConnect();
 

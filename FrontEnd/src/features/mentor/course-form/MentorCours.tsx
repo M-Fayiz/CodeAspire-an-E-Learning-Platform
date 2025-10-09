@@ -62,14 +62,12 @@ const MyCourseCard: React.FC<CourseCardProps> = ({ course, onEdit }) => {
         </div>
 
         <div className="flex justify-between">
-          <div>
-            
-          </div>
+          <div></div>
           <button
             onClick={onEdit}
             className="bg-black flex justify-center items-center gap-2 text-white px-4 py-2 rounded-md hover:bg-gray-700 transition-colors text-sm font-medium"
           >
-            <Eye className="w-5"/>
+            <Eye className="w-5" />
             View Course
           </button>
           {/* <button className="bg-red-500 text-white px-4 py-2 rounded-md hover:bg-red-600 transition-colors text-sm font-medium">

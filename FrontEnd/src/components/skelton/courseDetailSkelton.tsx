@@ -2,12 +2,11 @@ export default function BannerSkeleton() {
   return (
     <div className="relative w-full py-5 px-6 md:px-16 lg:px-24">
       <div className="flex flex-col md:flex-row justify-between items-center relative gap-10 animate-pulse">
-        
         {/* Left Content */}
         <div className="relative flex-1 p-5 space-y-4">
           {/* Title */}
           <div className="h-8 md:h-10 bg-gray-300 rounded w-3/4"></div>
-          
+
           {/* Description (3 lines) */}
           <div className="space-y-2">
             <div className="h-3 bg-gray-200 rounded w-full"></div>

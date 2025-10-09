@@ -6,6 +6,7 @@ import {
   ICourseListDTO,
   IFormCourseDTO,
 } from "../../types/dtos.type/course.dtos.type";
+import { INotificationDTO } from "../../types/dtos.type/notification.dto.types";
 
 export interface ICourseService {
   createCourses(course: ICourses): Promise<ICourses | null>;
@@ -50,11 +51,14 @@ export interface ICourseService {
   ): Promise<ICourseDTO>;
   getAdminCourse(): Promise<IFormCourseDTO[] | null>;
   getCourseDetails(courseId: string): Promise<IFormCourseDTO | null>;
-  approveCourse(courseId: string): Promise<{status:string|null,notify:{userId:Types.ObjectId,message:string}}>;
+  approveCourse(courseId: string): Promise<{
+    status: string | null;
+    notifyDTO: INotificationDTO;
+  }>;
   rejectCourse(
     courseId: string,
     feedBack: string,
     email: string,
-  ): Promise<string | null>;
+  ): Promise<{ courseStatus: string | null; notifyDTO: INotificationDTO }>;
   publishCourse(courseId: string): Promise<string | null>;
 }

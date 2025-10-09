@@ -4,16 +4,21 @@ import {
   HelpCircle,
   LogOut,
   Menu,
-
   Settings,
   User,
   X,
 } from "lucide-react";
-import React, { useState } from "react";
+import React, {  useState } from "react";
 import type { IDecodedUserType } from "../../../types/auth.types";
 import { useAuth } from "../../../context/auth.context";
-import { Spinner } from "../../templates/Spinner";
+// import { Spinner } from "../../templates/Spinner";
 import { Link } from "react-router";
+import dayjs  from 'dayjs'
+import relativeTime from "dayjs/plugin/relativeTime";
+import NotificationDropdown from "@/components/Notification/NotificationComponents";
+
+import { useNotificationContext } from "@/context/notification.context";
+dayjs.extend(relativeTime);
 
 interface IHeaderProbs {
   user: IDecodedUserType;
@@ -28,19 +33,11 @@ const Header: React.FC<IHeaderProbs> = ({
 }) => {
   const [showProfileDropdown, setShowProfileDropdown] = useState(false);
   const [showNotifications, setShowNotifications] = useState(false);
+ 
+  const { logout } = useAuth();
+ const { count} = useNotificationContext();
 
-  const { logout, loading } = useAuth();
-
-  const notifications = [
-    { id: 1, text: "New course enrollment", time: "5 min ago", unread: true },
-    { id: 2, text: "Assignment submitted", time: "1 hour ago", unread: true },
-    {
-      id: 3,
-      text: "System maintenance scheduled",
-      time: "2 hours ago",
-      unread: false,
-    },
-  ];
+  
 
   return (
     <header className="bg-white border-b border-gray-200 px-4 py-3 flex items-center justify-between sticky top-0 z-40">
@@ -62,9 +59,9 @@ const Header: React.FC<IHeaderProbs> = ({
       </div>
 
       <div className="flex items-center space-x-3">
-          <div>
-            <Link to={'/'}>Home</Link>
-          </div>
+        <div>
+          <Link to={"/"}>Home</Link>
+        </div>
 
         <div className="relative">
           <button
@@ -72,43 +69,18 @@ const Header: React.FC<IHeaderProbs> = ({
             className="p-2 rounded-md hover:bg-gray-100 transition-colors relative"
           >
             <Bell className="w-5 h-5 text-gray-600" />
+            {count>0&&(
+
             <span className="absolute -top-1 -right-1 bg-red-500 text-white text-xs rounded-full w-5 h-5 flex items-center justify-center">
-              2
+              {count}
             </span>
+            )}
           </button>
 
           {showNotifications && (
-            <div className="absolute right-0 mt-2 w-80 bg-white rounded-lg shadow-lg border border-gray-200 py-2 z-50">
-              <div className="px-4 py-2 border-b border-gray-200">
-                <h3 className="font-medium text-gray-900">Notifications</h3>
-              </div>
-              <div className="max-h-64 overflow-y-auto">
-                {notifications.map((notification) => (
-                  <div
-                    key={notification.id}
-                    className={`px-4 py-3 hover:bg-gray-50 cursor-pointer border-l-4 ${
-                      notification.unread
-                        ? "border-blue-500 bg-blue-50"
-                        : "border-transparent"
-                    }`}
-                  >
-                    <p className="text-sm text-gray-900">{notification.text}</p>
-                    <p className="text-xs text-gray-500 mt-1">
-                      {notification.time}
-                    </p>
-                  </div>
-                ))}
-              </div>
-              <div className="px-4 py-2 border-t border-gray-200">
-                <button className="text-sm text-blue-600 hover:text-blue-800">
-                  View all notifications
-                </button>
-              </div>
-            </div>
+            <NotificationDropdown />
           )}
         </div>
-
-        {/* Profile Dropdown */}
         <div className="relative">
           <button
             onClick={() => setShowProfileDropdown(!showProfileDropdown)}
@@ -169,7 +141,7 @@ const Header: React.FC<IHeaderProbs> = ({
           )}
         </div>
       </div>
-      {loading && <Spinner fullScreen variant="theme" />}
+      {/* {loading && <Spinner fullScreen variant="theme" />} */}
     </header>
   );
 };

@@ -24,7 +24,7 @@ function VerifyEmail() {
 
       try {
         const res = await AuthService.verifyEmail(email, token);
-     
+
         toast.success(res.message);
         checkAuth();
         setTimeout(() => {

@@ -67,7 +67,10 @@ export const ChartAreaInteractive: React.FC<cahrtPrps> = ({ courseId }) => {
           <CardTitle>Area Chart - Interactive</CardTitle>
           <CardDescription>Showing total enrolled Studens</CardDescription>
         </div>
-        <Select value={timeRange}  onValueChange={(value) => setTimeRange(value as ChartFilter)}>
+        <Select
+          value={timeRange}
+          onValueChange={(value) => setTimeRange(value as ChartFilter)}
+        >
           <SelectTrigger
             className="hidden w-[160px] rounded-lg sm:ml-auto sm:flex"
             aria-label="Select a value"

@@ -13,7 +13,6 @@ const SearchHeader: React.FC<SearchBarProps> = ({
 }) => {
   const [search, setSearch] = useState("");
   const handleChange = (value: string) => {
-    
     setSearch(value);
     handleSearch(value);
   };

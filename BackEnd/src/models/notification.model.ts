@@ -1,4 +1,4 @@
-import mongoose, { Document, Types } from "mongoose";
+import mongoose, { Document, Schema, Types } from "mongoose";
 import { INotification } from "../types/notification.types";
 
 export interface INotificationModel
@@ -8,7 +8,7 @@ export interface INotificationModel
 const NotificationSchema = new mongoose.Schema<INotificationModel>(
   {
     userId: {
-      Type: mongoose.Schema.Types.ObjectId,
+      type: Schema.Types.ObjectId,
       ref: "User",
       required: true,
     },
@@ -24,7 +24,7 @@ const NotificationSchema = new mongoose.Schema<INotificationModel>(
     },
     type: {
       type: String,
-      enum: ["INFO", "WARNING", "SUCCESS", "ERROR"],
+      enum: ["info", "warning", "success", "error"],
     },
     title: {
       type: String,
@@ -34,6 +34,6 @@ const NotificationSchema = new mongoose.Schema<INotificationModel>(
 );
 
 export const NotificationModel = mongoose.model<INotificationModel>(
-  "notification",
+  "Notification",
   NotificationSchema,
 );

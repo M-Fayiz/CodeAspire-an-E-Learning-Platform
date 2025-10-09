@@ -3,8 +3,8 @@ import { Spinner } from "@/components/templates/Spinner";
 import HeroSection from "@/features/admin/Course/HeroSection";
 import courseService from "@/service/mentor/course.service";
 import type { IFormCourseDTO } from "@/types/DTOS/courses.types";
-import { CheckCircle, ClipboardPen, Clock, PlayCircle } from "lucide-react";
-import { useEffect, useMemo, useState } from "react";
+import {  ClipboardPen, PlayCircle } from "lucide-react";
+import { useEffect, useState } from "react";
 import { useParams } from "react-router";
 import {
   Accordion,
@@ -20,7 +20,7 @@ function AdminCourseDetails() {
   const [course, setCourses] = useState<IFormCourseDTO | null>(null);
   const [videoUrl, setVideoUrl] = useState({ url: "", title: "" });
   const [activeTab, setActiveTab] = useState("Curriculum");
-  console.log(id, " of course  ");
+
   useEffect(() => {
     async function fetchCourse() {
       const coursedata = await courseService.getCourseDetails(id as string);
@@ -191,7 +191,6 @@ function AdminCourseDetails() {
         <div>
           {activeTab === "Action" && (
             <AdminCourseActions
-              courseId={course._id}
               onAppprove={handleApprove}
               onReject={handlereject}
               status={course.status}
