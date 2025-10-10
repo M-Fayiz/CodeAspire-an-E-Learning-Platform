@@ -22,7 +22,6 @@ import { sendMail } from "../../utility/send-mail.util";
 import { FilterQuery, Types } from "mongoose";
 import { IEnrolledRepository } from "../../repository/interface/IEnrolledRepositoy";
 import { INotificationRepository } from "../../repository/interface/INotificationRepository";
-import { INotification } from "../../types/notification.types";
 import { NotificationTemplates } from "../../template/notification.template";
 import { INotificationDTO } from "../../types/dtos.type/notification.dto.types";
 import { notificationDto } from "../../dtos/notification.dto";

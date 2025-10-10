@@ -5,15 +5,15 @@ import CoursesSection from "../../components/layout/landing/Courses";
 import MockInterviewSection from "../../components/layout/landing/MockInterview";
 import StatsSection from "../../components/layout/landing/Stats";
 import Footer from "../../components/layout/landing/Footer";
-import { jwtDecode } from "jwt-decode";
+// import { jwtDecode } from "jwt-decode";
 
 const Landing = () => {
-  const params = new URLSearchParams(window.location.search);
-  const accessToken = params.get("token");
-  if (accessToken) {
-    const user = jwtDecode(accessToken);
-    // console.log('jwt user',user)
-  }
+  // const params = new URLSearchParams(window.location.search);
+  // const accessToken = params.get("token");
+  // if (accessToken) {
+
+  //   // console.log('jwt user',user)
+  // }
   return (
     <>
       <div className="min-h-screen">

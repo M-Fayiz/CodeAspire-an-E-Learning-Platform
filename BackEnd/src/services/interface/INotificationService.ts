@@ -1,3 +1,4 @@
+import { Types } from "mongoose";
 import { INotificationDTO } from "../../types/dtos.type/notification.dto.types";
 
 export interface INotificationService {
