@@ -35,7 +35,7 @@ export class AuthController implements IAuthController {
       setRefreshToken(res, token.refreshToken);
       res.status(HttpStatus.OK).json(
         successResponse(HttpResponse.LOGGED_IN_SUCCESSFULLY, {
-          token: token,
+          token: token.accessToken,
         }),
       );
     } catch (error) {
@@ -59,7 +59,7 @@ export class AuthController implements IAuthController {
 
       res
         .status(HttpStatus.OK)
-        .json(successResponse(HttpResponse.OK, { user: user }));
+        .json(successResponse(HttpResponse.OK, { user: user ,token:accessToken}));
     } catch (error) {
       next(error);
     }
@@ -98,16 +98,19 @@ export class AuthController implements IAuthController {
     try {
       const { email, password } = req.body;
 
-      const tokens = await this._authSerive.login(email, password);
-      setAccessToken(res, tokens.accessToken);
-      setRefreshToken(res, tokens.refreshToken);
+      const tokensAndUserData = await this._authSerive.login(email, password);
+      setAccessToken(res, tokensAndUserData.accessToken);
+      setRefreshToken(res, tokensAndUserData.refreshToken);
 
       res
         .status(HttpStatus.OK)
         .json(
           successResponse(
             HttpResponse.LOGGED_IN_SUCCESSFULLY,
-            tokens.MappedUser,
+            {
+              data:tokensAndUserData.MappedUser,
+              token:tokensAndUserData.accessToken
+            }
           ),
         );
     } catch (error) {

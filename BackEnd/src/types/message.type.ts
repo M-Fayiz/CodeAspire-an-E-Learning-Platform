@@ -6,6 +6,7 @@ export interface IMessage{
     sender:Types.ObjectId
     content:string
     type:'text'| 'image'|'video'| 'pdf'
+    status:'sent'|'delivered'|'read'
     mediaUrl:string
     createdAt:Date
 }

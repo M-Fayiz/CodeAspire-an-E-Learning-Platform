@@ -1,3 +1,4 @@
+
 import { Server, Socket } from "socket.io";
 import { Server as HttpServer } from "http";
 import { env } from "../config/env.config";
@@ -18,7 +19,7 @@ export const initializeSocket = (server: HttpServer) => {
   });
   io.on("connection", (socket: CustomSocket) => {
     console.log("User Connected ", socket.id);
-
+  // const token=socket.handshake.auth.token
     socket.on("join", (userId) => {
       console.log(`User Id ${userId}`);
       socket.join(userId);

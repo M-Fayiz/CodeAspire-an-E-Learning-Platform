@@ -5,6 +5,7 @@ import { API } from "../constants/api.constant";
 import type { UserRole } from "../types/auth.types";
 import { throwAxiosError } from "@/utility/throwErrot";
 import { sharedService } from "./shared.service";
+import { HttpStatusCode } from "@/constants/statusCode";
 
 export const AuthService = {
   signUp: async (
@@ -30,6 +31,10 @@ export const AuthService = {
         token,
         email,
       });
+      console.log(response.data.token)
+      if(response.data.token){
+        localStorage.setItem('accessToken',response.data.token)
+      }
 
       return response.data.message;
     } catch (error) {
@@ -52,7 +57,9 @@ export const AuthService = {
           response.data.user.profile = profilrUrl;
         }
       }
-      console.log(" this the profile ur; ", response.data.user.profile);
+      if(response.data.token){
+        localStorage.setItem('accessToken',response.data.token)
+      }
       return response.data?.user;
     } catch (error) {
       throwAxiosError(error);
@@ -85,7 +92,9 @@ export const AuthService = {
   }> => {
     try {
       const response = await axiosInstance.post(API.Auth.LOGIN_URL, data);
-
+      if(response.data.token){
+        localStorage.setItem('accessToken',response.data.token)
+      }
       return response?.data;
     } catch (error) {
       throwAxiosError(error);
@@ -98,8 +107,10 @@ export const AuthService = {
         {},
         { withCredentials: true },
       );
-
-      if (response.status == 200) return true;
+      if (response.status === HttpStatusCode.OK) {
+        localStorage.removeItem("accessToken");
+      }
+      if (response.status == HttpStatusCode.OK) return true;
     } catch (error) {
       throwAxiosError(error);
     }
