@@ -1,6 +1,6 @@
 import { IUser, IAuth } from "../../types/user.types";
 import { JwtPayload } from "jsonwebtoken";
-import { IUserDTO } from "../../types/dtos.type/dto.types";
+import { IUserDTO } from "../../types/dtos.type/user.dto.types";
 
 export interface IAuthService {
   signUp(user: IUser): Promise<string>;

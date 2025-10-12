@@ -4,7 +4,7 @@ import { UserController } from "../controllers/implementation/UserController";
 import { UserRepository } from "../repository/implementation/UserRepository";
 import { UserService } from "../services/implementation/UserService";
 import { verifyUser } from "../middlewares/authentication.middleware";
-import { MentorRepository } from "../repository/implementation/mentorRepository";
+import { MentorRepository } from "../repository/implementation/MentorRepository";
 
 const userRepository = new UserRepository();
 const mentorRepository = new MentorRepository();

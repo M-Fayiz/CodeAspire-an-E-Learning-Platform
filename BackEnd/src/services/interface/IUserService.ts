@@ -3,7 +3,7 @@ import {
   IAdminDTO,
   ILearnerDTO,
   IMentorDTO,
-} from "../../types/dtos.type/dto.types";
+} from "../../types/dtos.type/user.dto.types";
 
 export interface IUserService {
   fetchUser(id: string): Promise<ILearnerDTO | IMentorDTO | IAdminDTO>;

@@ -1,6 +1,5 @@
 import { Types } from "mongoose";
 import { IUser } from "../user.types";
-import { IReviewModel } from "../../models/review.model";
 
 export interface IReviewDTO {
   _id: Types.ObjectId;

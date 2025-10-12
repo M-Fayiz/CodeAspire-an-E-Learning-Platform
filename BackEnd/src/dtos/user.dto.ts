@@ -1,4 +1,4 @@
-import { IUserDTO } from "../types/dtos.type/dto.types";
+import { IUserDTO } from "../types/dtos.type/user.dto.types";
 import { IAnyUser } from "../types/user.types";
 
 export function userDTO(user: IAnyUser): IUserDTO {

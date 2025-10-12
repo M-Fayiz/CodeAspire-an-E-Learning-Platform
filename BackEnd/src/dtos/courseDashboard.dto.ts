@@ -2,7 +2,7 @@ import { ICourses } from "../types/courses.type";
 import {
   CourseDashboardDTO,
   IChartTrendDTO,
-} from "../types/dtos.type/CourseDashboard.dto.type";
+} from "../types/dtos.type/courseDashboard.dto.type";
 import { IRevenueAggregationResult } from "../types/courseDashboard.type";
 import { chartAggregation } from "../types/enrollment.types";
 

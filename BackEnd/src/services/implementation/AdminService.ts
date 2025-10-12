@@ -6,7 +6,7 @@ import { createHttpError } from "../../utility/http-error";
 import { IAdminService } from "../interface/IAdminService";
 import { parseObjectId } from "../../mongoose/objectId";
 import { LearnerDTO, MentorDTO } from "../../dtos/role.dto";
-import { ILearnerDTO, IMentorDTO } from "../../types/dtos.type/dto.types";
+import { ILearnerDTO, IMentorDTO } from "../../types/dtos.type/user.dto.types";
 import { IRole, mentorApprovalStatus } from "../../types/user.types";
 import { filter } from "../../types/enrollment.types";
 import { timeFilter } from "../../utility/dashFilterGenerator.utils";

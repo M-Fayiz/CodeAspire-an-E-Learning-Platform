@@ -24,7 +24,7 @@ import { IPayload, IUserModel } from "../../models/user.model";
 import { generateSecureToken } from "../../utility/crypto.util";
 import { redisPrefix } from "../../const/redisKey";
 import { userDTO } from "../../dtos/user.dto";
-import { IUserDTO } from "../../types/dtos.type/dto.types";
+import { IUserDTO } from "../../types/dtos.type/user.dto.types";
 import { payloadDTO } from "../../dtos/payload.dto";
 
 export class AuthService implements IAuthService {

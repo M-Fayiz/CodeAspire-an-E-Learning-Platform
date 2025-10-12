@@ -1,4 +1,4 @@
-import { IPayloadDTO } from "../types/dtos.type/dto.types";
+import { IPayloadDTO } from "../types/dtos.type/user.dto.types";
 import { IAnyUser } from "../types/user.types";
 
 export const payloadDTO = (user: IAnyUser): IPayloadDTO => {

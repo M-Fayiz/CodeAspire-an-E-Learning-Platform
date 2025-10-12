@@ -1,4 +1,4 @@
-import { ILearnerDTO, IMentorDTO } from "../../types/dtos.type/dto.types";
+import { ILearnerDTO, IMentorDTO } from "../../types/dtos.type/user.dto.types";
 import { filter } from "../../types/enrollment.types";
 import { mentorApprovalStatus } from "../../types/user.types";
 import { UserFetchResponse } from "../implementation/AdminService";

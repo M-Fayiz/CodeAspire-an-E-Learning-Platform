@@ -1,9 +1,9 @@
-import { IRole } from "./user.types";
+// import { IRole } from "./user.types";
 
-export interface IJwtPayload {
-  id: string;
-  role: IRole;
-  isActive: boolean;
-  isApproved?: boolean;
-  isRequested?: boolean;
-}
+// export interface IJwtPayload {
+//   id: string;
+//   role: IRole;
+//   isActive: boolean;
+//   isApproved?: boolean;
+//   isRequested?: boolean;
+// }

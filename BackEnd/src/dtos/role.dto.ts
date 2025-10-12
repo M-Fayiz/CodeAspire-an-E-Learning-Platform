@@ -3,7 +3,7 @@ import {
   IAdminDTO,
   ILearnerDTO,
   IMentorDTO,
-} from "../types/dtos.type/dto.types";
+} from "../types/dtos.type/user.dto.types";
 
 export function MentorDTO(mentor: IMenterModel): IMentorDTO {
   return {

@@ -1,7 +1,7 @@
 import {
   IReviewDTO,
   IReviewUnpopulatedDTO,
-} from "../../types/dtos.type/review.dto";
+} from "../../types/dtos.type/review.dto.types";
 
 export interface IReviewSevice {
   createReview(

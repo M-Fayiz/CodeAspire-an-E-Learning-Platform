@@ -1,7 +1,7 @@
 import {
   CourseDashboardDTO,
   IChartTrendDTO,
-} from "../../types/dtos.type/CourseDashboard.dto.type";
+} from "../../types/dtos.type/courseDashboard.dto.type";
 import {
   IEnrolledCoursedetailsDTO,
   IEnrolledListDto,

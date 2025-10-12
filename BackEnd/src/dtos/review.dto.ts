@@ -3,7 +3,7 @@ import {
   IReviewDTO,
   IReviewPopulatedDTO,
   IReviewUnpopulatedDTO,
-} from "../types/dtos.type/review.dto";
+} from "../types/dtos.type/review.dto.types";
 import { Types } from "mongoose";
 
 export function reviewDTO(data: IReviewModel): IReviewUnpopulatedDTO {

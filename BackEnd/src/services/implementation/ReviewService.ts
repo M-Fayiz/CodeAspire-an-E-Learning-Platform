@@ -8,7 +8,7 @@ import { HttpResponse } from "../../const/error-message";
 import {
   IReviewDTO,
   IReviewUnpopulatedDTO,
-} from "../../types/dtos.type/review.dto";
+} from "../../types/dtos.type/review.dto.types";
 import { popularedReviewDTO, reviewDTO } from "../../dtos/review.dto";
 import { IReviewModel } from "../../models/review.model";
 

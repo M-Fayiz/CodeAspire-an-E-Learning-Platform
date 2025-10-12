@@ -27,7 +27,7 @@ export interface IEnrolledCoursedetailsDTO extends IEnrolledListDto {
   courseId: Types.ObjectId;
   mentorId: Types.ObjectId;
   learnerId: Types.ObjectId;
-  progress: ICourseProgess;
+  progress: ICourseProgess|null;
 }
 
 export interface ILectureProgress {

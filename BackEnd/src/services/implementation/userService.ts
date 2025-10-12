@@ -18,7 +18,7 @@ import {
   IAdminDTO,
   ILearnerDTO,
   IMentorDTO,
-} from "../../types/dtos.type/dto.types";
+} from "../../types/dtos.type/user.dto.types";
 import logger from "../../config/logger.config";
 
 export class UserService implements IUserService {

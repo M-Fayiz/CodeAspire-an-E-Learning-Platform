@@ -1,5 +1,5 @@
 import { ICategory } from "../types/category.types";
-import { ICategoryDTO } from "../types/dtos.type/dto.types";
+import { ICategoryDTO } from "../types/dtos.type/user.dto.types";
 
 export function CategoryDTO(category: ICategory): ICategoryDTO {
   return {
