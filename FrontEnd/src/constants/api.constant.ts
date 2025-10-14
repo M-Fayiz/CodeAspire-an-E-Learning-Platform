@@ -74,8 +74,12 @@ export const API = {
     ADD_REVIEW: "/reviews/",
     GET_REVIEWS: (courseId: string) => `/reviews/${courseId}`,
   },
-  NOTIFICATION:{
-    GET_NOTIFICATION:(userId:string)=>`/notifications/${userId}`,
-    READ_NOTIFICATION:(notifyId:string)=>`/notifications/${notifyId}`
-  }
+  NOTIFICATION: {
+    GET_NOTIFICATION: (userId: string) => `/notifications/${userId}`,
+    READ_NOTIFICATION: (notifyId: string) => `/notifications/${notifyId}`,
+  },
+  CHAT: {
+    CREATE_CHAT: `/chats/get-or-create`,
+    LIST_USERS: (senderId: string) => `/chats/users/${senderId}`,
+  },
 };

@@ -1,5 +1,5 @@
 export interface INotificationDTO {
-    _id:string,
+  _id: string;
   userId: string;
   message: string;
   isRead: boolean;

@@ -294,9 +294,6 @@ const courseService = {
   ): Promise<
     "inProgress" | "draft" | "published" | "approved" | "rejected"
   > => {
-
-
-
     try {
       const response = await axiosInstance.patch(
         API.COURSE.REJECT_COURSE(coursId),

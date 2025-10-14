@@ -61,31 +61,30 @@ const Banner: React.FC<BannerProps> = ({
               "Another productive way to use this tool to begin a daily writing routine. One way is to generate a random paragraph with the intention to try to rewrite it while still keeping the original meaning"
             }
           </p>
-            {user?.role=='learner'&&(
-              <>
-          {isEnrolled ? (
-      
-            <Link
-              to={`/learner/enrolled-courses`}
-              className="bg-orange-500 hover:bg-orange-600 text-white font-semibold px-6 py-3 rounded-lg shadow-md transition"
-            >
-              Continue learning
-            </Link>
-          ) : (
-            <div className="flex gap-2">
-              <button
-                onClick={handlePaymentPage}
-                className="bg-orange-500  hover:bg-orange-600 text-white font-semibold px-6 py-3 rounded-lg shadow-md transition"
-              >
-                Enroll Now
-              </button>
-              <button className="border border-white  text-white md:border-orange-500  md:text-orange-500  hover:bg-orange-50 font-semibold px-6 py-3 rounded-lg transition">
-                See Curriculum
-              </button>
-            </div>
+          {user?.role == "learner" && (
+            <>
+              {isEnrolled ? (
+                <Link
+                  to={`/learner/enrolled-courses`}
+                  className="bg-orange-500 hover:bg-orange-600 text-white font-semibold px-6 py-3 rounded-lg shadow-md transition"
+                >
+                  Continue learning
+                </Link>
+              ) : (
+                <div className="flex gap-2">
+                  <button
+                    onClick={handlePaymentPage}
+                    className="bg-orange-500  hover:bg-orange-600 text-white font-semibold px-6 py-3 rounded-lg shadow-md transition"
+                  >
+                    Enroll Now
+                  </button>
+                  <button className="border border-white  text-white md:border-orange-500  md:text-orange-500  hover:bg-orange-50 font-semibold px-6 py-3 rounded-lg transition">
+                    See Curriculum
+                  </button>
+                </div>
+              )}
+            </>
           )}
-              </>
-            )}
         </div>
 
         <div className="relative flex-1 max-w-md">

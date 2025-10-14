@@ -1,4 +1,3 @@
-
 import { Server, Socket } from "socket.io";
 import { Server as HttpServer } from "http";
 import { env } from "../config/env.config";
@@ -11,17 +10,15 @@ import { ChatRepository } from "../repository/implementation/ChatRepository";
 import { MessageRepository } from "../repository/implementation/MessageRespository";
 import { ChatService } from "../services/implementation/ChatService";
 
-const chatRepository = new ChatRepository()
-const messageRepository= new MessageRepository()
-const chatService = new ChatService(chatRepository,messageRepository)
-
+const chatRepository = new ChatRepository();
+const messageRepository = new MessageRepository();
+const chatService = new ChatService(chatRepository, messageRepository);
 
 interface CustomSocket extends Socket {
   roomId?: string;
-  user?: { _id: string, email: string }
+  user?: { _id: string; email: string };
 }
 let io: Server;
-
 
 export const initializeSocket = (server: HttpServer) => {
   io = new Server(server, {
@@ -35,15 +32,18 @@ export const initializeSocket = (server: HttpServer) => {
   io.use((socket: CustomSocket, next) => {
     const token = socket.handshake.auth?.token;
     if (!token) {
-      throw createHttpError(HttpStatus.UNAUTHORIZED, HttpResponse.UNAUTHORIZED)
+      throw createHttpError(HttpStatus.UNAUTHORIZED, HttpResponse.UNAUTHORIZED);
     }
 
     try {
       const user = verifyAccesToken(token);
       if (!user) {
-        throw createHttpError(HttpStatus.UNAUTHORIZED, HttpResponse.UNAUTHORIZED)
+        throw createHttpError(
+          HttpStatus.UNAUTHORIZED,
+          HttpResponse.UNAUTHORIZED,
+        );
       }
-      console.log('this is user ', user)
+      console.log("this is user ", user);
       socket.data.userId = user._id;
       next();
     } catch (error) {
@@ -53,55 +53,92 @@ export const initializeSocket = (server: HttpServer) => {
 
   io.on("connection", (socket: CustomSocket) => {
     console.log("User Connected ", socket.id);
-    const token = socket.handshake.auth.token
-    const user = verifyAccesToken(token)
+    const token = socket.handshake.auth.token;
+    const user = verifyAccesToken(token);
     if (!user) {
-      throw createHttpError(HttpStatus.UNAUTHORIZED, HttpResponse.UNAUTHORIZED)
+      throw createHttpError(HttpStatus.UNAUTHORIZED, HttpResponse.UNAUTHORIZED);
     }
 
-    socket.data.userId = user._id
+    socket.data.userId = user._id;
 
     socket.on("join", async (payload) => {
-
-
-      const { chatId } = payload || {}
+      const { chatId } = payload || {};
       if (!chatId) {
         socket.emit("error", { message: HttpResponse.CHAT_ID_Required });
-        return
+        return;
       }
-      const chat = await chatService.findChat(chatId)
+      const chat = await chatService.findChat(chatId);
       if (!chat) {
         socket.emit("error", { message: HttpResponse.CHAT_NOT_FOUND });
         return;
       }
-      const userId = socket.data.userId.toString()
+      const userId = socket.data.userId.toString();
       if (!chat.users.includes(userId)) {
         socket.emit("error", { message: HttpResponse.NOT_PERMINTED });
         return;
       }
-      socket.join(`user:${userId}`)
-      socket.join(`chat:${userId}`)
-
+      socket.join(`user:${userId}`);
+      socket.join(`chat:${userId}`);
 
       // read message mechanism
 
-      socket.to(`chat:${chatId}`).emit("message_notification", { chatId })
-
+      socket.to(`chat:${chatId}`).emit("message_notification", { chatId });
     });
 
-    socket.on('send_message', async (payload, ack) => {
+    socket.on("send_message", async (payload, ack) => {
       try {
-        const userId = socket.data.userId.toString()
-        const { chatId, content, type = 'text', mediaUrl, tempId } = payload
-        if (!chatId || (!content && type == 'text')) {
+        const userId = socket.data.userId.toString();
+        const { chatId, content, type = "text", mediaUrl, tempId } = payload;
+        if (!chatId || (!content && type == "text")) {
           return ack?.({ error: "Invalid payload" });
         }
 
-        const messageData= await 
-      } catch (error) {
+        const chat = await chatService.findChat(chatId);
 
+        if (!chat || !chat.users.map(String).includes(userId)) {
+          return ack?.({ error: "Not a Participant" });
+        }
+
+        const messageData = await chatService.createMessage({
+          chatId,
+          sender: userId,
+          content,
+          type,
+          status: "sent",
+          mediaUrl,
+        });
+        const updatedChat = await chatService.updateChat(chatId, {
+          latestMessage: messageData._id,
+        });
+
+        const messageToEmit = {
+          _id: messageData._id,
+          chatId,
+          sender: userId,
+          type,
+          status: messageData.status,
+          createdAt: messageData.createdAt,
+        };
+
+        io.to(`chat:${chatId}`).emit("new_message", messageToEmit);
+        ack?.({ success: true, message: messageToEmit, tempId });
+      } catch (error) {
+        ack({ error: "server error" });
       }
-    })
+    });
+
+    socket.on("message_delicered", async ({ chatId, messageId }) => {
+      const userId = socket.data.userId.toString();
+      const chat = await chatService.findChat(chatId);
+      if (!chat || !chat.users.map(String).includes(userId)) return;
+
+      await chatService.updateMessage(messageId, { status: "delivered" });
+
+      io.to(`chat:${chatId}`).emit("message_status_update", {
+        messageId,
+        status: "delivered",
+      });
+    });
 
     socket.on("disconnect", () => {
       console.log("User disconnected:", socket.id);

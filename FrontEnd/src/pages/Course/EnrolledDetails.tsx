@@ -13,7 +13,13 @@ import CommentsSection from "@/features/courses_list/Details/Review";
 import CurriculumProgress from "@/features/courses_list/Enrolled Course/Progress";
 import { EnrolledService } from "@/service/Learner/enrolledCourse.service";
 import type { IEnrolledCoursedetailsDTO } from "@/types/DTOS/enrollements.dto";
-import { ClipboardPen, FileStack, PlayCircle, User } from "lucide-react";
+import {
+  ClipboardPen,
+  PlayCircle,
+  Star,
+  TableOfContentsIcon,
+  User,
+} from "lucide-react";
 import { useEffect, useState } from "react";
 import { useParams } from "react-router";
 
@@ -62,7 +68,6 @@ const EnrolledCourseDetails = () => {
         <div className="lg:col-span-2 space-y-6">
           {!videoUrl.url ? (
             <div className="bg-white">
-             
               <Banner
                 course={enrolledCourse}
                 courseId={enrolledCourse?.courseId as string}
@@ -95,12 +100,13 @@ const EnrolledCourseDetails = () => {
             </div>
           )}
 
-          {/* Tabs */}
-          <div className="flex justify-center border-b p-4 border-gray-200">
+          <div className="flex gap-2 justify-center border-b p-4 border-gray-200">
             <Taps
               label="overview"
               icon={
-                <ClipboardPen className="text-gray-500 w-4 h-4 hidden md:block" />
+                <ClipboardPen
+                  className={`${activeTap == "overview" ? "text-white" : "text-gray-500 w-4 h-4 hidden md:block"}`}
+                />
               }
               Click={handle}
               tap="overview"
@@ -108,7 +114,11 @@ const EnrolledCourseDetails = () => {
             />
             <Taps
               label="mentor"
-              icon={<User className="text-gray-500 w-5 h-5 hidden md:block" />}
+              icon={
+                <User
+                  className={`${activeTap == "mentor" ? "text-white" : "text-gray-500 w-4 h-4 hidden md:block"}`}
+                />
+              }
               Click={handle}
               tap="mentor"
               activeTap={activeTap}
@@ -116,7 +126,9 @@ const EnrolledCourseDetails = () => {
             <Taps
               label="curriculum"
               icon={
-                <FileStack className="text-gray-500 w-5 h-5 hidden md:block" />
+                <TableOfContentsIcon
+                  className={`${activeTap == "curriculum" ? "text-white" : "text-gray-500 w-4 h-4 hidden md:block"}`}
+                />
               }
               Click={handle}
               tap="curriculum"
@@ -125,7 +137,9 @@ const EnrolledCourseDetails = () => {
             <Taps
               label="Reviews"
               icon={
-                <ClipboardPen className="text-gray-500 w-4 h-4 hidden md:block" />
+                <Star
+                  className={`${activeTap == "Reviews" ? "text-white" : "text-gray-500 w-4 h-4 hidden md:block"}`}
+                />
               }
               Click={handle}
               tap="Reviews"
@@ -133,12 +147,11 @@ const EnrolledCourseDetails = () => {
             />
           </div>
 
-          {/* Tab Content */}
           <div className="p-4 md:p-6 gridg-cols-4">
             {activeTap === "overview" && <CourseOverview />}
             {activeTap === "mentor" && (
               <MentorProfile
-                id={enrolledCourse?.course.mentorsId._id as string}
+                mentorId={enrolledCourse?.course.mentorsId._id as string}
               />
             )}
             {activeTap === "curriculum" && (
@@ -210,8 +223,6 @@ const EnrolledCourseDetails = () => {
             )}
           </div>
         </div>
-
-        {/* Right Content */}
         {enrolledCourse?.course?.sessions && (
           <div className="ls:col-span-1">
             <CurriculumProgress

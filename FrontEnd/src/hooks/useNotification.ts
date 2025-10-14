@@ -1,4 +1,3 @@
-
 import { useEffect, useState, useMemo, useCallback } from "react";
 import type { INotificationDTO } from "@/types/DTOS/notification.dto";
 import { NotificationService } from "@/service/notification.service";
@@ -11,22 +10,22 @@ export function useNotifications(userId: string) {
   const [count, setCount] = useState(0);
   const socket = useSocket();
 
-
   useEffect(() => {
     (async () => {
       try {
         const data = await NotificationService.getNotification(userId);
-        console.log('data',data)
+        console.log("data", data);
         if (data) {
           const sorted = data.sort(
-            (a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
+            (a, b) =>
+              new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime(),
           );
           setNotifications(sorted);
           setCount(sorted.filter((n) => !n.isRead).length);
         }
       } catch (err) {
-        if(err instanceof Error){
-          toast.error(err.message)
+        if (err instanceof Error) {
+          toast.error(err.message);
         }
       } finally {
         setLoading(false);
@@ -34,28 +33,26 @@ export function useNotifications(userId: string) {
     })();
   }, [userId]);
 
-
   useEffect(() => {
     if (!socket) return;
 
     const handleNotification = (payload: INotificationDTO) => {
-      console.log('this the payload :',payload)
+      console.log("this the payload :", payload);
       setNotifications((prev) => [payload, ...prev]);
       setCount((prev) => prev + 1);
     };
 
     socket.on("notification", handleNotification);
-   return () => {
-    socket.off("notification", handleNotification); 
-  };
+    return () => {
+      socket.off("notification", handleNotification);
+    };
   }, [socket]);
-
 
   const markAsRead = useCallback(async (id: string) => {
     const success = await NotificationService.readNotification(id);
     if (success) {
       setNotifications((prev) =>
-        prev.map((n) => (n._id === id ? { ...n, isRead: true } : n))
+        prev.map((n) => (n._id === id ? { ...n, isRead: true } : n)),
       );
       setCount((prev) => Math.max(prev - 1, 0));
     }
@@ -63,11 +60,11 @@ export function useNotifications(userId: string) {
 
   const unreadNotifications = useMemo(
     () => notifications.filter((n) => !n.isRead),
-    [notifications]
+    [notifications],
   );
   const readNotifications = useMemo(
     () => notifications.filter((n) => n.isRead),
-    [notifications]
+    [notifications],
   );
 
   return { loading, unreadNotifications, readNotifications, markAsRead, count };

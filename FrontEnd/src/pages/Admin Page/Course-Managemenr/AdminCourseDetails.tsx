@@ -3,7 +3,7 @@ import { Spinner } from "@/components/templates/Spinner";
 import HeroSection from "@/features/admin/Course/HeroSection";
 import courseService from "@/service/mentor/course.service";
 import type { IFormCourseDTO } from "@/types/DTOS/courses.types";
-import {  ClipboardPen, PlayCircle } from "lucide-react";
+import { ClipboardPen, PlayCircle } from "lucide-react";
 import { useEffect, useState } from "react";
 import { useParams } from "react-router";
 import {

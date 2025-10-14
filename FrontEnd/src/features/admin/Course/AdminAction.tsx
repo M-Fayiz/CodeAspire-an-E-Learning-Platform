@@ -15,14 +15,12 @@ import { CheckCircle, XCircle } from "lucide-react";
 import { Input } from "@/components/ui/Inputs";
 
 interface AdminCourseActionsProps {
-
   onAppprove: () => Promise<void>;
   status: "inProgress" | "draft" | "published" | "approved" | "rejected";
   onReject: (feedBack: string) => Promise<void>;
 }
 
 export default function AdminCourseActions({
-
   onAppprove,
   status,
   onReject,
@@ -46,7 +44,7 @@ export default function AdminCourseActions({
       return;
     }
     onReject(form.feedBack);
-    setForm({feedBack:''})
+    setForm({ feedBack: "" });
     setLoading(false);
   };
 

@@ -6,9 +6,6 @@ import type { UserRole } from "../../types/auth.types";
 import { Spinner } from "../templates/Spinner";
 import { SocketProvider } from "@/context/socket.context";
 
-
-
-
 interface ProtectedProps {
   children: ReactNode;
   fallback?: string;
@@ -48,9 +45,5 @@ export const Protected_Router: React.FC<ProtectedProps> = ({
     }
   }
 
-  return (
-    <SocketProvider userId={user?.id}>
-      {children}
-    </SocketProvider>
-  );
+  return <SocketProvider userId={user?.id}>{children}</SocketProvider>;
 };

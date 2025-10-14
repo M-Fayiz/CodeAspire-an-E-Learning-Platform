@@ -29,13 +29,11 @@ const DynamicLayout = () => {
 
       <div className="flex-1 flex flex-col">
         <NotificationProvider userId={user.id}>
-          
-        
-        <Header
-          user={user}
-          onMenuToggle={toggleSidebar}
-          isSidebarOpen={isSidebarOpen}
-        />
+          <Header
+            user={user}
+            onMenuToggle={toggleSidebar}
+            isSidebarOpen={isSidebarOpen}
+          />
         </NotificationProvider>
 
         <main className="flex-1 overflow-y-auto bg-gray-50 p-4  md:mt-0 lg:mt-0 lg:ml-64 transition-all duration-300">

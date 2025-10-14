@@ -1,5 +1,12 @@
 // src/context/socket.context.tsx
-import React, { createContext, useContext, useEffect, useMemo, useState, type ReactNode } from "react";
+import React, {
+  createContext,
+  useContext,
+  useEffect,
+  useMemo,
+  useState,
+  type ReactNode,
+} from "react";
 import { io, Socket } from "socket.io-client";
 
 interface SocketContextType {
@@ -13,20 +20,23 @@ interface SocketProviderProps {
   children: ReactNode;
 }
 
-export const SocketProvider: React.FC<SocketProviderProps> = ({ userId, children }) => {
+export const SocketProvider: React.FC<SocketProviderProps> = ({
+  userId,
+  children,
+}) => {
   const [socket, setSocket] = useState<Socket | null>(null);
 
   useEffect(() => {
     if (!userId) return;
-    const newSocket = io(import.meta.env.VITE_BASE_URL , {
+    const newSocket = io(import.meta.env.VITE_BASE_URL, {
       query: { userId },
       transports: ["websocket"],
       reconnection: true,
       reconnectionAttempts: 5,
       reconnectionDelay: 1000,
-      auth:{
-        token:localStorage.getItem('accessToken')
-      }
+      auth: {
+        token: localStorage.getItem("accessToken"),
+      },
     });
 
     newSocket.on("connect", () => {
@@ -53,9 +63,10 @@ export const SocketProvider: React.FC<SocketProviderProps> = ({ userId, children
 
   const value = useMemo(() => ({ socket }), [socket]);
 
-  return <SocketContext.Provider value={value}>{children}</SocketContext.Provider>;
+  return (
+    <SocketContext.Provider value={value}>{children}</SocketContext.Provider>
+  );
 };
-
 
 export const useSocket = (): Socket | null => {
   const context = useContext(SocketContext);

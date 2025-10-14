@@ -31,9 +31,9 @@ export const AuthService = {
         token,
         email,
       });
-      console.log(response.data.token)
-      if(response.data.token){
-        localStorage.setItem('accessToken',response.data.token)
+      console.log(response.data.token);
+      if (response.data.token) {
+        localStorage.setItem("accessToken", response.data.token);
       }
 
       return response.data.message;
@@ -57,8 +57,8 @@ export const AuthService = {
           response.data.user.profile = profilrUrl;
         }
       }
-      if(response.data.token){
-        localStorage.setItem('accessToken',response.data.token)
+      if (response.data.token) {
+        localStorage.setItem("accessToken", response.data.token);
       }
       return response.data?.user;
     } catch (error) {
@@ -92,8 +92,8 @@ export const AuthService = {
   }> => {
     try {
       const response = await axiosInstance.post(API.Auth.LOGIN_URL, data);
-      if(response.data.token){
-        localStorage.setItem('accessToken',response.data.token)
+      if (response.data.token) {
+        localStorage.setItem("accessToken", response.data.token);
       }
       return response?.data;
     } catch (error) {

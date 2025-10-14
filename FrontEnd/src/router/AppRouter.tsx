@@ -1,6 +1,6 @@
 import { createBrowserRouter, Navigate, Outlet } from "react-router";
 
-import Landing from "../pages/Landing/Landing";
+import Landing from "@/pages/Landing page/Landing";
 
 // Auth Components
 import LoginPage from "../pages/Auth Page/LoginPage";
@@ -30,7 +30,7 @@ import CourseEnrolledList from "@/pages/Course/CourseEnrolledList";
 import EnrolledCourseDetails from "@/pages/Course/EnrolledDetails";
 import CourseDashboard from "@/pages/Mentor_Page/course_creation/CourseDashboard";
 import MentorDashboard from "@/pages/Mentor_Page/MentorDashboard";
-import ChatPage from "@/pages/chat/ChatPage";
+import ChatPage from "@/pages/chat page/ChatPage";
 
 function Form_Courses_Provider() {
   return (
@@ -72,6 +72,7 @@ export const router = createBrowserRouter([
       { path: "courses", element: <CourseLayout /> },
       { path: "enrolled-courses", element: <CourseEnrolledList /> },
       { path: "enrolled-courses/:id", element: <EnrolledCourseDetails /> },
+      { path: "chats/:id", element: <ChatPage /> },
     ],
   },
   {
@@ -83,12 +84,10 @@ export const router = createBrowserRouter([
     ),
     children: [
       { index: true, element: <Navigate to="dashboard" /> },
-      { path: "dashboard", element:( 
-      
-      <MentorDashboard /> 
-    )},
+      { path: "dashboard", element: <MentorDashboard /> },
       { path: "profile/:id", element: <ProfileManagement /> },
       { path: "data", element: <MentorDataForm /> },
+      { path: "chats/:id", element: <ChatPage /> },
       {
         path: "courses",
         element: <Form_Courses_Provider />,
@@ -119,6 +118,7 @@ export const router = createBrowserRouter([
       { path: "category", element: <CategoryManagement /> },
       { path: "courses", element: <CourseManagement /> },
       { path: "courses/:id", element: <AdminCourseDetails /> },
+      { path: "chats/:id", element: <ChatPage /> },
     ],
   },
   {
@@ -143,10 +143,6 @@ export const router = createBrowserRouter([
       { path: ":id", element: <CourseDetails /> },
       { path: "payment-success", element: <PaymentSuccess /> },
     ],
-  },
-  {
-    path:'/chats',
-    element:<ChatPage/>
   },
   {
     path: "*",

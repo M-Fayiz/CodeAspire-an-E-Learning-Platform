@@ -1,5 +1,5 @@
 import { Types } from "mongoose";
-import { getIO } from "../config/socket.config";
+import { getIO } from "../socket.io/socketEvent";
 import { INotificationDTO } from "../types/dtos.type/notification.dto.types";
 
 export const sendToUser = (userId: Types.ObjectId, data: INotificationDTO) => {

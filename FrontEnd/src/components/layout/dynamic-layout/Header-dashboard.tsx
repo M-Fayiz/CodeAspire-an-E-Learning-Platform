@@ -8,12 +8,12 @@ import {
   User,
   X,
 } from "lucide-react";
-import React, {  useState } from "react";
+import React, { useState } from "react";
 import type { IDecodedUserType } from "../../../types/auth.types";
 import { useAuth } from "../../../context/auth.context";
 // import { Spinner } from "../../templates/Spinner";
 import { Link } from "react-router";
-import dayjs  from 'dayjs'
+import dayjs from "dayjs";
 import relativeTime from "dayjs/plugin/relativeTime";
 import NotificationDropdown from "@/components/Notification/NotificationComponents";
 
@@ -33,11 +33,9 @@ const Header: React.FC<IHeaderProbs> = ({
 }) => {
   const [showProfileDropdown, setShowProfileDropdown] = useState(false);
   const [showNotifications, setShowNotifications] = useState(false);
- 
-  const { logout } = useAuth();
- const { count} = useNotificationContext();
 
-  
+  const { logout } = useAuth();
+  const { count } = useNotificationContext();
 
   return (
     <header className="bg-white border-b border-gray-200 px-4 py-3 flex items-center justify-between sticky top-0 z-40">
@@ -69,17 +67,14 @@ const Header: React.FC<IHeaderProbs> = ({
             className="p-2 rounded-md hover:bg-gray-100 transition-colors relative"
           >
             <Bell className="w-5 h-5 text-gray-600" />
-            {count>0&&(
-
-            <span className="absolute -top-1 -right-1 bg-red-500 text-white text-xs rounded-full w-5 h-5 flex items-center justify-center">
-              {count}
-            </span>
+            {count > 0 && (
+              <span className="absolute -top-1 -right-1 bg-red-500 text-white text-xs rounded-full w-5 h-5 flex items-center justify-center">
+                {count}
+              </span>
             )}
           </button>
 
-          {showNotifications && (
-            <NotificationDropdown />
-          )}
+          {showNotifications && <NotificationDropdown />}
         </div>
         <div className="relative">
           <button

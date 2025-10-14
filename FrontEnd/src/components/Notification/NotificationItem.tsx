@@ -1,7 +1,7 @@
 import React from "react";
 import dayjs from "dayjs";
 import relativeTime from "dayjs/plugin/relativeTime";
-import type { INotificationDTO } from "@/types/DTOS/notification.dto"; 
+import type { INotificationDTO } from "@/types/DTOS/notification.dto";
 dayjs.extend(relativeTime);
 
 interface Props {
@@ -35,7 +35,6 @@ const NotificationItem: React.FC<Props> = ({ notification }) => {
             {dayjs(notification.createdAt).format("hh:mm A")}
           </p>
         </div>
-        
       </div>
     </div>
   );

@@ -1,12 +1,17 @@
+import { useAuth } from "@/context/auth.context";
+import { ChatService } from "@/service/chat.service";
 import UserService from "@/service/user.service";
 import type { MentorDTO } from "@/types/DTOS/SharedCourseDetails";
+import { MessageSquare } from "lucide-react";
 import React, { useEffect, useState } from "react";
+import { useNavigate } from "react-router";
+import { toast } from "sonner";
 
 interface MentorProps {
-  id: string;
+  mentorId: string;
 }
 
-const MentorProfile: React.FC<MentorProps> = ({ id }) => {
+const MentorProfile: React.FC<MentorProps> = ({ mentorId }) => {
   const [mentorProfile, setMentorProfile] = useState<MentorDTO>({
     name: "",
     bio: "",
@@ -19,71 +24,97 @@ const MentorProfile: React.FC<MentorProps> = ({ id }) => {
     },
     profilePicture: "",
   });
-  console.log(id);
+  const { user } = useAuth();
+  const navigate = useNavigate();
   useEffect(() => {
     (async () => {
-      const data = await UserService.getUserProfile(id);
+      const data = await UserService.getUserProfile(mentorId);
 
       if (data) {
         setMentorProfile(data);
       }
     })();
-  }, [id]);
-  console.log(" mentotr data ", mentorProfile);
+  }, [mentorId]);
+
+  const createChatRoom = async () => {
+    try {
+      const data = await ChatService.createChat(user!.id, mentorId);
+      if (data) {
+        navigate(`/learner/chats/${data._id}`);
+      }
+    } catch (error) {
+      if (error instanceof Error) {
+        toast.error(error.message);
+      }
+    }
+  };
   return (
-    <section className="bg-white py-12 px-6 md:px-12 rounded-xl shadow-sm">
-      <h2 className="text-lg font-semibold text-green-600 mb-8">About Me</h2>
+    <section className="bg-white py-12 px-6 md:px-12 rounded-2xl shadow-md border border-gray-100">
+      <h2 className="text-xl font-semibold text-black mb-10 text-center md:text-left">
+        About Me
+      </h2>
 
       <div className="flex flex-col md:flex-row items-center md:items-start gap-10">
-        <div className="flex-shrink-0">
+        <div className="relative flex-shrink-0">
           <img
             src={mentorProfile.profilePicture}
             alt={mentorProfile.name}
-            className="w-60 h-60 object-cover rounded-lg shadow-md"
+            className="w-56 h-56 object-cover rounded-xl shadow-lg border-4 border-orange-100 hover:scale-105 transition-transform duration-300"
           />
+          {/* <span className="absolute bottom-2 right-2 bg-orange-500 text-white text-xs px-3 py-1 rounded-full shadow">
+        Mentor
+      </span> */}
         </div>
 
         <div className="flex-1 text-center md:text-left">
-          <h3 className="text-2xl font-bold text-gray-800">
+          <h3 className="text-3xl font-bold text-gray-800 mb-2">
             {mentorProfile.name}
           </h3>
-          {/* {role && <p className="text-green-600 font-medium mb-4">{role}</p>} */}
-          <p className="text-gray-600 leading-relaxed mb-6">
+
+          <p className="text-gray-500 text-base leading-relaxed mb-6">
             {mentorProfile.bio}
           </p>
 
-          {/* <div className="flex justify-center md:justify-start gap-12 mb-6">
-            {mentorProfile.expertise.map((stat, index) => (
-              <div key={index} className="text-center">
-                <p className="text-3xl font-bold text-green-600">{stat}</p>
-              </div>
-            ))}
-          </div> */}
+          <div className="flex flex-wrap justify-center md:justify-start gap-4 mb-8">
+            {mentorProfile.socialLinks.github && (
+              <a
+                href={mentorProfile.socialLinks.github}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="flex items-center gap-2 text-sm font-medium text-gray-600 hover:text-orange-500 transition-colors"
+              >
+                <i className="ri-github-fill text-xl"></i> GitHub
+              </a>
+            )}
+            {mentorProfile.socialLinks.linkedIn && (
+              <a
+                href={mentorProfile.socialLinks.linkedIn}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="flex items-center gap-2 text-sm font-medium text-gray-600 hover:text-orange-500 transition-colors"
+              >
+                <i className="ri-linkedin-box-fill text-xl"></i> LinkedIn
+              </a>
+            )}
+            {mentorProfile.socialLinks.portfolio && (
+              <a
+                href={mentorProfile.socialLinks.portfolio}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="flex items-center gap-2 text-sm font-medium text-gray-600 hover:text-orange-500 transition-colors"
+              >
+                <i className="ri-global-line text-xl"></i> Portfolio
+              </a>
+            )}
+          </div>
 
-          {mentorProfile.socialLinks.github && (
-            <a
-              href={mentorProfile.socialLinks.github}
-              className="text-green-600 font-semibold hover:underline inline-flex items-center gap-2"
-            >
-              Github
-            </a>
-          )}
-          {mentorProfile.socialLinks.linkedIn && (
-            <a
-              href={mentorProfile.socialLinks.linkedIn}
-              className="text-green-600 font-semibold hover:underline inline-flex items-center gap-2"
-            >
-              Github
-            </a>
-          )}
-          {mentorProfile.socialLinks.portfolio && (
-            <a
-              href={mentorProfile.socialLinks.portfolio}
-              className="text-green-600 font-semibold hover:underline inline-flex items-center gap-2"
-            >
-              Github
-            </a>
-          )}
+          <button
+            onClick={createChatRoom}
+            className="inline-flex items-center gap-3 bg-orange-500 hover:bg-orange-600 text-white font-semibold px-6 py-3 rounded-full shadow-lg transition-all duration-300 hover:shadow-xl"
+          >
+            <MessageSquare className={`text-white w-4 h-4 hidden md:block`} />{" "}
+            Chat with Mentor
+          </button>
         </div>
       </div>
     </section>
