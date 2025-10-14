@@ -45,10 +45,12 @@ export function useNotifications(userId: string) {
     };
 
     socket.on("notification", handleNotification);
-    return () => socket.off("notification", handleNotification);
+   return () => {
+    socket.off("notification", handleNotification); 
+  };
   }, [socket]);
 
-  // Mark a notification as read
+
   const markAsRead = useCallback(async (id: string) => {
     const success = await NotificationService.readNotification(id);
     if (success) {

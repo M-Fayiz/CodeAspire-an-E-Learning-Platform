@@ -18,13 +18,15 @@ export const SocketProvider: React.FC<SocketProviderProps> = ({ userId, children
 
   useEffect(() => {
     if (!userId) return;
-console.log('base ',import.meta.env.VITE_BASE_URL)
     const newSocket = io(import.meta.env.VITE_BASE_URL , {
       query: { userId },
       transports: ["websocket"],
       reconnection: true,
       reconnectionAttempts: 5,
       reconnectionDelay: 1000,
+      auth:{
+        token:localStorage.getItem('accessToken')
+      }
     });
 
     newSocket.on("connect", () => {

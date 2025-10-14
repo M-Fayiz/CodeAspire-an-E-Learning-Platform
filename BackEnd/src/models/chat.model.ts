@@ -2,9 +2,7 @@ import mongoose, {Schema, Document, Types } from "mongoose";
 import { IChat } from "../types/chat.type";
 
 
-export interface IChatModel
-  extends Document<Types.ObjectId>,
-    Omit<IChat, "_id"> {}
+export interface IChatModel extends IChat, Document<Types.ObjectId> {}
 
     const ChatSchema=new mongoose.Schema<IChatModel>({
         users: [{ type: Schema.Types.ObjectId, ref: 'User', required: true }],

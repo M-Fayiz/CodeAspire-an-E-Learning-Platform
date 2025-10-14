@@ -38,7 +38,7 @@ function CourseLayout() {
           ? Number(searchParams.get("limit"))
           : 5,
       };
-      console.log("user ID", user?.id);
+   
 
       const data = await courseService.fetchCourses(query, user?.id);
       if (data) {

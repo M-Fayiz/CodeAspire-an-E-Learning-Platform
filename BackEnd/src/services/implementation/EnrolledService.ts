@@ -5,7 +5,7 @@ import { parseObjectId } from "../../mongoose/objectId";
 import { ICourseRepository } from "../../repository/interface/ICourseRepository";
 import { IEnrolledRepository } from "../../repository/interface/IEnrolledRepositoy";
 import { IFormCourseDTO } from "../../types/dtos.type/course.dtos.type";
-import { createHttpError } from "../../utility/http-error";
+import { createHttpError } from "../../utils/http-error";
 import { formCourseDto } from "../../dtos/course.dtos";
 import type {
   IEnrolledCoursedetailsDTO,
@@ -34,7 +34,7 @@ import {
 } from "../../dtos/courseDashboard.dto";
 import { IMentorDhasboardDTO } from "../../types/dtos.type/mentorDashboard.dto.type";
 import { mentorDashboardDTO } from "../../dtos/mentorDashboard.dto";
-import { timeFilter } from "../../utility/dashFilterGenerator.utils";
+import { timeFilter } from "../../utils/dashFilterGenerator.utils";
 
 export class EnrolledService implements IEnrolledService {
   constructor(

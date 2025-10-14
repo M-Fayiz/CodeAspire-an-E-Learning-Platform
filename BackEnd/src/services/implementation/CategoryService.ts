@@ -4,7 +4,7 @@ import { parseObjectId } from "../../mongoose/objectId";
 import { ICategoryRepository } from "../../repository/interface/ICategoryRepository";
 import { ICategoryService } from "../interface/ICategoryService";
 import { ICategory, ICaregoryTree } from "../../types/category.types";
-import { createHttpError } from "../../utility/http-error";
+import { createHttpError } from "../../utils/http-error";
 import { HttpStatus } from "../../const/http-status";
 import { HttpResponse } from "../../const/error-message";
 

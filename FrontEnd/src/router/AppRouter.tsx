@@ -30,6 +30,7 @@ import CourseEnrolledList from "@/pages/Course/CourseEnrolledList";
 import EnrolledCourseDetails from "@/pages/Course/EnrolledDetails";
 import CourseDashboard from "@/pages/Mentor_Page/course_creation/CourseDashboard";
 import MentorDashboard from "@/pages/Mentor_Page/MentorDashboard";
+import ChatPage from "@/pages/chat/ChatPage";
 
 function Form_Courses_Provider() {
   return (
@@ -142,6 +143,10 @@ export const router = createBrowserRouter([
       { path: ":id", element: <CourseDetails /> },
       { path: "payment-success", element: <PaymentSuccess /> },
     ],
+  },
+  {
+    path:'/chats',
+    element:<ChatPage/>
   },
   {
     path: "*",

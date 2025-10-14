@@ -4,6 +4,7 @@ interface CourseCardProps {
   course: ICourseData;
 }
 const CourseCard: React.FC<CourseCardProps> = ({ course }) => {
+
   return (
     <div className="bg-white rounded-lg shadow-md hover:shadow-lg transition-shadow duration-300 overflow-hidden group">
       <div className="relative">
@@ -57,8 +58,8 @@ const CourseCard: React.FC<CourseCardProps> = ({ course }) => {
               ₹{course.price}
             </span>
           </div>
-          <button className="bg-[black] text-white px-4 py-2 rounded-md hover:bg-black transition-colors text-sm font-medium">
-            Enroll Now
+          <button className="bg-[black] flex gap-2   text-white px-4 py-2 rounded-md hover:bg-black transition-colors text-sm font-medium">
+           View COurse
           </button>
         </div>
       </div>

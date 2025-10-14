@@ -2,7 +2,7 @@ import { Request, Response, NextFunction } from "express";
 import { ISharedController } from "../interface/ISharedController";
 import { ISharedService } from "../../services/interface/ISharedService";
 import { HttpStatus } from "../../const/http-status";
-import { successResponse } from "../../utility/response.util";
+import { successResponse } from "../../utils/response.util";
 import { HttpResponse } from "../../const/error-message";
 
 export class SharedController implements ISharedController {

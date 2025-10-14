@@ -3,11 +3,11 @@ import { IAuthController } from "../interface/IAuthController";
 import { IAuthService } from "../../services/interface/IAuthService";
 import { HttpStatus } from "../../const/http-status";
 import { HttpResponse } from "../../const/error-message";
-import { successResponse } from "../../utility/response.util";
+import { successResponse } from "../../utils/response.util";
 import { options } from "../../config/cookie.config";
-import { createHttpError } from "../../utility/http-error";
-import { clearCookies } from "../../utility/clearCookies.util";
-import { setAccessToken, setRefreshToken } from "../../utility/cookie.util";
+import { createHttpError } from "../../utils/http-error";
+import { clearCookies } from "../../utils/clearCookies.util";
+import { setAccessToken, setRefreshToken } from "../../utils/cookie.util";
 import { IUserModel } from "../../models/user.model";
 import { env } from "../../config/env.config";
 

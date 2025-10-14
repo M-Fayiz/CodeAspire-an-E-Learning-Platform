@@ -6,22 +6,22 @@ import {
   IAdmin,
 } from "../../types/user.types";
 import { IUserRepo } from "../../repository/interface/IUserRepo";
-import { hashPassword, comparePassword } from "../../utility/bcrypt.util";
-import { sendToken } from "../../utility/send-mail.util";
+import { hashPassword, comparePassword } from "../../utils/bcrypt.util";
+import { sendToken } from "../../utils/send-mail.util";
 import { v4 as uuidv4 } from "uuid";
 import redisClient from "../../config/redis";
 import { HttpStatus } from "../../const/http-status";
 import { HttpResponse } from "../../const/error-message";
-import { createHttpError } from "../../utility/http-error";
-import { generateTokens } from "../../utility/jwt-token.util";
+import { createHttpError } from "../../utils/http-error";
+import { generateTokens } from "../../utils/jwt-token.util";
 import { IAuthService } from "../interface/IAuthService";
 import {
   verifyAccesToken,
   verifyRefreshToken,
-} from "../../utility/jwt-token.util";
+} from "../../utils/jwt-token.util";
 import { JwtPayload } from "jsonwebtoken";
 import { IPayload, IUserModel } from "../../models/user.model";
-import { generateSecureToken } from "../../utility/crypto.util";
+import { generateSecureToken } from "../../utils/crypto.util";
 import { redisPrefix } from "../../const/redisKey";
 import { userDTO } from "../../dtos/user.dto";
 import { IUserDTO } from "../../types/dtos.type/user.dto.types";

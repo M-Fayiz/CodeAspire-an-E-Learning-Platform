@@ -2,7 +2,7 @@ import { parseObjectId } from "../../mongoose/objectId";
 import { IReviewRepository } from "../../repository/interface/IReviewRepository";
 import { IReview } from "../../types/review.type";
 import { IReviewSevice } from "../interface/IReviewService";
-import { createHttpError } from "../../utility/http-error";
+import { createHttpError } from "../../utils/http-error";
 import { HttpStatus } from "../../const/http-status";
 import { HttpResponse } from "../../const/error-message";
 import {

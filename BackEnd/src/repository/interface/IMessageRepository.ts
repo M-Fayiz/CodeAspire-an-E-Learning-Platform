@@ -1,6 +1,6 @@
-import { IMessageModel } from "../../models/message.model";
+import { IMessage } from "../../types/message.type";
 
 
 export interface IMessageRepository{
-    createMessage():Promise<IMessageModel>
+    createMessage(data: Partial<IMessage>):Promise<IMessageModel>
 }

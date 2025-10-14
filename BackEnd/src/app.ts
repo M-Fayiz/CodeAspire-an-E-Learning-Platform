@@ -20,7 +20,7 @@ import enrolledRouter from "./routers/enrolled.router";
 import reviewRouter from "./routers/review.router";
 import http from "http";
 import { sessionConfig } from "./config/session.config";
-import { initializeSocket } from "./config/socket.config";
+import { getIO, initializeSocket } from "./config/socket.config";
 import notifyRouter from "./routers/notification.router";
 
 dotenv.config();
@@ -45,6 +45,7 @@ app.use(session(sessionConfig));
 
 const server = http.createServer(app);
 initializeSocket(server);
+
 
 app.use(passport.initialize());
 app.use(passport.session());

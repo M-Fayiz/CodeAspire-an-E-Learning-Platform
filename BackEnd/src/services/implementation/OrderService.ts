@@ -3,7 +3,7 @@ import { IOrderRepository } from "../../repository/interface/IOrderRepository";
 import { IOrderService } from "../interface/IOrderService";
 import Stripe from "stripe";
 import { env } from "../../config/env.config";
-import { createHttpError } from "../../utility/http-error";
+import { createHttpError } from "../../utils/http-error";
 import { HttpStatus } from "../../const/http-status";
 import { parseObjectId } from "../../mongoose/objectId";
 import { HttpResponse } from "../../const/error-message";
@@ -14,7 +14,7 @@ import { IEnrollement } from "../../types/enrollment.types";
 import logger from "../../config/logger.config";
 import { ITransactionRepository } from "../../repository/interface/ITransactionRepository";
 import { ITransaction } from "../../types/transaction.type";
-import { calculateShares } from "../../utility/calculateSplit.util";
+import { calculateShares } from "../../utils/calculateSplit.util";
 
 export class OrderService implements IOrderService {
   private _stripe;

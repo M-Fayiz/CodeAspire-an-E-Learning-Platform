@@ -2,11 +2,11 @@ import { Request, Response, NextFunction } from "express";
 import { ICourseService } from "../../services/interface/ICourseService";
 import { ICourseController } from "../interface/ICourseController";
 import { HttpStatus } from "../../const/http-status";
-import { successResponse } from "../../utility/response.util";
+import { successResponse } from "../../utils/response.util";
 import { HttpResponse } from "../../const/error-message";
 import { updatePart } from "../../types/courses.type";
 import logger from "../../config/logger.config";
-import { sendToUser } from "../../utility/socket.utils";
+import { sendToUser } from "../../utils/socket.utils";
 
 export class CourseController implements ICourseController {
   constructor(private _courseService: ICourseService) {}

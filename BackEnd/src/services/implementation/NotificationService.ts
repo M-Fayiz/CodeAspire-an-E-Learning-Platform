@@ -5,7 +5,7 @@ import { notificationDto } from "../../dtos/notification.dto";
 import { parseObjectId } from "../../mongoose/objectId";
 import { INotificationRepository } from "../../repository/interface/INotificationRepository";
 import { INotificationDTO } from "../../types/dtos.type/notification.dto.types";
-import { createHttpError } from "../../utility/http-error";
+import { createHttpError } from "../../utils/http-error";
 import { INotificationService } from "../interface/INotificationService";
 
 export class NotificationService implements INotificationService {

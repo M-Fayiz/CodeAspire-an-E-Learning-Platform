@@ -1,7 +1,7 @@
 import { HttpResponse } from "../../const/error-message";
 import { HttpStatus } from "../../const/http-status";
 import { INotificationService } from "../../services/interface/INotificationService";
-import { successResponse } from "../../utility/response.util";
+import { successResponse } from "../../utils/response.util";
 import { INotificationController } from "../interface/INotificationController";
 import { Request, Response, NextFunction } from "express";
 

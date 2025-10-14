@@ -1,7 +1,7 @@
 import { Types } from "mongoose";
 
-
-export interface IMessage{
+export interface IMessageDto {
+    _id:Types.ObjectId
     chatId:Types.ObjectId
     sender:Types.ObjectId
     content?:string

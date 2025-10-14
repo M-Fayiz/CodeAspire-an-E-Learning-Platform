@@ -3,7 +3,7 @@ import { ICategoryController } from "../interface/ICategoryController";
 import { ICategoryService } from "../../services/interface/ICategoryService";
 import { HttpStatus } from "../../const/http-status";
 import { HttpResponse } from "../../const/error-message";
-import { successResponse } from "../../utility/response.util";
+import { successResponse } from "../../utils/response.util";
 
 export class CategoryController implements ICategoryController {
   constructor(private _categoryService: ICategoryService) {}

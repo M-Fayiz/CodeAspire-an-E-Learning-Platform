@@ -1,7 +1,7 @@
 import { Request, Response, NextFunction } from "express";
 import { IEnrolledController } from "../interface/IEnrolledController";
 import { HttpStatus } from "../../const/http-status";
-import { successResponse } from "../../utility/response.util";
+import { successResponse } from "../../utils/response.util";
 import { HttpResponse } from "../../const/error-message";
 import { IEnrolledService } from "../../services/interface/IEnrolledService";
 import { filter } from "../../types/enrollment.types";

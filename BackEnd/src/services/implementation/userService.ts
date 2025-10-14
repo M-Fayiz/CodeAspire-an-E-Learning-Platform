@@ -5,12 +5,12 @@ import {
   ILearnerModel,
   IMenterModel,
 } from "../../models/user.model";
-import { createHttpError } from "../../utility/http-error";
+import { createHttpError } from "../../utils/http-error";
 import { HttpStatus } from "../../const/http-status";
 import { HttpResponse } from "../../const/error-message";
 import { IAdmin, ILearner, IRole } from "../../types/user.types";
 import { parseObjectId } from "../../mongoose/objectId";
-import { comparePassword, hashPassword } from "../../utility/bcrypt.util";
+import { comparePassword, hashPassword } from "../../utils/bcrypt.util";
 
 import { IMentorRepository } from "../../repository/interface/IMentorRepository";
 import { AdminDTO, LearnerDTO, MentorDTO } from "../../dtos/role.dto";

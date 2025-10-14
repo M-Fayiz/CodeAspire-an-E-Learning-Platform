@@ -3,7 +3,7 @@ import { IReviewController } from "../interface/IReviewController";
 import { IReviewSevice } from "../../services/interface/IReviewService";
 import { HttpStatus } from "../../const/http-status";
 import { HttpResponse } from "../../const/error-message";
-import { successResponse } from "../../utility/response.util";
+import { successResponse } from "../../utils/response.util";
 
 export class ReviewController implements IReviewController {
   constructor(private _reviewService: IReviewSevice) {}

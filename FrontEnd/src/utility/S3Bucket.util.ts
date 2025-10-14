@@ -1,12 +1,11 @@
 import axios from "axios";
-import { userInstance } from "../axios/createInstance";
+import { axiosInstance } from "../axios/createInstance";
 import { API } from "../constants/api.constant";
 
 export const S3BucketUtil = {
   putPreSignedURL: async (file: File) => {
     try {
-      console.log(file, "file");
-      const response = await userInstance.get(API.USER.PUT_PRESIGNED_URL, {
+      const response = await axiosInstance.get(API.USER.PUT_PRESIGNED_URL, {
         params: {
           fileName: file.name,
           type: file.type,
@@ -21,7 +20,7 @@ export const S3BucketUtil = {
   },
   getPreSignedURL: async (fileName: string) => {
     try {
-      const response = await userInstance.get(API.USER.GET_PRESIGNED_URL, {
+      const response = await axiosInstance.get(API.USER.GET_PRESIGNED_URL, {
         params: { key: fileName },
       });
       return response.data.get_fileURL;

@@ -2,14 +2,14 @@ import { HttpResponse } from "../../const/error-message";
 import { HttpStatus } from "../../const/http-status";
 import { ILearnerModel, IMenterModel } from "../../models/user.model";
 import { IUserRepo } from "../../repository/interface/IUserRepo";
-import { createHttpError } from "../../utility/http-error";
+import { createHttpError } from "../../utils/http-error";
 import { IAdminService } from "../interface/IAdminService";
 import { parseObjectId } from "../../mongoose/objectId";
 import { LearnerDTO, MentorDTO } from "../../dtos/role.dto";
 import { ILearnerDTO, IMentorDTO } from "../../types/dtos.type/user.dto.types";
 import { IRole, mentorApprovalStatus } from "../../types/user.types";
 import { filter } from "../../types/enrollment.types";
-import { timeFilter } from "../../utility/dashFilterGenerator.utils";
+import { timeFilter } from "../../utils/dashFilterGenerator.utils";
 
 export type UserFetchResponse = {
   safeUsers: IMentorDTO | ILearnerDTO[];

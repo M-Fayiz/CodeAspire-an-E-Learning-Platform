@@ -10,7 +10,7 @@ import { IUserRepo } from "../interface/IUserRepo";
 import { Profile } from "passport-google-oauth20";
 import { IRole, searchProps } from "../../types/user.types";
 import { Types } from "mongoose";
-import { buildUserFilter } from "../../utility/searchQuery";
+import { buildUserFilter } from "../../utils/searchQuery";
 
 export class UserRepository
   extends BaseRepository<IUserModel>

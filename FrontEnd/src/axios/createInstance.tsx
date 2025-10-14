@@ -45,6 +45,5 @@ const createInstance = (): AxiosInstance => {
   return instance;
 };
 
-export const userInstance = createInstance();
 
 export const axiosInstance = createInstance();

@@ -2,7 +2,7 @@ import { Request, Response, NextFunction } from "express";
 import { IUserService } from "../../services/interface/IUserService";
 import { IUserController } from "../interface/IUserController";
 import { HttpStatus } from "../../const/http-status";
-import { successResponse } from "../../utility/response.util";
+import { successResponse } from "../../utils/response.util";
 import { HttpResponse } from "../../const/error-message";
 import logger from "../../config/logger.config";
 

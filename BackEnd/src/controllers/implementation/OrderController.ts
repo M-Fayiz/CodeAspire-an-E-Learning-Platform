@@ -3,7 +3,7 @@ import { IOrderController } from "../interface/IOrderController";
 import { IOrderService } from "../../services/interface/IOrderService";
 import { HttpStatus } from "../../const/http-status";
 import { HttpResponse } from "../../const/error-message";
-import { successResponse } from "../../utility/response.util";
+import { successResponse } from "../../utils/response.util";
 
 export class OrderController implements IOrderController {
   constructor(private _orderService: IOrderService) {}

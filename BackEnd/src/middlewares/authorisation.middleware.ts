@@ -1,5 +1,5 @@
 import { NextFunction, Request, Response } from "express";
-import { createHttpError } from "../utility/http-error";
+import { createHttpError } from "../utils/http-error";
 import { HttpStatus } from "../const/http-status";
 import { HttpResponse } from "../const/error-message";
 import { IAnyUser, IRole } from "../types/user.types";
