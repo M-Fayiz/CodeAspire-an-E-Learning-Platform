@@ -74,4 +74,7 @@ export const env = {
   get HASH_SALT() {
     return process.env.SALT;
   },
+  get REDIS() {
+    return process.env.REDIS;
+  },
 };

@@ -8,4 +8,9 @@ export interface IMessageRepository {
     messageId: Types.ObjectId,
     filter: FilterQuery<IMessage>,
   ): Promise<IMessageModel | null>;
+  getChats(
+    chatId: Types.ObjectId,
+    limit: number,
+  ): Promise<IMessageModel[] | null>;
+  readMessage(messageIds: Types.ObjectId[]): Promise<IMessageModel[]>;
 }

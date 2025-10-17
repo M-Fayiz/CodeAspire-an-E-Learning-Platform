@@ -72,7 +72,7 @@ export const router = createBrowserRouter([
       { path: "courses", element: <CourseLayout /> },
       { path: "enrolled-courses", element: <CourseEnrolledList /> },
       { path: "enrolled-courses/:id", element: <EnrolledCourseDetails /> },
-      { path: "chats/:id", element: <ChatPage /> },
+      { path: "chats", element: <ChatPage /> },
     ],
   },
   {
@@ -87,7 +87,7 @@ export const router = createBrowserRouter([
       { path: "dashboard", element: <MentorDashboard /> },
       { path: "profile/:id", element: <ProfileManagement /> },
       { path: "data", element: <MentorDataForm /> },
-      { path: "chats/:id", element: <ChatPage /> },
+      { path: "chats", element: <ChatPage /> },
       {
         path: "courses",
         element: <Form_Courses_Provider />,
@@ -118,7 +118,7 @@ export const router = createBrowserRouter([
       { path: "category", element: <CategoryManagement /> },
       { path: "courses", element: <CourseManagement /> },
       { path: "courses/:id", element: <AdminCourseDetails /> },
-      { path: "chats/:id", element: <ChatPage /> },
+      { path: "chats", element: <ChatPage /> },
     ],
   },
   {

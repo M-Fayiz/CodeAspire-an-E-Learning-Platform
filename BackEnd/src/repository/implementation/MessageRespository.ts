@@ -20,4 +20,19 @@ export class MessageRepository
   ): Promise<IMessageModel | null> {
     return await this.findByIDAndUpdate(messageId, filter);
   }
+  async getChats(
+    chatId: Types.ObjectId,
+    limit: number,
+  ): Promise<IMessageModel[] | null> {
+    const filter = {
+      chatId: chatId,
+    };
+    return await this.findAll(filter);
+  }
+  async readMessage(messageIds: Types.ObjectId[]): Promise<IMessageModel[]> {
+    return await this.UpdateMany(
+      { _id: { $in: messageIds } },
+      { $set: { status: "read" } },
+    );
+  }
 }

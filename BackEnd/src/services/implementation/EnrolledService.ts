@@ -53,6 +53,7 @@ export class EnrolledService implements IEnrolledService {
     if (!enrolledData) {
       throw createHttpError(HttpStatus.NOT_FOUND, HttpResponse.ITEM_NOT_FOUND);
     }
+
     const populatedEnrolledCourse = await Promise.all(
       enrolledData.map(async (course) => {
         const data = await this._courseRepository.findCourse(

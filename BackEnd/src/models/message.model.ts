@@ -17,8 +17,8 @@ const MessageSchema = new mongoose.Schema<IMessageModel>({
   mediaUrl: { type: String },
   status: {
     type: String,
-    enum: ["sent", "delivered", "read"],
-    default: "sent",
+    enum: ["sending", "sent", "delivered", "read"],
+    default: "sending",
   },
   createdAt: { type: Date, default: Date.now },
 });

@@ -7,7 +7,6 @@ import {
   PopulateOptions,
   QueryOptions,
   PipelineStage,
-
 } from "mongoose";
 
 type PopulateFieldType =
@@ -65,17 +64,16 @@ export abstract class BaseRepository<T extends Document> {
   async findUserByEmail(email: string): Promise<T | null> {
     return this.model.findOne({ email });
   }
-async find(
-  filter: FilterQuery<T>,
-  populateFields?: PopulateFieldType,
-): Promise<T[] | null> {
-  let query = this.model.find(filter);
-  if (populateFields && Array.isArray(populateFields)) {
-    query = query.populate(populateFields);
+  async find(
+    filter: FilterQuery<T>,
+    populateFields?: PopulateFieldType,
+  ): Promise<T[] | null> {
+    let query = this.model.find(filter);
+    if (populateFields && Array.isArray(populateFields)) {
+      query = query.populate(populateFields);
+    }
+    return query.lean().exec() as Promise<T[]>;
   }
-  return query.lean().exec() as Promise<T[]>;
-}
-
 
   async findUserAndUpdate(
     filter: FilterQuery<T>,
@@ -132,5 +130,13 @@ async find(
   }
   async aggregate<R = T>(pipeline: PipelineStage[]): Promise<R[]> {
     return this.model.aggregate(pipeline).exec();
+  }
+  async UpdateMany(
+    filter: FilterQuery<T>,
+    update: UpdateQuery<T>,
+  ): Promise<T[]> {
+    this.model.updateMany(filter, update);
+
+    return this.model.find(filter);
   }
 }

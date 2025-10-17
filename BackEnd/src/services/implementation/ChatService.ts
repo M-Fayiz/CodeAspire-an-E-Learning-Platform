@@ -95,6 +95,7 @@ export class ChatService implements IChatService {
   }
   async listUsers(senderId: string): Promise<IChatListDTO[]> {
     const sender_Id = parseObjectId(senderId);
+    console.log("senderid ", senderId);
     if (!sender_Id) {
       throw createHttpError(HttpStatus.NOT_FOUND, HttpResponse.INVALID_ID);
     }
@@ -102,14 +103,42 @@ export class ChatService implements IChatService {
 
     const filteredData = populatedData?.map((chat) => {
       const otherUsers = chat.users.filter(
-        (user) =>user._id !==sender_Id,
+        (user) => user._id.toString() !== sender_Id.toString(),
       );
 
       return { ...chat, users: otherUsers };
     });
-console.log('filtered data',filteredData)
+
     return (
       filteredData?.map((chat) => chatListDTO(chat as IChatPopulated)) ?? []
     );
+  }
+  async getMessages(chatId: string, limit: number): Promise<IMessageDto[]> {
+    const chat_id = parseObjectId(chatId);
+    console.log("this is chat 🛜 ", chatId);
+    if (!chat_id) {
+      throw createHttpError(HttpStatus.BAD_REQUEST, HttpResponse.INVALID_ID);
+    }
+    const messages = await this._messageRepository.getChats(chat_id, limit);
+    return (messages || []).map((msg) => MessageDto(msg));
+  }
+  async readMessages(messageIds: string[]): Promise<IMessageDto[]> {
+    const message_Ids = messageIds.map((id) => parseObjectId(id));
+
+    if (!message_Ids) {
+      throw createHttpError(HttpStatus.BAD_REQUEST, HttpResponse.INVALID_ID);
+    }
+    const updatedData = await this._messageRepository.readMessage(
+      message_Ids as Types.ObjectId[],
+    );
+
+    if (!updatedData) {
+      throw createHttpError(
+        HttpStatus.INTERNAL_SERVER_ERROR,
+        HttpResponse.SERVER_ERROR,
+      );
+    }
+
+    return updatedData.map((data) => MessageDto(data));
   }
 }

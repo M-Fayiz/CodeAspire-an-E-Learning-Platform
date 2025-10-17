@@ -16,7 +16,7 @@ export const HttpResponse = {
   ACCESS_DENIED: "Access Denied!",
   ITEM_EXIST: "Item Already Exist",
   INVALID_ID: "Invalid id",
-  ITEM_NOT_FOUND: "",
+  ITEM_NOT_FOUND: "Item not Found !",
   ORDER_EXIST: " You have already Purchased this Course !",
   FAILED_TO_CREATE_REVIE: "failed to add your review !",
   CHAT_NOT_FOUND: "Chat not found ",

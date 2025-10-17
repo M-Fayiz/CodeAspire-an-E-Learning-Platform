@@ -2,7 +2,7 @@ export interface IBaseChatDTO {
   _id: string;
   participantKey: string;
   latestMessage: string | null;
-  createdAt?: Date;
+  createdAt?: Date | string;
 }
 
 export interface IChatDTO extends IBaseChatDTO {
@@ -13,6 +13,6 @@ export interface IChatListDTO extends IBaseChatDTO {
   user: {
     _id: string;
     name: string;
-    profile:string
+    profile: string;
   };
 }

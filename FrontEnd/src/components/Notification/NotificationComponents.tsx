@@ -36,7 +36,7 @@ const NotificationDropdown = () => {
         {activeTap == "Latest" && (
           <div>
             {unreadNotifications ? (
-              unreadNotifications.map((notification, ind) => (
+              unreadNotifications.map((notification) => (
                 <div
                   key={notification._id}
                   onClick={() => markAsRead(notification._id)}

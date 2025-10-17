@@ -15,6 +15,7 @@ export class EnrolledController implements IEnrolledController {
   ): Promise<void> => {
     try {
       const { learnerId } = req.params;
+
       const enrolledCourseData =
         await this._enrolledService.getEnrolledCourses(learnerId);
       console.info("enrolled course ", { enrolledCourseData });

@@ -39,7 +39,7 @@ export const navigationConfig = {
       { icon: Users, label: "User Management", path: "/admin/users" },
       { icon: Book, label: "Course Management", path: "/admin/courses" },
       { icon: Layers, label: "Category Management", path: "/admin/category" },
-      { icon: MessageSquare, label: "Messages", path: "/admin/messages" },
+      { icon: MessageSquare, label: "Messages", path: "/admin/chats" },
       { icon: Settings, label: "System Settings", path: "/admin/settings" },
     ],
     secondary: [
@@ -72,7 +72,7 @@ export const navigationConfig = {
       {
         icon: MessageSquare,
         label: "Messages",
-        path: "/learner/messages",
+        path: "/learner/chats",
         badge: 2,
       },
       { icon: Activity, label: "Progress", path: "/learner/progress" },
@@ -97,7 +97,7 @@ export const navigationConfig = {
       {
         icon: MessageSquare,
         label: "Messages",
-        path: "/mentor/messages",
+        path: "/mentor/chats",
         badge: 8,
       },
       // { icon: BarChart3, label: "Analytics", path: "/mentor/analytics" },

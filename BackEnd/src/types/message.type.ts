@@ -5,7 +5,7 @@ export interface IMessage {
   sender: Types.ObjectId;
   content?: string;
   type: "text" | "image" | "video" | "pdf";
-  status: "sent" | "delivered" | "read";
+  status: "sending" | "sent" | "delivered" | "read";
   mediaUrl?: string | null;
   createdAt: Date;
 }

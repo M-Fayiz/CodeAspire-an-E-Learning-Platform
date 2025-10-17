@@ -7,4 +7,9 @@ export interface IChatController {
     next: NextFunction,
   ): Promise<void>;
   listUsers(req: Request, res: Response, next: NextFunction): Promise<void>;
+  getChatMessages(
+    req: Request,
+    res: Response,
+    next: NextFunction,
+  ): Promise<void>;
 }

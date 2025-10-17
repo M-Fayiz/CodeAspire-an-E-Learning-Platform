@@ -9,7 +9,7 @@ import { IUserRepo } from "../../repository/interface/IUserRepo";
 import { hashPassword, comparePassword } from "../../utils/bcrypt.util";
 import { sendToken } from "../../utils/send-mail.util";
 import { v4 as uuidv4 } from "uuid";
-import redisClient from "../../config/redis";
+import redisClient from "../../config/redis.config";
 import { HttpStatus } from "../../const/http-status";
 import { HttpResponse } from "../../const/error-message";
 import { createHttpError } from "../../utils/http-error";

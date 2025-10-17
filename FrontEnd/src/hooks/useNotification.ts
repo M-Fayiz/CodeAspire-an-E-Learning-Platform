@@ -14,7 +14,7 @@ export function useNotifications(userId: string) {
     (async () => {
       try {
         const data = await NotificationService.getNotification(userId);
-        console.log("data", data);
+      
         if (data) {
           const sorted = data.sort(
             (a, b) =>
@@ -37,7 +37,7 @@ export function useNotifications(userId: string) {
     if (!socket) return;
 
     const handleNotification = (payload: INotificationDTO) => {
-      console.log("this the payload :", payload);
+      console.log("this the payload 💬:", payload);
       setNotifications((prev) => [payload, ...prev]);
       setCount((prev) => prev + 1);
     };

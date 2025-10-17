@@ -17,4 +17,6 @@ export interface IChatService {
     filter: FilterQuery<IMessage>,
   ): Promise<IMessageDto>;
   listUsers(senderId: string): Promise<IChatListDTO[]>;
+  getMessages(chatId: string, limit: number): Promise<IMessageDto[]>;
+  readMessages(messageIds: string[]): Promise<IMessageDto[]>;
 }

@@ -34,9 +34,29 @@ export class ChatCOntroller implements IChatController {
     const { senderId } = req.params;
 
     const ChatUser = await this._chatService.listUsers(senderId);
-    console.log("chat user ", ChatUser);
+
     res
       .status(HttpStatusCode.Ok)
       .json(successResponse(HttpResponse.OK, { ChatUser }));
+  };
+  getChatMessages = async (
+    req: Request,
+    res: Response,
+    next: NextFunction,
+  ): Promise<void> => {
+    try {
+      const { chatId } = req.params;
+      const { limit } = req.query;
+
+      const messages = await this._chatService.getMessages(
+        chatId,
+        Number(limit),
+      );
+      res
+        .status(HttpStatusCode.Ok)
+        .json(successResponse(HttpResponse.OK, { messages }));
+    } catch (error) {
+      next(error);
+    }
   };
 }

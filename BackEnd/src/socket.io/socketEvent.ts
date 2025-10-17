@@ -9,6 +9,8 @@ import { HttpResponse } from "../const/error-message";
 import { ChatRepository } from "../repository/implementation/ChatRepository";
 import { MessageRepository } from "../repository/implementation/MessageRespository";
 import { ChatService } from "../services/implementation/ChatService";
+import redisClient from "../config/redis.config";
+import { redisPrefix } from "../const/redisKey";
 
 const chatRepository = new ChatRepository();
 const messageRepository = new MessageRepository();
@@ -43,7 +45,7 @@ export const initializeSocket = (server: HttpServer) => {
           HttpResponse.UNAUTHORIZED,
         );
       }
-      console.log("this is user ", user);
+
       socket.data.userId = user._id;
       next();
     } catch (error) {
@@ -51,97 +53,112 @@ export const initializeSocket = (server: HttpServer) => {
     }
   });
 
-  io.on("connection", (socket: CustomSocket) => {
+  io.on("connection", async (socket: CustomSocket) => {
     console.log("User Connected ", socket.id);
-    const token = socket.handshake.auth.token;
-    const user = verifyAccesToken(token);
-    if (!user) {
-      throw createHttpError(HttpStatus.UNAUTHORIZED, HttpResponse.UNAUTHORIZED);
-    }
 
-    socket.data.userId = user._id;
+    const userId = socket.data.userId;
+    socket.join(`user:${userId}`);
 
-    socket.on("join", async (payload) => {
-      const { chatId } = payload || {};
-      if (!chatId) {
+    await redisClient.hSet(redisPrefix.ONLINE_USERS, userId, socket.id);
+
+    io.emit("user:online", userId);
+
+    socket.on("join_chat", async (payload) => {
+      const { roomId } = payload || {};
+      console.log("room id ", roomId);
+      if (!roomId) {
         socket.emit("error", { message: HttpResponse.CHAT_ID_Required });
         return;
       }
-      const chat = await chatService.findChat(chatId);
+      const chat = await chatService.findChat(roomId);
       if (!chat) {
         socket.emit("error", { message: HttpResponse.CHAT_NOT_FOUND });
         return;
       }
+
       const userId = socket.data.userId.toString();
-      if (!chat.users.includes(userId)) {
+      if (!chat.users.map((id) => id.toString()).includes(userId)) {
         socket.emit("error", { message: HttpResponse.NOT_PERMINTED });
         return;
       }
-      socket.join(`user:${userId}`);
-      socket.join(`chat:${userId}`);
 
-      // read message mechanism
+      socket.join(`chat:${roomId}`);
+      await new Promise((r) => setTimeout(r, 100));
 
-      socket.to(`chat:${chatId}`).emit("message_notification", { chatId });
+      socket.to(`chat:${roomId}`).emit("message_notification", { roomId });
     });
 
     socket.on("send_message", async (payload, ack) => {
       try {
         const userId = socket.data.userId.toString();
-        const { chatId, content, type = "text", mediaUrl, tempId } = payload;
-        if (!chatId || (!content && type == "text")) {
+
+        const { roomId, content, type = "text", mediaUrl, tempId } = payload;
+        if (!roomId || (!content && type == "text")) {
           return ack?.({ error: "Invalid payload" });
         }
 
-        const chat = await chatService.findChat(chatId);
+        const chat = await chatService.findChat(roomId);
 
         if (!chat || !chat.users.map(String).includes(userId)) {
           return ack?.({ error: "Not a Participant" });
         }
 
         const messageData = await chatService.createMessage({
-          chatId,
+          chatId:roomId,
           sender: userId,
           content,
           type,
           status: "sent",
           mediaUrl,
         });
-        const updatedChat = await chatService.updateChat(chatId, {
+
+        const updatedChat = await chatService.updateChat(roomId, {
           latestMessage: messageData._id,
         });
 
         const messageToEmit = {
           _id: messageData._id,
-          chatId,
+          roomId,
           sender: userId,
+          content,
           type,
           status: messageData.status,
           createdAt: messageData.createdAt,
         };
 
-        io.to(`chat:${chatId}`).emit("new_message", messageToEmit);
+        io.to(`chat:${roomId}`).emit("new_message", messageToEmit);
         ack?.({ success: true, message: messageToEmit, tempId });
       } catch (error) {
         ack({ error: "server error" });
       }
     });
 
-    socket.on("message_delicered", async ({ chatId, messageId }) => {
+    socket.on("message_delivered", async ({ roomId, messageId }) => {
       const userId = socket.data.userId.toString();
-      const chat = await chatService.findChat(chatId);
+      const chat = await chatService.findChat(roomId);
       if (!chat || !chat.users.map(String).includes(userId)) return;
 
       await chatService.updateMessage(messageId, { status: "delivered" });
 
-      io.to(`chat:${chatId}`).emit("message_status_update", {
+      io.to(`chat:${roomId}`).emit("message_status_update", {
         messageId,
         status: "delivered",
       });
     });
 
-    socket.on("disconnect", () => {
-      console.log("User disconnected:", socket.id);
+    socket.on("message_read", async ({ roomId, messageIds }) => {
+      const userId = socket.data.userId.toString();
+
+      const chatMessage = await chatService.readMessages(messageIds);
+      io.to(`chat:${roomId}`).emit("message_status_update", {
+        messageIds,
+        status: "read",
+      });
+    });
+
+    socket.on("disconnect", async () => {
+      await redisClient.hDel(redisPrefix.ONLINE_USERS, userId);
+      io.emit("user:offline", userId);
     });
   });
   return io;

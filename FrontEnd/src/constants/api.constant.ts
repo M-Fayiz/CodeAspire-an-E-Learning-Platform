@@ -81,5 +81,7 @@ export const API = {
   CHAT: {
     CREATE_CHAT: `/chats/get-or-create`,
     LIST_USERS: (senderId: string) => `/chats/users/${senderId}`,
+    GET_MESSAGE: (chatId: string, limit = 30) =>
+      `/chats/${chatId}/messages?limit=${limit}`,
   },
 };
