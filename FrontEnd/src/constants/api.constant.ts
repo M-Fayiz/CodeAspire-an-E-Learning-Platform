@@ -8,6 +8,7 @@ export const API = {
     AUTH_URL: "/auth/me",
     FORGOT_PASSWORD_URL: "/auth/forgot-password",
     RESET_PASSWORD_URL: "/auth/reset-password",
+    GOOGLE_AUTH:(role:string)=>`/api/v1/auth/google?role:${role}`
   },
   USER: {
     FETCH_USER_PROFILE: (id: string) => `/users/me/${id}`,
@@ -16,7 +17,7 @@ export const API = {
     UPDATE_PROFILE_PICTURE: (id: string) => `/users/${id}/profile-picture`,
     PUT_PRESIGNED_URL: "/users/s3-presigned-url",
     GET_PRESIGNED_URL: "/users/s3-getPresigned-url",
-    UPDATE_MENTOR_PROFILE: (id: string) => `/users/${id}/mentor-profile`,
+    UPDATE_MENTOR_PROFILE: (mentorId: string) => `/users/${mentorId}/mentor-profile`,
     UPDATE_PROFILE_DATA: (id: string) => `/users/${id}/profile-data`,
     GET_USER_PROFILE: (id: string) => `/users/${id}/profile`,
   },
@@ -26,7 +27,7 @@ export const API = {
   },
   ADMIN: {
     FETCH_ALL_USERS: "/admin/users",
-    GET_USER_PROFILE: (id: string) => `/admin/users/${id}`,
+    GET_USER_PROFILE: (userId: string) => `/admin/users/${userId}`,
     BLOCK_USER: (id: string) => `/admin/users/${id}/block`,
     APPROVE_MENTOR: (id: string) => `/admin/users/${id}/approve`,
   },
@@ -56,6 +57,7 @@ export const API = {
   },
   PAYMENT: {
     CREATE_PAYMENT_INTENT: "/orders/create-checkout-session",
+    GET_PAYMENT_DATA:(sessionsId:string)=>`/orders/stripe/${sessionsId}`
   },
   ENROLLEMENT: {
     GET_ENROLLED_COURSE: (learnerId: string) => `/enrollements/${learnerId}`,

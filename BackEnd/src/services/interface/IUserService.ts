@@ -4,6 +4,8 @@ import {
   ILearnerDTO,
   IMentorDTO,
 } from "../../types/dtos.type/user.dto.types";
+import { IMenterModel } from "../../models/user.model";
+import { INotificationDTO } from "../../types/dtos.type/notification.dto.types";
 
 export interface IUserService {
   fetchUser(id: string): Promise<ILearnerDTO | IMentorDTO | IAdminDTO>;
@@ -16,8 +18,12 @@ export interface IUserService {
   updateUserProfile(
     id: string,
     userData: ILearner | IMentor | IAdmin,
-  ): Promise<IMentorDTO | null>;
+  ): Promise<IMentorDTO | IMentorDTO | IAdminDTO | null>;
   getUserProfile(
     userId: string,
   ): Promise<IAdminDTO | ILearnerDTO | IMentorDTO | null>;
+  addMentorData(
+    mentorId: string,
+    mentorData: IMenterModel,
+  ): Promise<{MentorDtp:IMentorDTO,notificationDTO:INotificationDTO}>
 }

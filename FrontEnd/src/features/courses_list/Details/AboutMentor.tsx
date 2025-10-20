@@ -40,7 +40,7 @@ const MentorProfile: React.FC<MentorProps> = ({ mentorId }) => {
     try {
       const data = await ChatService.createChat(user!.id, mentorId);
       if (data) {
-        navigate(`/learner/chats/${data._id}`);
+        navigate(`/learner/chats`);
       }
     } catch (error) {
       if (error instanceof Error) {

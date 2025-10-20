@@ -1,19 +1,20 @@
+import { Types } from "mongoose";
 import { ICategory } from "../types/category.types";
 import { ICourses } from "../types/courses.type";
 import {
   ICourseDTO,
   ICourseListDTO,
-  ICoursesPopulated,
+  IPopulatedCourse,
   IFormCourseDTO,
 } from "../types/dtos.type/course.dtos.type";
-import { IUser } from "../types/user.types";
+
 
 export function courseListDTO(
-  course: ICoursesPopulated,
+  course: IPopulatedCourse,
   enrolledIds?: Set<string>,
 ): ICourseListDTO {
   return {
-    _id: course.id as string,
+    _id: course._id,
     title: course.title,
     thumbnail: course.thumbnail,
     category:
@@ -27,16 +28,16 @@ export function courseListDTO(
     language: course.language,
     level: course.level,
     price: course.price,
-    isEnrolled: enrolledIds?.has(course.id as string) ?? false,
+    isEnrolled: enrolledIds?.has(course._id as Types.ObjectId) ?? false,
   };
 }
 
 export function courseDTO(
-  course: ICoursesPopulated,
+  course: IPopulatedCourse,
   isEnrolled?: boolean,
 ): ICourseDTO {
   return {
-    _id: course._id as string,
+    _id: course._id,
     title: course.title,
     description: course.description ? course.description : "",
     thumbnail: course.thumbnail,
@@ -56,27 +57,27 @@ export function courseDTO(
   };
 }
 
-export function formCourseDto(course: ICourses): IFormCourseDTO {
+export function formCourseDto(course: IPopulatedCourse): IFormCourseDTO {
   return {
-    _id: String(course._id),
+    _id: course._id,
     title: course.title || "",
     description: course.description || "",
     thumbnail: course.thumbnail || "",
     category: {
-      _id: String((course.categoryId as ICategory)._id),
-      title: (course.categoryId as ICategory).title,
+      _id: course.categoryId._id,
+      title: course.categoryId.title,
     },
     subCategory: {
-      _id: String((course.subCategoryId as ICategory)._id),
-      title: (course.subCategoryId as ICategory).title,
+      _id: course.subCategoryId._id,
+      title: course.subCategoryId.title,
     },
     language: course.language,
     level: course.level,
     price: course.price,
     mentorsId: {
-      _id: String((course.mentorsId as IUser)._id),
-      name: (course.mentorsId as IUser).name,
-      email: (course.mentorsId as IUser).email,
+      _id: course.mentorsId._id,
+      name: course.mentorsId.name,
+      email: course.mentorsId.email,
     },
     sessions: course.sessions ?? [],
     status: course.status,

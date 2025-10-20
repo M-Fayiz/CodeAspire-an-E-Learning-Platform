@@ -12,7 +12,7 @@ const messageRepository = new MessageRepository();
 const chatService = new ChatService(chatRepository, messageRepository);
 const chatController = new ChatCOntroller(chatService);
 
-chatRouter.get("/:chatId/messages", verifyUser, chatController.getChatMessages);
+chatRouter.get("/:chatId/messages", chatController.getChatMessages);
 chatRouter.get("/users/:senderId", verifyUser, chatController.listUsers);
 chatRouter.post("/get-or-create", verifyUser, chatController.getOrCreateChat);
 

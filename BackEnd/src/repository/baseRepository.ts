@@ -64,15 +64,15 @@ export abstract class BaseRepository<T extends Document> {
   async findUserByEmail(email: string): Promise<T | null> {
     return this.model.findOne({ email });
   }
-  async find(
+  async find<U = T>(
     filter: FilterQuery<T>,
     populateFields?: PopulateFieldType,
-  ): Promise<T[] | null> {
+  ): Promise<U[] | null> {
     let query = this.model.find(filter);
     if (populateFields && Array.isArray(populateFields)) {
       query = query.populate(populateFields);
     }
-    return query.lean().exec() as Promise<T[]>;
+    return query.lean().exec() as Promise<U[]>;
   }
 
   async findUserAndUpdate(

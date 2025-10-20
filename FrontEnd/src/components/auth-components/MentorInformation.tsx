@@ -7,6 +7,7 @@ import type { IMentorProps } from "../../types/mentor.types";
 import MentorApprovalCard from "../Mentor/mentor-approval/MentorApproval";
 import { useNavigate } from "react-router";
 import { toast } from "sonner";
+import { mentorSchema } from "@/schema/mentorSchema";
 
 const MentorDataForm = () => {
   const { user } = useAuth();
@@ -15,7 +16,7 @@ const MentorDataForm = () => {
   const [formData, setFormData] = useState<IMentorProps>({
     expertise: [] as string[],
     bio: "",
-    experience: "",
+    experience: 0,
     socialLinks: {
       linkedIn: "",
       github: "",
@@ -29,11 +30,11 @@ const MentorDataForm = () => {
     if (user?.role == "mentor" && user.ApprovalStatus == "approved") {
       navigate("/mentor/dashboard");
     }
-  }, []);
+  }, [[user, navigate]]);
 
   const [newExpertise, setNewExpertise] = useState("");
   const [currentStep, setCurrentStep] = useState(1);
-
+  const [errors, setErrors] = useState<{ [key: string]: string }>({});
   const handleInputChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
   ) => {
@@ -88,14 +89,19 @@ const MentorDataForm = () => {
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
-    if (
-      !formData.expertise.length ||
-      !formData.experience ||
-      !formData.bio.trim()
-    ) {
-      toast.error("Please complete all required fields.");
-      return;
-    }
+
+    const result = mentorSchema.safeParse(formData);
+        if (!result.success) {
+          const ERROR: { [key: string]: string } = {};
+          const zodError = result.error;
+          zodError.issues.forEach((err) => {
+            if (err.path[0]) {
+              ERROR[err.path[0] as string] = err.message;
+            }
+          });
+          setErrors(ERROR);
+          return;
+        }
 
     try {
       const result = await UserService.updateMentorInformation(
@@ -217,12 +223,13 @@ const MentorDataForm = () => {
                         <Input
                           label="Years of Experience"
                           type="number"
-                          value={formData.experience}
+                          value={Number(formData.experience)}
                           onChange={handleInputChange}
                           name="experience"
                           min="0"
                           max="50"
                           placeholder="e.g., 5"
+                          error={errors.experience}
                         />
                       </div>
                     </div>
@@ -235,6 +242,7 @@ const MentorDataForm = () => {
                       name="bio"
                       textArea
                       placeholder="Tell us about yourself, your background, and what you're passionate about..."
+                      error={errors.bio}
                     />
                   </div>
                 </div>
@@ -252,6 +260,7 @@ const MentorDataForm = () => {
                     name="linkedIn"
                     icon={<Link className="inline w-4 h-4 mr-1" />}
                     placeholder="https://linkedin.com/in/yourprofile"
+                    error={errors.linkedIn}
                   />
 
                   <Input
@@ -262,6 +271,7 @@ const MentorDataForm = () => {
                     name="github"
                     icon={<Link className="inline w-4 h-4 mr-1" />}
                     placeholder="https://github.com/yourusername"
+                    error={errors.github}
                   />
                 </div>
                 <div className="space-y-6 md:w-1/2">
@@ -273,6 +283,7 @@ const MentorDataForm = () => {
                     name="portfolio"
                     icon={<Link className="inline w-4 h-4 mr-1" />}
                     placeholder="https://yourportfolio.com"
+                    error={errors.portfolio}
                   />
 
                   <Input
@@ -281,6 +292,7 @@ const MentorDataForm = () => {
                     onChange={handleInputChange}
                     name="resume"
                     icon={<FileUp className="inline w-4 h-4 mr-1" />}
+                    error={errors.resume}
                   />
                 </div>
               </div>

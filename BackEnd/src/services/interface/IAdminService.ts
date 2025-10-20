@@ -11,7 +11,7 @@ export interface IAdminService {
     role: string,
   ): Promise<UserFetchResponse>;
   blockUser(id: string): Promise<{ isActive: boolean; id: string }>;
-  userProfile(id: string): Promise<ILearnerDTO | IMentorDTO | null>;
+  userProfile(userId: string): Promise<ILearnerDTO | IMentorDTO | null>;
   approveMentor(
     id: string,
     status: string,

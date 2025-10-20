@@ -15,6 +15,7 @@ import logger from "../../config/logger.config";
 import { ITransactionRepository } from "../../repository/interface/ITransactionRepository";
 import { ITransaction } from "../../types/transaction.type";
 import { calculateShares } from "../../utils/calculateSplit.util";
+import { Types } from "mongoose";
 
 export class OrderService implements IOrderService {
   private _stripe;
@@ -37,79 +38,103 @@ export class OrderService implements IOrderService {
         sig as string,
         env.WEB_HOOK_SECRETE_KEY as string,
       );
-      switch (event.type) {
-        case "checkout.session.completed": {
-          const pi = event.data.object;
-          const orderId = pi.metadata?.orderId;
-          const order_id = parseObjectId(orderId as string);
-          if (!order_id) {
-            throw createHttpError(
-              HttpStatus.NOT_FOUND,
-              HttpResponse.INVALID_ID,
-            );
-          }
-          const order = await this._orderRepository.findOrder(order_id);
-          if (!order) {
-            throw createHttpError(HttpStatus.NOT_FOUND, "Order not found");
-          }
 
-          await this._orderRepository.updateOrderStatus(order_id, "completed");
-          const course_id = parseObjectId(pi.metadata?.courseId as string);
-          const user_id = parseObjectId(pi.metadata?.userId as string);
-          const mentore_id = parseObjectId(pi.metadata?.mentorId as string);
-          const category_id = parseObjectId(pi.metadata?.categoryId as string);
-          if (!course_id || !user_id || !mentore_id || !category_id) {
-            throw createHttpError(HttpStatus.OK, HttpResponse.OK);
-          }
-          const adminShare = calculateShares(
-            Number(pi.metadata?.amount),
-            Number(env.ADMIN_SHARE),
-          );
-          const mentorShare = calculateShares(
-            Number(pi.metadata?.amount),
-            Number(env.MENTOR_SHARE),
-          );
+      logger.info(` Stripe event received: ${event.type}`);
 
-          const transactionData: ITransaction = {
-            amount: Number(pi.metadata?.amount),
-            orderId: order_id,
-            userId: user_id,
-            mentorId: mentore_id,
-            status: "success",
-            paymentMethod: "stripe",
-            gatewayTransactionId: pi.payment_intent as string,
-            adminShare,
-            mentorShare,
-            courseId: course_id,
-          };
+      if (event.type === "checkout.session.completed") {
+        const session = event.data.object as Stripe.Checkout.Session;
 
-          await this._transactionRepository.createTransaction(transactionData);
-
-          const enrollData: IEnrollement = {
-            courseId: course_id,
-            categoryId: category_id,
-            learnerId: user_id,
-            mentorId: mentore_id,
-            progress: {
-              completedLectures: [],
-              completionPercentage: 0,
-              lastAccessedLecture: null,
-            },
-          };
-
-          await this._enrolledRepository.enrolleCourse(enrollData);
+        if (!session.metadata) {
+          logger.error(" Missing metadata in session:", session.id);
+          return;
         }
+
+        const { orderId, courseId, userId, mentorId, categoryId, amount } =
+          session.metadata;
+        const order_id = parseObjectId(orderId);
+        const course_id = parseObjectId(courseId);
+        const user_id = parseObjectId(userId);
+        const mentore_id = parseObjectId(mentorId);
+        const category_id = parseObjectId(categoryId);
+
+        if (
+          !order_id ||
+          !course_id ||
+          !user_id ||
+          !mentore_id ||
+          !category_id
+        ) {
+          logger.error(" Invalid ObjectIds in metadata:", session.metadata);
+          return;
+        }
+
+        const order = await this._orderRepository.findOrder(order_id);
+        if (!order) {
+          logger.error(" Order not found:", order_id);
+          return;
+        }
+
+        await this._orderRepository.updateOrderStatus(order_id, "completed");
+
+        const adminShare = calculateShares(
+          Number(amount),
+          Number(env.ADMIN_SHARE),
+        );
+        const mentorShare = calculateShares(
+          Number(amount),
+          Number(env.MENTOR_SHARE),
+        );
+
+        const paymentIntentId =
+          typeof session.payment_intent === "string"
+            ? session.payment_intent
+            : session.payment_intent?.id;
+
+        const transactionData: ITransaction = {
+          amount: Number(amount),
+          orderId: order_id,
+          userId: user_id,
+          mentorId: mentore_id,
+          status: "success",
+          paymentMethod: "stripe",
+          gatewayTransactionId: paymentIntentId as string,
+          adminShare,
+          mentorShare,
+          courseId: course_id,
+        };
+
+        logger.info("✅ Creating transaction:", transactionData);
+        await this._transactionRepository.createTransaction(transactionData);
+
+        const enrollData: IEnrollement = {
+          courseId: course_id,
+          categoryId: category_id,
+          learnerId: user_id,
+          mentorId: mentore_id,
+          progress: {
+            completedLectures: [],
+            completionPercentage: 0,
+            lastAccessedLecture: null,
+          },
+        };
+
+        logger.info("✅ Enrolling learner:", enrollData);
+        await this._enrolledRepository.enrolleCourse(enrollData);
+
+        logger.info(
+          "🎉 Enrollment and transaction completed for order:",
+          order_id,
+        );
       }
     } catch (error) {
-      if (error instanceof Error) {
-        throw createHttpError(HttpStatus.INTERNAL_SERVER_ERROR, error.message);
-      }
+      logger.error("❌ Stripe webhook error:", error);
       throw createHttpError(
         HttpStatus.INTERNAL_SERVER_ERROR,
-        "Something went wrong!",
+        HttpResponse.SERVER_ERROR,
       );
     }
   }
+
   async paymentIntent(
     userId: string,
     courseId: string,
@@ -171,7 +196,7 @@ export class OrderService implements IOrderService {
           },
         ],
         mode: "payment",
-        success_url: `${env.CLIENT_ORGIN}/courses/payment-success/`,
+        success_url: `${env.CLIENT_ORGIN}/courses/payment-success?session_id={CHECKOUT_SESSION_ID}`,
         client_reference_id: String(orderData._id),
         metadata: {
           orderId,
@@ -179,7 +204,7 @@ export class OrderService implements IOrderService {
           userId,
           amount,
           mentorId: String(course.mentorsId._id),
-          categoryId: String(course.categoryId),
+          categoryId: String(course.categoryId._id),
         },
       },
       { idempotencyKey: idemKey },
@@ -194,5 +219,15 @@ export class OrderService implements IOrderService {
       orderId: String(orderData._id),
       checkoutURL: session.url as string,
     };
+  }
+  async getPaymentData(
+    sessionId: string,
+  ): Promise<Stripe.Response<Stripe.Checkout.Session>> {
+    console.log("session Id  :", sessionId);
+    const session = await this._stripe.checkout.sessions.retrieve(sessionId, {
+      expand: ["payment_intent", "invoice"],
+    });
+    console.log("session ", session);
+    return session;
   }
 }

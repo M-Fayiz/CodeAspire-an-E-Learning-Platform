@@ -1,4 +1,6 @@
 import { axiosInstance } from "@/axios/createInstance";
+import { API } from "@/constants/api.constant";
+import { throwAxiosError } from "@/utility/throwErrot";
 import type { AxiosError } from "axios";
 
 export const OrderService = {
@@ -10,7 +12,6 @@ export const OrderService = {
     orderId: string;
     checkoutURL: string;
   }> => {
-    console.log("🍉", courseId, userId);
     try {
       const response = await axiosInstance.post(
         "/orders/payment/create-checkout-session",
@@ -18,9 +19,16 @@ export const OrderService = {
       );
       return response.data;
     } catch (error) {
-      const err = error as AxiosError<{ error: string }>;
-      const errorMessage = err.response?.data.error;
-      throw new Error(errorMessage);
+      throwAxiosError(error)
     }
   },
+
+  getOrderDetails:async(sessionId:string)=>{
+    try {
+      const response=await axiosInstance.get(API.PAYMENT.GET_PAYMENT_DATA(sessionId))
+      return response.data.paymentdata
+    } catch (error) {
+     throwAxiosError(error)
+    }
+  }
 };

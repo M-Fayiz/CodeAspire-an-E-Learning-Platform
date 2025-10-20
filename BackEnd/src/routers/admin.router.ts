@@ -16,9 +16,9 @@ adminRouter.use(verifyUser);
 adminRouter.use(authorizedRole(IRole.Admin));
 
 adminRouter.get("/users", adminController.fetchAllUsers);
-adminRouter.delete("/users/:id/block", adminController.blockUser);
-adminRouter.get("/users/:id", adminController.userProfile);
-adminRouter.put("/users/:id/approve", adminController.approveMentor);
+adminRouter.delete("/users/:userId/block", adminController.blockUser);
+adminRouter.get("/users/:userId", adminController.userProfile);
+adminRouter.put("/users/:userId/approve", adminController.approveMentor);
 // adminRouter.get('/dashboard')
 
 export default adminRouter;

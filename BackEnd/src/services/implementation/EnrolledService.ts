@@ -4,7 +4,7 @@ import { HttpStatus } from "../../const/http-status";
 import { parseObjectId } from "../../mongoose/objectId";
 import { ICourseRepository } from "../../repository/interface/ICourseRepository";
 import { IEnrolledRepository } from "../../repository/interface/IEnrolledRepositoy";
-import { IFormCourseDTO } from "../../types/dtos.type/course.dtos.type";
+import { IFormCourseDTO, IPopulatedCourse } from "../../types/dtos.type/course.dtos.type";
 import { createHttpError } from "../../utils/http-error";
 import { formCourseDto } from "../../dtos/course.dtos";
 import type {
@@ -61,7 +61,7 @@ export class EnrolledService implements IEnrolledService {
         );
         if (!data) return null;
 
-        const populatedCourse = formCourseDto(data);
+        const populatedCourse = formCourseDto(data as IPopulatedCourse);
 
         return {
           ...course,
@@ -190,6 +190,8 @@ export class EnrolledService implements IEnrolledService {
       this._erolledRepository.getTopSellingCourse(mentor_id),
       this._transactionRepository.getMentorTotalRevenue(mentor_id),
     ]);
+
+    console.log("top ", topCourse);
     return mentorDashboardDTO(studentsAndRating[0], topCourse, revanue);
   }
 }

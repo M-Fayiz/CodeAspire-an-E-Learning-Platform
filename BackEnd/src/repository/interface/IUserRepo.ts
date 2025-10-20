@@ -6,7 +6,8 @@ import {
   IAdminModel,
 } from "../../models/user.model";
 import { IRole, searchProps } from "../../types/user.types";
-import { Types } from "mongoose";
+import { FilterQuery, Types } from "mongoose";
+
 
 export interface IUserRepo {
   createUser(user: IUserModel): Promise<IUserModel>;
@@ -56,4 +57,5 @@ export interface IUserRepo {
   getUserProfile(
     userId: Types.ObjectId,
   ): Promise<IUserModel | IMenterModel | ILearnerModel | IAdminModel | null>;
+  findUser(filter:FilterQuery<IUserModel>):Promise<IUserModel | IMenterModel | ILearnerModel | IAdminModel | null>;
 }

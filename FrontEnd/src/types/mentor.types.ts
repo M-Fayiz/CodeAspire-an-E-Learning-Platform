@@ -1,7 +1,7 @@
 export interface IMentorProps {
   expertise: string[];
   bio: string;
-  experience: string;
+  experience: number;
   socialLinks: {
     linkedIn: string;
     github: string;

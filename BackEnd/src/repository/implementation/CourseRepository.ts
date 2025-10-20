@@ -4,6 +4,7 @@ import { ICourses, ILecture, ISession } from "../../types/courses.type";
 import { BaseRepository } from "../baseRepository";
 import { ICourseRepository } from "../interface/ICourseRepository";
 import logger from "../../config/logger.config";
+import { IPopulatedCourse } from "../../types/dtos.type/course.dtos.type";
 
 export class CourseRepository
   extends BaseRepository<ICourses>
@@ -138,14 +139,16 @@ export class CourseRepository
   ): Promise<ICourses | null> {
     return await this.findByIDAndUpdate(courseId, baseInfo);
   }
-  async getAdminCoursList(): Promise<ICourses[] | null> {
-    return await this.find(
+  async getAdminCoursList(): Promise<IPopulatedCourse[] | null> {
+    return await this.find<IPopulatedCourse>(
       { status: { $in: ["published", "rejected", "approved"] } },
       ["categoryId", "subCategoryId", "mentorsId"],
     );
   }
-  async getCourseDetails(courseId: Types.ObjectId): Promise<ICourses[] | null> {
-    return await this.find({ _id: courseId }, [
+  async getCourseDetails(
+    courseId: Types.ObjectId,
+  ): Promise<IPopulatedCourse[] | null> {
+    return await this.find<IPopulatedCourse>({ _id: courseId }, [
       "categoryId",
       "subCategoryId",
       "mentorsId",

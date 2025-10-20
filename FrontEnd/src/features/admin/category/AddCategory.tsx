@@ -32,16 +32,17 @@ const AddCategoryAccordion: React.FC<IAddCategoryProps> = ({
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     const result = categorySchema.safeParse({ title: formData.title });
-    let fieldErros: Record<string, string> = {};
+    const fieldErros: Record<string, string> = {};
     if (!result.success) {
       result.error.issues.forEach((err) => {
-        let fieldName = err.path.join(".");
+        const fieldName = err.path.join(".");
         fieldErros[fieldName] = err.message;
       });
       setErros(fieldErros);
       return;
     }
     addCat(formData.title, formData.parentId);
+    setFormData({ title: "", parentId: "" })
   };
 
   return (

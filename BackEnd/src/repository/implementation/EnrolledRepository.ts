@@ -131,12 +131,11 @@ export class EnrolledRepository
     ]);
   }
   async getTopSellingCourse(mentorId?: Types.ObjectId): Promise<ITopCourse[]> {
+    console.log("mentorID ", mentorId);
     const matchStage = mentorId ? { mentorId } : {};
     return await this.aggregate<ITopCourse>([
       {
-        $match: {
-          mentorId: matchStage,
-        },
+        $match: matchStage,
       },
       {
         $group: {
@@ -159,16 +158,16 @@ export class EnrolledRepository
           from: "courses",
           localField: "_id",
           foreignField: "_id",
-          as: "courses",
+          as: "course",
         },
       },
       {
-        $unwind: "$courses",
+        $unwind: "$course",
       },
       {
         $project: {
-          courseId: "$_id",
-          title: "$courses.title",
+          courseId: "$course._id",
+          title: "$course.title",
           enrolledStudent: "$totalStudent",
         },
       },

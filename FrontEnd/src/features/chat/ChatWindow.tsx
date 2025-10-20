@@ -1,5 +1,5 @@
 import React, { useState, useRef, useEffect } from "react";
-import { Send, Paperclip, Smile } from "lucide-react";
+import { Send, Paperclip } from "lucide-react";
 import { useAuth } from "@/context/auth.context";
 import { useSocket } from "@/context/socket.context";
 import type { IMessageDto } from "@/types/DTOS/message.dto.types";
@@ -23,10 +23,12 @@ const ChatWindow: React.FC<ChatWindowProps> = ({ userData }) => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
   };
 
+
   useEffect(() => {
     if (!socket || !userData._id) return;
 
     socket.emit("join_chat", { roomId : userData._id });
+  
     const onMessage = (msg: IMessageDto) => {
       setMessages((prev) => {
         const exists = prev.some((m) => m._id === msg._id);
@@ -34,7 +36,7 @@ const ChatWindow: React.FC<ChatWindowProps> = ({ userData }) => {
       });
     };
      const onOnline = (userId: string) => {
-      
+      console.log('user Id ',userId)
       if (userId === userData.userId) setOnline(true);
     };
 
@@ -101,6 +103,7 @@ const ChatWindow: React.FC<ChatWindowProps> = ({ userData }) => {
       handleSendMessage();
     }
   };
+
 
   return (
     <div className="flex flex-col h-screen bg-gray-50">
@@ -170,9 +173,9 @@ const ChatWindow: React.FC<ChatWindowProps> = ({ userData }) => {
               className="flex-1 bg-transparent resize-none focus:outline-none text-gray-900 placeholder-gray-500"
               style={{ maxHeight: "120px" }}
             />
-            <button className="p-1 hover:bg-gray-200 rounded-full transition-colors">
+            {/* <button className="p-1 hover:bg-gray-200 rounded-full transition-colors">
               <Smile size={20} className="text-gray-600" />
-            </button>
+            </button> */}
           </div>
 
           <button

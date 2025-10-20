@@ -4,7 +4,7 @@ import { INotificationDTO } from "../types/dtos.type/notification.dto.types";
 import redisClient from "../config/redis.config";
 import { redisPrefix } from "../const/redisKey";
 
-export const sendToUser = async (
+export const sendNotification = async (
   userId: Types.ObjectId,
   data: INotificationDTO,
 ) => {

@@ -6,7 +6,7 @@ import { successResponse } from "../../utils/response.util";
 import { HttpResponse } from "../../const/error-message";
 import { updatePart } from "../../types/courses.type";
 import logger from "../../config/logger.config";
-import { sendToUser } from "../../utils/socket.utils";
+import { sendNotification } from "../../utils/socket.utils";
 
 export class CourseController implements ICourseController {
   constructor(private _courseService: ICourseService) {}
@@ -256,7 +256,7 @@ export class CourseController implements ICourseController {
         title: status.notifyDTO.title,
         message: status.notifyDTO.message,
       };
-      sendToUser(status.notifyDTO.userId, status.notifyDTO);
+      sendNotification(status.notifyDTO.userId, status.notifyDTO);
       res
         .status(HttpStatus.OK)
         .json(successResponse(HttpResponse.OK, { status: status.status }));

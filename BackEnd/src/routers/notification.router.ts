@@ -12,8 +12,8 @@ const notificationRepository = new NotificationRepository();
 const notificationService = new NotificationService(notificationRepository);
 const notificationController = new NotificationController(notificationService);
 
-notifyRouter.use(verifyUser);
-notifyRouter.use(authorizedRole(IRole.Admin, IRole.Learner, IRole.Mentor));
+// notifyRouter.use(verifyUser);
+// notifyRouter.use(authorizedRole(IRole.Admin, IRole.Learner, IRole.Mentor));
 
 notifyRouter.get("/:userId", notificationController.getAllNotification);
 notifyRouter.put("/:notifyId", notificationController.readNotification);

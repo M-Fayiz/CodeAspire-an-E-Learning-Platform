@@ -18,13 +18,18 @@ import {
   IAdminDTO,
   ILearnerDTO,
   IMentorDTO,
+  RoleModelMap,
 } from "../../types/dtos.type/user.dto.types";
 import logger from "../../config/logger.config";
+import { NotificationTemplates } from "../../template/notification.template";
+import { INotificationRepository } from "../../repository/interface/INotificationRepository";
+import { INotificationDTO } from "../../types/dtos.type/notification.dto.types";
 
 export class UserService implements IUserService {
   constructor(
-    private _userRep: IUserRepo,
+    private _userRepository: IUserRepo,
     private _mentorRepository: IMentorRepository,
+    private _notificationRepository:INotificationRepository
   ) {}
 
   async fetchUser(id: string): Promise<ILearnerDTO | IMentorDTO | IAdminDTO> {
@@ -32,18 +37,23 @@ export class UserService implements IUserService {
     if (!userId) {
       throw createHttpError(HttpStatus.NOT_FOUND, HttpResponse.INVALID_ID);
     }
-    const userData = await this._userRep.getUserProfile(userId);
+    const userData = await this._userRepository.getUserProfile(userId);
     if (!userData) {
       throw createHttpError(HttpStatus.NOT_FOUND, HttpResponse.USER_NOT_FOUND);
     }
-    switch (userData.role) {
-      case "learner":
-        return LearnerDTO(userData as ILearnerModel);
-      case "mentor":
-        return MentorDTO(userData as IMenterModel);
-      case "admin":
-        return AdminDTO(userData as IAdminModel);
-    }
+
+    const roleTransformers: {
+      [R in keyof RoleModelMap]: (
+        user: RoleModelMap[R],
+      ) => ILearnerDTO | IMentorDTO | IAdminDTO;
+    } = {
+      learner: (user) => LearnerDTO(user),
+      mentor: (user) => MentorDTO(user),
+      admin: (user) => AdminDTO(user),
+    };
+
+    const transformer = roleTransformers[userData.role as keyof RoleModelMap];
+    return transformer(userData as RoleModelMap[keyof RoleModelMap]);
   }
 
   async changePassword(
@@ -58,7 +68,7 @@ export class UserService implements IUserService {
         HttpResponse.INVALID_CREDNTIALS,
       );
     }
-    const user = await this._userRep.findUserById(objectId);
+    const user = await this._userRepository.findUserById(objectId);
     if (!user) {
       throw createHttpError(HttpStatus.NOT_FOUND, HttpResponse.USER_NOT_FOUND);
     }
@@ -75,7 +85,7 @@ export class UserService implements IUserService {
       );
     }
     const hashedPassword = await hashPassword(newPassword);
-    await this._userRep.updateUserPassword(user.email, hashedPassword);
+    await this._userRepository.updateUserPassword(user.email, hashedPassword);
 
     return true;
   }
@@ -90,7 +100,7 @@ export class UserService implements IUserService {
         HttpResponse.INVALID_CREDNTIALS,
       );
     }
-    const userData = await this._userRep.userProfilePictureUpdate(
+    const userData = await this._userRepository.userProfilePictureUpdate(
       userObjectId,
       imageURL,
     );
@@ -99,10 +109,10 @@ export class UserService implements IUserService {
     }
     return userData.profilePicture;
   }
-  async updateUserProfile(
+  async updateUserProfile<T extends ILearner | IMenterModel | IAdmin>(
     id: string,
-    userData: ILearner | IMenterModel | IAdmin,
-  ): Promise<IMentorDTO | null> {
+    userData: T,
+  ): Promise<IMentorDTO | ILearnerDTO | IAdminDTO | null> {
     const userId = parseObjectId(id);
     if (!userId) {
       throw createHttpError(
@@ -110,38 +120,47 @@ export class UserService implements IUserService {
         HttpResponse.INVALID_CREDNTIALS,
       );
     }
-    const user = await this._userRep.findUserById(userId);
+
+    const user = await this._userRepository.findUserById(userId);
     if (!user) {
       throw createHttpError(HttpStatus.NOT_FOUND, HttpResponse.USER_NOT_FOUND);
     }
 
-    switch (user.role) {
-      case "mentor": {
-        const updatedMentor = await this._mentorRepository.updateMentorProfile(
+    const updateActions = {
+      mentor: async () => {
+        const result = await this._mentorRepository.updateMentorProfile(
           userId,
           userData as IMenterModel,
         );
-        return updatedMentor ? MentorDTO(updatedMentor) : null;
-      }
-      case "admin": {
-        const updatedAdmin = await this._userRep.updateUserprofile(
+        return result ? MentorDTO(result) : null;
+      },
+      admin: async () => {
+        const result = await this._userRepository.updateUserprofile(
           userId,
           userData as IAdminModel,
         );
-        logger.info("admin data fron service", { updatedAdmin });
-        return updatedAdmin ? AdminDTO(updatedAdmin as IAdminModel) : null;
-      }
-      case "learner": {
-        const updatedLearner = await this._userRep.updateUserprofile(
+        return result ? AdminDTO(result as IAdminModel) : null;
+      },
+      learner: async () => {
+        const result = await this._userRepository.updateUserprofile(
           userId,
           userData as ILearnerModel,
         );
-        return updatedLearner
-          ? LearnerDTO(updatedLearner as ILearnerModel)
-          : null;
-      }
+        return result ? LearnerDTO(result as ILearnerModel) : null;
+      },
+    } as const;
+
+    const handler = updateActions[user.role as keyof typeof updateActions];
+    if (!handler) {
+      throw createHttpError(
+        HttpStatus.BAD_REQUEST,
+        `Invalid user role: ${user.role}`,
+      );
     }
+
+    return handler();
   }
+
   async getUserProfile(
     userId: string,
   ): Promise<IAdminDTO | ILearnerDTO | IMentorDTO | null> {
@@ -150,12 +169,35 @@ export class UserService implements IUserService {
       throw createHttpError(HttpStatus.NOT_FOUND, HttpResponse.INVALID_ID);
     }
 
-    const userData = await this._userRep.getUserProfile(id);
+    const userData = await this._userRepository.getUserProfile(id);
     if (userData?.role == IRole.Admin) return AdminDTO(userData as IAdminModel);
     if (userData?.role == IRole.Mentor)
       return MentorDTO(userData as IMenterModel);
     if (userData?.role == IRole.Learner)
       return LearnerDTO(userData as ILearnerModel);
     return null;
+  }
+  async addMentorData(
+    mentorId: string,
+    mentorData: IMenterModel,
+  ): Promise<{MentorDtp:IMentorDTO,notificationDTO:INotificationDTO}> {
+    const mentor_Id = parseObjectId(mentorId);
+    if (!mentor_Id) {
+      throw createHttpError(HttpStatus.BAD_REQUEST, HttpResponse.INVALID_ID);
+    }
+    const updateMentorData = await this._mentorRepository.updateMentorProfile(
+      mentor_Id,
+      { ...mentorData, ApprovalStatus: "requested" } as IMenterModel,
+    );
+    if (!updateMentorData) {
+      throw createHttpError(HttpStatus.INTERNAL_SERVER_ERROR,HttpResponse.SERVER_ERROR)
+    }
+      const adminId=await this._userRepository.findUser({role:IRole.Admin})
+
+      const notificationData=NotificationTemplates.mentorRequest(adminId!._id,updateMentorData.name,updateMentorData._id)
+
+    const NotificationData=  await this._notificationRepository.createNotification(notificationData)
+    
+    return {MentorDtp:MentorDTO(updateMentorData as IMenterModel),notificationDTO:NotificationData}
   }
 }

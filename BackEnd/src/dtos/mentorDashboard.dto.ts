@@ -6,14 +6,22 @@ import {
 } from "../types/mentorDashboard.types";
 
 export function mentorDashboardDTO(
-  studenAndRatinng: IMentorDashboardData,
+  studenAndRatinng: IMentorDashboardData | undefined,
   topCourse: ITopCourse[],
   revanue: IMentorTotalRevanue[],
 ): IMentorDhasboardDTO {
-  let rev = revanue.length == 0 ? 0 : revanue[0].revenue;
+
+  const rev = revanue.length === 0 ? 0 : revanue[0].revenue;
+
+  const summary = {
+    avgRating: studenAndRatinng?.avgRating ?? 0,
+    totalStudents: studenAndRatinng?.totalStudents ?? 0,
+  };
+
   return {
-    summary: studenAndRatinng,
-    topCourse: topCourse,
+    summary,
+    topCourse,
     revanue: rev,
   };
 }
+

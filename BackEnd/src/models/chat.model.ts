@@ -7,6 +7,7 @@ const ChatSchema = new mongoose.Schema<IChatModel>({
   users: [{ type: Schema.Types.ObjectId, ref: "User", required: true }],
   participantKey: { type: String, unique: true },
   latestMessage: { type: Schema.Types.ObjectId, ref: "Message" },
+  lastMessageTime: { type: Date },
   createdAt: { type: Date, default: Date.now },
 });
 

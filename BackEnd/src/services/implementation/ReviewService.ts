@@ -7,10 +7,9 @@ import { HttpStatus } from "../../const/http-status";
 import { HttpResponse } from "../../const/error-message";
 import {
   IReviewDTO,
-  IReviewUnpopulatedDTO,
+  IReviewPopulatedDTO,
 } from "../../types/dtos.type/review.dto.types";
 import { popularedReviewDTO, reviewDTO } from "../../dtos/review.dto";
-import { IReviewModel } from "../../models/review.model";
 
 export class ReviewService implements IReviewSevice {
   constructor(private _reviewRepository: IReviewRepository) {}
@@ -66,11 +65,7 @@ export class ReviewService implements IReviewSevice {
     }
 
     return reviewdata.map((review) =>
-      popularedReviewDTO({
-        ...review.toObject(),
-        learnerId: review.learnerId,
-        replies: review.replies ? { mentor: review.replies.mentorId } : null,
-      }),
+      popularedReviewDTO(review as IReviewPopulatedDTO),
     );
   }
 }

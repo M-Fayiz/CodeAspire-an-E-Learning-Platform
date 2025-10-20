@@ -12,6 +12,7 @@ export function chatDto(data: IChatModel): IChatDTO {
     participantKey: chat.participantKey,
     users: chat.users,
     latestMessage: chat.latestMessage ?? null,
+    lastMessageTime: chat.lastMessageTime,
     createdAt: chat.createdAt,
   };
 }
@@ -26,6 +27,7 @@ export function chatListDTO(data: IChatPopulated): IChatListDTO {
       name: data.users[0].name,
       profile: data.users[0].profilePicture as string,
     },
+    lastMessageTime: data.lastMessageTime,
     createdAt: data.createdAt,
   };
 }

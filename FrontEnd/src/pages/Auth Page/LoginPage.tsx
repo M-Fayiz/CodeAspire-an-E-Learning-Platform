@@ -58,7 +58,7 @@ const LoginPage: React.FC = () => {
   };
 
   const handleGoogleAuth = async (role: UserRole) => {
-    try {
+    try { 
       await AuthService.googleAuth(role);
     } catch (error) {
       console.log(error);

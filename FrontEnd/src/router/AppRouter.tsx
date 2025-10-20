@@ -112,7 +112,7 @@ export const router = createBrowserRouter([
       { path: "profile/:id", element: <ProfileManagement /> },
       { path: "users", element: <UserManagement /> },
       {
-        path: "user-profile/:id",
+        path: "user-profile/:userId",
         element: <AdminUserProfile />,
       },
       { path: "category", element: <CategoryManagement /> },

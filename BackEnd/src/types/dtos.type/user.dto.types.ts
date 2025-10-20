@@ -1,5 +1,10 @@
 import { Types } from "mongoose";
 import { IRole, mentorApprovalStatus } from "../user.types";
+import {
+  IAdminModel,
+  ILearnerModel,
+  IMenterModel,
+} from "../../models/user.model";
 
 export interface IBaseRoleDTO {
   id: Types.ObjectId;
@@ -51,3 +56,9 @@ export interface IPayloadDTO {
   email: string;
   role: string;
 }
+
+export type RoleModelMap = {
+  learner: ILearnerModel;
+  mentor: IMenterModel;
+  admin: IAdminModel;
+};

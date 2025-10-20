@@ -138,6 +138,7 @@ export class EnrolledController implements IEnrolledController {
       const dashboardData =
         await this._enrolledService.getMentorDashboardData(mentorId);
 
+      console.info("dash board :", { dashboardData });
       res
         .status(HttpStatus.OK)
         .json(successResponse(HttpResponse.OK, { dashboardData }));

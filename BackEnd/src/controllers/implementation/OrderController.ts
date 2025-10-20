@@ -42,4 +42,19 @@ export class OrderController implements IOrderController {
       next(error);
     }
   };
+  get_payment_data = async (
+    req: Request,
+    res: Response,
+    next: NextFunction,
+  ): Promise<void> => {
+    try {
+      const { id } = req.params;
+      const paymentdata = await this._orderService.getPaymentData(id);
+      res
+        .status(HttpStatus.OK)
+        .json(successResponse(HttpResponse.OK, [paymentdata]));
+    } catch (error) {
+      next(error);
+    }
+  };
 }

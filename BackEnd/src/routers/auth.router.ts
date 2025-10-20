@@ -4,8 +4,8 @@ import { IRole } from "../types/user.types";
 const authRouter = express.Router();
 import { Request, Response, NextFunction } from "express";
 import { UserRepository } from "../repository/implementation/UserRepository";
-import { AuthService } from "../services/implementation/authService";
-import { AuthController } from "../controllers/implementation/authController";
+import { AuthService } from "../services/implementation/AuthService";
+import { AuthController } from "../controllers/implementation/AuthController";
 import { registerSchema } from "../utils/zod";
 import passport from "../utils/passport.util";
 import { env } from "../config/env.config";
@@ -43,6 +43,7 @@ authRouter.patch(
 authRouter.get(
   "/google",
   (req: Request, res: Response, next: NextFunction) => {
+    console.log("get into google ");
     const { role } = req.query as { role?: IRole };
     req.session.role = role || IRole.Learner;
     next();

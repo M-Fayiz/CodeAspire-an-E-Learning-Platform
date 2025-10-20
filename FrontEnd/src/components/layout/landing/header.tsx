@@ -17,6 +17,8 @@ const Header: React.FC = () => {
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
+  console.info('user from headerr ',user)
+
   return (
     <header
       className={`fixed w-full z-50 transition-all duration-300 ${
@@ -51,7 +53,7 @@ const Header: React.FC = () => {
             >
               Pricing
             </a>
-            {user ? (
+            {user?.role ? (
               <Link to={`/${user.role}/dashboard`}>
                 <User />
               </Link>

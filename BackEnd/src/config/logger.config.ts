@@ -23,6 +23,15 @@ const logger = createLogger({
       maxSize: env.LOGGER_MAX_SIZE,
       maxFiles: env.LOGGER_MAX_FILES,
       zippedArchive: true,
+      level: "info",
+    }),
+    new DailyRotateFile({
+      filename: "logs/error-%DATE%.log",
+      datePattern: "YYYY-MM-DD",
+      maxSize: env.LOGGER_MAX_SIZE,
+      maxFiles: env.LOGGER_MAX_FILES,
+      zippedArchive: true,
+      level: "error",
     }),
   ],
 });

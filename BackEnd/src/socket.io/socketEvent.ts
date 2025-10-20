@@ -104,7 +104,7 @@ export const initializeSocket = (server: HttpServer) => {
         }
 
         const messageData = await chatService.createMessage({
-          chatId:roomId,
+          chatId: roomId,
           sender: userId,
           content,
           type,
@@ -114,6 +114,7 @@ export const initializeSocket = (server: HttpServer) => {
 
         const updatedChat = await chatService.updateChat(roomId, {
           latestMessage: messageData._id,
+          lastMessageTime: new Date().toISOString(),
         });
 
         const messageToEmit = {

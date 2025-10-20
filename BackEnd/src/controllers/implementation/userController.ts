@@ -5,6 +5,7 @@ import { HttpStatus } from "../../const/http-status";
 import { successResponse } from "../../utils/response.util";
 import { HttpResponse } from "../../const/error-message";
 import logger from "../../config/logger.config";
+import { sendNotification } from "../../utils/socket.utils";
 
 export class UserController implements IUserController {
   constructor(private _userService: IUserService) {}
@@ -72,9 +73,9 @@ export class UserController implements IUserController {
     next: NextFunction,
   ): Promise<void> => {
     try {
-      const { id } = req.params;
+      const { mentorId } = req.params;
       const updatedData = await this._userService.updateUserProfile(
-        id,
+        mentorId,
         req.body,
       );
       res
@@ -95,6 +96,28 @@ export class UserController implements IUserController {
       res
         .status(HttpStatus.OK)
         .json(successResponse(HttpResponse.OK, { userData }));
+    } catch (error) {
+      next(error);
+    }
+  };
+  addMentorData = async (
+    req: Request,
+    res: Response,
+    next: NextFunction,
+  ): Promise<void> => {
+    try {
+      const { mentorId } = req.params;
+      const { userData } = req.body;
+      const mentorDataAndNotify = await this._userService.addMentorData(
+        mentorId,
+        userData,
+      );
+      
+      sendNotification(mentorDataAndNotify.notificationDTO.userId,mentorDataAndNotify.notificationDTO)
+
+      res
+        .status(HttpStatus.OK)
+        .json(successResponse(HttpResponse.OK, { mentorData:mentorDataAndNotify.MentorDtp }));
     } catch (error) {
       next(error);
     }

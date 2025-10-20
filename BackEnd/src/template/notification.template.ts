@@ -29,4 +29,18 @@ export const NotificationTemplates = {
     link,
     createdAt: new Date(),
   }),
+  mentorRequest: (
+    userId: Types.ObjectId,
+    userName: string,
+    mentorId: Types.ObjectId,
+  ): INotification => ({
+    userId,
+    message: `${userName} has requested mentor approval.`,
+    title: "New Mentor Request",
+    type: "info",
+    isRead: false,
+    link:`/admin/user-profile/${mentorId}`,
+    createdAt: new Date(),
+    updatedAt: new Date(),
+  }),
 };

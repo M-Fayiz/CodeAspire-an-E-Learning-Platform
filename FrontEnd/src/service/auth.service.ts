@@ -116,8 +116,11 @@ export const AuthService = {
     }
   },
   googleAuth: async (role: UserRole): Promise<void> => {
+    console.log('role ,',role)
     try {
-      window.location.href = `${import.meta.env.VITE_BASE_URL}/auth/google?role:${role}`;
+      // window.location.href = `${import.meta.env.VITE_BASE_URL}/auth/google?role:${role}`;
+      
+      window.location.href =`${import.meta.env.VITE_BASE_URL}${API.Auth.GOOGLE_AUTH(role)}` 
     } catch (error) {
       throwAxiosError(error);
     }

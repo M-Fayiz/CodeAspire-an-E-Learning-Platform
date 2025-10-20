@@ -1,13 +1,31 @@
 import { Types } from "mongoose";
 import { ICourses, ISession } from "../courses.type";
+import { ICategory } from "../category.types";
+import { IMenterModel } from "../../models/user.model";
 
-export interface ICoursesPopulated extends ICourses {
-  categoryId: { title: string };
-  subCategoryId: { title: string };
+export interface IBaseCourse {
+  _id: Types.ObjectId;
+  title: string;
+  description?: string;
+  thumbnail?: string;
+  language: string;
+  level: "Beginner" | "Intermediate" | "Advanced";
+  price: number;
+  sessions?: ISession[];
+  isActive?: boolean;
+  isDraft?: boolean;
+  status: "inProgress" | "draft" | "published" | "approved" | "rejected";
+  updatedAt: Date;
+}
+
+export interface IPopulatedCourse extends IBaseCourse {
+  categoryId: ICategory;
+  subCategoryId: ICategory;
+  mentorsId: IMenterModel;
 }
 
 export interface ICourseListDTO {
-  _id: Types.ObjectId | string;
+  _id: Types.ObjectId;
   title: string;
   thumbnail?: string;
   category: string;
@@ -24,22 +42,22 @@ export interface ICourseDTO extends ICourseListDTO {
 }
 
 export interface IFormCourseDTO {
-  _id: Types.ObjectId | string;
+  _id: Types.ObjectId;
   title: string;
   thumbnail: string;
   category: {
-    _id: string;
+    _id: Types.ObjectId;
     title: string;
   };
   subCategory: {
-    _id: string;
+    _id: Types.ObjectId;
     title: string;
   };
   language: string;
   level: "Beginner" | "Intermediate" | "Advanced";
   price: number;
   mentorsId: {
-    _id: string;
+    _id: Types.ObjectId;
     name: string;
     email: string;
   };

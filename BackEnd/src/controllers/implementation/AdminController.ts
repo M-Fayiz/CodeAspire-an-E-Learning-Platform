@@ -4,7 +4,6 @@ import { IAdminService } from "../../services/interface/IAdminService";
 import { HttpStatus } from "../../const/http-status";
 import { successResponse } from "../../utils/response.util";
 import { HttpResponse } from "../../const/error-message";
-import { sendToUser } from "../../utils/socket.utils";
 
 export class AdminController implements IAdminController {
   constructor(private _adminService: IAdminService) {}
@@ -44,7 +43,7 @@ export class AdminController implements IAdminController {
     next: NextFunction,
   ): Promise<void> => {
     try {
-      const user_ID = req.params.id;
+      const user_ID = req.params.userId;
 
       const result = await this._adminService.blockUser(user_ID);
       res
@@ -61,9 +60,9 @@ export class AdminController implements IAdminController {
     next: NextFunction,
   ): Promise<void> => {
     try {
-      const { id } = req.params;
-
-      const userData = await this._adminService.userProfile(id);
+      const { userId } = req.params;
+      console.log("userID : ", userId);
+      const userData = await this._adminService.userProfile(userId);
 
       res
         .status(HttpStatus.OK)
@@ -78,9 +77,12 @@ export class AdminController implements IAdminController {
     next: NextFunction,
   ): Promise<void> => {
     try {
-      const { id } = req.params;
+      const { userId } = req.params;
       const { status } = req.body;
-      const approveStatus = await this._adminService.approveMentor(id, status);
+      const approveStatus = await this._adminService.approveMentor(
+        userId,
+        status,
+      );
 
       res
         .status(HttpStatus.OK)

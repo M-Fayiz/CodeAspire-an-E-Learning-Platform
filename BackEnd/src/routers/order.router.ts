@@ -23,6 +23,13 @@ const orderService = new OrderService(
 
 const orderController = new OrderController(orderService);
 
+orderRouter.get(
+  "/stripe/:id",
+  verifyUser,
+  authorizedRole(IRole.Learner),
+  orderController.get_payment_data,
+);
+
 orderRouter.post(
   "/payment/create-checkout-session",
   // verifyUser,

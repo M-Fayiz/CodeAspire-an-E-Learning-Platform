@@ -9,7 +9,7 @@ import {
 import { IUserRepo } from "../interface/IUserRepo";
 import { Profile } from "passport-google-oauth20";
 import { IRole, searchProps } from "../../types/user.types";
-import { Types } from "mongoose";
+import { FilterQuery, Types } from "mongoose";
 import { buildUserFilter } from "../../utils/searchQuery";
 
 export class UserRepository
@@ -40,6 +40,7 @@ export class UserRepository
       default:
         return user as IUserModel;
     }
+
   }
   async updateUserPassword(
     email: string,
@@ -129,5 +130,8 @@ export class UserRepository
     userId: Types.ObjectId,
   ): Promise<IUserModel | IMenterModel | ILearnerModel | IAdminModel | null> {
     return await this.findOne({ _id: userId });
+  }
+  async findUser(filter: FilterQuery<IUserModel>): Promise<IUserModel | IMenterModel | ILearnerModel | IAdminModel | null> {
+      return await this.findOne(filter)
   }
 }

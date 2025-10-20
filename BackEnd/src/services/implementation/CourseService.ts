@@ -7,7 +7,7 @@ import { ICourseService } from "../interface/ICourseService";
 import {
   ICourseDTO,
   ICourseListDTO,
-  ICoursesPopulated,
+  IPopulatedCourse,
   IFormCourseDTO,
 } from "../../types/dtos.type/course.dtos.type";
 import {
@@ -97,7 +97,7 @@ export class CourseService implements ICourseService {
       enrolledCourse?.map((c) => c.courseId.toString()),
     );
     const mappedCourseList = courseList.map((course) =>
-      courseListDTO(course as ICoursesPopulated, enrolledIds),
+      courseListDTO(course as IPopulatedCourse, enrolledIds),
     );
     let totalPage = totalDocument / limit;
     return { courseData: mappedCourseList, totalPage };
@@ -174,7 +174,7 @@ export class CourseService implements ICourseService {
     ]);
 
     const mappedCourseList = data?.map((course) =>
-      formCourseDto(course as ICourses),
+      formCourseDto(course as IPopulatedCourse),
     );
     let totalPage = Math.floor(documnetCount / limit);
     console.log(totalPage);
@@ -194,7 +194,7 @@ export class CourseService implements ICourseService {
       throw createHttpError(HttpStatus.CONFLICT, HttpResponse.ITEM_EXIST);
     }
     const courseData = await this._courseRepository.addSession(id, session);
-    return courseDTO(courseData as ICoursesPopulated);
+    return courseDTO(courseData as IPopulatedCourse);
   }
   async addLectures(
     courseId: string,
@@ -220,7 +220,7 @@ export class CourseService implements ICourseService {
       lecture,
     );
 
-    return courseDTO(courseData as ICoursesPopulated);
+    return courseDTO(courseData as IPopulatedCourse);
   }
   async editLecture(
     courseId: string,
@@ -241,7 +241,7 @@ export class CourseService implements ICourseService {
       LectureId,
       lecture,
     );
-    return courseDTO(coursedata as ICoursesPopulated);
+    return courseDTO(coursedata as IPopulatedCourse);
   }
   async updateBaseCourseInfo(
     courseId: string,
@@ -255,14 +255,14 @@ export class CourseService implements ICourseService {
       id,
       baseInfo,
     );
-    return courseDTO(updatedData as ICoursesPopulated);
+    return courseDTO(updatedData as IPopulatedCourse);
   }
   async getAdminCourse(): Promise<IFormCourseDTO[] | null> {
     const adminCoursList = await this._courseRepository.getAdminCoursList();
-
+    console.log(adminCoursList);
     return adminCoursList
       ? adminCoursList.map((course) =>
-          formCourseDto(course as ICoursesPopulated),
+          formCourseDto(course as IPopulatedCourse),
         )
       : null;
   }

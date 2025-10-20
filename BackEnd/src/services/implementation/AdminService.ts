@@ -91,22 +91,22 @@ export class AdminService implements IAdminService {
     };
     return result;
   }
-  async userProfile(id: string): Promise<ILearnerDTO | IMentorDTO | null> {
-    const objectId = parseObjectId(id);
-    if (!objectId) {
+  async userProfile(userId: string): Promise<ILearnerDTO | IMentorDTO | null> {
+    const user_Id = parseObjectId(userId);
+    if (!user_Id) {
       throw createHttpError(
         HttpStatus.BAD_REQUEST,
         HttpResponse.INVALID_CREDNTIALS,
       );
     }
 
-    const profileData = await this._userRepo.findUserById(objectId);
+    const profileData = await this._userRepo.findUserById(user_Id);
     if (!profileData) {
       throw createHttpError(HttpStatus.NOT_FOUND, HttpResponse.USER_NOT_FOUND);
     }
 
     switch (profileData.role) {
-      case IRole.Admin:
+      case IRole.Mentor:
         return MentorDTO(profileData as IMenterModel);
       case IRole.Learner:
         return LearnerDTO(profileData as ILearnerModel);

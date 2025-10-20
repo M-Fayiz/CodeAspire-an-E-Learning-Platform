@@ -44,17 +44,16 @@ export const adminService = {
       throw new Error(errorMessage);
     }
   },
-  userProfile: async (id: string): Promise<IUserType> => {
+  userProfile: async (userId: string): Promise<IUserType> => {
     try {
-      const response = await axiosInstance.get(API.ADMIN.GET_USER_PROFILE(id), {
-        params: { id },
-      });
+      const response = await axiosInstance.get(API.ADMIN.GET_USER_PROFILE(userId));
+
       if (response.data.userData.profilePicture) {
         const imageURL = await sharedService.getPreSignedDownloadURL(
           response.data.userData.profilePicture as string,
         );
         response.data.userData.profilePicture = imageURL;
-      }
+      }   
 
       if (response.data.userData.resume) {
         const resume = await sharedService.getPreSignedDownloadURL(
@@ -62,6 +61,7 @@ export const adminService = {
         );
         response.data.userData.resume = resume;
       }
+      console.log('user Data  ',response.data.userData)
       return response.data.userData;
     } catch (error) {
       const err = error as AxiosError<{ error: string }>;

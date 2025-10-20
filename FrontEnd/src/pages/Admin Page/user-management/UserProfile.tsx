@@ -19,16 +19,18 @@ import { toast } from "sonner";
 import { useParams } from "react-router";
 
 const AdminUserProfile: React.FC = () => {
-  const { id } = useParams();
+  const { userId } = useParams();
+  console.log(' userId ',userId)
   const [profileData, setProfileData] = useState<IUserType | null>(null);
   useEffect(() => {
     (async () => {
-      const data = await adminService.userProfile(id as string);
+      const data = await adminService.userProfile(userId as string);
       if (data) {
         setProfileData(data);
       }
     })();
-  }, [id]);
+  }, [userId]);
+
   const handleUnblockUser = async () => {
     try {
       if (!profileData?.id) return;

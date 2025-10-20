@@ -5,6 +5,7 @@ export interface IBaseChatDTO {
   _id: Types.ObjectId;
   participantKey: string;
   latestMessage: Types.ObjectId | null;
+  lastMessageTime: Date;
   createdAt?: Date;
 }
 
