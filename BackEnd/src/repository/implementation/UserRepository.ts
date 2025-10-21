@@ -40,7 +40,6 @@ export class UserRepository
       default:
         return user as IUserModel;
     }
-
   }
   async updateUserPassword(
     email: string,
@@ -114,7 +113,7 @@ export class UserRepository
   }
   async updateMentorStatus(
     id: Types.ObjectId,
-    status: string,
+    status: "approved" | "rejected",
   ): Promise<IUserModel | null> {
     return await this.findByIDAndUpdate(id, { ApprovalStatus: status });
   }
@@ -131,7 +130,9 @@ export class UserRepository
   ): Promise<IUserModel | IMenterModel | ILearnerModel | IAdminModel | null> {
     return await this.findOne({ _id: userId });
   }
-  async findUser(filter: FilterQuery<IUserModel>): Promise<IUserModel | IMenterModel | ILearnerModel | IAdminModel | null> {
-      return await this.findOne(filter)
+  async findUser(
+    filter: FilterQuery<IUserModel>,
+  ): Promise<IUserModel | IMenterModel | ILearnerModel | IAdminModel | null> {
+    return await this.findOne(filter);
   }
 }

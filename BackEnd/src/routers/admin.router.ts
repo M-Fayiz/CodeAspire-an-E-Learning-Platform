@@ -7,9 +7,11 @@ import { AdminController } from "../controllers/implementation/AdminController";
 import { verifyUser } from "../middlewares/authentication.middleware";
 import { authorizedRole } from "../middlewares/authorisation.middleware";
 import { IRole } from "../types/user.types";
+import { NotificationRepository } from "../repository/implementation/NotificationRepository";
 
 const userRepository = new UserRepository();
-const adminService = new AdminService(userRepository);
+const notificationRespository = new NotificationRepository();
+const adminService = new AdminService(userRepository, notificationRespository);
 const adminController = new AdminController(adminService);
 
 adminRouter.use(verifyUser);

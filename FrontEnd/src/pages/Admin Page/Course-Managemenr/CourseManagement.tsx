@@ -109,7 +109,7 @@ function CourseManagement() {
 
                     <div className="flex flex-wrap items-center gap-4 text-sm text-gray-600">
                       <span className="flex items-center gap-1">
-                        <DollarSign className="w-4 h-4" />${course.price}
+                        ₹ {course.price}
                       </span>
                       {/* <span>{course.duration}h duration</span> */}
                       <span>{course.sessions.length} sessioms</span>

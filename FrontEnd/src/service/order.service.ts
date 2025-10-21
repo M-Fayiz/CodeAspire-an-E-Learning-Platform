@@ -19,16 +19,18 @@ export const OrderService = {
       );
       return response.data;
     } catch (error) {
-      throwAxiosError(error)
+      throwAxiosError(error);
     }
   },
 
-  getOrderDetails:async(sessionId:string)=>{
+  getOrderDetails: async (sessionId: string) => {
     try {
-      const response=await axiosInstance.get(API.PAYMENT.GET_PAYMENT_DATA(sessionId))
-      return response.data.paymentdata
+      const response = await axiosInstance.get(
+        API.PAYMENT.GET_PAYMENT_DATA(sessionId),
+      );
+      return response.data.paymentdata;
     } catch (error) {
-     throwAxiosError(error)
+      throwAxiosError(error);
     }
-  }
+  },
 };

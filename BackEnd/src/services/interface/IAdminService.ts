@@ -1,3 +1,4 @@
+import { INotificationDTO } from "../../types/dtos.type/notification.dto.types";
 import { ILearnerDTO, IMentorDTO } from "../../types/dtos.type/user.dto.types";
 import { filter } from "../../types/enrollment.types";
 import { mentorApprovalStatus } from "../../types/user.types";
@@ -14,10 +15,11 @@ export interface IAdminService {
   userProfile(userId: string): Promise<ILearnerDTO | IMentorDTO | null>;
   approveMentor(
     id: string,
-    status: string,
+    status: "approved" | "rejected",
+    feedback?: string,
   ): Promise<{
     status: mentorApprovalStatus;
-    notify: { userId: string; message: string };
+    notification: INotificationDTO;
   }>;
   getDashboardData(
     filter?: filter,

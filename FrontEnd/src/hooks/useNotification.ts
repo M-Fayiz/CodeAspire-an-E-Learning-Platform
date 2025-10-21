@@ -14,7 +14,7 @@ export function useNotifications(userId: string) {
     (async () => {
       try {
         const data = await NotificationService.getNotification(userId);
-      
+
         if (data) {
           const sorted = data.sort(
             (a, b) =>

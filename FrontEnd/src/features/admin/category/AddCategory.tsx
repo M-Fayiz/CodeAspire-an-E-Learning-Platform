@@ -42,7 +42,7 @@ const AddCategoryAccordion: React.FC<IAddCategoryProps> = ({
       return;
     }
     addCat(formData.title, formData.parentId);
-    setFormData({ title: "", parentId: "" })
+    setFormData({ title: "", parentId: "" });
   };
 
   return (

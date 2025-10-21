@@ -15,7 +15,7 @@ const ChatWindow: React.FC<ChatWindowProps> = ({ userData }) => {
   const { user } = useAuth();
   const socket = useSocket();
   const [messages, setMessages] = useState<IMessageDto[]>([]);
-  const [Online,setOnline]=useState(false)
+  const [Online, setOnline] = useState(false);
   const [inputMessage, setInputMessage] = useState("");
   const messagesEndRef = useRef<HTMLDivElement>(null);
 
@@ -23,33 +23,32 @@ const ChatWindow: React.FC<ChatWindowProps> = ({ userData }) => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
   };
 
-
   useEffect(() => {
     if (!socket || !userData._id) return;
 
-    socket.emit("join_chat", { roomId : userData._id });
-  
+    socket.emit("join_chat", { roomId: userData._id });
+
     const onMessage = (msg: IMessageDto) => {
       setMessages((prev) => {
         const exists = prev.some((m) => m._id === msg._id);
         return exists ? prev : [...prev, msg];
       });
     };
-     const onOnline = (userId: string) => {
-      console.log('user Id ',userId)
+    const onOnline = (userId: string) => {
+      console.log("user Id ", userId);
       if (userId === userData.userId) setOnline(true);
     };
 
     const onOffline = (userId: string) => {
       if (userId === userData.userId) setOnline(false);
-    };  
+    };
     socket.on("new_message", onMessage);
-    socket.on('user:online',onOnline)
-    socket.on('user:offline',onOffline)
+    socket.on("user:online", onOnline);
+    socket.on("user:offline", onOffline);
     return () => {
       socket.off("new_message", onMessage);
-       socket.off("user:online", onOnline);
-       socket.off("user:offline", onOffline);
+      socket.off("user:online", onOnline);
+      socket.off("user:offline", onOffline);
     };
   }, [socket, userData]);
 
@@ -104,23 +103,28 @@ const ChatWindow: React.FC<ChatWindowProps> = ({ userData }) => {
     }
   };
 
-
   return (
     <div className="flex flex-col h-screen bg-gray-50">
       <div className="bg-white border-b border-gray-200 px-6 py-4">
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-3">
             <div className="relative">
-              <img src={userData.profile} className="w-10 h-10 rounded-full bg-orange-500 flex items-center justify-center text-white font-semibold"/>
-               
-           {Online&&(
+              <img
+                src={userData.profile}
+                className="w-10 h-10 rounded-full bg-orange-500 flex items-center justify-center text-white font-semibold"
+              />
 
-              <div className="absolute bottom-0 right-0 w-3 h-3 bg-green-500 rounded-full border-2 border-white"></div>
+              {Online && (
+                <div className="absolute bottom-0 right-0 w-3 h-3 bg-green-500 rounded-full border-2 border-white"></div>
               )}
             </div>
             <div>
               <h2 className="font-semibold text-gray-900">{userData.name}</h2>
-              <p className={`text-sm ${Online?"text-green-600":"text-gray-600"}`}>{Online?"Online":"Offline"}</p>
+              <p
+                className={`text-sm ${Online ? "text-green-600" : "text-gray-600"}`}
+              >
+                {Online ? "Online" : "Offline"}
+              </p>
             </div>
           </div>
         </div>

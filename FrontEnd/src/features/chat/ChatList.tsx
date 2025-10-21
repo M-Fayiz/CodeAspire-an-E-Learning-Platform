@@ -12,7 +12,7 @@ const ChatList: React.FC<ChatListProps> = ({ select }) => {
   const [searchTerm, setSearchTerm] = useState("");
   const [chats, setChats] = useState<IChatListDTO[]>([]);
 
-  const [selectedChat, setSelectedChat] = useState<userProps|string>("1");
+  const [selectedChat, setSelectedChat] = useState<userProps | string>("1");
 
   const { user } = useAuth();
   useEffect(() => {
@@ -68,7 +68,14 @@ const ChatList: React.FC<ChatListProps> = ({ select }) => {
           filteredChats.map((chat) => (
             <div
               key={chat._id}
-              onClick={() => slectItem({_id:chat._id,name:chat.user.name,profile:chat.user.profile,userId:chat.user._id})}
+              onClick={() =>
+                slectItem({
+                  _id: chat._id,
+                  name: chat.user.name,
+                  profile: chat.user.profile,
+                  userId: chat.user._id,
+                })
+              }
               className={`flex items-center gap-3 p-4 cursor-pointer transition-colors ${
                 selectedChat === chat._id
                   ? "bg-orange-50 border-l-4 border-orange-500"

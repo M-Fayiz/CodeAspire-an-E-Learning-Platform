@@ -2,13 +2,11 @@ import ChatList from "@/features/chat/ChatList";
 import ChatWindow from "@/features/chat/ChatWindow";
 import { useState } from "react";
 
-
-
-export interface userProps{
-  _id:string,
-  profile:string,
-  name:string
-  userId:string
+export interface userProps {
+  _id: string;
+  profile: string;
+  name: string;
+  userId: string;
 }
 const ChatPage = () => {
   const [selectedChat, setSelectedChat] = useState<userProps | null>(null);

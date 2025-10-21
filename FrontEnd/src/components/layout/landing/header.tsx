@@ -17,7 +17,7 @@ const Header: React.FC = () => {
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
-  console.info('user from headerr ',user)
+  console.info("user from headerr ", user);
 
   return (
     <header

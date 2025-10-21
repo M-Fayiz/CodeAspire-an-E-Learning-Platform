@@ -27,7 +27,7 @@ const createInstance = (): AxiosInstance => {
 
       if (error.response?.status == 401 && !originalRequest._retry) {
         originalRequest._retry = true;
-   
+
         const refreshed = await AuthService.refreshToken();
         if (refreshed) {
           return instance(originalRequest);

@@ -89,19 +89,18 @@ const MentorDataForm = () => {
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
-
     const result = mentorSchema.safeParse(formData);
-        if (!result.success) {
-          const ERROR: { [key: string]: string } = {};
-          const zodError = result.error;
-          zodError.issues.forEach((err) => {
-            if (err.path[0]) {
-              ERROR[err.path[0] as string] = err.message;
-            }
-          });
-          setErrors(ERROR);
-          return;
+    if (!result.success) {
+      const ERROR: { [key: string]: string } = {};
+      const zodError = result.error;
+      zodError.issues.forEach((err) => {
+        if (err.path[0]) {
+          ERROR[err.path[0] as string] = err.message;
         }
+      });
+      setErrors(ERROR);
+      return;
+    }
 
     try {
       const result = await UserService.updateMentorInformation(

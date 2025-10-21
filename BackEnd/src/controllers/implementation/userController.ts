@@ -112,12 +112,19 @@ export class UserController implements IUserController {
         mentorId,
         userData,
       );
-      
-      sendNotification(mentorDataAndNotify.notificationDTO.userId,mentorDataAndNotify.notificationDTO)
+
+      sendNotification(
+        mentorDataAndNotify.notificationDTO.userId,
+        mentorDataAndNotify.notificationDTO,
+      );
 
       res
         .status(HttpStatus.OK)
-        .json(successResponse(HttpResponse.OK, { mentorData:mentorDataAndNotify.MentorDtp }));
+        .json(
+          successResponse(HttpResponse.OK, {
+            mentorData: mentorDataAndNotify.MentorDtp,
+          }),
+        );
     } catch (error) {
       next(error);
     }

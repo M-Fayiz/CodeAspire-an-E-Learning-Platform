@@ -4,7 +4,10 @@ import { HttpStatus } from "../../const/http-status";
 import { parseObjectId } from "../../mongoose/objectId";
 import { ICourseRepository } from "../../repository/interface/ICourseRepository";
 import { IEnrolledRepository } from "../../repository/interface/IEnrolledRepositoy";
-import { IFormCourseDTO, IPopulatedCourse } from "../../types/dtos.type/course.dtos.type";
+import {
+  IFormCourseDTO,
+  IPopulatedCourse,
+} from "../../types/dtos.type/course.dtos.type";
 import { createHttpError } from "../../utils/http-error";
 import { formCourseDto } from "../../dtos/course.dtos";
 import type {

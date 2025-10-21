@@ -1,27 +1,29 @@
-import  { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { CheckCircle, Download, Calendar, Mail } from "lucide-react";
 import { Link } from "react-router";
 import { OrderService } from "@/service/order.service";
 
-
-
 const PaymentSuccess = () => {
+  const query = new URLSearchParams(window.location.search);
+  const sessionId = query.get("session_id");
+  const [txnData, setTxnData] = useState<{
+    amount: number;
+    invoice: string;
+    txnId: string;
+  } | null>(null);
 
-
-const query = new URLSearchParams(window.location.search);
-const sessionId = query.get("session_id");
-  const [txnData,setTxnData]=useState<{amount:number,invoice:string,txnId:string}|null>(null)
-
-  useEffect(()=>{
-    (async()=>{
-      const data=await OrderService.getOrderDetails(sessionId as string)
-      if(data){
-        setTxnData({amount:data.amount_total / 100,invoice:data.invoice?.hosted_invoice_url,txnId:data.payment_intent?.id})
+  useEffect(() => {
+    (async () => {
+      const data = await OrderService.getOrderDetails(sessionId as string);
+      if (data) {
+        setTxnData({
+          amount: data.amount_total / 100,
+          invoice: data.invoice?.hosted_invoice_url,
+          txnId: data.payment_intent?.id,
+        });
       }
-    })()
-  },[sessionId])
-
-
+    })();
+  }, [sessionId]);
 
   return (
     <div className="min-h-screen bg-gray-50 flex items-center justify-center p-4">
@@ -36,11 +38,10 @@ const sessionId = query.get("session_id");
           <p className="text-lg text-gray-600 mb-4">
             Thank you for your purchase. You now have access to your course.
           </p>
-          {txnData&&(
-
-          <div className="inline-flex items-center bg-green-50 text-green-800 px-4 py-2 rounded-full text-sm font-medium">
-            Transaction ID: {txnData.txnId}
-          </div>
+          {txnData && (
+            <div className="inline-flex items-center bg-green-50 text-green-800 px-4 py-2 rounded-full text-sm font-medium">
+              Transaction ID: {txnData.txnId}
+            </div>
           )}
         </div>
 
@@ -57,9 +58,10 @@ const sessionId = query.get("session_id");
           <div className="space-y-3">
             <div className="flex justify-between">
               <span className="text-gray-600">Course Price:</span>
-              {txnData&&(
-
-              <span className="font-medium">${txnData.amount.toFixed(2)}</span>
+              {txnData && (
+                <span className="font-medium">
+                  ${txnData.amount.toFixed(2)}
+                </span>
               )}
             </div>
             <div className="flex justify-between">
@@ -69,12 +71,12 @@ const sessionId = query.get("session_id");
             <hr className="border-gray-200" />
             <div className="flex justify-between text-lg font-semibold">
               <span>Total Paid:</span>
-              {txnData&&(
-
-              <span className="font-medium">${txnData.amount.toFixed(2)}</span>
+              {txnData && (
+                <span className="font-medium">
+                  ${txnData.amount.toFixed(2)}
+                </span>
               )}
             </div>
-    
           </div>
         </div>
 
@@ -87,7 +89,10 @@ const sessionId = query.get("session_id");
               <Calendar className="w-5 h-5" />
               Start Learning
             </Link>
-            <a href={txnData?.invoice} className="flex items-center justify-center gap-2 border border-gray-300 hover:bg-gray-50 text-gray-700 font-medium py-3 px-4 rounded-lg transition-colors">
+            <a
+              href={txnData?.invoice}
+              className="flex items-center justify-center gap-2 border border-gray-300 hover:bg-gray-50 text-gray-700 font-medium py-3 px-4 rounded-lg transition-colors"
+            >
               <Download className="w-5 h-5" />
               Download Receipt
             </a>

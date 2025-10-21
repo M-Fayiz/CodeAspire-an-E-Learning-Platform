@@ -4,6 +4,7 @@ import { IAdminService } from "../../services/interface/IAdminService";
 import { HttpStatus } from "../../const/http-status";
 import { successResponse } from "../../utils/response.util";
 import { HttpResponse } from "../../const/error-message";
+import { sendNotification } from "../../utils/socket.utils";
 
 export class AdminController implements IAdminController {
   constructor(private _adminService: IAdminService) {}
@@ -78,12 +79,16 @@ export class AdminController implements IAdminController {
   ): Promise<void> => {
     try {
       const { userId } = req.params;
-      const { status } = req.body;
+      const { status, feedback } = req.body;
       const approveStatus = await this._adminService.approveMentor(
         userId,
         status,
+        feedback,
       );
-
+      sendNotification(
+        approveStatus.notification.userId,
+        approveStatus.notification,
+      );
       res
         .status(HttpStatus.OK)
         .json(

@@ -10,6 +10,9 @@ import { ILearnerDTO, IMentorDTO } from "../../types/dtos.type/user.dto.types";
 import { IRole, mentorApprovalStatus } from "../../types/user.types";
 import { filter } from "../../types/enrollment.types";
 import { timeFilter } from "../../utils/dashFilterGenerator.utils";
+import { NotificationTemplates } from "../../template/notification.template";
+import { INotificationRepository } from "../../repository/interface/INotificationRepository";
+import { notificationDto } from "../../dtos/notification.dto";
 
 export type UserFetchResponse = {
   safeUsers: IMentorDTO | ILearnerDTO[];
@@ -17,7 +20,10 @@ export type UserFetchResponse = {
 };
 
 export class AdminService implements IAdminService {
-  constructor(private _userRepo: IUserRepo) {}
+  constructor(
+    private _userRepo: IUserRepo,
+    private _notificationRepository: INotificationRepository,
+  ) {}
 
   async fetchAllUsers(
     page: number,
@@ -125,14 +131,15 @@ export class AdminService implements IAdminService {
     }
   }
   async approveMentor(
-    id: string,
-    status: string,
+    mentorId: string,
+    status: "approved" | "rejected",
+    feedback?: string,
   ): Promise<{
     status: mentorApprovalStatus;
-    notify: { userId: string; message: string };
+    notification: IN;
   }> {
-    const user_Id = parseObjectId(id);
-    if (!user_Id) {
+    const mentor_ID = parseObjectId(mentorId);
+    if (!mentor_ID) {
       throw createHttpError(
         HttpStatus.BAD_REQUEST,
         HttpResponse.INVALID_CREDNTIALS,
@@ -140,17 +147,28 @@ export class AdminService implements IAdminService {
     }
 
     const approvedData = await this._userRepo.updateMentorStatus(
-      user_Id,
+      mentor_ID,
       status,
     );
     if (!approvedData) {
       throw createHttpError(HttpStatus.NOT_FOUND, HttpResponse.USER_NOT_FOUND);
     }
-    const notify = {
-      userId: id,
-      message: `your request has been ${approvedData.ApprovalStatus}`,
+    let notificationData;
+    if (status == "approved") {
+      notificationData = NotificationTemplates.mentorApproval(approvedData._id);
+    } else {
+      notificationData = NotificationTemplates.mentorReject(
+        approvedData._id,
+        feedback as string,
+      );
+    }
+    const createdNtfy =
+      await this._notificationRepository.createNotification(notificationData);
+
+    return {
+      status: approvedData.ApprovalStatus,
+      notification: notificationDto(createdNtfy),
     };
-    return { status: approvedData.ApprovalStatus, notify };
   }
   async getDashboardData(
     filter?: filter,

@@ -29,7 +29,7 @@ export class UserService implements IUserService {
   constructor(
     private _userRepository: IUserRepo,
     private _mentorRepository: IMentorRepository,
-    private _notificationRepository:INotificationRepository
+    private _notificationRepository: INotificationRepository,
   ) {}
 
   async fetchUser(id: string): Promise<ILearnerDTO | IMentorDTO | IAdminDTO> {
@@ -180,7 +180,7 @@ export class UserService implements IUserService {
   async addMentorData(
     mentorId: string,
     mentorData: IMenterModel,
-  ): Promise<{MentorDtp:IMentorDTO,notificationDTO:INotificationDTO}> {
+  ): Promise<{ MentorDtp: IMentorDTO; notificationDTO: INotificationDTO }> {
     const mentor_Id = parseObjectId(mentorId);
     if (!mentor_Id) {
       throw createHttpError(HttpStatus.BAD_REQUEST, HttpResponse.INVALID_ID);
@@ -190,14 +190,25 @@ export class UserService implements IUserService {
       { ...mentorData, ApprovalStatus: "requested" } as IMenterModel,
     );
     if (!updateMentorData) {
-      throw createHttpError(HttpStatus.INTERNAL_SERVER_ERROR,HttpResponse.SERVER_ERROR)
+      throw createHttpError(
+        HttpStatus.INTERNAL_SERVER_ERROR,
+        HttpResponse.SERVER_ERROR,
+      );
     }
-      const adminId=await this._userRepository.findUser({role:IRole.Admin})
+    const adminId = await this._userRepository.findUser({ role: IRole.Admin });
 
-      const notificationData=NotificationTemplates.mentorRequest(adminId!._id,updateMentorData.name,updateMentorData._id)
+    const notificationData = NotificationTemplates.mentorRequest(
+      adminId!._id,
+      updateMentorData.name,
+      updateMentorData._id,
+    );
 
-    const NotificationData=  await this._notificationRepository.createNotification(notificationData)
-    
-    return {MentorDtp:MentorDTO(updateMentorData as IMenterModel),notificationDTO:NotificationData}
+    const NotificationData =
+      await this._notificationRepository.createNotification(notificationData);
+
+    return {
+      MentorDtp: MentorDTO(updateMentorData as IMenterModel),
+      notificationDTO: NotificationData,
+    };
   }
 }

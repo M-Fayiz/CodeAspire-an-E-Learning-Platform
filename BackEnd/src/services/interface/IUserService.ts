@@ -25,5 +25,5 @@ export interface IUserService {
   addMentorData(
     mentorId: string,
     mentorData: IMenterModel,
-  ): Promise<{MentorDtp:IMentorDTO,notificationDTO:INotificationDTO}>
+  ): Promise<{ MentorDtp: IMentorDTO; notificationDTO: INotificationDTO }>;
 }

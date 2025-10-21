@@ -40,9 +40,7 @@ export const SocketProvider: React.FC<SocketProviderProps> = ({
     });
 
     newSocket.on("connect", () => {
-    
       console.log("Socket connected", newSocket.id);
-      
     });
 
     newSocket.on("connect_error", (err) => {

@@ -12,16 +12,30 @@ import {
   ExternalLink,
   FileText,
 } from "lucide-react";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+} from "@/components/ui/alert-dialog";
 
 import { adminService } from "@/service/admin/admin.service";
 import type { IUserType } from "../../../types/users.type";
 import { toast } from "sonner";
 import { useParams } from "react-router";
+import { Input } from "@/components/ui/Inputs";
 
 const AdminUserProfile: React.FC = () => {
   const { userId } = useParams();
-  console.log(' userId ',userId)
+  console.log(" userId ", userId);
   const [profileData, setProfileData] = useState<IUserType | null>(null);
+  const [form, setForm] = useState({ feedBack: "" });
+  const [error, setErros] = useState({ feedBack: "" });
   useEffect(() => {
     (async () => {
       const data = await adminService.userProfile(userId as string);
@@ -91,6 +105,23 @@ const AdminUserProfile: React.FC = () => {
         toast.error(error.message);
       }
     }
+  };
+  const handleInput = (e: { target: { name: string; value: string } }) => {
+    const { name, value } = e.target;
+    setForm((prev) => ({ ...prev, [name]: value }));
+  };
+  const handleReject = async (status: string) => {
+    if (form.feedBack.trim() == "") {
+      setErros({ feedBack: "please give a reason..." });
+      return;
+    }
+    const result = await adminService.approveMentor(
+      profileData!.id,
+      status,
+      form.feedBack,
+    );
+    setProfileData((prv) => ({ ...prv!, approvalStatus: result.status }));
+    setForm({ feedBack: "" });
   };
 
   return (
@@ -276,13 +307,41 @@ const AdminUserProfile: React.FC = () => {
                         </button>
                       </div>
                       <div className="flex flex-wrap gap-2">
-                        <button
-                          onClick={() => approveMentor("rejected")}
-                          type="button"
-                          className="text-red-700 hover:text-white border border-red-700 hover:bg-red-800 focus:ring-4 focus:outline-none focus:ring-red-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center me-2 mb-2 dark:border-red-500 dark:text-red-500 dark:hover:text-white dark:hover:bg-red-600 dark:focus:ring-red-800"
-                        >
-                          Rejected
-                        </button>
+                        <AlertDialog>
+                          <AlertDialogTrigger asChild>
+                            <button
+                              type="button"
+                              className="text-red-700 hover:text-white border border-red-700 hover:bg-red-800 focus:ring-4 focus:outline-none focus:ring-red-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center me-2 mb-2 dark:border-red-500 dark:text-red-500 dark:hover:text-white dark:hover:bg-red-600 dark:focus:ring-red-800"
+                            >
+                              Rejected
+                            </button>
+                          </AlertDialogTrigger>
+                          <AlertDialogContent>
+                            <AlertDialogHeader>
+                              <AlertDialogTitle>
+                                Reject this course?
+                              </AlertDialogTitle>
+                              <AlertDialogDescription>
+                                <Input
+                                  name="feedBack"
+                                  textArea
+                                  onChange={handleInput}
+                                  value={form.feedBack}
+                                  error={error.feedBack}
+                                />
+                              </AlertDialogDescription>
+                            </AlertDialogHeader>
+                            <AlertDialogFooter>
+                              <AlertDialogCancel>Cancel</AlertDialogCancel>
+                              <AlertDialogAction
+                                onClick={() => handleReject("rejected")}
+                                className="bg-red-600 hover:bg-red-700 text-white"
+                              >
+                                Confirm Reject
+                              </AlertDialogAction>
+                            </AlertDialogFooter>
+                          </AlertDialogContent>
+                        </AlertDialog>
                       </div>
                     </div>
                   </div>

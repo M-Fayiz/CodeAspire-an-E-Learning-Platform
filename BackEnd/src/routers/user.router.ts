@@ -9,8 +9,12 @@ import { NotificationRepository } from "../repository/implementation/Notificatio
 
 const userRepository = new UserRepository();
 const mentorRepository = new MentorRepository();
-const notificationRepository=new NotificationRepository()
-const userService = new UserService(userRepository, mentorRepository,notificationRepository);
+const notificationRepository = new NotificationRepository();
+const userService = new UserService(
+  userRepository,
+  mentorRepository,
+  notificationRepository,
+);
 const userController = new UserController(userService);
 
 userRouter.use(verifyUser);

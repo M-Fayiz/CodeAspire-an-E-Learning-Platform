@@ -8,7 +8,6 @@ import {
 import { IRole, searchProps } from "../../types/user.types";
 import { FilterQuery, Types } from "mongoose";
 
-
 export interface IUserRepo {
   createUser(user: IUserModel): Promise<IUserModel>;
   findUserByEmail(
@@ -46,7 +45,7 @@ export interface IUserRepo {
   ): Promise<IUserModel | IMenterModel | ILearnerModel | IAdminModel | null>;
   updateMentorStatus(
     id: Types.ObjectId,
-    status: string,
+    status: "approved" | "rejected",
   ): Promise<IUserModel | null>;
   updateUserprofile(
     id: Types.ObjectId,
@@ -57,5 +56,7 @@ export interface IUserRepo {
   getUserProfile(
     userId: Types.ObjectId,
   ): Promise<IUserModel | IMenterModel | ILearnerModel | IAdminModel | null>;
-  findUser(filter:FilterQuery<IUserModel>):Promise<IUserModel | IMenterModel | ILearnerModel | IAdminModel | null>;
+  findUser(
+    filter: FilterQuery<IUserModel>,
+  ): Promise<IUserModel | IMenterModel | ILearnerModel | IAdminModel | null>;
 }

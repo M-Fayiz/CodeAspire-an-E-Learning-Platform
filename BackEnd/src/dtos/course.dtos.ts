@@ -8,7 +8,6 @@ import {
   IFormCourseDTO,
 } from "../types/dtos.type/course.dtos.type";
 
-
 export function courseListDTO(
   course: IPopulatedCourse,
   enrolledIds?: Set<string>,

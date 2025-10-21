@@ -10,7 +10,6 @@ export function mentorDashboardDTO(
   topCourse: ITopCourse[],
   revanue: IMentorTotalRevanue[],
 ): IMentorDhasboardDTO {
-
   const rev = revanue.length === 0 ? 0 : revanue[0].revenue;
 
   const summary = {
@@ -24,4 +23,3 @@ export function mentorDashboardDTO(
     revanue: rev,
   };
 }
-

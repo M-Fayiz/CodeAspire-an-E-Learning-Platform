@@ -1,5 +1,14 @@
 import React, { useState } from "react";
-import { User, Mail, Lock, UserPlus, Phone, Code, GraduationCap, Users } from "lucide-react";
+import {
+  User,
+  Mail,
+  Lock,
+  UserPlus,
+  Phone,
+  Code,
+  GraduationCap,
+  Users,
+} from "lucide-react";
 import type { AuthComponentProps, ISignUp } from "../../types/auth.types";
 
 import { Input } from "../ui/Inputs";
@@ -14,7 +23,6 @@ const SignupComponent: React.FC<AuthComponentProps> = ({
     "learner",
   );
   const [isLoading, setIsLoading] = useState(false);
-
 
   const [formData, setFormData] = useState<ISignUp>({
     name: "",
@@ -62,20 +70,18 @@ const SignupComponent: React.FC<AuthComponentProps> = ({
 
   return (
     <div className="min-h-screen relative bg-gradient-to-br from-orange-100 via-white to-orange-50 flex items-center justify-center px-6 py-12 overflow-hidden">
-
-
       <div className="absolute top-[-120px] left-[-120px] w-[400px] h-[400px] bg-orange-300 opacity-30 blur-3xl rounded-full"></div>
       <div className="absolute bottom-[-120px] right-[-120px] w-[400px] h-[400px] bg-yellow-200 opacity-40 blur-3xl rounded-full"></div>
 
       <div className="relative flex flex-col lg:flex-row items-center justify-between w-full max-w-6xl gap-10 z-10">
-
         <div className="lg:w-1/2 text-center lg:text-left space-y-8 px-4">
-
           <div className="flex items-center justify-center lg:justify-start space-x-3">
             <div className="w-14 h-14 bg-gradient-to-br from-orange-500 to-orange-600 rounded-3xl flex items-center justify-center shadow-lg">
               <Code className="w-8 h-8 text-white" />
             </div>
-            <h1 className="text-4xl font-bold text-gray-800 tracking-tight">CodeAspire</h1>
+            <h1 className="text-4xl font-bold text-gray-800 tracking-tight">
+              CodeAspire
+            </h1>
           </div>
 
           <div className="space-y-6">
@@ -86,31 +92,33 @@ const SignupComponent: React.FC<AuthComponentProps> = ({
               “Every great journey begins <br /> with a single commit.”
             </h1>
             <p className="text-gray-600 text-lg max-w-md mx-auto lg:mx-0 leading-relaxed">
-              Continue your journey with <span className="text-orange-600 font-semibold">CodeAspire</span>.  
+              Continue your journey with{" "}
+              <span className="text-orange-600 font-semibold">CodeAspire</span>.
               Let’s build something amazing together.
             </p>
           </div>
 
-          <h2 className="text-3xl font-semibold text-orange-600 mt-8">Join Us Today!</h2>
+          <h2 className="text-3xl font-semibold text-orange-600 mt-8">
+            Join Us Today!
+          </h2>
         </div>
 
-        
         <div className=" max-w-lg bg-white/40 backdrop-blur-2xl rounded-3xl shadow-xl p-10 border border-white/30 hover:shadow-2xl ">
-          
-        
           <div className="text-center mb-8">
             <div className="flex items-center justify-center mb-4">
               <div className="bg-gradient-to-r from-orange-500 to-orange-600 p-3 rounded-2xl shadow-md">
                 <UserPlus className="w-6 h-6 text-white" />
               </div>
             </div>
-            <h1 className="text-2xl font-bold text-gray-800 mb-1">Create Account</h1>
-            <p className="text-gray-500 text-sm">Choose your role to get started</p>
+            <h1 className="text-2xl font-bold text-gray-800 mb-1">
+              Create Account
+            </h1>
+            <p className="text-gray-500 text-sm">
+              Choose your role to get started
+            </p>
           </div>
 
-       
           <form onSubmit={handleSubmit} className="space-y-2">
-      
             <div className="flex gap-3">
               <Input
                 label="Your Name"
@@ -120,7 +128,9 @@ const SignupComponent: React.FC<AuthComponentProps> = ({
                 value={formData.name || ""}
                 onChange={updateFormData}
                 error={errors.name}
-                icon={<User className="absolute top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-400" />}
+                icon={
+                  <User className="absolute top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-400" />
+                }
               />
               <Input
                 label="Phone"
@@ -130,11 +140,12 @@ const SignupComponent: React.FC<AuthComponentProps> = ({
                 value={formData.phone || ""}
                 onChange={updateFormData}
                 error={errors.phone}
-                icon={<Phone className="absolute top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-400" />}
+                icon={
+                  <Phone className="absolute top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-400" />
+                }
               />
             </div>
 
-         
             <Input
               label="Email"
               name="email"
@@ -143,7 +154,9 @@ const SignupComponent: React.FC<AuthComponentProps> = ({
               value={formData.email}
               onChange={updateFormData}
               error={errors.email}
-              icon={<Mail className="absolute top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-400" />}
+              icon={
+                <Mail className="absolute top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-400" />
+              }
             />
 
             <div className="flex gap-3">
@@ -155,7 +168,9 @@ const SignupComponent: React.FC<AuthComponentProps> = ({
                 value={formData.password}
                 onChange={updateFormData}
                 error={errors.password}
-                icon={<Lock className="absolute top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-400" />}
+                icon={
+                  <Lock className="absolute top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-400" />
+                }
                 showPasswordToggle
               />
               <Input
@@ -166,43 +181,44 @@ const SignupComponent: React.FC<AuthComponentProps> = ({
                 value={formData.confirmPassword || ""}
                 onChange={updateFormData}
                 error={errors.confirmPassword}
-                icon={<Lock className="absolute  top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-400" />}
+                icon={
+                  <Lock className="absolute  top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-400" />
+                }
                 showPasswordToggle
               />
             </div>
 
-  
             <div className="grid grid-cols-2 gap-2 mb-6">
-             
-                  <>
-                  <button
-                    type="button"
-                    key={'learner'}
-                    onClick={() => setSelectedRole('learner')}
-                    className={`p-3 rounded-lg border-2 transition-all duration-300 text-gray-500 ${
-                      selectedRole === 'learner'
-                        ? "border-orange-500 bg-orange-50 text-orange-700 shadow-md"
-                        : "border-gray-200 hover:border-gray-300 hover:bg-gray-50 "
-                    }`}
-                  >
-                    <GraduationCap className="w-5 h-5 mx-auto mb-1 " />
-                    <span className="text-xs font-medium capitalize">Learner</span>
-                  </button>
-                  <button
-                    type="button"
-                    key={'mentor'}
-                    onClick={() => setSelectedRole('mentor')}
-                    className={`p-3 rounded-lg border-2 transition-all duration-300 text-gray-500 ${
-                      selectedRole === 'mentor'
-                        ? "border-orange-500 bg-orange-50 text-orange-700 shadow-md"
-                        : "border-gray-200 hover:border-gray-300 hover:bg-gray-50"
-                    }`}
-                  >
-                    <Users className="w-5 h-5 mx-auto mb-1" />
-                    <span className="text-xs font-medium capitalize">Mentor</span>
-                  </button>
-                  </>
-        
+              <>
+                <button
+                  type="button"
+                  key={"learner"}
+                  onClick={() => setSelectedRole("learner")}
+                  className={`p-3 rounded-lg border-2 transition-all duration-300 text-gray-500 ${
+                    selectedRole === "learner"
+                      ? "border-orange-500 bg-orange-50 text-orange-700 shadow-md"
+                      : "border-gray-200 hover:border-gray-300 hover:bg-gray-50 "
+                  }`}
+                >
+                  <GraduationCap className="w-5 h-5 mx-auto mb-1 " />
+                  <span className="text-xs font-medium capitalize">
+                    Learner
+                  </span>
+                </button>
+                <button
+                  type="button"
+                  key={"mentor"}
+                  onClick={() => setSelectedRole("mentor")}
+                  className={`p-3 rounded-lg border-2 transition-all duration-300 text-gray-500 ${
+                    selectedRole === "mentor"
+                      ? "border-orange-500 bg-orange-50 text-orange-700 shadow-md"
+                      : "border-gray-200 hover:border-gray-300 hover:bg-gray-50"
+                  }`}
+                >
+                  <Users className="w-5 h-5 mx-auto mb-1" />
+                  <span className="text-xs font-medium capitalize">Mentor</span>
+                </button>
+              </>
             </div>
 
             <button
@@ -211,7 +227,10 @@ const SignupComponent: React.FC<AuthComponentProps> = ({
               className="w-full bg-white/70 border border-gray-200 text-gray-700 py-3 px-4 rounded-full font-medium hover:bg-white hover:shadow-md transition flex items-center justify-center space-x-2 mb-4 backdrop-blur-sm"
             >
               <svg className="w-5 h-5" viewBox="0 0 24 24">
-                <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92..." />
+                <path
+                  fill="#4285F4"
+                  d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92..."
+                />
               </svg>
               <span>Continue with Google</span>
             </button>
@@ -232,10 +251,12 @@ const SignupComponent: React.FC<AuthComponentProps> = ({
             </button>
           </form>
 
-
           <p className="text-center text-sm text-gray-600 mt-6">
             Already have an account?{" "}
-            <Link to="/auth/login" className="text-orange-600 hover:underline font-medium">
+            <Link
+              to="/auth/login"
+              className="text-orange-600 hover:underline font-medium"
+            >
               Sign in
             </Link>
           </p>
