@@ -53,7 +53,7 @@ export type IAnyUser = IUser | IAdmin | ILearner | IMentor;
 
 export interface searchProps {
   name: string | "";
-  role: string | "";
+  role: IRole | "";
   isActive: boolean | "";
 }
 

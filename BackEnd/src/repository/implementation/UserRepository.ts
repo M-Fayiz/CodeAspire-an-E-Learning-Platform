@@ -135,4 +135,7 @@ export class UserRepository
   ): Promise<IUserModel | IMenterModel | ILearnerModel | IAdminModel | null> {
     return await this.findOne(filter);
   }
+  async findDashBoardUserCount(role: IRole): Promise<number> {
+    return await this.countDocuments({ role: role });
+  }
 }

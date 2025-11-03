@@ -14,6 +14,7 @@ import {
 } from "@/components/ui/accordion";
 import AdminCourseActions from "@/features/admin/Course/AdminAction";
 import { toast } from "sonner";
+import MentorProfile from "@/features/courses_list/Details/AboutMentor";
 
 function AdminCourseDetails() {
   const { id } = useParams();
@@ -111,12 +112,12 @@ function AdminCourseDetails() {
             activeTap={activeTab}
           />
           <Taps
-            label="Instructor"
+            label="mentor"
             icon={
               <ClipboardPen className="text-gray-500 w-4 h-4 hidden md:block" />
             }
             Click={handleTaps}
-            tap="Instructor"
+            tap="mentor"
             activeTap={activeTab}
           />
           <Taps
@@ -195,6 +196,9 @@ function AdminCourseDetails() {
               onReject={handlereject}
               status={course.status}
             />
+          )}
+          {activeTab === "mentor" && (
+            <MentorProfile mentorId={course?.mentorsId._id as string} />
           )}
         </div>
       </div>

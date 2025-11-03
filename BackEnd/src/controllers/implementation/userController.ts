@@ -4,7 +4,7 @@ import { IUserController } from "../interface/IUserController";
 import { HttpStatus } from "../../const/http-status";
 import { successResponse } from "../../utils/response.util";
 import { HttpResponse } from "../../const/error-message";
-import logger from "../../config/logger.config";
+
 import { sendNotification } from "../../utils/socket.utils";
 
 export class UserController implements IUserController {
@@ -16,9 +16,9 @@ export class UserController implements IUserController {
     next: NextFunction,
   ): Promise<void> => {
     try {
-      const { id } = req.params;
+      const { userId } = req.params;
       // logger.info('user logged controler',{id})
-      const userData = await this._userService.fetchUser(id);
+      const userData = await this._userService.fetchUser(userId);
 
       res
         .status(HttpStatus.OK)
@@ -34,7 +34,7 @@ export class UserController implements IUserController {
   ): Promise<void> => {
     try {
       const { currentPassword, newPassword } = req.body;
-      const userId = req.params.id;
+      const { userId } = req.params;
 
       await this._userService.changePassword(
         userId,
@@ -54,7 +54,7 @@ export class UserController implements IUserController {
   ): Promise<void> => {
     try {
       const { imageURL } = req.body;
-      const userId = req.params.id;
+      const { userId } = req.params;
 
       const ImageSavedUrl = await this._userService.userProfilePitcureUpdate(
         imageURL,
@@ -73,9 +73,9 @@ export class UserController implements IUserController {
     next: NextFunction,
   ): Promise<void> => {
     try {
-      const { mentorId } = req.params;
+      const { userId } = req.params;
       const updatedData = await this._userService.updateUserProfile(
-        mentorId,
+        userId,
         req.body,
       );
       res
@@ -91,8 +91,8 @@ export class UserController implements IUserController {
     next: NextFunction,
   ): Promise<void> => {
     try {
-      const { id } = req.params;
-      const userData = await this._userService.getUserProfile(id);
+      const { userId } = req.params;
+      const userData = await this._userService.getUserProfile(userId);
       res
         .status(HttpStatus.OK)
         .json(successResponse(HttpResponse.OK, { userData }));
@@ -118,13 +118,11 @@ export class UserController implements IUserController {
         mentorDataAndNotify.notificationDTO,
       );
 
-      res
-        .status(HttpStatus.OK)
-        .json(
-          successResponse(HttpResponse.OK, {
-            mentorData: mentorDataAndNotify.MentorDtp,
-          }),
-        );
+      res.status(HttpStatus.OK).json(
+        successResponse(HttpResponse.OK, {
+          mentorData: mentorDataAndNotify.MentorDtp,
+        }),
+      );
     } catch (error) {
       next(error);
     }

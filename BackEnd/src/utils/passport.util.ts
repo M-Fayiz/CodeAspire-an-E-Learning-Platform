@@ -15,7 +15,6 @@ const userRepo = new UserRepository();
 const clientID = env.CLIENT_ID as string;
 const clientSecret = env.CLIENT_SECRET as string;
 const callBack = env.CALLBACK_URL as string;
-console.log(callBack, "callback");
 
 passport.use(
   new GoogleStrategy(

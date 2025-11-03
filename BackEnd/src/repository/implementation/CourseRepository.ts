@@ -173,4 +173,7 @@ export class CourseRepository
   async findDocumentCount(query: FilterQuery<ICourses>): Promise<number> {
     return await this.countDocuments(query);
   }
+  async findAllCourse(query: FilterQuery<ICourses>): Promise<ICourses[]|null> {
+      return await this.find(query)
+  }
 }

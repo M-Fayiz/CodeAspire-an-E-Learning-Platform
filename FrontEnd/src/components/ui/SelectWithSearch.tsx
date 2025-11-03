@@ -16,7 +16,7 @@ import {
 import { ChevronsUpDownIcon } from "lucide-react";
 
 export interface IBoxOptions {
-  key: string;
+  _id: string;
   label: string;
 }
 
@@ -40,11 +40,11 @@ export function Combobox({
   const [open, setOpen] = useState(false);
 
   useEffect(() => {
-    const selectedLabel = boxOptions.find((item) => item.key === value)?.label;
+    const selectedLabel = boxOptions.find((item) => item._id === value)?.label;
     setCategory?.(selectedLabel);
   }, [value, boxOptions]);
 
-  const selectedLabel = boxOptions.find((item) => item.key === value)?.label;
+  const selectedLabel = boxOptions.find((item) => item._id === value)?.label;
 
   return (
     <div>
@@ -71,10 +71,10 @@ export function Combobox({
               <CommandGroup>
                 {boxOptions.map((data) => (
                   <CommandItem
-                    key={data.key}
+                    key={data._id}
                     value={data.label}
                     onSelect={() => {
-                      const newValue = data.key === value ? "" : data.key;
+                      const newValue = data._id === value ? "" : data._id;
                       console.log("new valuew", newValue);
                       onChange?.(name, newValue);
                       setOpen(false);

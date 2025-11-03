@@ -8,12 +8,21 @@ import {
 import { useAuth } from "../../../context/auth.context";
 import { Spinner } from "../../templates/Spinner";
 import { Navigate } from "react-router";
+import { useEffect, useState } from "react";
+import { adminService } from "@/service/admin/admin.service";
+import type { IAdminDashboardDTO } from "@/types/DTOS/adminDashboard.type";
 
-const DashboardContent = () => {
+const AdminDashboard = () => {
   const { user, loading } = useAuth();
-
+  const [dashData, setDashData] = useState<IAdminDashboardDTO | null>(null);
   if (loading) return <Spinner />;
   if (!user) return <Navigate to="/auth/login" replace />;
+  useEffect(() => {
+    (async () => {
+      const data = await adminService.getDashboardCardsdata();
+      setDashData(data);
+    })();
+  }, []);
 
   const getDashboardContent = () => {
     switch (user.role) {
@@ -21,30 +30,26 @@ const DashboardContent = () => {
         return {
           title: "Admin Dashboard",
           stats: [
-            { label: "Total Users", value: "1,234", icon: Users },
-            { label: "Active Courses", value: "89", icon: BookCopy },
-            { label: "Revenue", value: "$45,123", icon: DollarSign },
-            { label: "System Health", value: "99.9%", icon: Activity },
-          ],
-        };
-      case "learner":
-        return {
-          title: "My Learning Dashboard",
-          stats: [
-            { label: "Courses Enrolled", value: "8", color: "bg-blue-500" },
-            { label: "Completed", value: "5", color: "bg-green-500" },
-            { label: "Hours Learned", value: "127", color: "bg-purple-500" },
-            { label: "Certificates", value: "3", color: "bg-orange-500" },
-          ],
-        };
-      case "mentor":
-        return {
-          title: "Mentor Dashboard",
-          stats: [
-            { label: "Total Students", value: "156", icon: Users },
-            { label: "Courses", value: "12", icon: BookCopy },
-            // { label: "Rating", value: "4.8", icon: UserStar },
-            // { label: "Earnings", value: "$3,456", icon: DollerSign },
+            {
+              label: "Total Learners",
+              value: dashData?.totalLearners,
+              icon: Users,
+            },
+            {
+              label: "Total Mentors",
+              value: dashData?.totalMentors,
+              icon: BookCopy,
+            },
+            {
+              label: "Total Revenue",
+              value: dashData?.totalRevenue,
+              icon: DollarSign,
+            },
+            {
+              label: "Total Course",
+              value: dashData?.totalCourses,
+              icon: Activity,
+            },
           ],
         };
       default:
@@ -57,7 +62,7 @@ const DashboardContent = () => {
   return (
     <div>
       <div className="mb-6">
-        <h1 className="text-2xl font-bold text-gray-900">{content.title}</h1>
+        <h1 className="text-2xl font-bold text-gray-900">Admin Dashboard</h1>
         <p className="text-gray-600">Welcome back, {user.name}!</p>
       </div>
 
@@ -78,7 +83,59 @@ const DashboardContent = () => {
           </div>
         ))}
       </div>
+      <div className="flex gap-5">
 
+      <div className="bg-white rounded-lg p-6 shadow-sm border border-gray-100">
+        <h3 className="text-lg font-semibold text-gray-900 mb-4">
+          Top Performing Course
+        </h3>
+        <div className="space-y-4">
+          {dashData?.topSelling.course.map((course, i) => (
+            <div key={i} className="flex items-center gap-3">
+              <div
+                className={`w-10 h-10 rounded-lg flex items-center justify-center text-white font-semibold  bg-gray-300`}
+              >
+                {course.title.charAt(0)}
+              </div>
+              <div className="flex-1">
+                <p className="text-sm font-medium text-gray-900">
+                  {course.title}
+                </p>
+                {/* <p className="text-xs text-gray-500">{course.time}</p> */}
+              </div>
+              <div className="flex items-center gap-1 text-gray-500">
+                <Users className="w-4 h-4" />
+                <span className="text-xs">{course.enrolledStudent}</span>
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
+      <div className="bg-white rounded-lg p-6 shadow-sm border border-gray-100">
+        <h3 className="text-lg font-semibold text-gray-900 mb-4">
+          Top Performing Category
+        </h3>
+        <div className="space-y-4">
+          {dashData?.topSelling.category.map((cat, i) => (
+            <div key={i} className="flex items-center gap-3">
+              <div
+                className={`w-10 h-10 rounded-lg flex items-center justify-center text-white font-semibold  bg-gray-300`}
+              >
+                {cat.title.charAt(0)}
+              </div>
+              <div className="flex-1">
+                <p className="text-sm font-medium text-gray-900">{cat.title}</p>
+                {/* <p className="text-xs text-gray-500">{course.time}</p> */}
+              </div>
+              <div className="flex items-center gap-1 text-gray-500">
+                <Users className="w-4 h-4" />
+                <span className="text-xs">{cat.enrolledStudent}</span>
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
+      </div>
       <div className="bg-white rounded-lg shadow-sm p-6">
         <h2 className="text-lg font-semibold text-gray-900 mb-4">
           Recent Activity
@@ -105,4 +162,4 @@ const DashboardContent = () => {
     </div>
   );
 };
-export default DashboardContent;
+export default AdminDashboard;

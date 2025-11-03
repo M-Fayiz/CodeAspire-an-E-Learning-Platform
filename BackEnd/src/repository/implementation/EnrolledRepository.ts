@@ -10,7 +10,6 @@ import {
 import { Types } from "mongoose";
 import {
   IMentorDashboardData,
-  IMentorTotalRevanue,
   ITopCategory,
   ITopCourse,
 } from "../../types/mentorDashboard.types";
@@ -131,7 +130,7 @@ export class EnrolledRepository
     ]);
   }
   async getTopSellingCourse(mentorId?: Types.ObjectId): Promise<ITopCourse[]> {
-    console.log("mentorID ", mentorId);
+
     const matchStage = mentorId ? { mentorId } : {};
     return await this.aggregate<ITopCourse>([
       {

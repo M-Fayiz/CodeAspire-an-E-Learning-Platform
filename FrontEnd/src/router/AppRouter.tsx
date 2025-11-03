@@ -11,7 +11,7 @@ import ResetPassword from "../components/auth-components/ResetPassword";
 import NotFound from "../pages/not-found/Not-Found";
 import ErrorFallback from "../components/common/ErrorFallback";
 import DynamicLayout from "../pages/Daynamic-Layout/Dynamic-Dashboard";
-import DashboardContent from "../components/layout/dynamic-layout/Dashboard-Content";
+import AdminDashboard from "../components/layout/dynamic-layout/Dashboard-Content";
 import { Protected_Router } from "../components/protectedRouter/ProtectedRouter";
 import ProfileManagement from "../pages/Profile Page/Profile";
 import UserManagement from "../pages/Admin Page/user-management/UserMangement";
@@ -67,7 +67,7 @@ export const router = createBrowserRouter([
     ),
     children: [
       { index: true, element: <Navigate to="dashboard" /> },
-      { path: "dashboard", element: <DashboardContent /> },
+      { path: "dashboard", element: <AdminDashboard /> },
       { path: "profile/:id", element: <ProfileManagement /> },
       { path: "courses", element: <CourseLayout /> },
       { path: "enrolled-courses", element: <CourseEnrolledList /> },
@@ -108,7 +108,7 @@ export const router = createBrowserRouter([
     ),
     children: [
       { index: true, element: <Navigate to="dashboard" /> },
-      { path: "dashboard", element: <DashboardContent /> },
+      { path: "dashboard", element: <AdminDashboard /> },
       { path: "profile/:id", element: <ProfileManagement /> },
       { path: "users", element: <UserManagement /> },
       {

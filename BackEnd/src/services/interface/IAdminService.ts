@@ -1,3 +1,4 @@
+import { IAdminDashboardDTO } from "../../types/dtos.type/adminDashboard.dto.type";
 import { INotificationDTO } from "../../types/dtos.type/notification.dto.types";
 import { ILearnerDTO, IMentorDTO } from "../../types/dtos.type/user.dto.types";
 import { filter } from "../../types/enrollment.types";
@@ -25,5 +26,5 @@ export interface IAdminService {
     filter?: filter,
     start?: string,
     end?: string,
-  ): Promise<void>;
+  ): Promise<IAdminDashboardDTO>;
 }

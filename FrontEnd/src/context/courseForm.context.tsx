@@ -140,6 +140,7 @@ const CourseFormProvider = ({ children }: { children: ReactNode }) => {
       thumbnail: "",
     });
   };
+  console.log("formData : ", formData);
   return (
     <CourseFormCourseContext.Provider
       value={{

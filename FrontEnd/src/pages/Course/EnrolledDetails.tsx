@@ -68,14 +68,16 @@ const EnrolledCourseDetails = () => {
         <div className="lg:col-span-2 space-y-6">
           {!videoUrl.url ? (
             <div className="bg-white">
-              <Banner
-                course={enrolledCourse}
-                courseId={enrolledCourse?.courseId as string}
-                description={enrolledCourse?.course.description as string}
-                imageUrl={enrolledCourse?.course.thumbnail as string}
-                title={enrolledCourse?.course.title as string}
-                isEnrolled={true}
-              />
+              {enrolledCourse && (
+                <Banner
+                  course={enrolledCourse as IEnrolledCoursedetailsDTO}
+                  courseId={enrolledCourse?.courseId as string}
+                  description={enrolledCourse?.course.description as string}
+                  imageUrl={enrolledCourse?.course.thumbnail as string}
+                  title={enrolledCourse?.course.title as string}
+                  isEnrolled={true}
+                />
+              )}
             </div>
           ) : (
             <div className="bg-white rounded-2xl shadow overflow-hidden border border-gray-200">

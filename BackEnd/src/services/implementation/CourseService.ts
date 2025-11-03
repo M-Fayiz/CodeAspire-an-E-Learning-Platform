@@ -35,6 +35,8 @@ export class CourseService implements ICourseService {
   ) {}
 
   async createCourses(course: ICourses): Promise<ICourses | null> {
+
+
     return await this._courseRepository.createCourses(course);
   }
   async fetchCourses(
@@ -289,7 +291,6 @@ export class CourseService implements ICourseService {
     const notifyData = NotificationTemplates.courseApproval(
       courseDetails?.mentorsId as Types.ObjectId,
       courseDetails?.title as string,
-      `http://localhost:3000/mentor/courses/my-courses`,
     );
     const savedNotify =
       await this._notificationRepository.createNotification(notifyData);
@@ -313,7 +314,6 @@ export class CourseService implements ICourseService {
       courseDetails?.mentorsId as Types.ObjectId,
       courseDetails?.title as string,
       feedBack,
-      `http://localhost:3000/mentor/courses/my-courses`,
     );
     const savedNotify =
       await this._notificationRepository.createNotification(notifyData);

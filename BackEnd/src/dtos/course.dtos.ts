@@ -27,7 +27,7 @@ export function courseListDTO(
     language: course.language,
     level: course.level,
     price: course.price,
-    isEnrolled: enrolledIds?.has(course._id as Types.ObjectId) ?? false,
+    isEnrolled: enrolledIds?.has(String(course._id)) ?? false,
   };
 }
 

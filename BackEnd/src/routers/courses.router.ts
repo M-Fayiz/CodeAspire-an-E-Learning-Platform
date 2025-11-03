@@ -30,11 +30,11 @@ courseRouter.use(authorizedRole(IRole.Mentor, IRole.Admin, IRole.Learner));
 courseRouter.post("/", courseController.addCourse);
 courseRouter.get("/my-courses", courseController.getMentorDraftedCourseList);
 courseRouter.get("/admin-courses", courseController.getAdminCoursList);
-courseRouter.get("/:id", courseController.getCourse);
+courseRouter.get("/:courseId", courseController.getCourse);
 courseRouter.get("/admin/:courseId", courseController.getCourseDetails);
 // courseRouter.put("/:id", courseController.updateCourse);
 courseRouter.put("/:courseId", courseController.updateBaseInfo);
-courseRouter.put("/:id/sessions", courseController.addSession);
+courseRouter.put("/:courseId/sessions", courseController.addSession); //id
 courseRouter.put("/:courseId/sessions/:sessionId", courseController.addLecture);
 courseRouter.put(
   "/:courseId/sessions/:sessionId/lectures/:lectureId",

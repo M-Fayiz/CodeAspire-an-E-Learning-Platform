@@ -15,14 +15,14 @@ export const NotificationTemplates = {
     userId: Types.ObjectId,
     title: string,
     feedback: string,
-    link?: string,
+   
   ): INotification => ({
     title: `Course Rejection`,
     message: `Your course "${title}" has been rejected by the authority. \n due to ${feedback}`,
     type: "error",
     isRead: false,
     userId,
-    link,
+    link:`/mentor/courses/my-courses`,
     createdAt: new Date(),
   }),
   mentorRequest: (

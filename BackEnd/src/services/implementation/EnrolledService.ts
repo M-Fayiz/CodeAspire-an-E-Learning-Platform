@@ -93,7 +93,7 @@ export class EnrolledService implements IEnrolledService {
       enrolledData.courseId as Types.ObjectId,
     );
 
-    const populatedCourse = formCourseDto(courseData as ICourses);
+    const populatedCourse = formCourseDto(courseData as IPopulatedCourse);
     return enrolledCourseDetailDTO(enrolledData, populatedCourse);
   }
   async updatedProgress(
@@ -153,7 +153,7 @@ export class EnrolledService implements IEnrolledService {
     }
 
     const { avgRating = 0, totalStudents = 0 } = studentsAndRating[0] || {};
-
+  
     return courseDashboardDTO(totalStudents, avgRating, course, revenue[0]);
   }
   async getTrendingCourseGraph(
@@ -193,8 +193,6 @@ export class EnrolledService implements IEnrolledService {
       this._erolledRepository.getTopSellingCourse(mentor_id),
       this._transactionRepository.getMentorTotalRevenue(mentor_id),
     ]);
-
-    console.log("top ", topCourse);
     return mentorDashboardDTO(studentsAndRating[0], topCourse, revanue);
   }
 }

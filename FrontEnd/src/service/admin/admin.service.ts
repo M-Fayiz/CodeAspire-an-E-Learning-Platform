@@ -1,5 +1,3 @@
-import type { AxiosError } from "axios";
-
 import { axiosInstance } from "@/axios/createInstance";
 import { API } from "@/constants/api.constant";
 import type { IUserType, mentorApprovalStatus } from "@/types/users.type";
@@ -7,6 +5,8 @@ import type { IUserType, mentorApprovalStatus } from "@/types/users.type";
 // import { searchFromParser } from "@/utility/parser.util";
 // import type { SearchQuery } from "@/types/parser.types";
 import { sharedService } from "../shared.service";
+import { throwAxiosError } from "@/utility/throwErrot";
+import type { IAdminDashboardDTO } from "@/types/DTOS/adminDashboard.type";
 
 interface fetchedUsers {
   users: IUserType[];
@@ -27,9 +27,7 @@ export const adminService = {
 
       return response?.data;
     } catch (error) {
-      const err = error as AxiosError<{ error: string }>;
-      const errorMessage = err.response?.data.error;
-      throw new Error(errorMessage);
+      throwAxiosError(error);
     }
   },
   blockUser: async (id: string): Promise<{ isActive: boolean; id: string }> => {
@@ -39,9 +37,7 @@ export const adminService = {
 
       return response.data.result;
     } catch (error) {
-      const err = error as AxiosError<{ error: string }>;
-      const errorMessage = err.response?.data.error;
-      throw new Error(errorMessage);
+      throwAxiosError(error);
     }
   },
   userProfile: async (userId: string): Promise<IUserType> => {
@@ -63,12 +59,10 @@ export const adminService = {
         );
         response.data.userData.resume = resume;
       }
-      console.log("user Data  ", response.data.userData);
+
       return response.data.userData;
     } catch (error) {
-      const err = error as AxiosError<{ error: string }>;
-      const errorMessage = err.response?.data.error;
-      throw new Error(errorMessage);
+      throwAxiosError(error);
     }
   },
   approveMentor: async (
@@ -84,9 +78,15 @@ export const adminService = {
       console.log(response.data);
       return response.data;
     } catch (error) {
-      const err = error as AxiosError<{ error: string }>;
-      const errorMessage = err.response?.data.error;
-      throw new Error(errorMessage);
+      throwAxiosError(error);
+    }
+  },
+  getDashboardCardsdata: async (): Promise<IAdminDashboardDTO> => {
+    try {
+      const response = await axiosInstance.get(API.ADMIN.DASHBOARD_CARD);
+      return response.data.dashBoardData;
+    } catch (error) {
+      throwAxiosError(error);
     }
   },
 };

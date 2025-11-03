@@ -16,6 +16,6 @@ categoryRouter.get("/", categoryController.listCategories);
 categoryRouter.use(verifyUser);
 categoryRouter.use(authorizedRole(IRole.Mentor, IRole.Admin));
 categoryRouter.post("/", categoryController.createCategory);
-categoryRouter.put("/:id", categoryController.editCategory);
+categoryRouter.put("/:categoryId", categoryController.editCategory);
 
 export default categoryRouter;

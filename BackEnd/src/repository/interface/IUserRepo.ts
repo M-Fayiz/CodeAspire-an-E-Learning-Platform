@@ -59,4 +59,5 @@ export interface IUserRepo {
   findUser(
     filter: FilterQuery<IUserModel>,
   ): Promise<IUserModel | IMenterModel | ILearnerModel | IAdminModel | null>;
+  findDashBoardUserCount(role: IRole): Promise<number >;
 }

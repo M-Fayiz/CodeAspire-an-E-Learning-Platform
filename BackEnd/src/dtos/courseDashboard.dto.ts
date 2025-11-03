@@ -24,8 +24,8 @@ export function courseDashboardDTO(
       status: course.status as string,
     },
     revenue: {
-      admin: revenue.adminSum ?? null,
-      mentor: revenue.mentorSum ?? null,
+      admin: (revenue && revenue.adminSum) ?? 0,
+      mentor: (revenue && revenue.adminSum) ?? 0,
     },
   };
 }

@@ -31,6 +31,7 @@ export const API = {
     GET_USER_PROFILE: (userId: string) => `/admin/users/${userId}`,
     BLOCK_USER: (id: string) => `/admin/users/${id}/block`,
     APPROVE_MENTOR: (id: string) => `/admin/users/${id}/approve`,
+    DASHBOARD_CARD: `/admin/dashboard/cards`,
   },
   CATEGORY: {
     CREATE_CATEGORY: `/categories`,

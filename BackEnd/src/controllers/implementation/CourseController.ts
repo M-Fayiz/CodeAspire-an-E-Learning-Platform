@@ -89,14 +89,14 @@ export class CourseController implements ICourseController {
     next: NextFunction,
   ): Promise<void> => {
     try {
-      const courseId = req.params.id;
+      const { courseId } = req.params;
       const { learnerId } = req.query;
 
       const course = await this._courseService.getCourse(
         courseId,
         learnerId as string,
       );
-      console.log("this is the course ", course);
+
       res
         .status(HttpStatus.OK)
         .json(successResponse(HttpResponse.OK, { course }));
@@ -134,11 +134,11 @@ export class CourseController implements ICourseController {
     next: NextFunction,
   ): Promise<void> => {
     try {
-      const { id } = req.params;
+      const { courseId } = req.params;
       const { session } = req.body;
 
       const addedSessionData = await this._courseService.addSessions(
-        id,
+        courseId,
         session,
       );
       console.warn(addedSessionData);
@@ -285,8 +285,8 @@ export class CourseController implements ICourseController {
         message: status.notifyDTO,
       };
 
-      console.log("data ", data);
-      sendToUser(status.notifyDTO.userId, status.notifyDTO);
+   
+      sendNotification(status.notifyDTO.userId, status.notifyDTO);
       res
         .status(HttpStatus.OK)
         .json(successResponse(HttpResponse.OK, { status }));

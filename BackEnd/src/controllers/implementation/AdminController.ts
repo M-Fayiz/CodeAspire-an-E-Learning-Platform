@@ -38,6 +38,12 @@ export class AdminController implements IAdminController {
       next(error);
     }
   };
+  /**
+   * 
+   * @param req 
+   * @param res 
+   * @param next 
+   */
   blockUser = async (
     req: Request,
     res: Response,
@@ -94,6 +100,18 @@ export class AdminController implements IAdminController {
         .json(
           successResponse(HttpResponse.OK, { status: approveStatus.status }),
         );
+    } catch (error) {
+      next(error);
+    }
+  };
+  getDashboardCardData = async (
+    req: Request,
+    res: Response,
+    next: NextFunction,
+  ): Promise<void> => {
+    try {
+      const dashBoardData=await this._adminService.getDashboardData();
+      res.status(HttpStatus.OK).json(successResponse(HttpResponse.OK,{dashBoardData}))
     } catch (error) {
       next(error);
     }

@@ -7,17 +7,17 @@ import {
 
 import { useCourseFormContext } from "@/context/courseForm.context";
 import categoryService from "@/service/admin/category.service";
-import type { ICategoryTree } from "@/types/category.types";
 import React, { useEffect, useMemo, useState } from "react";
 import { FileUp } from "lucide-react";
 import { sharedService } from "@/service/shared.service";
 import { Spinner } from "@/components/ui/shadcn-io/spinner";
+import type { ICategoryTreeDTO } from "@/types/DTOS/category.type";
 interface BaseCaourseProps {
   handleTap?: (tap: "basic" | "curriculum" | "publish") => void;
 }
 
 const BasicCourseInformation: React.FC<BaseCaourseProps> = () => {
-  const [categories, setCategories] = useState<ICategoryTree[]>([]);
+  const [categories, setCategories] = useState<ICategoryTreeDTO[]>([]);
   const [selectedCategory, setSelectedCategory] = useState("");
   const [image, setImage] = useState("");
   const [spin] = useState(false);
@@ -56,7 +56,7 @@ const BasicCourseInformation: React.FC<BaseCaourseProps> = () => {
 
   const { categoryOptions, subCategoryOptions } = useMemo(() => {
     const categoryOptions = categories.map((category) => ({
-      key: category.key,
+      _id: category._id,
       label: category.label,
     }));
 
@@ -64,7 +64,7 @@ const BasicCourseInformation: React.FC<BaseCaourseProps> = () => {
       categories
         .find((c) => c.label === selectedCategory)
         ?.children?.map((child) => ({
-          key: child.key,
+          _id: child._id,
           label: child.label,
         })) || [];
 
@@ -143,7 +143,7 @@ const BasicCourseInformation: React.FC<BaseCaourseProps> = () => {
                 boxOptions={[
                   ...COURSE_LANGUAGE.map((data) => ({
                     label: data,
-                    key: data,
+                    _id: data,
                   })),
                 ]}
                 name="language"
@@ -158,7 +158,7 @@ const BasicCourseInformation: React.FC<BaseCaourseProps> = () => {
                 boxOptions={[
                   ...COURSE_LEVEL.map((data) => ({
                     label: data,
-                    key: data,
+                    _id: data,
                   })),
                 ]}
                 name="level"

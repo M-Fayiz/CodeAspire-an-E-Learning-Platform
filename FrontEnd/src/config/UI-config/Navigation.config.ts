@@ -15,6 +15,7 @@ import {
   ShoppingCart,
   Star,
   Users,
+  CalendarDays,
   // BarChart3,
 } from "lucide-react";
 import React from "react";
@@ -89,6 +90,7 @@ export const navigationConfig = {
       { icon: Home, label: "Dashboard", path: "/mentor/dashboard" },
       { icon: Book, label: "My Courses", path: "/mentor/courses/my-courses" },
       { icon: Users, label: "Students", path: "/mentor/students" },
+      { icon: CalendarDays, label: "Slots", path: "/mentor/slots" },
       // {
       //   icon: PlusCircle,
       //   label: "Create Course",

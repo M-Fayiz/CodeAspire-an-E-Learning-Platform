@@ -15,7 +15,6 @@ import logger from "../../config/logger.config";
 import { ITransactionRepository } from "../../repository/interface/ITransactionRepository";
 import { ITransaction } from "../../types/transaction.type";
 import { calculateShares } from "../../utils/calculateSplit.util";
-import { Types } from "mongoose";
 
 export class OrderService implements IOrderService {
   private _stripe;

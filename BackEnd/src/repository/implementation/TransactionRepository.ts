@@ -8,6 +8,7 @@ import { BaseRepository } from "../baseRepository";
 import { ITransactionRepository } from "../interface/ITransactionRepository";
 import { IRevenueAggregationResult } from "../../types/courseDashboard.type";
 import { IMentorTotalRevanue } from "../../types/mentorDashboard.types";
+import {  IAdminRevenue } from "../../types/adminDahsboard.type";
 
 export class TransactionRepositoy
   extends BaseRepository<ITransactionModel>
@@ -55,4 +56,18 @@ export class TransactionRepositoy
       },
     ]);
   }
+  async getAdminRevenue(): Promise<IAdminRevenue[]> {
+  return this.aggregate<IAdminRevenue>([
+    {
+      $group: {
+        _id: null,
+        revenue: { $sum: '$adminShare' }
+      }
+    },
+    {
+      $unwind:"$revenue"
+    }
+  ]);
+}
+
 }

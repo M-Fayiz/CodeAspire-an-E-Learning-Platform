@@ -1,11 +1,26 @@
 import React, { useState, useRef, useEffect } from "react";
-import { Send, Paperclip } from "lucide-react";
+import {
+  Send,
+  Paperclip,
+  ImageUp,
+  SquarePlay,
+  FileAudio,
+  File,
+} from "lucide-react";
 import { useAuth } from "@/context/auth.context";
 import { useSocket } from "@/context/socket.context";
 import type { IMessageDto } from "@/types/DTOS/message.dto.types";
 import { ChatService } from "@/service/chat.service";
 import { v4 as uuid } from "uuid";
 import type { userProps } from "@/pages/chat page/ChatPage";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+type FileType = "photo" | "video" | "audio" | "document";
 
 interface ChatWindowProps {
   userData: userProps;
@@ -14,6 +29,9 @@ interface ChatWindowProps {
 const ChatWindow: React.FC<ChatWindowProps> = ({ userData }) => {
   const { user } = useAuth();
   const socket = useSocket();
+  const fileInputRef = useRef<HTMLInputElement | null>(null);
+  const [selectedFile, setSelectedFile] = useState<File | null>(null);
+
   const [messages, setMessages] = useState<IMessageDto[]>([]);
   const [Online, setOnline] = useState(false);
   const [inputMessage, setInputMessage] = useState("");
@@ -69,15 +87,6 @@ const ChatWindow: React.FC<ChatWindowProps> = ({ userData }) => {
     if (!socket || !inputMessage.trim()) return;
 
     const tempId = `temp-${uuid()}`;
-    const newMessage: IMessageDto = {
-      _id: tempId,
-      chatId: userData._id,
-      sender: user!.id,
-      content: inputMessage,
-      type: "text",
-      status: "sending",
-      createdAt: new Date().toISOString(),
-    };
 
     setInputMessage("");
 
@@ -101,6 +110,91 @@ const ChatWindow: React.FC<ChatWindowProps> = ({ userData }) => {
       e.preventDefault();
       handleSendMessage();
     }
+  };
+
+  const handleTypeSelect = (type: FileType) => {
+    if (!fileInputRef.current) return;
+
+    let acceptValue = "";
+    switch (type) {
+      case "photo":
+        acceptValue = "image/*";
+        break;
+      case "video":
+        acceptValue = "video/*";
+        break;
+      case "audio":
+        acceptValue = "audio/*";
+        break;
+      case "document":
+        acceptValue = ".pdf,.doc,.docx,.txt";
+        break;
+      default:
+        acceptValue = "";
+    }
+    fileInputRef.current.setAttribute("accept", acceptValue);
+    fileInputRef.current.click();
+  };
+  const handleFIleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (file) {
+      setSelectedFile(file);
+      console.log("file is :", file);
+    }
+  };
+  const renderMessageContent = (message: IMessageDto) => {
+    // Case 1: If it's just text
+    if (message.content && !message.fileUrl) {
+      return <p className="text-sm break-words">{message.content}</p>;
+    }
+
+    if (message.fileUrl) {
+      if (message.type?.startsWith("image")) {
+        return (
+          <img
+            src={message.fileUrl}
+            alt="Sent image"
+            className="rounded-lg max-w-[200px] cursor-pointer"
+            onClick={() => window.open(message.fileUrl, "_blank")}
+          />
+        );
+      }
+
+      if (message.type?.startsWith("video")) {
+        return (
+          <video
+            controls
+            src={message.fileUrl}
+            className="rounded-lg max-w-[250px]"
+          />
+        );
+      }
+
+      if (message.type?.startsWith("audio")) {
+        return <audio controls src={message.fileUrl} className="w-full" />;
+      }
+
+      if (
+        message.type?.startsWith("application") ||
+        message.type === "document"
+      ) {
+        return (
+          <div className="flex items-center gap-2 bg-gray-100 p-2 rounded-lg">
+            <File className="text-gray-600" />
+            <a
+              href={message.fileUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-sm text-blue-600 hover:underline"
+            >
+              {message.content || "Open Document"}
+            </a>
+          </div>
+        );
+      }
+    }
+
+    return null;
   };
 
   return (
@@ -144,28 +238,110 @@ const ChatWindow: React.FC<ChatWindowProps> = ({ userData }) => {
                     : "bg-white text-gray-900 border border-gray-200"
                 }`}
               >
-                <p className="text-sm">{message.content}</p>
-                <p
-                  className={`text-xs mt-1 ${
-                    message.sender === user?.id
-                      ? "text-orange-100"
-                      : "text-gray-500"
-                  }`}
-                >
-                  {message.createdAt as string}
-                </p>
+                {/* 👇 Replace your old <p> tag with this new block */}
+                <div className="space-y-2">
+                  {renderMessageContent(message)}
+                  <p
+                    className={`text-xs mt-1 ${
+                      message.sender === user?.id
+                        ? "text-orange-100"
+                        : "text-gray-500"
+                    }`}
+                  >
+                    {new Date(message.createdAt).toLocaleTimeString([], {
+                      hour: "2-digit",
+                      minute: "2-digit",
+                    })}
+                  </p>
+                </div>
               </div>
             </div>
           ))}
+
           <div ref={messagesEndRef} />
         </div>
       </div>
 
       <div className="border-t border-gray-200 px-6 py-4 bg-white sticky bottom-0">
+        {selectedFile && (
+          <div className="max-w-4xl mx-auto mb-3 p-3 border border-gray-300 rounded-xl bg-gray-100 relative">
+            <button
+              onClick={() => setSelectedFile(null)}
+              className="absolute top-1 right-2 text-gray-500 hover:text-red-500"
+            >
+              ✕
+            </button>
+
+            {/* File preview */}
+            {selectedFile.type.startsWith("image/") && (
+              <img
+                src={URL.createObjectURL(selectedFile)}
+                alt="preview"
+                className="w-50 h-50 object-cover rounded-lg"
+              />
+            )}
+
+            {selectedFile.type.startsWith("video/") && (
+              <video
+                controls
+                src={URL.createObjectURL(selectedFile)}
+                className="w-50 rounded-lg"
+              />
+            )}
+
+            {selectedFile.type.startsWith("audio/") && (
+              <audio controls src={URL.createObjectURL(selectedFile)} />
+            )}
+
+            {selectedFile.type.startsWith("application/") && (
+              <div className="flex items-center gap-2">
+                <File className="text-gray-600" />
+                <p className="text-sm text-gray-800 truncate max-w-[200px]">
+                  {selectedFile.name}
+                </p>
+              </div>
+            )}
+
+            <div className="mt-3 flex justify-end">
+              <button
+                onClick={() => handleFIleChange}
+                className="bg-orange-500 hover:bg-orange-600 text-white px-4 py-2 rounded-lg"
+              >
+                Send File
+              </button>
+            </div>
+          </div>
+        )}
         <div className="flex items-end gap-2 max-w-4xl mx-auto">
-          <button className="p-2 hover:bg-gray-100 rounded-full transition-colors mb-2">
-            <Paperclip size={20} className="text-gray-600" />
-          </button>
+          <Select
+            onValueChange={(value) => handleTypeSelect(value as FileType)}
+          >
+            <SelectTrigger>
+              <SelectValue
+                placeholder={<Paperclip size={22} className="text-gray-600" />}
+              />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="photo">
+                <ImageUp className="w-12" /> Photo
+              </SelectItem>
+              <SelectItem value="video">
+                <SquarePlay className="w-12" /> Video
+              </SelectItem>
+              <SelectItem value="audio">
+                <FileAudio className="w-12" /> Audio
+              </SelectItem>
+              <SelectItem value="document">
+                <File className="w-12" /> Document
+              </SelectItem>
+            </SelectContent>
+          </Select>
+          <input
+            type="file"
+            style={{ display: "none" }}
+            ref={fileInputRef}
+            onChange={handleFIleChange}
+          />
 
           <div className="flex-1 bg-gray-100 rounded-2xl px-4 py-2 flex items-center gap-2">
             <textarea
