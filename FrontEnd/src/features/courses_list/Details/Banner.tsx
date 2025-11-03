@@ -11,7 +11,7 @@ import { useAuth } from "@/context/auth.context";
 import { toast } from "sonner";
 import { Link } from "react-router";
 import { Badge } from "@/components/ui/shadcn-io/ThemeBadge";
-import type { IFormCourseDTO } from "@/types/DTOS/courses.types";
+import type { IFormCourseDTO } from "@/types/DTOS/courses.dto.types";
 
 interface BannerProps {
   courseId: string;

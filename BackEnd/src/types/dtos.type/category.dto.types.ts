@@ -4,3 +4,7 @@ export interface ICategoryDTO {
   slug: string;
   parent: string | null;
 }
+
+export interface ICaregoryTreeDTO extends ICategoryDTO {
+  children: ICaregoryTreeDTO[];
+}

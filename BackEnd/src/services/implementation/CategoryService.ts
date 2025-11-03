@@ -3,10 +3,11 @@ import startCase from "lodash/startCase.js";
 import { parseObjectId } from "../../mongoose/objectId";
 import { ICategoryRepository } from "../../repository/interface/ICategoryRepository";
 import { ICategoryService } from "../interface/ICategoryService";
-import { ICategory, ICaregoryTree } from "../../types/category.types";
+import { ICategory } from "../../types/category.types";
 import { createHttpError } from "../../utils/http-error";
 import { HttpStatus } from "../../const/http-status";
 import { HttpResponse } from "../../const/error-message";
+import { ICaregoryTreeDTO } from "../../types/dtos.type/category.dto.types";
 
 export class CategoryService implements ICategoryService {
   constructor(private _categoryRepository: ICategoryRepository) {}
@@ -28,19 +29,19 @@ export class CategoryService implements ICategoryService {
       parentId,
     );
   }
-  async listCategories(): Promise<ICaregoryTree[] | null> {
+  async listCategories(): Promise<ICaregoryTreeDTO[] | null> {
     const categories = await this._categoryRepository.listCategories();
     const map = new Map();
     categories?.forEach((cat) => {
       map.set(cat._id.toString(), {
-        key: cat._id.toString(),
+        _id: cat._id.toString(),
         label: cat.title,
         slug: cat.slug,
         parent: null,
         children: [],
       });
     });
-    const tree: ICaregoryTree[] = [];
+    const tree: ICaregoryTreeDTO[] = [];
 
     categories?.forEach((cat) => {
       const node = map.get(cat._id.toString());

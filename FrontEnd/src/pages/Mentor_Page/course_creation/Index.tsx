@@ -1,6 +1,7 @@
 import ManagementLayout from "@/components/layout/ManagementLayout";
 import { BookPlus } from "lucide-react";
-import CourseForm from "@/features/mentor/course-form/courseForm";
+
+  import CourseCreateLayout from "@/features/mentor/course/courseCreation/courseForm";
 // import CourseFormProvider from "@/context/courseForm.context";
 
 const CourseCreation = () => {
@@ -11,7 +12,7 @@ const CourseCreation = () => {
         description=" Create your new Course Here"
         icon={<BookPlus className="h-10 w-10 text-gray-700" />}
       >
-        <CourseForm />
+        <CourseCreateLayout />
       </ManagementLayout>
     </>
   );

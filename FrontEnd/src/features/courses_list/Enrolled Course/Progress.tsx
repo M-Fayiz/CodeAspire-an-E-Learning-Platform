@@ -1,7 +1,7 @@
 import React, { useMemo } from "react";
 import { Check, Circle } from "lucide-react";
-import type { ICourseProgess } from "@/types/DTOS/enrollements.dto";
-import type { ISession } from "@/types/DTOS/courses.types";
+import type { ICourseProgess } from "@/types/DTOS/enrollements.dto.type";
+import type { ISession } from "@/types/DTOS/courses.dto.types";
 
 interface CurriculumProgressProps {
   progress: ICourseProgess;

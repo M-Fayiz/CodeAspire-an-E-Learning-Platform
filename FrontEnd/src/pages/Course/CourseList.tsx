@@ -1,6 +1,6 @@
 import { Link, useSearchParams } from "react-router";
 import CourseCard from "../../features/courses_list/List/CourseCard";
-import type { ICourseData, ISearchQuery } from "@/types/DTOS/courses.types";
+import type { ICourseData, ISearchQuery } from "@/types/DTOS/courses.dto.types";
 import { useEffect, useState } from "react";
 
 import SearchHeader from "../../features/courses_list/List/CourseSearchBar";

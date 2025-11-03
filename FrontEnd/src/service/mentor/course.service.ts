@@ -8,7 +8,7 @@ import type {
   ILecture,
   ISearchQuery,
   ISession,
-} from "@/types/DTOS/courses.types";
+} from "@/types/DTOS/courses.dto.types";
 import type { AxiosError } from "axios";
 import { sharedService } from "../shared.service";
 import { S3BucketUtil } from "@/utility/S3Bucket.util";

@@ -4,7 +4,7 @@ import PaginationRounded from "@/components/ui/Pagination";
 import SearchBar from "@/components/ui/searchBar";
 import useDebounce from "@/hooks/useDebounce";
 import courseService from "@/service/mentor/course.service";
-import type { IFormCourseDTO } from "@/types/DTOS/courses.types";
+import type { IFormCourseDTO } from "@/types/DTOS/courses.dto.types";
 import {
   BookOpen,
   Calendar,

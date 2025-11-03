@@ -7,7 +7,7 @@ import MentorProfile from "@/features/courses_list/Details/AboutMentor";
 import Banner from "@/features/courses_list/Details/Banner";
 import CourseOverview from "@/features/courses_list/Details/OverView";
 import courseService from "@/service/mentor/course.service";
-import type { IFormCourseDTO } from "@/types/DTOS/courses.types";
+import type { IFormCourseDTO } from "@/types/DTOS/courses.dto.types";
 import { ClipboardPen, User } from "lucide-react";
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";

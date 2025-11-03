@@ -4,9 +4,9 @@ import Taps from "@/components/common/Taps";
 import { useCourseFormContext } from "@/context/courseForm.context";
 import { toast } from "sonner";
 
-import CourseCurriculum from "./CourseCurriculum";
-import BasicCourseInformation from "./BasicIformation";
-import Publish from "./Publish";
+import CourseCurriculum from "./CourseCurriculum"; 
+import BasicCourseInformation from "./BasicIformation"; 
+import Publish from "../Publish";
 
 export default function CourseCreateLayout() {
   const [activeTab, setActiveTab] = useState("basic");

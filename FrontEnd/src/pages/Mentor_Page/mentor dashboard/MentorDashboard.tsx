@@ -1,9 +1,9 @@
 import { useEffect, useState } from "react";
 import { TrendingUp, DollarSign, Users, Star } from "lucide-react";
-import type { IMentorDhasboardDTO } from "@/types/DTOS/mentorDashboard.dto";
+import type { IMentorDhasboardDTO } from "@/types/DTOS/mentorDashboard.dto.type";
 import { useAuth } from "@/context/auth.context";
 import { EnrolledService } from "@/service/Learner/enrolledCourse.service";
-import StatCard from "./mentor dashboard/DashboardCard";
+import StatCard from "./DashboardCard";
 import MentorDashboardSkeleton from "@/components/shared/Dashboard";
 import { useNavigate } from "react-router";
 

@@ -29,8 +29,9 @@ import PaymentSuccess from "@/pages/Payment page/PaymentSuccess";
 import CourseEnrolledList from "@/pages/Course/CourseEnrolledList";
 import EnrolledCourseDetails from "@/pages/Course/EnrolledDetails";
 import CourseDashboard from "@/pages/Mentor_Page/course_creation/CourseDashboard";
-import MentorDashboard from "@/pages/Mentor_Page/MentorDashboard";
+import MentorDashboard from "@/pages/Mentor_Page/mentor dashboard/MentorDashboard";
 import ChatPage from "@/pages/chat page/ChatPage";
+import SlotManagement from "@/pages/Mentor_Page/slot management/SlotManagement";
 
 function Form_Courses_Provider() {
   return (
@@ -58,6 +59,7 @@ export const router = createBrowserRouter([
       { path: "reset-password", element: <ResetPassword /> },
     ],
   },
+  // LEARNER ROUTES
   {
     path: "/learner",
     element: (
@@ -75,6 +77,7 @@ export const router = createBrowserRouter([
       { path: "chats", element: <ChatPage /> },
     ],
   },
+  // MENTOR ROUTES
   {
     path: "/mentor",
     element: (
@@ -88,6 +91,7 @@ export const router = createBrowserRouter([
       { path: "profile/:id", element: <ProfileManagement /> },
       { path: "data", element: <MentorDataForm /> },
       { path: "chats", element: <ChatPage /> },
+      { path: "slot-management", element: <SlotManagement /> },
       {
         path: "courses",
         element: <Form_Courses_Provider />,
@@ -99,6 +103,7 @@ export const router = createBrowserRouter([
       },
     ],
   },
+  // ADMIN ROUTES
   {
     path: "/admin",
     element: (

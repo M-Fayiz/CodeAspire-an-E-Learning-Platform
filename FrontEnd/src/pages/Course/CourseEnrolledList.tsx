@@ -3,7 +3,7 @@ import CourseCardSkeleton from "@/components/ui/cartSkelton";
 import { useAuth } from "@/context/auth.context";
 import EnrolledCourseCart from "@/features/courses_list/Enrolled Course/enrolledCart";
 import { EnrolledService } from "@/service/Learner/enrolledCourse.service";
-import type { IEnrolledListDto } from "@/types/DTOS/enrollements.dto";
+import type { IEnrolledListDto } from "@/types/DTOS/enrollements.dto.type";
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 

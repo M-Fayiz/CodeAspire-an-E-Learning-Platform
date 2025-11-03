@@ -12,7 +12,7 @@ import CourseOverview from "@/features/courses_list/Details/OverView";
 import CommentsSection from "@/features/courses_list/Details/Review";
 import CurriculumProgress from "@/features/courses_list/Enrolled Course/Progress";
 import { EnrolledService } from "@/service/Learner/enrolledCourse.service";
-import type { IEnrolledCoursedetailsDTO } from "@/types/DTOS/enrollements.dto";
+import type { IEnrolledCoursedetailsDTO } from "@/types/DTOS/enrollements.dto.type";
 import {
   ClipboardPen,
   PlayCircle,

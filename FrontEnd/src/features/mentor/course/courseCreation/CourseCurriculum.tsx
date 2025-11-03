@@ -24,14 +24,14 @@ import {
 import { Input } from "@/components/ui/Inputs";
 
 import { toast } from "sonner";
-import type { ILecture, ISession } from "@/types/DTOS/courses.types";
+import type { ILecture, ISession } from "@/types/DTOS/courses.dto.types";
 import { useCourseFormContext } from "@/context/courseForm.context";
 import { sessionSchema } from "@/schema/courseForm.schema";
 import courseService from "@/service/mentor/course.service";
 import { Spinner } from "@/components/ui/shadcn-io/spinner";
 import { Notebook } from "lucide-react";
-import { AddLecture } from "./CourseSheetFields.tsx/AddLecture";
-import { EditLecture } from "./CourseSheetFields.tsx/EditLecture";
+import { AddLecture } from "../CourseSheetFields.tsx/AddLecture";
+import { EditLecture } from "../CourseSheetFields.tsx/EditLecture";
 
 interface CurriculumProps {
   courseId?: string;

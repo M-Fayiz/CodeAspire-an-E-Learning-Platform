@@ -1,4 +1,4 @@
-import type { ICourseData } from "@/types/DTOS/courses.types";
+import type { ICourseData } from "@/types/DTOS/courses.dto.types";
 
 interface CourseCardProps {
   course: ICourseData;

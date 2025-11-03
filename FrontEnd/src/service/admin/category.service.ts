@@ -2,9 +2,11 @@ import { axiosInstance } from "@/axios/createInstance";
 import { API } from "@/constants/api.constant";
 import type {
   ICategory,
+  
   ICategoryEdit,
-  ICategoryTree,
+
 } from "@/types/category.types";
+import type { ICategoryDTO } from "@/types/DTOS/category.dto.type"; 
 import type { AxiosError } from "axios";
 
 const categoryService = {
@@ -24,9 +26,10 @@ const categoryService = {
       throw new Error(errorMessage);
     }
   },
-  listCategory: async (): Promise<ICategoryTree[]> => {
+  listCategory: async (): Promise<ICategoryDTO[]> => {
     try {
       const response = await axiosInstance.get(API.CATEGORY.LIST_CATEGORIES);
+
       return response.data.categories;
     } catch (error) {
       const err = error as AxiosError<{ error: string }>;

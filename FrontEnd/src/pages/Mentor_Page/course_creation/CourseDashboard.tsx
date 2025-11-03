@@ -1,8 +1,8 @@
 import { useAuth } from "@/context/auth.context";
-import DashBoardHeader from "@/features/mentor/course-form/CourseDashBoard/DashboardHeader";
-import { ChartAreaInteractive } from "@/features/mentor/course-form/CourseDashBoard/TrendGraph";
+import DashBoardHeader from "@/features/mentor/course/CourseDashBoard/DashboardHeader";
+import { ChartAreaInteractive } from "@/features/mentor/course/CourseDashBoard/TrendGraph";
 import { EnrolledService } from "@/service/Learner/enrolledCourse.service";
-import type { CourseDashboardDTO } from "@/types/DTOS/courseDashboard.dto";
+import type { CourseDashboardDTO } from "@/types/DTOS/courseDashboard.dto.type";
 import CourseComment from "@/features/courses_list/Details/Comment";
 import { useEffect, useState } from "react";
 import { useParams } from "react-router";

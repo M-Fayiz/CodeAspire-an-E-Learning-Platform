@@ -1,4 +1,4 @@
-import type { IEnrolledListDto } from "@/types/DTOS/enrollements.dto";
+import type { IEnrolledListDto } from "@/types/DTOS/enrollements.dto.type";
 import { MoreVertical, Play } from "lucide-react";
 import type React from "react";
 import { useMemo, useState } from "react";

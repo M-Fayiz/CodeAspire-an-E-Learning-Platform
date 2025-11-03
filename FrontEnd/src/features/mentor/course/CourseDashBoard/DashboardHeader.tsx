@@ -1,5 +1,5 @@
 import { useCourseFormContext } from "@/context/courseForm.context";
-import type { CourseDashboardDTO } from "@/types/DTOS/courseDashboard.dto";
+import type { CourseDashboardDTO } from "@/types/DTOS/courseDashboard.dto.type";
 
 import { Eye, Star, TrendingUp, Users } from "lucide-react";
 import type React from "react";

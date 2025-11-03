@@ -1,4 +1,3 @@
-import { Spinner } from "@/components/ui/shadcn-io/spinner";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/Inputs";
 import {
@@ -8,29 +7,36 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { Spinner } from "@/components/ui/shadcn-io/spinner";
 import { useCourseFormContext } from "@/context/courseForm.context";
 import { lectureSchema } from "@/schema/courseForm.schema";
 import courseService from "@/service/mentor/course.service";
-import type { ILecture } from "@/types/DTOS/courses.types";
+import { sharedService } from "@/service/shared.service";
+import type { ILecture, ISession } from "@/types/DTOS/courses.dto.types";
 import { useEffect, useState } from "react";
-import toast from "react-hot-toast";
+import { toast } from "sonner";
 
-interface AddLectureProps {
+interface EditLectureProps {
   closeSheet: () => void;
   courseId: string;
   sessionId: string;
+  lectureId: string;
+  editLecture: ILecture;
 }
-
-export function AddLecture({
+export function EditLecture({
   closeSheet,
   courseId,
   sessionId,
-}: AddLectureProps) {
+  lectureId,
+  editLecture,
+}: EditLectureProps) {
   const [lecture, setLecture] = useState<ILecture>({
-    title: "",
-    lectureType: "none",
-    lectureContent: "",
+    _id: editLecture?._id,
+    title: editLecture?.title,
+    lectureType: editLecture?.lectureType,
+    lectureContent: editLecture?.lectureContent,
   });
+  console.log(sessionId, " selected ");
   const [videoURL, setVideoURL] = useState("");
   const [spin, setSpin] = useState(false);
   const [errors, setErros] = useState<{ [key: string]: string }>({});
@@ -51,15 +57,25 @@ export function AddLecture({
     if (!lecture?.lectureContent) {
       return;
     }
+    async function handlePreview() {
+      if (typeof lecture.lectureContent == "string") {
+        const resultURl = await sharedService.getPreSignedDownloadURL(
+          lecture.lectureContent,
+        );
 
-    if (lecture.lectureContent instanceof File) {
-      const URLobject = URL.createObjectURL(lecture.lectureContent);
-      setVideoURL(URLobject);
+        setVideoURL(resultURl);
+      }
 
-      return () => {
-        URL.revokeObjectURL(URLobject);
-      };
+      if (lecture.lectureContent instanceof File) {
+        const URLobject = URL.createObjectURL(lecture.lectureContent);
+        setVideoURL(URLobject);
+
+        return () => {
+          URL.revokeObjectURL(URLobject);
+        };
+      }
     }
+    handlePreview();
   }, [lecture?.lectureContent]);
 
   const saveLecture = async (e: React.FormEvent) => {
@@ -77,13 +93,15 @@ export function AddLecture({
       }
 
       setSpin(true);
-      const updatedCourseData = await courseService.addLecture(
+
+      const updatedCourseData = await courseService.editLecture(
         courseId,
         sessionId,
+        lectureId,
         lecture,
       );
       if (updatedCourseData) {
-        addSession(updatedCourseData.sessions);
+        addSession(updatedCourseData.sessions as ISession[]);
         setSpin(false);
         closeSheet();
       }

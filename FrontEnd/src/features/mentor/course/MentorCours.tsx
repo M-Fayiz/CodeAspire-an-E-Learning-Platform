@@ -1,6 +1,6 @@
 // MyCourseCard.tsx
 import { sharedService } from "@/service/shared.service";
-import type { IFormCourseDTO } from "@/types/DTOS/courses.types";
+import type { IFormCourseDTO } from "@/types/DTOS/courses.dto.types";
 import { Eye } from "lucide-react";
 import { useEffect, useState } from "react";
 

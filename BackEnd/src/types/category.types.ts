@@ -13,10 +13,4 @@ export interface ICategoryEdit {
   parentId: string;
 }
 
-export interface ICaregoryTree {
-  key: string;
-  label: string;
-  slug: string;
-  parent?: string;
-  children: ICaregoryTree[];
-}
+

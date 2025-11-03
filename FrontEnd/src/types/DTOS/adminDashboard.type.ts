@@ -1,4 +1,4 @@
-import type { ITopCourse } from "./mentorDashboard.dto";
+import type { ITopCourse } from "./mentorDashboard.dto.type";
 
 export interface IAdminDashboardDTO {
   totalMentors: number;

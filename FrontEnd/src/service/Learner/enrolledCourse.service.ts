@@ -4,11 +4,11 @@ import type {
   ICourseProgess,
   IEnrolledCoursedetailsDTO,
   IEnrolledListDto,
-} from "@/types/DTOS/enrollements.dto";
+} from "@/types/DTOS/enrollements.dto.type";
 import { sharedService } from "../shared.service";
 import { throwAxiosError } from "@/utility/throwErrot";
 import type { ChartFilter } from "@/types/enrollent.types";
-import type { IMentorDhasboardDTO } from "@/types/DTOS/mentorDashboard.dto";
+import type { IMentorDhasboardDTO } from "@/types/DTOS/mentorDashboard.dto.type";
 
 export const EnrolledService = {
   getEnrolledCourse: async (learnerId: string): Promise<IEnrolledListDto[]> => {

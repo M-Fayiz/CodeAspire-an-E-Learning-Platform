@@ -1,4 +1,4 @@
-import type { CourseForm, IFormCourseDTO } from "./courses.types";
+import type { CourseForm, IFormCourseDTO } from "./courses.dto.types";
 
 export function CourseFormDTO(course: IFormCourseDTO): CourseForm {
   return {

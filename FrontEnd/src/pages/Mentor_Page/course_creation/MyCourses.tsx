@@ -3,11 +3,11 @@ import ManagementLayout from "@/components/layout/ManagementLayout";
 import { useEffect, useState } from "react";
 import { useAuth } from "@/context/auth.context";
 import courseService from "@/service/mentor/course.service";
-import type { IFormCourseDTO } from "@/types/DTOS/courses.types";
+import type { IFormCourseDTO } from "@/types/DTOS/courses.dto.types";
 import { useCourseFormContext } from "@/context/courseForm.context";
 import { Link, useNavigate, useSearchParams } from "react-router";
-import MyCourseCard from "@/features/mentor/course-form/MentorCours";
-import { CourseFormDTO } from "@/types/DTOS/CourseFormDto";
+import MyCourseCard from "@/features/mentor/course/MentorCours";
+import { CourseFormDTO } from "@/types/DTOS/CourseForm.dto.type";
 import { Spinner } from "@/components/templates/Spinner";
 
 import { PlusCircle } from "lucide-react";

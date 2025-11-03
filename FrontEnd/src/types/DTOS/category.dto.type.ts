@@ -1,7 +1,8 @@
-export interface ICategoryTreeDTO {
+export interface ICategoryDTO {
   _id: string;
   label: string;
   slug: string;
   parent?: string;
-  children?: ICategoryTreeDTO[];
+  children?: ICategoryDTO[];
 }
+

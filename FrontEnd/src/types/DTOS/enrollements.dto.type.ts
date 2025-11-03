@@ -1,4 +1,4 @@
-import type { IFormCourseDTO } from "./courses.types";
+import type { IFormCourseDTO } from "./courses.dto.types";
 
 export interface IEnrolledListDto {
   _id: string;

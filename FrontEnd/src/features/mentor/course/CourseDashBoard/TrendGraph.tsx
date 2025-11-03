@@ -24,7 +24,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import type { ChartDataDTO } from "@/types/DTOS/courseDashboard.dto";
+import type { ChartDataDTO } from "@/types/DTOS/courseDashboard.dto.type";
 import { EnrolledService } from "@/service/Learner/enrolledCourse.service";
 import type { ChartFilter } from "@/types/enrollent.types";
 
