@@ -11,7 +11,7 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import type { ICategoryTree } from "@/types/category.types";
 import { SelectInput } from "@/components/ui/SelectInput";
-import { categorySchema } from "@/schema/categorySchema";
+import { categorySchema } from "@/schema/category.schema";
 
 interface IAddCategoryProps {
   allCategories: ICategoryTree[];

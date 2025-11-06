@@ -5,7 +5,7 @@ const authRouter = express.Router();
 import { Request, Response, NextFunction } from "express";
 import { UserRepository } from "../repository/implementation/UserRepository";
 import { AuthService } from "../services/implementation/authService";
-import { AuthController } from "../controllers/implementation/authController";
+import { AuthController } from "../controllers/implementation/AuthController";
 import { registerSchema } from "../utils/zod";
 import passport from "../utils/passport.util";
 import { env } from "../config/env.config";

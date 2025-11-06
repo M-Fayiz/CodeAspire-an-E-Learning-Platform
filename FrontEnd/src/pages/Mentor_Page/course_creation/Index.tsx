@@ -1,7 +1,7 @@
 import ManagementLayout from "@/components/layout/ManagementLayout";
 import { BookPlus } from "lucide-react";
 
-  import CourseCreateLayout from "@/features/mentor/course/courseCreation/courseForm";
+import CourseCreateLayout from "@/features/mentor/course/courseCreation/courseForm";
 // import CourseFormProvider from "@/context/courseForm.context";
 
 const CourseCreation = () => {

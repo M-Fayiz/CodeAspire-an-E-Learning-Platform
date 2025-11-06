@@ -22,4 +22,5 @@ export const HttpResponse = {
   CHAT_NOT_FOUND: "Chat not found ",
   CHAT_ID_Required: "Chat id  required",
   NOT_PERMINTED: "Not permited to join this chat",
+  COURSE_NOT_FOUND:'Course Not FOund'
 };

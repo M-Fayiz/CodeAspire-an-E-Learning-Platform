@@ -84,57 +84,58 @@ const AdminDashboard = () => {
         ))}
       </div>
       <div className="flex gap-5">
-
-      <div className="bg-white rounded-lg p-6 shadow-sm border border-gray-100">
-        <h3 className="text-lg font-semibold text-gray-900 mb-4">
-          Top Performing Course
-        </h3>
-        <div className="space-y-4">
-          {dashData?.topSelling.course.map((course, i) => (
-            <div key={i} className="flex items-center gap-3">
-              <div
-                className={`w-10 h-10 rounded-lg flex items-center justify-center text-white font-semibold  bg-gray-300`}
-              >
-                {course.title.charAt(0)}
+        <div className="bg-white rounded-lg p-6 shadow-sm border border-gray-100">
+          <h3 className="text-lg font-semibold text-gray-900 mb-4">
+            Top Performing Course
+          </h3>
+          <div className="space-y-4">
+            {dashData?.topSelling.course.map((course, i) => (
+              <div key={i} className="flex items-center gap-3">
+                <div
+                  className={`w-10 h-10 rounded-lg flex items-center justify-center text-white font-semibold  bg-gray-300`}
+                >
+                  {course.title.charAt(0)}
+                </div>
+                <div className="flex-1">
+                  <p className="text-sm font-medium text-gray-900">
+                    {course.title}
+                  </p>
+                  {/* <p className="text-xs text-gray-500">{course.time}</p> */}
+                </div>
+                <div className="flex items-center gap-1 text-gray-500">
+                  <Users className="w-4 h-4" />
+                  <span className="text-xs">{course.enrolledStudent}</span>
+                </div>
               </div>
-              <div className="flex-1">
-                <p className="text-sm font-medium text-gray-900">
-                  {course.title}
-                </p>
-                {/* <p className="text-xs text-gray-500">{course.time}</p> */}
-              </div>
-              <div className="flex items-center gap-1 text-gray-500">
-                <Users className="w-4 h-4" />
-                <span className="text-xs">{course.enrolledStudent}</span>
-              </div>
-            </div>
-          ))}
+            ))}
+          </div>
         </div>
-      </div>
-      <div className="bg-white rounded-lg p-6 shadow-sm border border-gray-100">
-        <h3 className="text-lg font-semibold text-gray-900 mb-4">
-          Top Performing Category
-        </h3>
-        <div className="space-y-4">
-          {dashData?.topSelling.category.map((cat, i) => (
-            <div key={i} className="flex items-center gap-3">
-              <div
-                className={`w-10 h-10 rounded-lg flex items-center justify-center text-white font-semibold  bg-gray-300`}
-              >
-                {cat.title.charAt(0)}
+        <div className="bg-white rounded-lg p-6 shadow-sm border border-gray-100">
+          <h3 className="text-lg font-semibold text-gray-900 mb-4">
+            Top Performing Category
+          </h3>
+          <div className="space-y-4">
+            {dashData?.topSelling.category.map((cat, i) => (
+              <div key={i} className="flex items-center gap-3">
+                <div
+                  className={`w-10 h-10 rounded-lg flex items-center justify-center text-white font-semibold  bg-gray-300`}
+                >
+                  {cat.title.charAt(0)}
+                </div>
+                <div className="flex-1">
+                  <p className="text-sm font-medium text-gray-900">
+                    {cat.title}
+                  </p>
+                  {/* <p className="text-xs text-gray-500">{course.time}</p> */}
+                </div>
+                <div className="flex items-center gap-1 text-gray-500">
+                  <Users className="w-4 h-4" />
+                  <span className="text-xs">{cat.enrolledStudent}</span>
+                </div>
               </div>
-              <div className="flex-1">
-                <p className="text-sm font-medium text-gray-900">{cat.title}</p>
-                {/* <p className="text-xs text-gray-500">{course.time}</p> */}
-              </div>
-              <div className="flex items-center gap-1 text-gray-500">
-                <Users className="w-4 h-4" />
-                <span className="text-xs">{cat.enrolledStudent}</span>
-              </div>
-            </div>
-          ))}
+            ))}
+          </div>
         </div>
-      </div>
       </div>
       <div className="bg-white rounded-lg shadow-sm p-6">
         <h2 className="text-lg font-semibold text-gray-900 mb-4">

@@ -28,7 +28,7 @@ export interface NavigationItem {
   badge?: number;
 }
 
-export const navigationConfig = {
+ const navigationConfig = {
   admin: {
     primary: [
       {
@@ -90,7 +90,7 @@ export const navigationConfig = {
       { icon: Home, label: "Dashboard", path: "/mentor/dashboard" },
       { icon: Book, label: "My Courses", path: "/mentor/courses/my-courses" },
       { icon: Users, label: "Students", path: "/mentor/students" },
-      { icon: CalendarDays, label: "Slots", path: "/mentor/slots" },
+      { icon: CalendarDays, label: "Slots", path: "/mentor/slot-management" },
       // {
       //   icon: PlusCircle,
       //   label: "Create Course",
@@ -113,3 +113,6 @@ export const navigationConfig = {
     ],
   },
 };
+
+
+export default navigationConfig

@@ -1,12 +1,7 @@
 import { axiosInstance } from "@/axios/createInstance";
 import { API } from "@/constants/api.constant";
-import type {
-  ICategory,
-  
-  ICategoryEdit,
-
-} from "@/types/category.types";
-import type { ICategoryDTO } from "@/types/DTOS/category.dto.type"; 
+import type { ICategory, ICategoryEdit } from "@/types/category.types";
+import type { ICategoryDTO } from "@/types/DTOS/category.dto.type";
 import type { AxiosError } from "axios";
 
 const categoryService = {

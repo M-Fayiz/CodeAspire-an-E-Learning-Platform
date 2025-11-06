@@ -7,7 +7,7 @@ import type { IMentorProps } from "../../types/mentor.types";
 import MentorApprovalCard from "../Mentor/mentor-approval/MentorApproval";
 import { useNavigate } from "react-router";
 import { toast } from "sonner";
-import { mentorSchema } from "@/schema/mentorSchema";
+import { mentorSchema } from "@/schema/mentor.schema";
 
 const MentorDataForm = () => {
   const { user } = useAuth();

@@ -26,7 +26,7 @@ const BasicCourseInformation: React.FC<BaseCaourseProps> = () => {
   useEffect(() => {
     const fetchCategories = async () => {
       const result = await categoryService.listCategory();
-      console.log(' result for category : ',result)
+      console.log(" result for category : ", result);
       if (result) {
         setCategories(result);
       }
@@ -56,7 +56,7 @@ const BasicCourseInformation: React.FC<BaseCaourseProps> = () => {
   };
 
   const { categoryOptions, subCategoryOptions } = useMemo(() => {
-    console.log('categories  ::',categories)
+    console.log("categories  ::", categories);
     const categoryOptions = categories.map((category) => ({
       _id: category._id,
       label: category.label,
@@ -72,7 +72,7 @@ const BasicCourseInformation: React.FC<BaseCaourseProps> = () => {
 
     return { categoryOptions, subCategoryOptions };
   }, [categories, selectedCategory]);
-  console.log('selected cate : ',selectedCategory)
+  console.log("selected cate : ", selectedCategory);
   return (
     <div className="p-4 sm:p-6">
       <div className="flex items-center justify-between mb-4">

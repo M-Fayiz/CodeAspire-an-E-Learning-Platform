@@ -1,155 +1,216 @@
-import React, { useState } from 'react';
+import { Input } from "@/components/ui/Inputs";
+import type { IMentorSlot, ISlotDays } from "@/types/slot.types";
+import React, { useEffect, useMemo, useState } from "react";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import courseService from "@/service/mentor/course.service";
+import type { SlotCourseDTO } from "@/types/DTOS/courses.dto.types";
+import { useAuth } from "@/context/auth.context";
+import { SlotDurationOptions } from "@/constants/slotManagment.const";
 
-const SlotBookingForm = () => {
-  const [formData, setFormData] = useState({
-    programType: '',
-    selectedDays: [],
-    startTime: '',
-    endTime: '',
-    capacity: '1'
-  });
+import { SelectField } from "@/components/ui/selectField";
+import { generateTimeOptions } from "@/utility/generateTimes.util";
 
-  const days = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
+interface SlotBookingFormProps {
+  formData: IMentorSlot;
+  setFormData: React.Dispatch<React.SetStateAction<IMentorSlot>>;
+  formError: Partial<Record<keyof IMentorSlot, string>>;
+}
 
+const SlotBookingForm: React.FC<SlotBookingFormProps> = ({
+  formData,
+  setFormData,
+  formError,
+}) => {
+  const days: ISlotDays[] = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"];
 
+  const { user } = useAuth();
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    if (formData.programType && formData.selectedDays.length > 0 && formData.startTime && formData.endTime) {
-     
-      setFormData({
-        programType: '',
-        selectedDays: [],
-        startTime: '',
-        endTime: '',
-        capacity: '1'
-      });
-    }
+  const [courses, setCourses] = useState<SlotCourseDTO[]>([]);
+  useEffect(() => {
+    (async () => {
+      const data = await courseService.listCourseOnSlot(user!.id);
+      if (data) {
+        setCourses(data);
+      }
+    })();
+  }, []);
+
+  const toggleDaySelection = (day: ISlotDays) => {
+    setFormData((prev) => ({
+      ...prev,
+      selectedDays: prev.selectedDays.includes(day)
+        ? prev.selectedDays.filter((d) => d !== day)
+        : [...prev.selectedDays, day],
+    }));
   };
+  console.log("form DAta ", formData);
 
+  const TimeOfSlots = useMemo(() => {
+    return generateTimeOptions(formData.slotDuration);
+  }, [formData.slotDuration]);
   return (
-    <div className="bg-white border border-gray-300 rounded-lg p-6 shadow-sm">
-      <h2 className="text-xl font-semibold text-gray-900 mb-6">Create New Slot</h2>
-      
-      <form onSubmit={handleSubmit} className="space-y-6">
-        {/* Program Type */}
-        <div>
-          <label className="block text-sm font-medium text-gray-900 mb-2">
-            Program Type<span className="text-red-600">*</span>
-          </label>
-          <select
-            value={formData.programType}
-            onChange={(e) => setFormData({ ...formData, programType: e.target.value })}
-            className="w-full px-4 py-2 border border-gray-300 rounded bg-white text-gray-900 focus:outline-none focus:ring-2 focus:ring-gray-400"
-            required
-          >
-            <option value="">Select a program</option>
-            <option value="Strength & Conditioning Basics">Strength & Conditioning Basics</option>
-            <option value="Advanced Training">Advanced Training</option>
-            <option value="Cardio Sessions">Cardio Sessions</option>
-            <option value="Yoga & Flexibility">Yoga & Flexibility</option>
-          </select>
-        </div>
-
-        {/* Select Days */}
-        <div>
-          <label className="block text-sm font-medium text-gray-900 mb-2">
-            Select Days<span className="text-red-600">*</span>
-          </label>
-          <div className="grid grid-cols-7 gap-2">
-            {days.map((day) => (
-              <button
-                key={day}
-                type="button"
-                // onClick={}
-                className={`py-2 px-3 border rounded text-sm font-medium transition-colors ${
-                  formData.selectedDays.includes(day)
-                    ? 'bg-gray-900 text-white border-gray-900'
-                    : 'bg-white text-gray-700 border-gray-300 hover:bg-gray-50'
-                }`}
-              >
-                {day}
-              </button>
+    <div className="space-y-6">
+      <div>
+        <label className="block text-sm font-medium text-gray-900 mb-2">
+          Course <span className="text-red-600">*</span>
+        </label>
+        <Select
+          value={formData.courseId}
+          onValueChange={(value) =>
+            setFormData({ ...formData, courseId: value })
+          }
+        >
+          <SelectTrigger className="w-full h-11 border border-gray-300 rounded-lg bg-white text-gray-900 focus:outline-none focus:ring-2 focus:ring-gray-400">
+            <SelectValue placeholder="Select your Course" />
+          </SelectTrigger>
+          <SelectContent>
+            {courses.map((course) => (
+              <SelectItem key={course._id} value={course._id}>
+                {course.title}
+              </SelectItem>
             ))}
-          </div>
-        </div>
+          </SelectContent>
+        </Select>
+        {formError.courseId && (
+          <p className="text-red-500 text-sm py-1">{formError.courseId}</p>
+        )}
+      </div>
 
-        {/* Time Selection */}
-        <div className="grid grid-cols-2 gap-4">
-          <div>
-            <label className="block text-sm font-medium text-gray-900 mb-2">
-              Start Time<span className="text-red-600">*</span>
-            </label>
-            <select
-              value={formData.startTime}
-              onChange={(e) => setFormData({ ...formData, startTime: e.target.value })}
-              className="w-full px-4 py-2 border border-gray-300 rounded bg-white text-gray-900 focus:outline-none focus:ring-2 focus:ring-gray-400"
-              required
+      <div>
+        <label className="block text-sm font-medium text-gray-900 mb-2">
+          Select Days <span className="text-red-600">*</span>
+        </label>
+        <div className="grid grid-cols-7 gap-2">
+          {days.map((day) => (
+            <button
+              key={day}
+              type="button"
+              onClick={() => toggleDaySelection(day)}
+              className={`py-2 px-3 border rounded-lg text-sm font-medium transition-all duration-200 ${
+                formData.selectedDays.includes(day)
+                  ? "bg-gray-900 text-white border-gray-900"
+                  : "bg-white text-gray-700 border-gray-300 hover:bg-gray-100"
+              }`}
             >
-              <option value="">Select start time</option>
-              <option value="1:30 AM">1:30 AM</option>
-              <option value="6:00 AM">6:00 AM</option>
-              <option value="7:00 AM">7:00 AM</option>
-              <option value="8:00 AM">8:00 AM</option>
-              <option value="9:00 AM">9:00 AM</option>
-              <option value="10:00 AM">10:00 AM</option>
-              <option value="5:00 PM">5:00 PM</option>
-              <option value="6:00 PM">6:00 PM</option>
-            </select>
-          </div>
-          <div>
-            <label className="block text-sm font-medium text-gray-900 mb-2">
-              End Time<span className="text-red-600">*</span>
-            </label>
-            <select
-              value={formData.endTime}
-              onChange={(e) => setFormData({ ...formData, endTime: e.target.value })}
-              className="w-full px-4 py-2 border border-gray-300 rounded bg-white text-gray-900 focus:outline-none focus:ring-2 focus:ring-gray-400"
-              required
-            >
-              <option value="">Select end time</option>
-              <option value="2:30 AM">2:30 AM</option>
-              <option value="7:00 AM">7:00 AM</option>
-              <option value="8:00 AM">8:00 AM</option>
-              <option value="9:00 AM">9:00 AM</option>
-              <option value="10:00 AM">10:00 AM</option>
-              <option value="11:00 AM">11:00 AM</option>
-              <option value="6:00 PM">6:00 PM</option>
-              <option value="7:00 PM">7:00 PM</option>
-            </select>
-          </div>
+              {day}
+            </button>
+          ))}
         </div>
+        {formError.selectedDays && (
+          <p className="text-red-500 text-sm py-1">{formError.selectedDays}</p>
+        )}
+      </div>
 
-        {/* Capacity */}
+      <div className="grid grid-cols-2 gap-4">
         <div>
           <label className="block text-sm font-medium text-gray-900 mb-2">
-            Capacity<span className="text-red-600">*</span>
+            Session Duration <span className="text-red-600">*</span>
           </label>
-          <input
+
+          <SelectField
+            label=""
+            placeholder="Select duration"
+            value={formData.slotDuration}
+            onChange={(value) =>
+              setFormData((prev) => ({ ...prev, slotDuration: Number(value) }))
+            }
+            options={SlotDurationOptions}
+          />
+          {formError.slotDuration && (
+            <p className="text-red-500 text-sm py-1">
+              {formError.slotDuration}
+            </p>
+          )}
+        </div>
+
+        <div>
+          <label className="block text-sm font-medium text-gray-900 mb-2">
+            Session Price <span className="text-red-600">*</span>
+          </label>
+          <Input
             type="number"
             min="1"
-            value={formData.capacity}
-            onChange={(e) => setFormData({ ...formData, capacity: e.target.value })}
-            className="w-full px-4 py-2 border border-gray-300 rounded bg-white text-gray-900 focus:outline-none focus:ring-2 focus:ring-gray-400"
+            value={formData.pricePerSlot}
+            onChange={(e) =>
+              setFormData({ ...formData, pricePerSlot: Number(e.target.value) })
+            }
             required
           />
+          {formError.pricePerSlot && (
+            <p className="text-red-500 text-sm py-1">
+              {formError.pricePerSlot}
+            </p>
+          )}
+        </div>
+      </div>
+
+      <div className="grid grid-cols-2 gap-4">
+        <div>
+          <label className="block text-sm font-medium text-gray-900 mb-2">
+            Start Time <span className="text-red-600">*</span>
+          </label>
+          <Select
+            value={formData.startTime}
+            onValueChange={(value) =>
+              setFormData({ ...formData, startTime: value })
+            }
+          >
+            <SelectTrigger className="w-full h-11 border border-gray-300 rounded-lg bg-white text-gray-900">
+              <SelectValue placeholder="Start Time" />
+            </SelectTrigger>
+            <SelectContent>
+              {TimeOfSlots.map((time) => (
+                <SelectItem key={time} value={time}>
+                  {time}
+                </SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
+
+          {formError.startTime && (
+            <p className="text-red-500 text-sm py-1">{formError.startTime}</p>
+          )}
         </div>
 
-        {/* Note */}
-        <div className="bg-gray-50 border border-gray-200 rounded p-3">
-          <p className="text-sm text-gray-600">
-            Note: The system prevents overlapping slots automatically.
-          </p>
+        <div>
+          <label className="block text-sm font-medium text-gray-900 mb-2">
+            End Time <span className="text-red-600">*</span>
+          </label>
+          <Select
+            value={formData.endTime}
+            onValueChange={(value) =>
+              setFormData({ ...formData, endTime: value })
+            }
+          >
+            <SelectTrigger className="w-full h-11 border border-gray-300 rounded-lg bg-white text-gray-900">
+              <SelectValue placeholder="End Time" />
+            </SelectTrigger>
+            <SelectContent>
+              {TimeOfSlots.map((time) => (
+                <SelectItem key={time} value={time}>
+                  {time}
+                </SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
+          {formError.endTime && (
+            <p className="text-red-500 text-sm py-1">{formError.endTime}</p>
+          )}
         </div>
+      </div>
 
-        {/* Submit Button */}
-        <button
-          type="submit"
-          className="px-6 py-2 bg-gray-600 text-white rounded hover:bg-gray-700 transition-colors font-medium"
-        >
-          Add Slot
-        </button>
-      </form>
+      <div className="bg-gray-50 border border-gray-200 rounded-lg p-3">
+        <p className="text-sm text-gray-600">
+          <strong>Note:</strong> The system automatically prevents overlapping
+          slots.
+        </p>
+      </div>
     </div>
   );
 };

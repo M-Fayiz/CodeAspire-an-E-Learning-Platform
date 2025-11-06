@@ -31,4 +31,5 @@ export interface ICourseController {
   approveCourse(req: Request, res: Response, next: NextFunction): Promise<void>;
   rejectCourse(req: Request, res: Response, next: NextFunction): Promise<void>;
   publishCourse(req: Request, res: Response, next: NextFunction): Promise<void>;
+  getCourseListSlot(req: Request, res: Response, next: NextFunction): Promise<void>;
 }

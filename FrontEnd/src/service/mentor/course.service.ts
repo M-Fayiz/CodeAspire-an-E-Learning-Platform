@@ -8,10 +8,11 @@ import type {
   ILecture,
   ISearchQuery,
   ISession,
+  SlotCourseDTO,
 } from "@/types/DTOS/courses.dto.types";
-import type { AxiosError } from "axios";
 import { sharedService } from "../shared.service";
 import { S3BucketUtil } from "@/utility/S3Bucket.util";
+import { throwAxiosError } from "@/utility/throwErrot";
 
 const courseService = {
   createCourse: async (courseData: ICourseData): Promise<ICourseData> => {
@@ -33,10 +34,7 @@ const courseService = {
       });
       return response.data.createdCourseData;
     } catch (error) {
-      const err = error as AxiosError<{ error: string }>;
-      const errorMessage =
-        err.response?.data?.error || "Something Went wrong Please try again";
-      throw new Error(errorMessage);
+      throwAxiosError(error);
     }
   },
   fetchCourses: async (
@@ -64,10 +62,7 @@ const courseService = {
 
       return { updated, totalDocument: response.data.totalDocument };
     } catch (error) {
-      const err = error as AxiosError<{ error: string }>;
-      const errorMessage =
-        err.response?.data?.error || "Something went wrong. Please try again.";
-      throw new Error(errorMessage);
+      throwAxiosError(error);
     }
   },
 
@@ -82,10 +77,7 @@ const courseService = {
       );
       return response.data.addedSessionData;
     } catch (error) {
-      const err = error as AxiosError<{ error: string }>;
-      const errorMessage =
-        err.response?.data?.error || "Something Went wrong Please try again";
-      throw new Error(errorMessage);
+      throwAxiosError(error);
     }
   },
   addLecture: async (
@@ -120,10 +112,7 @@ const courseService = {
 
       return response.data.addedLectureData;
     } catch (error) {
-      const err = error as AxiosError<{ error: string }>;
-      const errorMessage =
-        err.response?.data?.error || "Something Went wrong Please try again";
-      throw new Error(errorMessage);
+      throwAxiosError(error);
     }
   },
   getCourse: async (courseId: string): Promise<ICourseDTO[] | null> => {
@@ -133,10 +122,7 @@ const courseService = {
       const response = await axiosInstance.get(API.COURSE.GET_COURSE(courseId));
       return response.data.course;
     } catch (error) {
-      const err = error as AxiosError<{ error: string }>;
-      const errorMessage =
-        err.response?.data?.error || "Something Went wrong Please try again";
-      throw new Error(errorMessage);
+      throwAxiosError(error);
     }
   },
   getMentorCourse: async (
@@ -154,10 +140,7 @@ const courseService = {
       console.log(response.data);
       return response.data;
     } catch (error) {
-      const err = error as AxiosError<{ error: string }>;
-      const errorMessage =
-        err.response?.data?.error || "Something Went wrong Please try again";
-      throw new Error(errorMessage);
+      throwAxiosError(error);
     }
   },
   editLecture: async (
@@ -185,10 +168,7 @@ const courseService = {
       );
       return response.data.updatedData;
     } catch (error) {
-      const err = error as AxiosError<{ error: string }>;
-      const errorMessage =
-        err.response?.data?.error || "Something Went wrong Please try again";
-      throw new Error(errorMessage);
+      throwAxiosError(error);
     }
   },
   updateBaseInformation: async (
@@ -214,10 +194,7 @@ const courseService = {
       );
       return response.data.updatedData;
     } catch (error) {
-      const err = error as AxiosError<{ error: string }>;
-      const errorMessage =
-        err.response?.data?.error || "Something Went wrong Please try again";
-      throw new Error(errorMessage);
+      throwAxiosError(error);
     }
   },
   getAdminCourList: async (): Promise<IFormCourseDTO[]> => {
@@ -233,10 +210,7 @@ const courseService = {
 
       return response.data.coursList;
     } catch (error) {
-      const err = error as AxiosError<{ error: string }>;
-      const errorMessage =
-        err.response?.data?.error || "Something Went wrong Please try again";
-      throw new Error(errorMessage);
+      throwAxiosError(error);
     }
   },
   getCourseDetails: async (
@@ -263,10 +237,7 @@ const courseService = {
       }
       return response.data.course;
     } catch (error) {
-      const err = error as AxiosError<{ error: string }>;
-      const errorMessage =
-        err.response?.data?.error || "Something Went wrong Please try again";
-      throw new Error(errorMessage);
+      throwAxiosError(error);
     }
   },
 
@@ -281,10 +252,7 @@ const courseService = {
       );
       return response.data.status;
     } catch (error) {
-      const err = error as AxiosError<{ error: string }>;
-      const errorMessage =
-        err.response?.data?.error || "Something Went wrong Please try again";
-      throw new Error(errorMessage);
+      throwAxiosError(error);
     }
   },
   rejectCourse: async (
@@ -304,10 +272,7 @@ const courseService = {
       );
       return response.data.status;
     } catch (error) {
-      const err = error as AxiosError<{ error: string }>;
-      const errorMessage =
-        err.response?.data?.error || "Something Went wrong Please try again";
-      throw new Error(errorMessage);
+      throwAxiosError(error);
     }
   },
   publishCourse: async (coursId: string) => {
@@ -317,10 +282,22 @@ const courseService = {
       );
       return response.data.status;
     } catch (error) {
-      const err = error as AxiosError<{ error: string }>;
-      const errorMessage =
-        err.response?.data?.error || "Something Went wrong Please try again";
-      throw new Error(errorMessage);
+      throwAxiosError(error);
+    }
+  },
+  /**
+   * Fetches a list of course titles and course IDs for use in the mentor slot creation form.
+   * @param mentorId
+   * @returns list of course ID and tile array of Object
+   */
+  listCourseOnSlot: async (mentorId: string): Promise<SlotCourseDTO[]> => {
+    try {
+      const response = await axiosInstance.get(
+        API.COURSE.LIST_COURSE_FOR_SLOT(mentorId),
+      );
+      return response.data.courseList;
+    } catch (error) {
+      throwAxiosError(error);
     }
   },
 };

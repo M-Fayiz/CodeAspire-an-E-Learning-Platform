@@ -66,3 +66,8 @@ export interface IFormCourseDTO {
   status: "inProgress" | "draft" | "published" | "approved" | "rejected";
   updated: string;
 }
+
+export interface IListCourseSlot{
+  _id:Types.ObjectId,
+  title:string
+}

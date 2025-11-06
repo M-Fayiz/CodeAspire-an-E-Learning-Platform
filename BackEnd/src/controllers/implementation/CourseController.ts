@@ -278,13 +278,6 @@ export class CourseController implements ICourseController {
         feedBack,
         email,
       );
-
-      console.log("this is the notify :", status.notifyDTO);
-      const data = {
-        title: status.notifyDTO.title,
-        message: status.notifyDTO,
-      };
-
    
       sendNotification(status.notifyDTO.userId, status.notifyDTO);
       res
@@ -309,4 +302,13 @@ export class CourseController implements ICourseController {
       next(error);
     }
   };
+  getCourseListSlot=async(req: Request, res: Response, next: NextFunction): Promise<void>=> {
+      try {
+        const {mentorId}=req.params
+        const courseList=await this._courseService.fetchCourseListForSlot(mentorId)
+        res.status(HttpStatus.OK).json(successResponse(HttpResponse.OK,{courseList}))
+      } catch (error) {
+        next(error)
+      }
+  }
 }

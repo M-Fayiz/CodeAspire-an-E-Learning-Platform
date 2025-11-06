@@ -110,3 +110,8 @@ export interface ISearchQuery {
   page?: number;
   limit?: number;
 }
+
+export interface SlotCourseDTO {
+  _id: string;
+  title: string;
+}

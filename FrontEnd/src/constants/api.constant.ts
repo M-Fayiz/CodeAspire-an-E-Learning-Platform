@@ -56,6 +56,7 @@ export const API = {
     COURSE_DETAILS: (courseId: string) => `/courses/${courseId}`,
     APPROVE_CURSE: (courseId: string) => `/courses/admin/approve/${courseId}`,
     REJECT_COURSE: (courseId: string) => `/courses/admin/reject/${courseId}`,
+    LIST_COURSE_FOR_SLOT: (mentorId: string) => `/courses/mentor/${mentorId}`,
   },
   PAYMENT: {
     CREATE_PAYMENT_INTENT: "/orders/create-checkout-session",
@@ -87,5 +88,9 @@ export const API = {
     LIST_USERS: (senderId: string) => `/chats/users/${senderId}`,
     GET_MESSAGE: (chatId: string, limit = 30) =>
       `/chats/${chatId}/messages?limit=${limit}`,
+  },
+  SLOTS: {
+    CREATE_SLOTS: `/slots/create`,
+    GET_MENTOR_SLOTS:(mentorId:string)=>`/slots/${mentorId}`
   },
 };

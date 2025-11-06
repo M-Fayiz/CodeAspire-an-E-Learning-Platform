@@ -23,6 +23,7 @@ import { sessionConfig } from "./config/session.config";
 import { initializeSocket } from "./socket.io/socketEvent";
 import notifyRouter from "./routers/notification.router";
 import chatRouter from "./routers/chat.router";
+import slotRouter from "./routers/slots.router";
 
 dotenv.config();
 
@@ -64,6 +65,7 @@ app.use("/api/v1/enrollements", enrolledRouter);
 app.use("/api/v1/reviews", reviewRouter);
 app.use("/api/v1/notifications", notifyRouter);
 app.use("/api/v1/chats", chatRouter);
+app.use("/api/v1/slots",slotRouter)
 const port = env.port;
 dbConnect();
 

@@ -38,7 +38,7 @@ export function Combobox({
   label,
 }: IComboboxProps) {
   const [open, setOpen] = useState(false);
-  console.log('box options :: ',boxOptions)
+  console.log("box options :: ", boxOptions);
   useEffect(() => {
     const selectedLabel = boxOptions.find((item) => item._id === value)?.label;
     setCategory?.(selectedLabel);

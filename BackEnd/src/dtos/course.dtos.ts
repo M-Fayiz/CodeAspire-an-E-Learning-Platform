@@ -1,11 +1,12 @@
 import { Types } from "mongoose";
-import { ICategory } from "../types/category.types";
+
 import { ICourses } from "../types/courses.type";
 import {
   ICourseDTO,
   ICourseListDTO,
   IPopulatedCourse,
   IFormCourseDTO,
+  IListCourseSlot,
 } from "../types/dtos.type/course.dtos.type";
 
 export function courseListDTO(
@@ -82,4 +83,11 @@ export function formCourseDto(course: IPopulatedCourse): IFormCourseDTO {
     status: course.status,
     updated: course.updatedAt.toISOString(),
   };
+}
+
+export function listCourseForSLot(course:ICourses):IListCourseSlot{
+  return {
+    _id:course._id as Types.ObjectId,
+    title:course.title
+  }
 }

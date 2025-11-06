@@ -5,6 +5,7 @@ import {
   ICourseDTO,
   ICourseListDTO,
   IFormCourseDTO,
+  IListCourseSlot,
 } from "../../types/dtos.type/course.dtos.type";
 import { INotificationDTO } from "../../types/dtos.type/notification.dto.types";
 
@@ -61,4 +62,5 @@ export interface ICourseService {
     email: string,
   ): Promise<{ courseStatus: string | null; notifyDTO: INotificationDTO }>;
   publishCourse(courseId: string): Promise<string | null>;
+  fetchCourseListForSlot(mentorId:string):Promise<IListCourseSlot[]|null>
 }

@@ -5,4 +5,3 @@ export interface ICategoryDTO {
   parent?: string;
   children?: ICategoryDTO[];
 }
-

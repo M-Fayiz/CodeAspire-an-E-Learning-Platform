@@ -1,8 +1,8 @@
 import type { IDecodedUserType } from "../../../types/auth.types";
 import React from "react";
-import { navigationConfig } from "../../../config/UI-config/Navigation.config";
+import  navigationConfig from "../../../config/UI-config/Navigation.config";
 import { Link } from "react-router-dom";
-import type { NavigationItem } from "../../../config/UI-config/Navigation.config";
+import type { NavigationItem } from "../../../config/UI-config/Navigation.config"; 
 import { useLocation } from "react-router";
 
 interface ISidebarProps {

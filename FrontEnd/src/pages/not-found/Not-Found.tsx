@@ -44,6 +44,7 @@ const NotFound: React.FC<NotFoundProps> = ({ error }) => {
           <div className="space-y-4">
             <div className="flex items-center justify-center lg:justify-start gap-2 text-orange-600">
               <Code2 size={32} />
+
               <span className="text-2xl font-bold">CodeApire</span>
             </div>
 

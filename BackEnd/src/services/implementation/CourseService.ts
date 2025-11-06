@@ -9,11 +9,13 @@ import {
   ICourseListDTO,
   IPopulatedCourse,
   IFormCourseDTO,
+  IListCourseSlot,
 } from "../../types/dtos.type/course.dtos.type";
 import {
   courseDTO,
   courseListDTO,
   formCourseDto,
+  listCourseForSLot,
 } from "../../dtos/course.dtos";
 import { createHttpError } from "../../utils/http-error";
 import { HttpStatus } from "../../const/http-status";
@@ -334,5 +336,23 @@ export class CourseService implements ICourseService {
     }
     const courseDetails = await this._courseRepository.publishCourse(id);
     return courseDetails ? courseDetails.status : null;
+  }
+
+  /**
+   * Fetches a mentor’s courses and maps them to a simplified DTO 
+   * containing only course IDs and titles.
+   * @param mentorId 
+   * @returnsA promise resolving to an array of course summaries
+   * @throws HttpErros if no course are found
+   */
+  async fetchCourseListForSlot(mentorId: string): Promise<IListCourseSlot[] | null> {
+      const mentor_Id=parseObjectId(mentorId)
+
+      const courseList=await this._courseRepository.findAllCourse({mentorsId:mentor_Id})
+      if(!courseList){
+        throw createHttpError(HttpStatus.NOT_FOUND,HttpResponse.COURSE_NOT_FOUND)
+      }
+
+      return courseList.map(course=>listCourseForSLot(course))
   }
 }
