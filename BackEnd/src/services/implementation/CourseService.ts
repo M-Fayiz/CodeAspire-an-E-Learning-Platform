@@ -37,8 +37,6 @@ export class CourseService implements ICourseService {
   ) {}
 
   async createCourses(course: ICourses): Promise<ICourses | null> {
-
-
     return await this._courseRepository.createCourses(course);
   }
   async fetchCourses(
@@ -339,20 +337,27 @@ export class CourseService implements ICourseService {
   }
 
   /**
-   * Fetches a mentor’s courses and maps them to a simplified DTO 
+   * Fetches a mentor’s courses and maps them to a simplified DTO
    * containing only course IDs and titles.
-   * @param mentorId 
+   * @param mentorId
    * @returnsA promise resolving to an array of course summaries
    * @throws HttpErros if no course are found
    */
-  async fetchCourseListForSlot(mentorId: string): Promise<IListCourseSlot[] | null> {
-      const mentor_Id=parseObjectId(mentorId)
+  async fetchCourseListForSlot(
+    mentorId: string,
+  ): Promise<IListCourseSlot[] | null> {
+    const mentor_Id = parseObjectId(mentorId);
 
-      const courseList=await this._courseRepository.findAllCourse({mentorsId:mentor_Id})
-      if(!courseList){
-        throw createHttpError(HttpStatus.NOT_FOUND,HttpResponse.COURSE_NOT_FOUND)
-      }
+    const courseList = await this._courseRepository.findAllCourse({
+      mentorsId: mentor_Id,
+    });
+    if (!courseList) {
+      throw createHttpError(
+        HttpStatus.NOT_FOUND,
+        HttpResponse.COURSE_NOT_FOUND,
+      );
+    }
 
-      return courseList.map(course=>listCourseForSLot(course))
+    return courseList.map((course) => listCourseForSLot(course));
   }
 }

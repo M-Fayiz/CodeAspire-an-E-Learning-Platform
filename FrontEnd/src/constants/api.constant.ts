@@ -91,6 +91,11 @@ export const API = {
   },
   SLOTS: {
     CREATE_SLOTS: `/slots/create`,
-    GET_MENTOR_SLOTS:(mentorId:string)=>`/slots/${mentorId}`
+    GET_MENTOR_SLOTS:(mentorId:string)=>`/slots/${mentorId}`,
+    UPDATE_SLOT:(slotId:string)=>`/slots/${slotId}`,
+    GET_COURSE_SLOT:(courseId:string)=>`/slots/course/${courseId}`
   },
+  SLOT_BOOK:{
+    BOOK_SLOT:`/slot-booking/create`
+  }
 };

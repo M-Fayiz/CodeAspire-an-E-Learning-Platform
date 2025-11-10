@@ -1,4 +1,4 @@
-import {  ICategory } from "../../types/category.types";
+import { ICategory } from "../../types/category.types";
 import { ICaregoryTreeDTO } from "../../types/dtos.type/category.dto.types";
 
 export interface ICategoryService {

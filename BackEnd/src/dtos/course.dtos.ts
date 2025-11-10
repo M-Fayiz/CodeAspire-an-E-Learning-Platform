@@ -85,9 +85,9 @@ export function formCourseDto(course: IPopulatedCourse): IFormCourseDTO {
   };
 }
 
-export function listCourseForSLot(course:ICourses):IListCourseSlot{
+export function listCourseForSLot(course: ICourses): IListCourseSlot {
   return {
-    _id:course._id as Types.ObjectId,
-    title:course.title
-  }
+    _id: course._id as Types.ObjectId,
+    title: course.title,
+  };
 }

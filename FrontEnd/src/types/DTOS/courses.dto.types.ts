@@ -31,7 +31,7 @@ export interface ICourseData {
   isEnrolled?: boolean;
 }
 export interface ICourseListDTO {
-  id: string;
+  _id: string;
   title: string;
   thumbnail?: string;
   category: string;

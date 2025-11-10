@@ -153,7 +153,7 @@ export class EnrolledService implements IEnrolledService {
     }
 
     const { avgRating = 0, totalStudents = 0 } = studentsAndRating[0] || {};
-  
+
     return courseDashboardDTO(totalStudents, avgRating, course, revenue[0]);
   }
   async getTrendingCourseGraph(

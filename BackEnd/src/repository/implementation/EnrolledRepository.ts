@@ -130,7 +130,6 @@ export class EnrolledRepository
     ]);
   }
   async getTopSellingCourse(mentorId?: Types.ObjectId): Promise<ITopCourse[]> {
-
     const matchStage = mentorId ? { mentorId } : {};
     return await this.aggregate<ITopCourse>([
       {

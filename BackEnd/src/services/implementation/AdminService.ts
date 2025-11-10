@@ -30,8 +30,8 @@ export class AdminService implements IAdminService {
     private _userRepo: IUserRepo,
     private _notificationRepository: INotificationRepository,
     private _courseRepository: ICourseRepository,
-    private _transactionRepository:ITransactionRepository,
-    private _enrolledRepository:IEnrolledRepository
+    private _transactionRepository: ITransactionRepository,
+    private _enrolledRepository: IEnrolledRepository,
   ) {}
 
   async fetchAllUsers(
@@ -186,15 +186,23 @@ export class AdminService implements IAdminService {
   ): Promise<IAdminDashboardDTO> {
     const { start, end } = timeFilter(filter, startDay, endDay);
 
-    const [mentors, learners, courseCount, revenue,topCourse,topCategory] = await Promise.all([
-      await this._userRepo.findDashBoardUserCount(IRole.Mentor),
-      await this._userRepo.findDashBoardUserCount(IRole.Mentor),
-      await this._courseRepository.findDocumentCount({}),
-      await this._transactionRepository.getAdminRevenue(),
-      await this._enrolledRepository.getTopSellingCourse(),
-      await this._enrolledRepository.getTopSellingCategory()
-    ]);
-    
-    return adminDashboardDTO(mentors,learners,courseCount,revenue[0].revenue,topCourse,topCategory)
+    const [mentors, learners, courseCount, revenue, topCourse, topCategory] =
+      await Promise.all([
+        await this._userRepo.findDashBoardUserCount(IRole.Mentor),
+        await this._userRepo.findDashBoardUserCount(IRole.Mentor),
+        await this._courseRepository.findDocumentCount({}),
+        await this._transactionRepository.getAdminRevenue(),
+        await this._enrolledRepository.getTopSellingCourse(),
+        await this._enrolledRepository.getTopSellingCategory(),
+      ]);
+
+    return adminDashboardDTO(
+      mentors,
+      learners,
+      courseCount,
+      revenue[0].revenue,
+      topCourse,
+      topCategory,
+    );
   }
 }

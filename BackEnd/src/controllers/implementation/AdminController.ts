@@ -39,10 +39,10 @@ export class AdminController implements IAdminController {
     }
   };
   /**
-   * 
-   * @param req 
-   * @param res 
-   * @param next 
+   *
+   * @param req
+   * @param res
+   * @param next
    */
   blockUser = async (
     req: Request,
@@ -110,8 +110,10 @@ export class AdminController implements IAdminController {
     next: NextFunction,
   ): Promise<void> => {
     try {
-      const dashBoardData=await this._adminService.getDashboardData();
-      res.status(HttpStatus.OK).json(successResponse(HttpResponse.OK,{dashBoardData}))
+      const dashBoardData = await this._adminService.getDashboardData();
+      res
+        .status(HttpStatus.OK)
+        .json(successResponse(HttpResponse.OK, { dashBoardData }));
     } catch (error) {
       next(error);
     }

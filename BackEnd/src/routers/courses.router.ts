@@ -32,7 +32,7 @@ courseRouter.get("/my-courses", courseController.getMentorDraftedCourseList);
 courseRouter.get("/admin-courses", courseController.getAdminCoursList);
 courseRouter.get("/:courseId", courseController.getCourse);
 courseRouter.get("/admin/:courseId", courseController.getCourseDetails);
-courseRouter.get('/mentor/:mentorId',courseController.getCourseListSlot)
+courseRouter.get("/mentor/:mentorId", courseController.getCourseListSlot);
 // courseRouter.put("/:id", courseController.updateCourse);
 courseRouter.put("/:courseId", courseController.updateBaseInfo);
 courseRouter.put("/:courseId/sessions", courseController.addSession); //id

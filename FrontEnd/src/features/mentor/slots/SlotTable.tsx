@@ -7,7 +7,7 @@ import { Pencil, Clock } from "lucide-react";
 
 interface SlotListProps {
   slots: IMentorSlot[];
-  onEdit?: (slot: IMentorSlot) => void;
+  onEdit: (slot: IMentorSlot) => void;
   onToggleActive?: (slotId: string, isActive: boolean) => void;
 }
 
@@ -21,7 +21,7 @@ const SlotList: React.FC<SlotListProps> = ({ slots, onEdit, onToggleActive }) =>
       </Card>
     );
   }
-
+  
   return (
     <Card className="bg-white border border-gray-200 text-black shadow-sm">
       <CardHeader className="pb-2">

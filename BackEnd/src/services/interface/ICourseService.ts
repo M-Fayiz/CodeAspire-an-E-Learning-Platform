@@ -62,5 +62,5 @@ export interface ICourseService {
     email: string,
   ): Promise<{ courseStatus: string | null; notifyDTO: INotificationDTO }>;
   publishCourse(courseId: string): Promise<string | null>;
-  fetchCourseListForSlot(mentorId:string):Promise<IListCourseSlot[]|null>
+  fetchCourseListForSlot(mentorId: string): Promise<IListCourseSlot[] | null>;
 }

@@ -1,15 +1,20 @@
-export type ISlotDays = "Mon" | "Tue" | "Wed" | "Thu" | "Fri" | "Sat" | "Sun";
+export type slotDays="Mon"| "Tue"|"Wed"| "Thu"| "Fri"| "Sat"| "Sun"
 
-export interface IMentorSlot {
-  _id?:string
-  mentorId: string;
-  courseId: string;
-  selectedDays: ISlotDays[];
+
+export interface IBaseSlot {
+  selectedDays: slotDays[];
   slotDuration: number;
-  startTime: string;
-  endTime: string;
   isActive?: boolean;
   pricePerSlot?: number;
+  startTime: string;
+  endTime: string;
   createdAt?: Date;
   updatedAt?: Date;
+}
+
+
+export interface  IMentorSlot  extends IBaseSlot{
+  _id?:string
+  mentorId: string;   
+  courseId: string;  
 }

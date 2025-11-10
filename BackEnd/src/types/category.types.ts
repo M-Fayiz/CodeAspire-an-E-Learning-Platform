@@ -12,5 +12,3 @@ export interface ICategoryEdit {
   title: string;
   parentId: string;
 }
-
-

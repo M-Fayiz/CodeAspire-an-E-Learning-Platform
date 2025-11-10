@@ -278,7 +278,7 @@ export class CourseController implements ICourseController {
         feedBack,
         email,
       );
-   
+
       sendNotification(status.notifyDTO.userId, status.notifyDTO);
       res
         .status(HttpStatus.OK)
@@ -302,13 +302,20 @@ export class CourseController implements ICourseController {
       next(error);
     }
   };
-  getCourseListSlot=async(req: Request, res: Response, next: NextFunction): Promise<void>=> {
-      try {
-        const {mentorId}=req.params
-        const courseList=await this._courseService.fetchCourseListForSlot(mentorId)
-        res.status(HttpStatus.OK).json(successResponse(HttpResponse.OK,{courseList}))
-      } catch (error) {
-        next(error)
-      }
-  }
+  getCourseListSlot = async (
+    req: Request,
+    res: Response,
+    next: NextFunction,
+  ): Promise<void> => {
+    try {
+      const { mentorId } = req.params;
+      const courseList =
+        await this._courseService.fetchCourseListForSlot(mentorId);
+      res
+        .status(HttpStatus.OK)
+        .json(successResponse(HttpResponse.OK, { courseList }));
+    } catch (error) {
+      next(error);
+    }
+  };
 }

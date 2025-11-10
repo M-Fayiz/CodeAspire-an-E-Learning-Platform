@@ -12,16 +12,18 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
-import { useEffect, useState } from "react";
+import {  useEffect, useState } from "react";
 import type { IMentorSlot } from "../../../types/slot.types";
 import { SlotService } from "@/service/mentor/slot.service";
 import { useAuth } from "@/context/auth.context";
 import slotSchema from "@/schema/slot.schema";
-import { convertTo24Hour } from "@/utility/generateTimes.util";
+import { convertTo12Hour, convertTo24Hour } from "@/utility/generateTimes.util";
 import SlotList from "@/features/mentor/slots/SlotTable";
+import { toast } from "sonner";
 
 const SlotManagement = () => {
   const [formData, setFormData] = useState<IMentorSlot>({
+    _id:'',
     courseId: "",
     selectedDays: [],
     mentorId: "",
@@ -32,7 +34,8 @@ const SlotManagement = () => {
   });
   const [formError, setFormError] = useState<Record<string, string>>({});
   const { user } = useAuth();
-  const [slot,setSlots]=useState<IMentorSlot[]|null>(null)
+  const [slot,setSlots]=useState<IMentorSlot[]>([])
+  const [isOpen,setIsOpen]=useState(false)
 
     useEffect(()=>{
       (async()=>{
@@ -56,31 +59,99 @@ const SlotManagement = () => {
       setFormError(errors);
       return;
     }
-    formData.startTime = convertTo24Hour(formData.startTime);
-    formData.endTime = convertTo24Hour(formData.endTime);
+    
+        const start24 = convertTo24Hour(formData.startTime);
+    const end24 = convertTo24Hour(formData.endTime);
 
-    if (formData.endTime < formData.startTime) {
-      errors.startTime = "please select Valid Time Format";
-      errors.endTime = "please select Valid Time Format";
+    if (end24 < start24) {
+      errors.startTime = "Please select a valid time range.";
+      errors.endTime = "Please select a valid time range.";
       setFormError(errors);
       return;
     }
+    
+        
+    if(formData._id){
+      try {
+        const updatedData=await SlotService.updateSlot({...formData,
+        startTime: start24,
+        endTime: end24,
+        mentorId: user?.id,
+      },formData._id)
+        setFormError({})
+       setSlots((prev) =>
+          prev.map((slot) =>
+            slot._id === updatedData._id ? { ...slot, ...updatedData } : slot
+          )
+        );
+        setIsOpen(false)
+        resetForm()
+        return
+      } catch (error) {
+        if(error instanceof Error){
+        toast.error(error.message)
+      }
+      }
+      
+      
+    }
 
-    const createdData = await SlotService.createSlots({
-      ...formData,
-      mentorId: user?.id,
-    });
-    setFormError({})
-    console.log("created :", createdData);
+
+    try {
+       const { _id, ...createData } = formData;
+      const createdData = await SlotService.createSlots({
+        ...createData,
+        startTime: start24,
+        endTime: end24,
+        mentorId: user?.id,
+      });
+      setFormError({})
+      resetForm()
+      setIsOpen(false)
+     setSlots((prev) => [...prev, createdData]);
+
+    } catch (error) {
+      if(error instanceof Error){
+        toast.error(error.message)
+      }
+    }
   };
+  const onEdit=(slot:IMentorSlot)=>{
+    
+    setFormData({
+      _id:slot._id,
+      courseId:slot.courseId,
+      mentorId:slot.mentorId,
+      selectedDays:slot.selectedDays,
+      slotDuration:slot.slotDuration,
+      pricePerSlot:slot.pricePerSlot,
+      startTime:convertTo12Hour(slot.startTime),
+      endTime:convertTo12Hour(slot.endTime)
+    })
+    setIsOpen(true)
+  }
+
+  const resetForm = () => {
+  setFormData({
+    _id: '',
+    courseId: "",
+    selectedDays: [],
+    mentorId: user?.id || "",
+    slotDuration: 30,
+    pricePerSlot: 0,
+    startTime: "",
+    endTime: "",
+  });
+  setFormError({});
+};
+
 
   return (
     <>
       <ManagementLayout description="mange your slot " title="slot management">
         <div className="flex flex-col gap-2.5"> 
-
         <div>
-          <Dialog>
+          <Dialog open={isOpen} onOpenChange={setIsOpen}>
             <DialogTrigger asChild>
               <Button variant="outline">
                 <Plus />
@@ -107,7 +178,10 @@ const SlotManagement = () => {
                   <DialogClose asChild>
                     <Button variant="outline">Cancel</Button>
                   </DialogClose>
-                  <Button type="submit">Create Slot</Button>
+                  <Button type="submit">
+  {formData._id ? "Update Slot" : "Create Slot"}
+</Button>
+
                 </DialogFooter>
               </form>
             </DialogContent>
@@ -115,8 +189,7 @@ const SlotManagement = () => {
         </div>
         <div>
           {slot&&(
-
-          <SlotList slots={slot} />
+          <SlotList slots={slot} onEdit={onEdit} />
           )}
         </div>
         </div>

@@ -15,14 +15,14 @@ import { EnrolledRepository } from "../repository/implementation/EnrolledReposit
 const userRepository = new UserRepository();
 const notificationRespository = new NotificationRepository();
 const courseRepository = new CourseRepository();
-const transactionRepository=new TransactionRepositoy()
-const enrolledRepository=new EnrolledRepository()
+const transactionRepository = new TransactionRepositoy();
+const enrolledRepository = new EnrolledRepository();
 const adminService = new AdminService(
   userRepository,
   notificationRespository,
   courseRepository,
   transactionRepository,
-  enrolledRepository
+  enrolledRepository,
 );
 const adminController = new AdminController(adminService);
 

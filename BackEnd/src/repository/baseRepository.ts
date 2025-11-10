@@ -42,8 +42,17 @@ export abstract class BaseRepository<T extends Document> {
     return this.model.countDocuments(filter || {}).exec();
   }
 
-  async findOne(filter: FilterQuery<T>): Promise<T | null> {
-    return this.model.findOne(filter);
+  async findOne<M = T>(
+    filter: FilterQuery<T>,
+    populateFields?: PopulateFieldType,
+  ): Promise<M | null> {
+    let query = this.model.findOne(filter).lean<M>();
+    if (populateFields) {
+      if (Array.isArray(populateFields)) {
+        query = query.populate(populateFields);
+      }
+    }
+    return query.exec();
   }
   async create(data: Partial<T>): Promise<T> {
     const document = new this.model(data);

@@ -12,7 +12,6 @@ export const sendNotification = async (
   let user_ID = String(userId);
   const isOnline = await redisClient.hGet(redisPrefix.ONLINE_USERS, user_ID);
 
-  
   io.to(`user:${userId}`).emit("notification", data);
 
   console.log(`Notification sent to ${userId}: ${data}`);

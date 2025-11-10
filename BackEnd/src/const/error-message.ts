@@ -22,5 +22,8 @@ export const HttpResponse = {
   CHAT_NOT_FOUND: "Chat not found ",
   CHAT_ID_Required: "Chat id  required",
   NOT_PERMINTED: "Not permited to join this chat",
-  COURSE_NOT_FOUND:'Course Not FOund'
+  COURSE_NOT_FOUND: "Course Not FOund",
+  SLOT_EXIST: "A slot with the same mentor, days, and time already exists.",
+  BOOKING_EXIST: " You already Booked one Slot For This Course Review",
+  BOOKING_TIME_CONFLICT: "You already have another session at this time",
 };

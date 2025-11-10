@@ -32,6 +32,7 @@ import CourseDashboard from "@/pages/Mentor_Page/course_creation/CourseDashboard
 import MentorDashboard from "@/pages/Mentor_Page/mentor dashboard/MentorDashboard";
 import ChatPage from "@/pages/chat page/ChatPage";
 import SlotManagement from "@/pages/Mentor_Page/slot management/SlotManagement";
+import SlotBooking from "@/pages/Slots/MentorSlot";
 
 function Form_Courses_Provider() {
   return (
@@ -75,6 +76,7 @@ export const router = createBrowserRouter([
       { path: "enrolled-courses", element: <CourseEnrolledList /> },
       { path: "enrolled-courses/:id", element: <EnrolledCourseDetails /> },
       { path: "chats", element: <ChatPage /> },
+      { path: "slot-booking/:courseId", element: <SlotBooking /> },
     ],
   },
   // MENTOR ROUTES

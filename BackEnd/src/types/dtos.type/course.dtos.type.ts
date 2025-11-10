@@ -67,7 +67,7 @@ export interface IFormCourseDTO {
   updated: string;
 }
 
-export interface IListCourseSlot{
-  _id:Types.ObjectId,
-  title:string
+export interface IListCourseSlot {
+  _id: Types.ObjectId;
+  title: string;
 }

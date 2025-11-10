@@ -198,12 +198,13 @@ export class OrderService implements IOrderService {
         success_url: `${env.CLIENT_ORGIN}/courses/payment-success?session_id={CHECKOUT_SESSION_ID}`,
         client_reference_id: String(orderData._id),
         metadata: {
+          type: "course_purchase",
           orderId,
           courseId,
           userId,
           amount,
           mentorId: String(course.mentorsId._id),
-          categoryId: String(course.categoryId._id),
+          categoryId: String(course.categoryId._d),
         },
       },
       { idempotencyKey: idemKey },
@@ -226,7 +227,7 @@ export class OrderService implements IOrderService {
     const session = await this._stripe.checkout.sessions.retrieve(sessionId, {
       expand: ["payment_intent", "invoice"],
     });
-    console.log("session ", session);
+
     return session;
   }
 }
