@@ -3,7 +3,7 @@ import { ISlotModel, SlotModel } from "../../models/slot.model";
 import { BaseRepository } from "../baseRepository";
 import { ISlotRepository } from "../interface/ISlotRepository";
 import { slotDays } from "../../types/slot.type";
-import { ISlotPopulatedDTO } from "../../types/dtos.type/slots.dto.type";
+import { ISlotpopultedDataFromDB } from "../../types/dtos.type/slots.dto.type";
 
 export class SlotRepository
   extends BaseRepository<ISlotModel>
@@ -44,8 +44,8 @@ export class SlotRepository
   }
   async getCourseSlot(
     courseId: Types.ObjectId,
-  ): Promise<ISlotPopulatedDTO | null> {
-    return await this.findOne<ISlotPopulatedDTO>({ courseId }, [
+  ): Promise<ISlotpopultedDataFromDB | null> {
+    return await this.findOne<ISlotpopultedDataFromDB>({ courseId }, [
       "courseId",
       "mentorId",
     ]);

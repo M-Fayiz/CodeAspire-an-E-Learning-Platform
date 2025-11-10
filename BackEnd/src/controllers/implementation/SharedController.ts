@@ -38,6 +38,7 @@ export class SharedController implements ISharedController {
   ): Promise<void> => {
     try {
       const { key } = req.query;
+      console.log('key if aws file ',key)
       const get_fileURL = await this._sharedService.generatePresignedGetUrl(
         key as string,
       );

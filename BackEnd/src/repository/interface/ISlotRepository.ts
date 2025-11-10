@@ -1,7 +1,7 @@
 import { FilterQuery, Types } from "mongoose";
 import { ISlotModel } from "../../models/slot.model";
 import { slotDays } from "../../types/slot.type";
-import { ISlotPopulatedDTO } from "../../types/dtos.type/slots.dto.type";
+import {  ISlotpopultedDataFromDB } from "../../types/dtos.type/slots.dto.type";
 
 export interface ISlotRepository {
   createSlot(slotData: Partial<ISlotModel>): Promise<ISlotModel>;
@@ -17,6 +17,6 @@ export interface ISlotRepository {
     slotId: Types.ObjectId,
     slotData: ISlotModel,
   ): Promise<ISlotModel | null>;
-  getCourseSlot(courseId: Types.ObjectId): Promise<ISlotPopulatedDTO | null>;
+  getCourseSlot(courseId: Types.ObjectId): Promise<ISlotpopultedDataFromDB | null>;
   findSlotByFilter(filter: FilterQuery<ISlotModel>): Promise<ISlotModel | null>;
 }

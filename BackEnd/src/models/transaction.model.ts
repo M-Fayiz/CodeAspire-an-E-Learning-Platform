@@ -12,6 +12,21 @@ const TransactionSchema = new mongoose.Schema<ITransactionModel>(
       required: true,
       ref: "orders",
     },
+    slotId: {
+      type: Schema.Types.ObjectId,
+      required: true,
+      ref: "Slot",
+    },
+    slotBookingId: {
+      type: Schema.Types.ObjectId,
+      required: true,
+      ref: "slotBooking",
+    },
+    paymentType: {
+      type: String,
+      enum: ["COURSE_PURCHASE", "SLOT_BOOKING"],
+      required: true,
+    },
     status: {
       type: String,
       enum: ["success", "failed", "refunded"],

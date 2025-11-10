@@ -8,6 +8,11 @@ import { createHttpError } from "../../utils/http-error";
 import { timeAndDateGenerator } from "../../utils/timeAndDateGenerator";
 import { ISlotBookingService } from "../interface/ISlotBookingService";
 import { ISlotRepository } from "../../repository/interface/ISlotRepository";
+import { parseObjectId } from "../../mongoose/objectId";
+import { ITransaction } from "../../types/transaction.type";
+import { TransactionType } from "../../const/transaction";
+import { calculateShares } from "../../utils/calculateSplit.util";
+import { ITransactionRepository } from "../../repository/interface/ITransactionRepository";
 
 export class SlotBookingService implements ISlotBookingService {
   private _stripe;
@@ -15,12 +20,25 @@ export class SlotBookingService implements ISlotBookingService {
   constructor(
     private _slotBookingRepository: ISlotBookingRepository,
     private _slotRepository: ISlotRepository,
+    private _transactionRepostiory: ITransactionRepository,
   ) {
     this._stripe = new Stripe(env.STRIPE_SECRETE_KEY as string);
   }
-
+  /**
+   * * Creates a new slot booking for a learner.
+   *
+   * Steps:
+   * 1. Checks if an existing active booking exists (booked or pending).
+   * 2. Determines whether the learner is eligible for a free booking.
+   * 3. Normalizes date and time values.
+   * 4. Validates that no time conflict exists with other bookings.
+   * 5. If the booking is free, stores it directly.
+   * 6. If paid, verifies mentor slot details and creates a Stripe Checkout Session.
+   *
+   * @param bookingData
+   * @returns
+   */
   async createBooking(bookingData: ISlotBooking): Promise<string | null> {
-    
     const { learnerId, courseId } = bookingData;
 
     const activeBooking = await this._slotBookingRepository.findSlots({
@@ -66,7 +84,7 @@ export class SlotBookingService implements ISlotBookingService {
     }
 
     if (bookingData.type == "free") {
-      await this._slotBookingRepository.createBooking(bookingData);
+      await this._slotBookingRepository.createBooking({...bookingData,status:'booked'});
       return null;
     }
 
@@ -79,6 +97,8 @@ export class SlotBookingService implements ISlotBookingService {
         HttpResponse.ITEM_NOT_FOUND,
       );
     }
+    const createdPaidSlot =
+      await this._slotBookingRepository.createBooking(bookingData);
     const session = await this._stripe.checkout.sessions.create({
       payment_method_types: ["card"],
       mode: "payment",
@@ -97,17 +117,68 @@ export class SlotBookingService implements ISlotBookingService {
       success_url: `${env.CLIENT_ORGIN}/courses/payment-success`,
       cancel_url: `${env.CLIENT_ORGIN}/slot-booking/cancel`,
       metadata: {
-        type: "slot_booking",
+        paymentType: "SLOT_BOOKING",
+        bookingId: createdPaidSlot._id.toString(),
         learnerId: learnerId.toString(),
         courseId: courseId.toString(),
         slotId: bookingData.slotId.toString(),
         mentorId: mentorSlot.mentorId.toString(),
-        startTime: bookingData.startTime,
-        endTime: bookingData.endTime,
         amount: mentorSlot.pricePerSlot as number,
       },
     });
 
     return session.url;
+  }
+  /**
+   *  * Handles a slot booking event triggered by the Stripe webhook.
+   *
+   * 1. Validates and extracts metadata from the Stripe session.
+   * 2.  updates booking  status.
+   * 3. Calculates and splits payment shares for admin and mentor.
+   * 4. Creates a transaction record.
+   * 5.
+   * @param session
+   */
+  async handleSlotBooking(session: Stripe.Checkout.Session): Promise<void> {
+    const { slotId, courseId, learnerId, mentorId, amount, bookingId } =
+      session.metadata!;
+
+    const slot_id = parseObjectId(slotId);
+    const learner_id = parseObjectId(learnerId);
+    const mentor_id = parseObjectId(mentorId);
+    const course_id = parseObjectId(courseId);
+
+    if (!slot_id || !learner_id || !mentor_id || !course_id) {
+      throw createHttpError(HttpStatus.BAD_REQUEST, HttpResponse.INVALID_ID);
+    }
+    await this._slotBookingRepository.updateSlotBookingData(
+      { _id: bookingId },
+      { status: "booked" },
+    );
+    const adminShare = calculateShares(Number(amount), Number(env.ADMIN_SHARE));
+    const mentorShare = calculateShares(
+      Number(amount),
+      Number(env.MENTOR_SHARE),
+    );
+
+    const paymentIntentId =
+      typeof session.payment_intent === "string"
+        ? session.payment_intent
+        : session.payment_intent?.id;
+
+    const transactionData: ITransaction = {
+      paymentType: TransactionType.SLOT_BOOKING,
+      amount: Number(amount),
+      userId: learner_id,
+      mentorId: mentor_id,
+      status: "success",
+      paymentMethod: "stripe",
+      gatewayTransactionId: paymentIntentId as string,
+      adminShare,
+      mentorShare,
+      courseId: course_id,
+      slotId: slot_id,
+    };
+    await this._transactionRepostiory.createTransaction(transactionData);
   }
 }

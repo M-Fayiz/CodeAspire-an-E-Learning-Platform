@@ -17,7 +17,7 @@ const SessionBookingSchema = new mongoose.Schema<ISlotBookingModel>(
     status: {
       type: String,
       enum: ["booked", "completed", "Pending"],
-      default: "booked",
+      default: "Pending",
     },
     feedback: { type: String },
   },
@@ -25,6 +25,6 @@ const SessionBookingSchema = new mongoose.Schema<ISlotBookingModel>(
 );
 
 export const SlotBookingModel = mongoose.model(
-  "sessionBooking",
+  "slotBooking",
   SessionBookingSchema,
 );

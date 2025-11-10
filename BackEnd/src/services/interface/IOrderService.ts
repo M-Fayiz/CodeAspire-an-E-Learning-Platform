@@ -1,7 +1,5 @@
-import { Request } from "express";
 import Stripe from "stripe";
 export interface IOrderService {
-  processEvent(req: Request): Promise<void>;
   paymentIntent(
     userId: string,
     courseId: string,
@@ -9,4 +7,5 @@ export interface IOrderService {
   getPaymentData(
     sessionId: string,
   ): Promise<Stripe.Response<Stripe.Checkout.Session>>;
+  handleCoursePurchase(session: Stripe.Checkout.Session): Promise<void>;
 }

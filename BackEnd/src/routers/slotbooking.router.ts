@@ -5,13 +5,17 @@ import { SlotBookingRepository } from "../repository/implementation/SlotBookingR
 import { SlotBookingService } from "../services/implementation/SlotBookingService";
 import { SlotBookingController } from "../controllers/implementation/SlotBookingController";
 import { SlotRepository } from "../repository/implementation/SlotRepository";
+import { TransactionRepositoy } from "../repository/implementation/TransactionRepository";
 
 const slotBookingRepository = new SlotBookingRepository();
 const slotRepository = new SlotRepository();
+const tansactionRepository = new TransactionRepositoy();
 const slotBookingService = new SlotBookingService(
   slotBookingRepository,
   slotRepository,
+  tansactionRepository,
 );
+
 const slotBookingController = new SlotBookingController(slotBookingService);
 
 bookingROuter.post("/create", slotBookingController.createBooking);

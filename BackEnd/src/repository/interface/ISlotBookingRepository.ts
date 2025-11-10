@@ -1,4 +1,4 @@
-import { FilterQuery, Types } from "mongoose";
+import { FilterQuery, Types, UpdateQuery } from "mongoose";
 import { ISlotBookingModel } from "../../models/sessionBooking.model";
 import { ISlotBooking } from "../../types/sessionBooking.type";
 
@@ -14,4 +14,8 @@ export interface ISlotBookingRepository {
   findAllSlots(
     query: FilterQuery<ISlotBooking>,
   ): Promise<ISlotBookingModel[] | null>;
+  updateSlotBookingData(
+    filter: FilterQuery<ISlotBookingModel>,
+    data: UpdateQuery<ISlotBookingModel>,
+  ): Promise<ISlotBookingModel | null>;
 }

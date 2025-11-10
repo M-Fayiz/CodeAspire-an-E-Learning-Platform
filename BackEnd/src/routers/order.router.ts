@@ -37,12 +37,4 @@ orderRouter.post(
   orderController.create_intent,
 );
 
-const webhookRouter = express.Router();
-webhookRouter.post(
-  "/payment",
-  // verifyUser,
-  // authorizedRole(IRole.Learner)
-  orderController.paymentWebhok,
-);
-
-export { webhookRouter, orderRouter };
+export default orderRouter;

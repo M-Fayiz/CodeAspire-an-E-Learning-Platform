@@ -15,7 +15,7 @@ import adminRouter from "./routers/admin.router";
 import categoryRouter from "./routers/category.router";
 import courseRouter from "./routers/courses.router";
 import sharedRouter from "./routers/shared.router";
-import { orderRouter, webhookRouter } from "./routers/order.router";
+// import { orderRouter, webhookRouter } from "./routers/order.router";
 import enrolledRouter from "./routers/enrolled.router";
 import reviewRouter from "./routers/review.router";
 import http from "http";
@@ -25,6 +25,8 @@ import notifyRouter from "./routers/notification.router";
 import chatRouter from "./routers/chat.router";
 import slotRouter from "./routers/slots.router";
 import bookingROuter from "./routers/slotbooking.router";
+import orderRouter from "./routers/order.router";
+import webhookRouter from "./routers/webhook.router";
 
 dotenv.config();
 

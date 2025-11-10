@@ -4,14 +4,15 @@ import UserService from "@/service/user.service";
 import type { MentorDTO } from "@/types/DTOS/SharedCourseDetails";
 import { MessageSquare } from "lucide-react";
 import React, { useEffect, useState } from "react";
-import { useNavigate } from "react-router";
+import { Link, useNavigate } from "react-router";
 import { toast } from "sonner";
 
 interface MentorProps {
   mentorId: string;
+  courseId:string
 }
 
-const MentorProfile: React.FC<MentorProps> = ({ mentorId }) => {
+const MentorProfile: React.FC<MentorProps> = ({ mentorId ,courseId}) => {
   const [mentorProfile, setMentorProfile] = useState<MentorDTO>({
     name: "",
     bio: "",
@@ -107,14 +108,23 @@ const MentorProfile: React.FC<MentorProps> = ({ mentorId }) => {
               </a>
             )}
           </div>
+          <div className="flex gap-3">
 
-          <button
-            onClick={createChatRoom}
-            className="inline-flex items-center gap-3 bg-orange-500 hover:bg-orange-600 text-white font-semibold px-6 py-3 rounded-full shadow-lg transition-all duration-300 hover:shadow-xl"
-          >
-            <MessageSquare className={`text-white w-4 h-4 hidden md:block`} />{" "}
-            Chat with Mentor
-          </button>
+            <button
+              onClick={createChatRoom}
+              className="inline-flex items-center gap-3 bg-orange-500 hover:bg-orange-600 text-white font-semibold px-6 py-3 rounded-full shadow-lg transition-all duration-300 hover:shadow-xl"
+            >
+              <MessageSquare className={`text-white w-4 h-4 hidden md:block`} />{" "}
+              Chat with Mentor
+            </button>
+            <Link
+              to={`/learner/slot-booking/${courseId}`}
+              className="inline-flex items-center gap-3 bg-orange-500 hover:bg-orange-600 text-white font-semibold px-6 py-3 rounded-full shadow-lg transition-all duration-300 hover:shadow-xl"
+            >
+              <MessageSquare className={`text-white w-4 h-4 hidden md:block`} />{" "}
+              Book Slot With mentor
+            </Link>
+          </div>
         </div>
       </div>
     </section>

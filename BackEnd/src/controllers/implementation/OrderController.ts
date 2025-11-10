@@ -8,19 +8,6 @@ import { successResponse } from "../../utils/response.util";
 export class OrderController implements IOrderController {
   constructor(private _orderService: IOrderService) {}
 
-  paymentWebhok = async (
-    req: Request,
-    res: Response,
-    next: NextFunction,
-  ): Promise<void> => {
-    try {
-      await this._orderService.processEvent(req);
-
-      res.status(HttpStatus.OK).send(HttpResponse.OK);
-    } catch (error) {
-      next(error);
-    }
-  };
   create_intent = async (
     req: Request,
     res: Response,

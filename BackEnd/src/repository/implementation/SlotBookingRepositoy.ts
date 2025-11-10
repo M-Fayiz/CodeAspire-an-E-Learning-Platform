@@ -1,4 +1,4 @@
-import { FilterQuery, Types } from "mongoose";
+import { FilterQuery, Types, UpdateQuery } from "mongoose";
 import {
   ISlotBookingModel,
   SlotBookingModel,
@@ -38,5 +38,11 @@ export class SlotBookingRepository
     query: FilterQuery<ISlotBooking>,
   ): Promise<ISlotBookingModel[] | null> {
     return await this.find(query);
+  }
+  async updateSlotBookingData(
+    filter: FilterQuery<ISlotBookingModel>,
+    data: UpdateQuery<ISlotBookingModel>,
+  ): Promise<ISlotBookingModel | null> {
+    return await this.findOneAndUpdate(filter, data);
   }
 }

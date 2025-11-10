@@ -269,3 +269,5 @@ const CourseCurriculum: React.FC<CurriculumProps> = () => {
 };
 
 export default CourseCurriculum;
+
+

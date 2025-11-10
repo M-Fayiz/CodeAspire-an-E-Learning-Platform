@@ -1,7 +1,10 @@
 import { Types } from "mongoose";
 
 export interface ITransaction {
-  orderId: Types.ObjectId;
+  paymentType: "COURSE_PURCHASE" | "SLOT_BOOKING";
+  orderId?: Types.ObjectId;
+  slotBookingId?: Types.ObjectId;
+  slotId?: Types.ObjectId;
   userId: Types.ObjectId;
   mentorId: Types.ObjectId;
   courseId: Types.ObjectId;

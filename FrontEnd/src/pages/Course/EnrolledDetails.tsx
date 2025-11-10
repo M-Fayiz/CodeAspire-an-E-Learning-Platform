@@ -11,6 +11,7 @@ import Banner from "@/features/courses_list/Details/Banner";
 import CourseOverview from "@/features/courses_list/Details/OverView";
 import CommentsSection from "@/features/courses_list/Details/Review";
 import CurriculumProgress from "@/features/courses_list/Enrolled Course/Progress";
+import { courseDetails } from "@/features/courses_list/List/CourseLoader";
 import { EnrolledService } from "@/service/Learner/enrolledCourse.service";
 import type { IEnrolledCoursedetailsDTO } from "@/types/DTOS/enrollements.dto.type";
 import {
@@ -153,6 +154,7 @@ const EnrolledCourseDetails = () => {
             {activeTap === "overview" && <CourseOverview />}
             {activeTap === "mentor" && (
               <MentorProfile
+              courseId={enrolledCourse?.courseId as string}
                 mentorId={enrolledCourse?.course.mentorsId._id as string}
               />
             )}

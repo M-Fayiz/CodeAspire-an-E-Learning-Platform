@@ -148,4 +148,12 @@ export abstract class BaseRepository<T extends Document> {
 
     return this.model.find(filter);
   }
+  async findOneAndUpdate(
+    filter: FilterQuery<T>,
+    updateData: UpdateQuery<T>,
+  ): Promise<T | null> {
+    return this.model
+      .findOneAndUpdate(filter, updateData, { new: true })
+      .lean<T>();
+  }
 }
