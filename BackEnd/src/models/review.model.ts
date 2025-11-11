@@ -1,5 +1,6 @@
 import mongoose, { Document, Types } from "mongoose";
 import { IReview } from "../types/review.type";
+import { DbModelName } from "../const/modelName";
 
 export interface IReviewModel extends IReview, Document {
   _id: Types.ObjectId;
@@ -9,12 +10,12 @@ const reviewSchema = new mongoose.Schema<IReviewModel>(
   {
     courseId: {
       type: mongoose.Schema.Types.ObjectId,
-      ref: "courses",
+      ref: DbModelName.COURSE,
       required: true,
     },
     learnerId: {
       type: mongoose.Schema.Types.ObjectId,
-      ref: "User",
+      ref:DbModelName.USER,
       required: true,
     },
     comment: {
@@ -29,7 +30,7 @@ const reviewSchema = new mongoose.Schema<IReviewModel>(
     replies: {
       mentorId: {
         type: mongoose.Schema.Types.ObjectId,
-        ref: "User",
+        ref: DbModelName.USER,
       },
       comment: String,
     },
@@ -37,6 +38,6 @@ const reviewSchema = new mongoose.Schema<IReviewModel>(
   { timestamps: true },
 );
 
-const ReviewModel = mongoose.model<IReviewModel>("reviews", reviewSchema);
+const ReviewModel = mongoose.model<IReviewModel>(DbModelName.REVIEW, reviewSchema);
 
 export default ReviewModel;

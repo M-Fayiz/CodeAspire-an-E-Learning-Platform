@@ -1,6 +1,7 @@
 import mongoose, { Types, Document } from "mongoose";
 import { IEnrollement } from "../types/enrollment.types";
-import { number, Schema } from "zod";
+
+import { DbModelName } from "../const/modelName";
 
 export interface IEnrolledModel
   extends Document<Types.ObjectId>,
@@ -10,21 +11,21 @@ const enrolledSchema = new mongoose.Schema<IEnrolledModel>(
   {
     courseId: {
       type: mongoose.Schema.Types.ObjectId,
-      ref: "courses",
+      ref: DbModelName.COURSE,
       required: true,
     },
     categoryId: {
       type: mongoose.Schema.Types.ObjectId,
-      ref: "Category",
+      ref:DbModelName.CATEGORY,
     },
     learnerId: {
       type: mongoose.Schema.Types.ObjectId,
       required: true,
-      ref: "User",
+      ref:DbModelName.USER,
     },
     mentorId: {
       type: mongoose.Schema.Types.ObjectId,
-      ref: "User",
+      ref: DbModelName.USER,
     },
     createdAt: {
       type: Date,
@@ -46,6 +47,6 @@ const enrolledSchema = new mongoose.Schema<IEnrolledModel>(
 );
 
 export const EnrolleModel = mongoose.model<IEnrolledModel>(
-  "enrolles",
+  DbModelName.ENROLLMENT,
   enrolledSchema,
 );

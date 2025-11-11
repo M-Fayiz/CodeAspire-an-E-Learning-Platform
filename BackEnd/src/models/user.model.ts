@@ -1,5 +1,6 @@
 import mongoose, { Document, Types } from "mongoose";
 import { IUser, IAdmin, ILearner, IMentor, IRole } from "../types/user.types";
+import { DbModelName } from "../const/modelName";
 
 const option = { discriminatorKey: "role", timeStamps: true };
 
@@ -34,7 +35,7 @@ const BaseUserSchema = new mongoose.Schema(
   },
   option,
 );
-export const UserModel = mongoose.model<IUserModel>("User", BaseUserSchema);
+export const UserModel = mongoose.model<IUserModel>(DbModelName.USER, BaseUserSchema);
 
 const MentorSchema = new mongoose.Schema({
   expertise: [String],

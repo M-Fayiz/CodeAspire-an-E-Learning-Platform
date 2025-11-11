@@ -1,5 +1,6 @@
 import mongoose, { Schema, Document, Types } from "mongoose";
 import { IMentorSlot } from "../types/slot.type";
+import { DbModelName } from "../const/modelName";
 
 export interface ISlotModel extends IMentorSlot, Document {
   _id: Types.ObjectId;
@@ -7,8 +8,8 @@ export interface ISlotModel extends IMentorSlot, Document {
 
 const SlotSchema = new mongoose.Schema<ISlotModel>(
   {
-    mentorId: { type: Schema.Types.ObjectId, ref: "User", required: true },
-    courseId: { type: Schema.Types.ObjectId, ref: "courses", required: true },
+    mentorId: { type: Schema.Types.ObjectId, ref: DbModelName.USER, required: true },
+    courseId: { type: Schema.Types.ObjectId, ref: DbModelName.COURSE, required: true },
     selectedDays: {
       type: [String],
       enum: ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"],
@@ -23,4 +24,4 @@ const SlotSchema = new mongoose.Schema<ISlotModel>(
   { timestamps: true },
 );
 
-export const SlotModel = mongoose.model<ISlotModel>("Slot", SlotSchema);
+export const SlotModel = mongoose.model<ISlotModel>(DbModelName.SLOT, SlotSchema);

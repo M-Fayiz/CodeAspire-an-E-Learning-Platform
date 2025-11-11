@@ -1,5 +1,6 @@
 import mongoose, { Types, Document, Schema } from "mongoose";
 import { IOrder } from "../types/order.type";
+import { DbModelName } from "../const/modelName";
 
 export interface IOrderModel
   extends Document<Types.ObjectId>,
@@ -10,7 +11,7 @@ const OrderSchema = new mongoose.Schema<IOrderModel>(
     courseId: {
       type: Schema.Types.ObjectId,
       required: true,
-      ref: "courses",
+      ref: DbModelName.COURSE,
     },
     status: {
       type: String,
@@ -24,7 +25,7 @@ const OrderSchema = new mongoose.Schema<IOrderModel>(
     userId: {
       type: Schema.Types.ObjectId,
       required: true,
-      ref: "User",
+      ref:DbModelName.USER,
     },
     paymentIntentId: {
       type: String,
@@ -33,4 +34,4 @@ const OrderSchema = new mongoose.Schema<IOrderModel>(
   { timestamps: true },
 );
 
-export const OrderModel = mongoose.model<IOrderModel>("orders", OrderSchema);
+export const OrderModel = mongoose.model<IOrderModel>(DbModelName.ORDER, OrderSchema);

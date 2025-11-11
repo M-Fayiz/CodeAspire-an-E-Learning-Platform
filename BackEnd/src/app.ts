@@ -49,6 +49,7 @@ app.use(express.urlencoded({ extended: true }));
 app.use(session(sessionConfig));
 
 const server = http.createServer(app);
+//socket 
 initializeSocket(server);
 
 app.use(passport.initialize());

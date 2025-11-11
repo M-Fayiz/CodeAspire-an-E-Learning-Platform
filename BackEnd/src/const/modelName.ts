@@ -1,0 +1,15 @@
+
+export enum DbModelName {
+  CATEGORY = 'Category',
+  CHAT = 'Chat',
+  COURSE = 'Course',
+  ENROLLMENT = 'Enrollment',
+  NOTIFICATION = 'Notification',
+  ORDER = 'Order',
+  REVIEW = 'Review',
+  SLOT_BOOKING = 'SlotBooking',
+  SLOT = 'Slot',
+  TRANSACTION = 'Transaction',
+  USER = 'User',
+  MESSAGE = 'Message',
+}

@@ -1,13 +1,14 @@
 import mongoose, { Schema, Document, Types } from "mongoose";
 import { IMessage } from "../types/message.type";
+import { DbModelName } from "../const/modelName";
 
 export interface IMessageModel
   extends Document<Types.ObjectId>,
     Omit<IMessage, "_id"> {}
 
 const MessageSchema = new mongoose.Schema<IMessageModel>({
-  chatId: { type: Schema.Types.ObjectId, ref: "Chat", required: true },
-  sender: { type: Schema.Types.ObjectId, ref: "User", required: true },
+  chatId: { type: Schema.Types.ObjectId, ref: DbModelName.CHAT, required: true },
+  sender: { type: Schema.Types.ObjectId, ref: DbModelName.USER, required: true },
   content: { type: String },
   type: {
     type: String,
@@ -24,6 +25,6 @@ const MessageSchema = new mongoose.Schema<IMessageModel>({
 });
 
 export const MessageModel = mongoose.model<IMessageModel>(
-  "messages",
+ DbModelName.MESSAGE,
   MessageSchema,
 );

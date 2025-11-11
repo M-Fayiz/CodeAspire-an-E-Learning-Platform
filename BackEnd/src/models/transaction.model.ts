@@ -1,5 +1,6 @@
 import mongoose, { Types, Document, Schema } from "mongoose";
 import { ITransaction } from "../types/transaction.type";
+import { DbModelName } from "../const/modelName";
 
 export interface ITransactionModel
   extends Document<Types.ObjectId>,
@@ -8,19 +9,16 @@ export interface ITransactionModel
 const TransactionSchema = new mongoose.Schema<ITransactionModel>(
   {
     orderId: {
-      type: Schema.Types.ObjectId,
-      required: true,
-      ref: "orders",
+      type: Schema.Types.ObjectId, 
+      ref: DbModelName.ORDER,
     },
     slotId: {
       type: Schema.Types.ObjectId,
-      required: true,
-      ref: "Slot",
+      ref:DbModelName.SLOT,
     },
     slotBookingId: {
       type: Schema.Types.ObjectId,
-      required: true,
-      ref: "slotBooking",
+      ref: DbModelName.SLOT_BOOKING,
     },
     paymentType: {
       type: String,
@@ -38,12 +36,12 @@ const TransactionSchema = new mongoose.Schema<ITransactionModel>(
     userId: {
       type: Schema.Types.ObjectId,
       required: true,
-      ref: "User",
+      ref:DbModelName.USER,
     },
     mentorId: {
       type: Schema.Types.ObjectId,
       required: true,
-      ref: "User",
+      ref: DbModelName.USER,
     },
     gatewayTransactionId: {
       type: String,
@@ -54,7 +52,7 @@ const TransactionSchema = new mongoose.Schema<ITransactionModel>(
     courseId: {
       type: Schema.Types.ObjectId,
       required: true,
-      ref: "courses",
+      ref: DbModelName.COURSE,
     },
     adminShare: { type: Number, required: true },
     mentorShare: { type: Number, required: true },
@@ -63,6 +61,6 @@ const TransactionSchema = new mongoose.Schema<ITransactionModel>(
 );
 
 export const transactionModel = mongoose.model<ITransactionModel>(
-  "transactions",
+  DbModelName.TRANSACTION,
   TransactionSchema,
 );

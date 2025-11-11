@@ -1,5 +1,6 @@
 import mongoose from "mongoose";
 import { ICourses } from "../types/courses.type";
+import { DbModelName } from "../const/modelName";
 
 const courseSchema = new mongoose.Schema<ICourses>(
   {
@@ -15,12 +16,12 @@ const courseSchema = new mongoose.Schema<ICourses>(
     },
     categoryId: {
       type: mongoose.Schema.Types.ObjectId,
-      ref: "Category",
+      ref: DbModelName.CATEGORY,
       required: true,
     },
     subCategoryId: {
       type: mongoose.Schema.Types.ObjectId,
-      ref: "Category",
+      ref: DbModelName.CATEGORY,
     },
     language: {
       type: String,
@@ -34,7 +35,7 @@ const courseSchema = new mongoose.Schema<ICourses>(
     },
     mentorsId: {
       type: mongoose.Schema.Types.ObjectId,
-      ref: "User",
+      ref: DbModelName.USER,
     },
     isActive: {
       type: Boolean,
@@ -80,4 +81,4 @@ const courseSchema = new mongoose.Schema<ICourses>(
   { timestamps: true },
 );
 
-export const courseModel = mongoose.model<ICourses>("courses", courseSchema);
+export const courseModel = mongoose.model<ICourses>(DbModelName.COURSE, courseSchema);

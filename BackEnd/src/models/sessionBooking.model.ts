@@ -1,5 +1,6 @@
 import mongoose, { Types, Schema, Document } from "mongoose";
 import { ISlotBooking } from "../types/sessionBooking.type";
+import { DbModelName } from "../const/modelName";
 
 export interface ISlotBookingModel extends ISlotBooking, Document {
   _id: Types.ObjectId;
@@ -7,9 +8,9 @@ export interface ISlotBookingModel extends ISlotBooking, Document {
 
 const SessionBookingSchema = new mongoose.Schema<ISlotBookingModel>(
   {
-    learnerId: { type: Schema.Types.ObjectId, ref: "User", required: true },
-    courseId: { type: Schema.Types.ObjectId, ref: "courses", required: true },
-    slotId: { type: Schema.Types.ObjectId, ref: "MentorSlot", required: true },
+    learnerId: { type: Schema.Types.ObjectId, ref: DbModelName.USER, required: true },
+    courseId: { type: Schema.Types.ObjectId, ref: DbModelName.COURSE, required: true },
+    slotId: { type: Schema.Types.ObjectId, ref: DbModelName.SLOT, required: true },
     date: { type: Date, required: true },
     startTime: { type: String, required: true },
     endTime: { type: String, required: true },
@@ -25,6 +26,6 @@ const SessionBookingSchema = new mongoose.Schema<ISlotBookingModel>(
 );
 
 export const SlotBookingModel = mongoose.model(
-  "slotBooking",
+ DbModelName.SLOT_BOOKING,
   SessionBookingSchema,
 );

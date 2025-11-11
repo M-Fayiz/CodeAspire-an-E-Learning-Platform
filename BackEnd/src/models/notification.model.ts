@@ -1,5 +1,6 @@
 import mongoose, { Document, Schema, Types } from "mongoose";
 import { INotification } from "../types/notification.types";
+import { DbModelName } from "../const/modelName";
 
 export interface INotificationModel
   extends Document<Types.ObjectId>,
@@ -9,7 +10,7 @@ const NotificationSchema = new mongoose.Schema<INotificationModel>(
   {
     userId: {
       type: Schema.Types.ObjectId,
-      ref: "User",
+      ref: DbModelName.USER,
       required: true,
     },
     message: {
@@ -34,6 +35,6 @@ const NotificationSchema = new mongoose.Schema<INotificationModel>(
 );
 
 export const NotificationModel = mongoose.model<INotificationModel>(
-  "Notification",
+  DbModelName.NOTIFICATION,
   NotificationSchema,
 );

@@ -1,5 +1,6 @@
 import mongoose from "mongoose";
 import { ICategory } from "../types/category.types";
+import { DbModelName } from "../const/modelName";
 
 const categorySchema = new mongoose.Schema<ICategory>({
   title: {
@@ -13,12 +14,12 @@ const categorySchema = new mongoose.Schema<ICategory>({
   },
   parentId: {
     type: mongoose.Schema.Types.ObjectId,
-    ref: "Category",
+    ref: DbModelName.CATEGORY,
     default: null,
   },
 });
 
 export const CategoryModel = mongoose.model<ICategory>(
-  "Category",
+  DbModelName.CATEGORY,
   categorySchema,
 );
