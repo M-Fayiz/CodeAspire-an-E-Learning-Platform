@@ -35,7 +35,10 @@ const BaseUserSchema = new mongoose.Schema(
   },
   option,
 );
-export const UserModel = mongoose.model<IUserModel>(DbModelName.USER, BaseUserSchema);
+export const UserModel = mongoose.model<IUserModel>(
+  DbModelName.USER,
+  BaseUserSchema,
+);
 
 const MentorSchema = new mongoose.Schema({
   expertise: [String],

@@ -1,20 +1,38 @@
-export type slotDays="Mon"| "Tue"|"Wed"| "Thu"| "Fri"| "Sat"| "Sun"
+import type { ICourseData } from "./DTOS/courses.dto.types";
 
+export type Days =
+  | "Monday"
+  | "Tuesday"
+  | "Wednesday"
+  | "Thursday"
+  | "Friday"
+  | "Saturday"
+  | "Sunday";
+
+export type SlotDay = {
+  startTime: string;
+  endTime: string;
+  day: Days;
+  active: boolean;
+};
 
 export interface IBaseSlot {
-  selectedDays: slotDays[];
+  selectedDays: SlotDay[];
   slotDuration: number;
   isActive?: boolean;
   pricePerSlot?: number;
-  startTime: string;
-  endTime: string;
   createdAt?: Date;
   updatedAt?: Date;
 }
 
+export interface IMentorSlot extends IBaseSlot {
+  _id?: string;
+  mentorId: string;
+  courseId: string;
+}
 
-export interface  IMentorSlot  extends IBaseSlot{
-  _id?:string
-  mentorId: string;   
-  courseId: string;  
+export interface mentorPopulatedSlots extends IBaseSlot {
+  _id: string;
+  mentorId: string;
+  courseId: ICourseData;
 }

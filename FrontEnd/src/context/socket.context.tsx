@@ -1,4 +1,5 @@
 // src/context/socket.context.tsx
+import { SocketEvents } from "@/constants/socketEvents";
 import React, {
   createContext,
   useContext,
@@ -39,7 +40,7 @@ export const SocketProvider: React.FC<SocketProviderProps> = ({
       },
     });
 
-    newSocket.on("connect", () => {
+    newSocket.on(SocketEvents.CONNECT, () => {
       console.log("Socket connected", newSocket.id);
     });
 
@@ -47,7 +48,7 @@ export const SocketProvider: React.FC<SocketProviderProps> = ({
       console.error("❌ Socket connection error:", err.message);
     });
 
-    newSocket.on("disconnect", (reason) => {
+    newSocket.on(SocketEvents.DISCONNECT, (reason) => {
       console.warn("🔌 Socket disconnected:", reason);
     });
 

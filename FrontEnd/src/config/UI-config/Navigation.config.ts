@@ -28,7 +28,7 @@ export interface NavigationItem {
   badge?: number;
 }
 
- const navigationConfig = {
+const navigationConfig = {
   admin: {
     primary: [
       {
@@ -77,6 +77,7 @@ export interface NavigationItem {
         badge: 2,
       },
       { icon: Activity, label: "Progress", path: "/learner/progress" },
+      { icon: CalendarDays, label: "Slots", path: "/learner/slot-booking" },
     ],
     secondary: [
       { icon: ShoppingCart, label: "Course Store", path: "/learner/store" },
@@ -90,7 +91,16 @@ export interface NavigationItem {
       { icon: Home, label: "Dashboard", path: "/mentor/dashboard" },
       { icon: Book, label: "My Courses", path: "/mentor/courses/my-courses" },
       { icon: Users, label: "Students", path: "/mentor/students" },
-      { icon: CalendarDays, label: "Slots", path: "/mentor/slot-management" },
+      {
+        icon: CalendarDays,
+        label: "Slots Management",
+        path: "/mentor/slot-management",
+      },
+      {
+        icon: CalendarDays,
+        label: "Booked Slots",
+        path: "/mentor/booked-slot-list",
+      },
       // {
       //   icon: PlusCircle,
       //   label: "Create Course",
@@ -114,5 +124,4 @@ export interface NavigationItem {
   },
 };
 
-
-export default navigationConfig
+export default navigationConfig;

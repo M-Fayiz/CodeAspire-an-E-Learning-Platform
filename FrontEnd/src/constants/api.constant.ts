@@ -91,11 +91,19 @@ export const API = {
   },
   SLOTS: {
     CREATE_SLOTS: `/slots/create`,
-    GET_MENTOR_SLOTS:(mentorId:string)=>`/slots/${mentorId}`,
-    UPDATE_SLOT:(slotId:string)=>`/slots/${slotId}`,
-    GET_COURSE_SLOT:(courseId:string)=>`/slots/course/${courseId}`
+    GET_MENTOR_SLOTS: (mentorId: string) => `/slots/${mentorId}`,
+    UPDATE_SLOT: (slotId: string) => `/slots/${slotId}`,
+    GET_COURSE_SLOT: (courseId: string) => `/slots/course/${courseId}`,
   },
-  SLOT_BOOK:{
-    BOOK_SLOT:`/slot-booking/create`
-  }
+  SLOT_BOOK: {
+    BOOK_SLOT: `/slot-booking/create`,
+    ListeUserBooking: (learnerId: string) =>
+      `/slot-booking/learner/${learnerId}`,
+    ListeMentorBooking: (mentorId: string) =>
+      `/slot-booking/mentor/${mentorId}`,
+    UPDATE_BOOKINGL: (slotId: string) => `/slot-booking/${slotId}`,
+  },
+  VIDEO: {
+    START_VIDEO: (bookingId: string) => `/video/start/${bookingId}`,
+  },
 };

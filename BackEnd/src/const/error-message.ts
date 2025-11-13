@@ -1,3 +1,5 @@
+import { Days } from "../types/slot.type";
+
 export const HttpResponse = {
   OK: "OK",
   SERVER_ERROR: "internal server Error!",
@@ -15,7 +17,7 @@ export const HttpResponse = {
   TOKEN_NOT_FOUND: "Token not Found",
   ACCESS_DENIED: "Access Denied!",
   ITEM_EXIST: "Item Already Exist",
-  INVALID_ID: "Invalid id",
+  INVALID_ID: `Invalid Id`,
   ITEM_NOT_FOUND: "Item not Found !",
   ORDER_EXIST: " You have already Purchased this Course !",
   FAILED_TO_CREATE_REVIE: "failed to add your review !",
@@ -23,7 +25,14 @@ export const HttpResponse = {
   CHAT_ID_Required: "Chat id  required",
   NOT_PERMINTED: "Not permited to join this chat",
   COURSE_NOT_FOUND: "Course Not FOund",
-  SLOT_EXIST: "A slot with the same mentor, days, and time already exists.",
+  SLOT_EXIST: "A slot for the same course already exists.",
   BOOKING_EXIST: " You already Booked one Slot For This Course Review",
   BOOKING_TIME_CONFLICT: "You already have another session at this time",
+  NO_BOOKED_SLOT: "We can't find your booked slot",
+  NOT_STARTED:
+    "The session has not started yet. Please wait until the start time.",
+  SESSION_ENDED: "The session has already ended.",
+  SLOT_EXIST_DAYS: (day: Days, existing: string, requested?: string) =>
+    `You have already a slot on ${day} ${existing}`,
+  SLOT_DATE: "You can only join on the scheduled date.",
 };

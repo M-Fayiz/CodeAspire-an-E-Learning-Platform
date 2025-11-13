@@ -13,6 +13,16 @@ import { ITransaction } from "../../types/transaction.type";
 import { TransactionType } from "../../const/transaction";
 import { calculateShares } from "../../utils/calculateSplit.util";
 import { ITransactionRepository } from "../../repository/interface/ITransactionRepository";
+import {
+  IBookingDTOforLearner,
+  IVideoSessionDTO,
+} from "../../types/dtos.type/slotBooking.dto.type";
+import {
+  ListBookedSlotOfLearner,
+  videoSessionDTO,
+} from "../../dtos/slotBooking.dto";
+import { FilterQuery, Types } from "mongoose";
+import { ISlotBookingModel } from "../../models/sessionBooking.model";
 
 export class SlotBookingService implements ISlotBookingService {
   private _stripe;
@@ -74,6 +84,7 @@ export class SlotBookingService implements ISlotBookingService {
       learnerId,
       startTime: { $lt: endTime },
       endTime: { $gt: startTime },
+      status: { $ne: "completed" },
     });
 
     if (overlap) {
@@ -84,7 +95,10 @@ export class SlotBookingService implements ISlotBookingService {
     }
 
     if (bookingData.type == "free") {
-      await this._slotBookingRepository.createBooking({...bookingData,status:'booked'});
+      await this._slotBookingRepository.createBooking({
+        ...bookingData,
+        status: "booked",
+      });
       return null;
     }
 
@@ -180,5 +194,94 @@ export class SlotBookingService implements ISlotBookingService {
       slotId: slot_id,
     };
     await this._transactionRepostiory.createTransaction(transactionData);
+  }
+
+  async findBookedSlot(bookedId: string): Promise<IVideoSessionDTO> {
+    const booked_id = parseObjectId(bookedId);
+    if (!booked_id) {
+      throw createHttpError(HttpStatus.BAD_REQUEST, HttpResponse.INVALID_ID);
+    }
+
+    const bookedData = await this._slotBookingRepository.findSlots({
+      _id: booked_id,
+    });
+
+    if (!bookedData) {
+      throw createHttpError(HttpStatus.NOT_FOUND, HttpResponse.NO_BOOKED_SLOT);
+    }
+
+    const now = new Date();
+    const startTime = new Date(bookedData.startTime);
+    const endTime = new Date(bookedData.endTime);
+
+    const EARLY_JOIN_BUFFER = Number(env.EARLY_JOIN_BUFFER) * 60 * 1000;
+
+    const currentDate = now.toISOString().split("T")[0];
+    const sessionDate = new Date(bookedData.date).toISOString().split("T")[0];
+    if (currentDate !== sessionDate) {
+      throw createHttpError(HttpStatus.CONFLICT, HttpResponse.SLOT_DATE);
+    }
+
+    if (now.getTime() < startTime.getTime() - EARLY_JOIN_BUFFER) {
+      throw createHttpError(HttpStatus.CONFLICT, HttpResponse.NOT_STARTED);
+    }
+
+    if (now.getTime() > endTime.getTime()) {
+      throw createHttpError(HttpStatus.CONFLICT, HttpResponse.SESSION_ENDED);
+    }
+
+    return videoSessionDTO(bookedData);
+  }
+  async ListLearnerBookedSlots(
+    learnerId?: string,
+    mentorId?: string,
+    page?: number,
+  ): Promise<IBookingDTOforLearner[]> {
+    let limit = 8;
+
+    let skip = page ? (page - 1) * limit : 0;
+    if (!learnerId && !mentorId) {
+      throw createHttpError(HttpStatus.BAD_REQUEST, HttpResponse.INVALID_ID);
+    }
+    let query: FilterQuery<ISlotBookingModel> = {};
+
+    if (learnerId) {
+      query.learnerId = learnerId;
+    } else {
+      query.mentorId = mentorId;
+    }
+    const bookedListss = await this._slotBookingRepository.listbookedSlots(
+      query,
+      limit,
+      skip,
+    );
+
+    return bookedListss.map((slot) => ListBookedSlotOfLearner(slot));
+  }
+  async addFeedback(
+    bookedId: string,
+    feedBack: string,
+  ): Promise<{ feedback: string; bookedId: Types.ObjectId }> {
+    const booked_id = parseObjectId(bookedId);
+    if (!booked_id) {
+      throw createHttpError(HttpStatus.BAD_REQUEST, HttpResponse.INVALID_ID);
+    }
+
+    const updatedData = await this._slotBookingRepository.updateSlotBookingData(
+      { _id: booked_id },
+      { feedback: feedBack },
+    );
+
+    if (!updatedData) {
+      throw createHttpError(
+        HttpStatus.INTERNAL_SERVER_ERROR,
+        HttpResponse.SERVER_ERROR,
+      );
+    }
+
+    return {
+      feedback: updatedData.feedback as string,
+      bookedId: updatedData._id,
+    };
   }
 }

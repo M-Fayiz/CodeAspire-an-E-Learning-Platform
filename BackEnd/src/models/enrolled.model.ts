@@ -16,12 +16,12 @@ const enrolledSchema = new mongoose.Schema<IEnrolledModel>(
     },
     categoryId: {
       type: mongoose.Schema.Types.ObjectId,
-      ref:DbModelName.CATEGORY,
+      ref: DbModelName.CATEGORY,
     },
     learnerId: {
       type: mongoose.Schema.Types.ObjectId,
       required: true,
-      ref:DbModelName.USER,
+      ref: DbModelName.USER,
     },
     mentorId: {
       type: mongoose.Schema.Types.ObjectId,

@@ -8,6 +8,8 @@ export interface ISlotBooking {
   startTime: Date | string;
   endTime: Date | string;
   type?: "free" | "paid";
-  status?: "booked" | "completed" | "Pending";
+  status?: "booked" | "completed" | "Pending" | "canceled" | "refunded";
   feedback?: string;
+  studentStatus?: "passed" | "failed" | "Pending";
+  mentorId: Types.ObjectId;
 }

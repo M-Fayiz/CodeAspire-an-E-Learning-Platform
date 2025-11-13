@@ -7,8 +7,16 @@ export interface IMessageModel
     Omit<IMessage, "_id"> {}
 
 const MessageSchema = new mongoose.Schema<IMessageModel>({
-  chatId: { type: Schema.Types.ObjectId, ref: DbModelName.CHAT, required: true },
-  sender: { type: Schema.Types.ObjectId, ref: DbModelName.USER, required: true },
+  chatId: {
+    type: Schema.Types.ObjectId,
+    ref: DbModelName.CHAT,
+    required: true,
+  },
+  sender: {
+    type: Schema.Types.ObjectId,
+    ref: DbModelName.USER,
+    required: true,
+  },
   content: { type: String },
   type: {
     type: String,
@@ -25,6 +33,6 @@ const MessageSchema = new mongoose.Schema<IMessageModel>({
 });
 
 export const MessageModel = mongoose.model<IMessageModel>(
- DbModelName.MESSAGE,
+  DbModelName.MESSAGE,
   MessageSchema,
 );

@@ -43,7 +43,11 @@ export function SelectField<T extends string | number>({
 
         <SelectContent>
           {options.map((opt) => (
-            <SelectItem key={opt.value} value={String(opt.value)}>
+            <SelectItem
+              key={opt.value}
+              value={String(opt.value)}
+              className="h-11"
+            >
               {opt.label}
             </SelectItem>
           ))}

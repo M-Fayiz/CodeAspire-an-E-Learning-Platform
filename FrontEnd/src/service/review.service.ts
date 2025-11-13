@@ -16,14 +16,12 @@ export const ReviewService = {
         courseId,
         comment,
       });
-      if(response.data.ceratedReview.learner.profilePicture){
-
+      if (response.data.ceratedReview.learner.profilePicture) {
         const presignedUrl = await sharedService.getPreSignedDownloadURL(
           response.data.ceratedReview.learner.profilePicture,
         );
         response.data.ceratedReview.learner.profilePicture = presignedUrl;
       }
- 
 
       return response.data.ceratedReview;
     } catch (error) {
@@ -35,10 +33,9 @@ export const ReviewService = {
       const response = await axiosInstance.get(
         API.REVIEW.GET_REVIEWS(courseId),
       );
-      
-      for (let review of response.data.courseReview) {
-        if( review.learner.profilePicture){
 
+      for (let review of response.data.courseReview) {
+        if (review.learner.profilePicture) {
           review.learner.profilePicture =
             await sharedService.getPreSignedDownloadURL(
               review.learner.profilePicture,

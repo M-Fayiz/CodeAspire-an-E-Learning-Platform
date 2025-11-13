@@ -17,27 +17,25 @@ type PopulateFieldType =
 export abstract class BaseRepository<T extends Document> {
   constructor(protected model: Model<T>) {}
 
-  async findAll(
+  async findAll<F = T>(
     filter?: FilterQuery<T>,
     limit?: number,
     skip?: number,
     populateFields?: PopulateFieldType,
-  ): Promise<T[]> {
-    let query = this.model.find(filter || {});
-    if (limit !== undefined) {
-      query = query.limit(limit);
-    }
-    if (skip !== undefined) {
-      query = query.skip(skip);
-    }
-    if (populateFields) {
-      if (Array.isArray(populateFields)) {
-        query = query.populate(populateFields);
-      }
-    }
+    desSort?: boolean,
+  ): Promise<F[]> {
+    let query = this.model.find(filter || {}).lean<F>();
 
-    return query.exec();
+    if (limit !== undefined) query = query.limit(limit);
+    if (skip !== undefined) query = query.skip(skip);
+    if (populateFields && Array.isArray(populateFields))
+      query = query.populate(populateFields);
+
+    query = query.sort({ createdAt: desSort ? -1 : 1 });
+
+    return query.exec() as unknown as F[];
   }
+
   async countDocuments(filter?: FilterQuery<T>): Promise<number> {
     return this.model.countDocuments(filter || {}).exec();
   }

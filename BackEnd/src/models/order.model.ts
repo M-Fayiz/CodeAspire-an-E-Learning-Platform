@@ -25,7 +25,7 @@ const OrderSchema = new mongoose.Schema<IOrderModel>(
     userId: {
       type: Schema.Types.ObjectId,
       required: true,
-      ref:DbModelName.USER,
+      ref: DbModelName.USER,
     },
     paymentIntentId: {
       type: String,
@@ -34,4 +34,7 @@ const OrderSchema = new mongoose.Schema<IOrderModel>(
   { timestamps: true },
 );
 
-export const OrderModel = mongoose.model<IOrderModel>(DbModelName.ORDER, OrderSchema);
+export const OrderModel = mongoose.model<IOrderModel>(
+  DbModelName.ORDER,
+  OrderSchema,
+);

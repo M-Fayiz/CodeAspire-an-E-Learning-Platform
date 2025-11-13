@@ -1,8 +1,10 @@
+import { Types } from "mongoose";
 import { ISlotModel } from "../models/slot.model";
 import {
   ISlotDTO,
   ISlotPopulatedDTO,
   ISlotpopultedDataFromDB,
+  mentorUnPopulatedSlots,
 } from "../types/dtos.type/slots.dto.type";
 
 export function slotDTO(slotData: ISlotModel): ISlotDTO {
@@ -12,10 +14,8 @@ export function slotDTO(slotData: ISlotModel): ISlotDTO {
     courseId: slotData.courseId,
     selectedDays: slotData.selectedDays,
     slotDuration: slotData.slotDuration,
-    isActive: slotData.isActive,
     pricePerSlot: slotData.pricePerSlot,
-    startTime: slotData.startTime,
-    endTime: slotData.endTime,
+    isActive: slotData.isActive,
   };
 }
 
@@ -25,11 +25,23 @@ export function slotPopulatedMapper(
   return {
     _id: slotData._id,
     course: slotData.courseId,
-    endTime: slotData.endTime,
-    startTime: slotData.startTime,
     mentor: slotData.mentorId,
     selectedDays: slotData.selectedDays,
     slotDuration: slotData.slotDuration,
+    createdAt: slotData.createdAt,
+    updatedAt: slotData.updatedAt,
+  };
+}
+
+export function mentorSlotsDTO(slotData: mentorUnPopulatedSlots): ISlotDTO {
+  return {
+    _id: slotData._id,
+    courseId: slotData.courseId._id as Types.ObjectId,
+    mentorId: slotData.mentorId,
+    selectedDays: slotData.selectedDays,
+    slotDuration: slotData.slotDuration,
+    pricePerSlot: slotData.pricePerSlot,
+    isActive: slotData.isActive,
     createdAt: slotData.createdAt,
     updatedAt: slotData.updatedAt,
   };

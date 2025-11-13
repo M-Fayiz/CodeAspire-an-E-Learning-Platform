@@ -7,14 +7,15 @@ import { sharedService } from "../shared.service";
 
 export const SlotService = {
   /**
-   * create new Slot by mentor , or updating existing slot 
-   * @param slotFormData 
+   * create new Slot by mentor , or updating existing slot
+   * @param slotFormData
    * @returns  new created document from the DB
    */
-  createSlots: async (slotFormData: Partial<IMentorSlot>):Promise<IMentorSlot> => {
+  createSlots: async (
+    slotFormData: Partial<IMentorSlot>,
+  ): Promise<IMentorSlot> => {
     console.log(slotFormData);
     try {
-      
       const response = await axiosInstance.post(
         API.SLOTS.CREATE_SLOTS,
         slotFormData,
@@ -30,38 +31,48 @@ export const SlotService = {
    * @param mentorId s
    * @returns an array of IMentorSlot
    */
-  getMentorSlotList:async(mentorId:string):Promise<IMentorSlot[]>=>{
+  getMentorSlotList: async (mentorId: string): Promise<IMentorSlot[]> => {
     try {
-        const response=await axiosInstance.get(API.SLOTS.GET_MENTOR_SLOTS(mentorId))
-        return response.data.mentorSlots
-
+      const response = await axiosInstance.get(
+        API.SLOTS.GET_MENTOR_SLOTS(mentorId),
+      );
+      return response.data.mentorSlots;
     } catch (error) {
-        throwAxiosError(error)
+      throwAxiosError(error);
     }
-  },/**
-   * 
-   * @param slotFormData 
-   * @param slotId 
+  } /**
+   *
+   * @param slotFormData
+   * @param slotId
    * @returns updated slot data after mapping
-   */
-  updateSlot:async(slotFormData: Partial<IMentorSlot>,slotId:string):Promise<IMentorSlot>=>{
+   */,
+  updateSlot: async (
+    slotFormData: Partial<IMentorSlot>,
+    slotId: string,
+  ): Promise<IMentorSlot> => {
     try {
-      const response=await  axiosInstance.put(API.SLOTS.UPDATE_SLOT(slotId),slotFormData)
-      return response.data.updatedSlot
+      const response = await axiosInstance.put(
+        API.SLOTS.UPDATE_SLOT(slotId),
+        slotFormData,
+      );
+      return response.data.updatedSlot;
     } catch (error) {
-      throwAxiosError(error)
+      throwAxiosError(error);
     }
-  }
-  ,
-  getCourseSlot:async(courseId:string):Promise<ISlotPopulatedDTO>=>{
+  },
+  getCourseSlot: async (courseId: string): Promise<ISlotPopulatedDTO> => {
     try {
-      console.log('course Id',courseId)
-      const response=await axiosInstance.get(API.SLOTS.GET_COURSE_SLOT(courseId))
-      const profileUrl=await sharedService.getPreSignedDownloadURL(response.data.slotData.mentor.profilePicture)
-      response.data.slotData.mentor.profilePicture=profileUrl
-      return response.data.slotData
+      console.log("course Id", courseId);
+      const response = await axiosInstance.get(
+        API.SLOTS.GET_COURSE_SLOT(courseId),
+      );
+      const profileUrl = await sharedService.getPreSignedDownloadURL(
+        response.data.slotData.mentor.profilePicture,
+      );
+      response.data.slotData.mentor.profilePicture = profileUrl;
+      return response.data.slotData;
     } catch (error) {
-      throwAxiosError(error)
+      throwAxiosError(error);
     }
-  }
+  },
 };

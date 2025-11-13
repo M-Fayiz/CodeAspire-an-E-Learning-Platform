@@ -1,7 +1,7 @@
 import type { mentorApprovalStatus } from "../users.type";
 
 export interface IBaseRoleDTO {
-  id: string;
+  _id: string;
   name: string;
   email: string;
   phone?: string;
@@ -21,4 +21,4 @@ export interface IMentorDTO extends IBaseRoleDTO {
   isRequested?: boolean;
 }
 
-export type IRole = "admin"| "mentor"| "learner"
+export type IRole = "admin" | "mentor" | "learner";

@@ -1,5 +1,5 @@
 import { Input } from "@/components/ui/Inputs";
-import type { IMentorSlot, ISlotDays } from "@/types/slot.types";
+import type { Days, IMentorSlot, SlotDay } from "@/types/slot.types";
 import React, { useEffect, useMemo, useState } from "react";
 import {
   Select,
@@ -12,9 +12,12 @@ import courseService from "@/service/mentor/course.service";
 import type { SlotCourseDTO } from "@/types/DTOS/courses.dto.types";
 import { useAuth } from "@/context/auth.context";
 import { SlotDurationOptions } from "@/constants/slotManagment.const";
-
 import { SelectField } from "@/components/ui/selectField";
-import { generateTimeOptions } from "@/utility/generateTimes.util";
+import {
+  convertTo24Hour,
+  generateTimeOptions,
+} from "@/utility/generateTimes.util";
+import { Checkbox } from "@/components/ui/checkbox";
 
 interface SlotBookingFormProps {
   formData: IMentorSlot;
@@ -27,33 +30,32 @@ const SlotBookingForm: React.FC<SlotBookingFormProps> = ({
   setFormData,
   formError,
 }) => {
-  const days: ISlotDays[] = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"];
-
   const { user } = useAuth();
-
   const [courses, setCourses] = useState<SlotCourseDTO[]>([]);
   useEffect(() => {
     (async () => {
       const data = await courseService.listCourseOnSlot(user!.id);
-      if (data) {
-        setCourses(data);
-      }
+      if (data) setCourses(data);
     })();
   }, []);
 
-  const toggleDaySelection = (day: ISlotDays) => {
-    setFormData((prev) => ({
-      ...prev,
-      selectedDays: prev.selectedDays.includes(day)
-        ? prev.selectedDays.filter((d) => d !== day)
-        : [...prev.selectedDays, day],
-    }));
-  };
-  console.log("form DAta ", formData);
+  const TimeOfSlots = useMemo(
+    () => generateTimeOptions(formData.slotDuration),
+    [formData.slotDuration],
+  );
 
-  const TimeOfSlots = useMemo(() => {
-    return generateTimeOptions(formData.slotDuration);
-  }, [formData.slotDuration]);
+  const updateDayField = (
+    day: Days,
+    field: keyof SlotDay,
+    value: string | boolean,
+  ) => {
+    const updated = formData.selectedDays.map((d) =>
+      d.day === day ? { ...d, [field]: value } : d,
+    );
+
+    setFormData({ ...formData, selectedDays: updated });
+  };
+
   return (
     <div className="space-y-6">
       <div>
@@ -66,12 +68,12 @@ const SlotBookingForm: React.FC<SlotBookingFormProps> = ({
             setFormData({ ...formData, courseId: value })
           }
         >
-          <SelectTrigger className="w-full h-11 border border-gray-300 rounded-lg bg-white text-gray-900 focus:outline-none focus:ring-2 focus:ring-gray-400">
+          <SelectTrigger className="w-full border border-gray-300 rounded-lg bg-white text-gray-900">
             <SelectValue placeholder="Select your Course" />
           </SelectTrigger>
           <SelectContent>
             {courses.map((course) => (
-              <SelectItem key={course._id} value={course._id}>
+              <SelectItem key={course._id} value={course._id} className="h-11">
                 {course.title}
               </SelectItem>
             ))}
@@ -82,51 +84,22 @@ const SlotBookingForm: React.FC<SlotBookingFormProps> = ({
         )}
       </div>
 
-      <div>
-        <label className="block text-sm font-medium text-gray-900 mb-2">
-          Select Days <span className="text-red-600">*</span>
-        </label>
-        <div className="grid grid-cols-7 gap-2">
-          {days.map((day) => (
-            <button
-              key={day}
-              type="button"
-              onClick={() => toggleDaySelection(day)}
-              className={`py-2 px-3 border rounded-lg text-sm font-medium transition-all duration-200 ${
-                formData.selectedDays.includes(day)
-                  ? "bg-gray-900 text-white border-gray-900"
-                  : "bg-white text-gray-700 border-gray-300 hover:bg-gray-100"
-              }`}
-            >
-              {day}
-            </button>
-          ))}
-        </div>
-        {formError.selectedDays && (
-          <p className="text-red-500 text-sm py-1">{formError.selectedDays}</p>
-        )}
-      </div>
-
       <div className="grid grid-cols-2 gap-4">
         <div>
           <label className="block text-sm font-medium text-gray-900 mb-2">
             Session Duration <span className="text-red-600">*</span>
           </label>
-
           <SelectField
-            label=""
             placeholder="Select duration"
             value={formData.slotDuration}
             onChange={(value) =>
-              setFormData((prev) => ({ ...prev, slotDuration: Number(value) }))
+              setFormData((prev) => ({
+                ...prev,
+                slotDuration: Number(value),
+              }))
             }
             options={SlotDurationOptions}
           />
-          {formError.slotDuration && (
-            <p className="text-red-500 text-sm py-1">
-              {formError.slotDuration}
-            </p>
-          )}
         </div>
 
         <div>
@@ -138,71 +111,106 @@ const SlotBookingForm: React.FC<SlotBookingFormProps> = ({
             min="1"
             value={formData.pricePerSlot}
             onChange={(e) =>
-              setFormData({ ...formData, pricePerSlot: Number(e.target.value) })
+              setFormData({
+                ...formData,
+                pricePerSlot: Number(e.target.value),
+              })
             }
-            required
           />
-          {formError.pricePerSlot && (
-            <p className="text-red-500 text-sm py-1">
-              {formError.pricePerSlot}
-            </p>
-          )}
         </div>
       </div>
+      <div>
+        <label className="block text-sm font-medium text-gray-900 mb-2">
+          Select Days <span className="text-red-600">*</span>
+        </label>
+        {/* {formError.selectedDays && (
+          <p className="text-red-500 text-sm py-1">{formError.selectedDays}</p>
+        )} */}
+      </div>
 
-      <div className="grid grid-cols-2 gap-4">
-        <div>
-          <label className="block text-sm font-medium text-gray-900 mb-2">
-            Start Time <span className="text-red-600">*</span>
-          </label>
-          <Select
-            value={formData.startTime}
-            onValueChange={(value) =>
-              setFormData({ ...formData, startTime: value })
-            }
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+        {formData.selectedDays.map((slotDay) => (
+          <div
+            key={slotDay.day}
+            className="p-4 border border-gray-200 rounded-lg bg-gray-50 space-y-3"
           >
-            <SelectTrigger className="w-full h-11 border border-gray-300 rounded-lg bg-white text-gray-900">
-              <SelectValue placeholder="Start Time" />
-            </SelectTrigger>
-            <SelectContent>
-              {TimeOfSlots.map((time) => (
-                <SelectItem key={time} value={time}>
-                  {time}
-                </SelectItem>
-              ))}
-            </SelectContent>
-          </Select>
+            <div className="flex justify-between items-center">
+              <h4 className="font-medium text-gray-800">{slotDay.day}</h4>
+              <div className="flex items-center space-x-2">
+                <Checkbox
+                  checked={slotDay.active}
+                  onCheckedChange={(checked) =>
+                    updateDayField(slotDay.day, "active", Boolean(checked))
+                  }
+                />
 
-          {formError.startTime && (
-            <p className="text-red-500 text-sm py-1">{formError.startTime}</p>
-          )}
-        </div>
+                <label className="text-sm text-gray-700">Enable</label>
+              </div>
+            </div>
 
-        <div>
-          <label className="block text-sm font-medium text-gray-900 mb-2">
-            End Time <span className="text-red-600">*</span>
-          </label>
-          <Select
-            value={formData.endTime}
-            onValueChange={(value) =>
-              setFormData({ ...formData, endTime: value })
-            }
-          >
-            <SelectTrigger className="w-full h-11 border border-gray-300 rounded-lg bg-white text-gray-900">
-              <SelectValue placeholder="End Time" />
-            </SelectTrigger>
-            <SelectContent>
-              {TimeOfSlots.map((time) => (
-                <SelectItem key={time} value={time}>
-                  {time}
-                </SelectItem>
-              ))}
-            </SelectContent>
-          </Select>
-          {formError.endTime && (
-            <p className="text-red-500 text-sm py-1">{formError.endTime}</p>
-          )}
-        </div>
+            {/* Time Selectors */}
+            <div className="grid grid-cols-2 gap-4">
+              {/* Start Time */}
+              <div>
+                <label className="block text-sm font-medium text-gray-900 mb-2">
+                  Start Time
+                </label>
+                <Select
+                  value={slotDay.startTime}
+                  onValueChange={(value) =>
+                    updateDayField(slotDay.day, "startTime", value)
+                  }
+                >
+                  <SelectTrigger className="w-full h-11 border border-gray-300 rounded-lg bg-white text-gray-900">
+                    <SelectValue placeholder="Start Time" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {TimeOfSlots.map((time) => (
+                      <SelectItem key={time} value={time}>
+                        {time}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              </div>
+
+              <div>
+                <label className="block text-sm font-medium text-gray-900 mb-2">
+                  End Time
+                </label>
+                <Select
+                  value={slotDay.endTime}
+                  onValueChange={(value) =>
+                    updateDayField(slotDay.day, "endTime", value)
+                  }
+                >
+                  <SelectTrigger className="w-full h-11 border border-gray-300 rounded-lg bg-white text-gray-900">
+                    <SelectValue placeholder="End Time" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {TimeOfSlots.map((time) => (
+                      <SelectItem key={time} value={time}>
+                        {time}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              </div>
+
+              {slotDay.startTime &&
+                slotDay.endTime &&
+                convertTo24Hour(slotDay.startTime) >=
+                  convertTo24Hour(slotDay.endTime) && (
+                  <p className="text-red-500 text-[14px]">
+                    please Select a valid Time Range
+                  </p>
+                )}
+              {/* {formError[slotDay.day] && (
+              <p className="text-red-500 text-xs">{formError[slotDay.day]}</p>
+            )} */}
+            </div>
+          </div>
+        ))}
       </div>
 
       <div className="bg-gray-50 border border-gray-200 rounded-lg p-3">

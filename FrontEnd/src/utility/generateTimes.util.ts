@@ -1,4 +1,4 @@
-import { dayMap, type ISlotPopulatedDTO } from "@/types/DTOS/slot.dto";
+import { type ISlotPopulatedDTO } from "@/types/DTOS/slot.dto";
 
 export function generateTimeOptions(intervalMinutes = 30) {
   const times = [];
@@ -23,31 +23,15 @@ export function convertTo24Hour(time12h: string) {
   return `${hours.padStart(2, "0")}:${minutes}`;
 }
 
-
 export function convertTo12Hour(time24h: string) {
   let [hours, minutes] = time24h.split(":");
   let h = Number(hours);
   const period = h >= 12 ? "PM" : "AM";
-  
-  if (h === 0) h = 12;             
-  else if (h > 12) h = h - 12;      
+
+  if (h === 0) h = 12;
+  else if (h > 12) h = h - 12;
 
   return `${String(h).padStart(2, "0")}:${minutes} ${period}`;
-}
-
-function timeToMinutes(timeStr :string) {
-  const [hours, minutes] = timeStr.split(":").map(Number);
-  return hours * 60 + minutes;
-}
-
-function minutesToTime(minutes: number): string {
-  let hours = Math.floor(minutes / 60);
-  const mins = minutes % 60;
-  const ampm = hours >= 12 ? "PM" : "AM";
-  hours = hours % 12;
-  hours = hours === 0 ? 12 : hours;
-  const formattedMins = mins.toString().padStart(2, "0");
-  return `${hours}:${formattedMins} ${ampm}`;
 }
 
 export function getNextWeekDates(): Date[] {
@@ -61,33 +45,73 @@ export function getNextWeekDates(): Date[] {
   return next7Days;
 }
 
-
+// utils/generateTimes.util.ts
 export function getSlotDatesForMentor(slot: ISlotPopulatedDTO) {
-  const nextWeek = getNextWeekDates();
+  const today = new Date();
+  const next7Days: { date: Date; day: string; formattedDate: string }[] = [];
 
-  return nextWeek
-    .filter((date) => slot.selectedDays.includes(dayMap[date.getDay()]))
-    .map((date) => ({
-      formattedDate: date.toLocaleDateString("en-GB", {
-        weekday: "short",
-        month: "short",
-        day: "numeric"
-      }),
-      startTime: slot.startTime,
-      endTime: slot.endTime
-    }));
+  for (let i = 0; i < 7; i++) {
+    const d = new Date(today);
+    d.setDate(today.getDate() + i);
+    const weekday = d.toLocaleDateString("en-US", { weekday: "long" });
+
+    const slotDay = slot.selectedDays.find(
+      (sd) => sd.day === weekday && sd.active,
+    );
+    if (slotDay) {
+      next7Days.push({
+        date: d,
+        day: weekday,
+        formattedDate: d.toLocaleDateString("en-GB", {
+          weekday: "short",
+          month: "short",
+          day: "numeric",
+        }),
+      });
+    }
+  }
+
+  return next7Days;
 }
 
+export function createSlotTime(duration: number, start: string, end: string) {
+  const slots: { start: string; end: string }[] = [];
 
-export function createSlotTime(durationMinutes:number, startTime:string, endTime:string) {
-  const start = timeToMinutes(startTime);
-  const end = timeToMinutes(endTime);
-  const slots = [];
+  if (!start || !end) return slots;
 
-  for (let current = start; current + durationMinutes <= end; current += durationMinutes) {
-    const slotStart = minutesToTime(current);
-    const slotEnd = minutesToTime(current + durationMinutes);
-    slots.push({ start: slotStart, end: slotEnd });
+  const toMinutes = (t: string) => {
+    const [time, period] = t.split(" ");
+    let [hours, minutes] = time.split(":").map(Number);
+
+    if (period) {
+      if (period.toUpperCase() === "PM" && hours !== 12) hours += 12;
+      if (period.toUpperCase() === "AM" && hours === 12) hours = 0;
+    }
+
+    return hours * 60 + minutes;
+  };
+
+  const fromMinutes = (m: number) => {
+    const hours = Math.floor(m / 60);
+    const minutes = m % 60;
+    const period = hours >= 12 ? "PM" : "AM";
+    const formattedHour = hours % 12 || 12;
+    return `${formattedHour}:${minutes.toString().padStart(2, "0")} ${period}`;
+  };
+
+  const startMinutes = toMinutes(start);
+  const endMinutes = toMinutes(end);
+
+  if (isNaN(startMinutes) || isNaN(endMinutes)) return slots;
+
+  let current = startMinutes;
+
+  while (current + duration <= endMinutes) {
+    slots.push({
+      start: fromMinutes(current),
+      end: fromMinutes(current + duration),
+    });
+    current += duration;
   }
 
   return slots;

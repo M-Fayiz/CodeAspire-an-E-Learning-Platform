@@ -20,9 +20,11 @@ const SlotCard: React.FC<SlotCardProps> = ({
         flex items-center justify-center
         border rounded-xl cursor-pointer
         px-6 py-3 transition-all duration-200
-        ${isSelected 
-          ? "bg-black text-white border-black shadow-md" 
-          : "bg-white text-gray-800 border-gray-300 hover:bg-gray-100"}
+        ${
+          isSelected
+            ? "bg-black text-white border-black shadow-md"
+            : "bg-white text-gray-800 border-gray-300 hover:bg-gray-100"
+        }
       `}
     >
       <span className="text-sm font-medium tracking-wide">

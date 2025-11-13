@@ -2,7 +2,6 @@ import { axiosInstance } from "@/axios/createInstance";
 import { API } from "@/constants/api.constant";
 import { throwAxiosError } from "@/utility/throwErrot";
 
-
 export const OrderService = {
   createPayment: async (
     courseId: string,

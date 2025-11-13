@@ -47,7 +47,25 @@ export const ChatService = {
   getChatMessage: async (chatId: string): Promise<IMessageDto[]> => {
     try {
       const response = await axiosInstance.get(API.CHAT.GET_MESSAGE(chatId));
-      return response.data.messages;
+
+      const updatedMessage = await Promise.all(
+        response.data.messages.map(async (data: IMessageDto) => {
+          let pictureURL;
+          if (data.mediaUrl) {
+            pictureURL = await sharedService.getPreSignedDownloadURL(
+              data.mediaUrl as string,
+            );
+          }
+
+          return {
+            ...data,
+
+            mediaUrl: pictureURL,
+          };
+        }),
+      );
+
+      return updatedMessage;
     } catch (error) {
       throwAxiosError(error);
     }

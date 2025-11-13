@@ -1,27 +1,59 @@
 import mongoose, { Schema, Document, Types } from "mongoose";
-import { IMentorSlot } from "../types/slot.type";
+import { IBaseSlot } from "../types/slot.type";
 import { DbModelName } from "../const/modelName";
 
-export interface ISlotModel extends IMentorSlot, Document {
+export interface ISlotModel extends IBaseSlot, Document {
   _id: Types.ObjectId;
+  mentorId: Types.ObjectId;
+  courseId: Types.ObjectId;
 }
 
-const SlotSchema = new mongoose.Schema<ISlotModel>(
+const SlotDaySchema = new Schema(
   {
-    mentorId: { type: Schema.Types.ObjectId, ref: DbModelName.USER, required: true },
-    courseId: { type: Schema.Types.ObjectId, ref: DbModelName.COURSE, required: true },
+    startTime: { type: String },
+    endTime: { type: String },
+    day: {
+      type: String,
+      enum: [
+        "Monday",
+        "Tuesday",
+        "Wednesday",
+        "Thursday",
+        "Friday",
+        "Saturday",
+        "Sunday",
+      ],
+      required: true,
+    },
+    active: { type: Boolean, default: true },
+  },
+  { _id: false },
+);
+
+const SlotSchema = new Schema<ISlotModel>(
+  {
+    mentorId: {
+      type: Schema.Types.ObjectId,
+      ref: DbModelName.USER,
+      required: true,
+    },
+    courseId: {
+      type: Schema.Types.ObjectId,
+      ref: DbModelName.COURSE,
+      required: true,
+    },
     selectedDays: {
-      type: [String],
-      enum: ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"],
+      type: [SlotDaySchema],
       required: true,
     },
     slotDuration: { type: Number, required: true },
     isActive: { type: Boolean, default: true },
     pricePerSlot: { type: Number, default: 0 },
-    startTime: { type: String, required: true },
-    endTime: { type: String, required: true },
   },
   { timestamps: true },
 );
 
-export const SlotModel = mongoose.model<ISlotModel>(DbModelName.SLOT, SlotSchema);
+export const SlotModel = mongoose.model<ISlotModel>(
+  DbModelName.SLOT,
+  SlotSchema,
+);

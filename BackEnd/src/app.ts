@@ -20,13 +20,14 @@ import enrolledRouter from "./routers/enrolled.router";
 import reviewRouter from "./routers/review.router";
 import http from "http";
 import { sessionConfig } from "./config/session.config";
-import { initializeSocket } from "./socket.io/socketEvent";
+import { intitializeSocket } from "./socket.io";
 import notifyRouter from "./routers/notification.router";
 import chatRouter from "./routers/chat.router";
 import slotRouter from "./routers/slots.router";
 import bookingROuter from "./routers/slotbooking.router";
 import orderRouter from "./routers/order.router";
 import webhookRouter from "./routers/webhook.router";
+import videoSessionRouter from "./routers/videoSession.router";
 
 dotenv.config();
 
@@ -49,8 +50,8 @@ app.use(express.urlencoded({ extended: true }));
 app.use(session(sessionConfig));
 
 const server = http.createServer(app);
-//socket 
-initializeSocket(server);
+//socket
+intitializeSocket(server);
 
 app.use(passport.initialize());
 app.use(passport.session());
@@ -71,6 +72,7 @@ app.use("/api/v1/notifications", notifyRouter);
 app.use("/api/v1/chats", chatRouter);
 app.use("/api/v1/slots", slotRouter);
 app.use("/api/v1/slot-booking", bookingROuter);
+app.use("/api/v1/video", videoSessionRouter);
 const port = env.port;
 dbConnect();
 

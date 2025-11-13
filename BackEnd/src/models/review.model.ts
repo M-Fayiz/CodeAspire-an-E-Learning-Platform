@@ -15,7 +15,7 @@ const reviewSchema = new mongoose.Schema<IReviewModel>(
     },
     learnerId: {
       type: mongoose.Schema.Types.ObjectId,
-      ref:DbModelName.USER,
+      ref: DbModelName.USER,
       required: true,
     },
     comment: {
@@ -38,6 +38,9 @@ const reviewSchema = new mongoose.Schema<IReviewModel>(
   { timestamps: true },
 );
 
-const ReviewModel = mongoose.model<IReviewModel>(DbModelName.REVIEW, reviewSchema);
+const ReviewModel = mongoose.model<IReviewModel>(
+  DbModelName.REVIEW,
+  reviewSchema,
+);
 
 export default ReviewModel;

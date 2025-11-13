@@ -1,14 +1,26 @@
 import { Types } from "mongoose";
 
-export type slotDays = "Mon" | "Tue" | "Wed" | "Thu" | "Fri" | "Sat" | "Sun";
+export type Days =
+  | "Monday"
+  | "Tuesday"
+  | "Wednesday"
+  | "Thursday"
+  | "Friday"
+  | "Saturday"
+  | "Sunday";
+
+export type SlotDay = {
+  startTime: Date | string;
+  endTime: Date | string;
+  day: Days;
+  active: boolean;
+};
 
 export interface IBaseSlot {
-  selectedDays: slotDays[];
+  selectedDays: SlotDay[];
   slotDuration: number;
   isActive?: boolean;
   pricePerSlot?: number;
-  startTime: string;
-  endTime: string;
   createdAt?: Date;
   updatedAt?: Date;
 }

@@ -6,6 +6,7 @@ import {
 import { ISlotBooking } from "../../types/sessionBooking.type";
 import { BaseRepository } from "../baseRepository";
 import { ISlotBookingRepository } from "../interface/ISlotBookingRepository";
+import { IPopulatedBooking } from "../../types/dtos.type/slotBooking.dto.type";
 
 export class SlotBookingRepository
   extends BaseRepository<ISlotBookingModel>
@@ -44,5 +45,19 @@ export class SlotBookingRepository
     data: UpdateQuery<ISlotBookingModel>,
   ): Promise<ISlotBookingModel | null> {
     return await this.findOneAndUpdate(filter, data);
+  }
+
+  async listbookedSlots(
+    filter: FilterQuery<ISlotBookingModel>,
+    limit?: number,
+    skip?: number,
+  ): Promise<IPopulatedBooking[]> {
+    return await this.findAll(
+      filter,
+      limit,
+      skip,
+      ["learnerId", "courseId", "mentorId"],
+      true,
+    );
   }
 }

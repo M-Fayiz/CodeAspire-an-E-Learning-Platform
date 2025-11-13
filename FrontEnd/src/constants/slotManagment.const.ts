@@ -9,4 +9,3 @@ export interface ISlotDuration {
   label: string;
   value: number;
 }
-

@@ -5,7 +5,10 @@ import { Clock, CalendarDays } from "lucide-react";
 import MentorSlotProfile from "@/features/slot/booking/MentorProfile";
 import { useParams } from "react-router";
 import { SlotService } from "@/service/mentor/slot.service";
-import { createSlotTime, getSlotDatesForMentor } from "@/utility/generateTimes.util";
+import {
+  createSlotTime,
+  getSlotDatesForMentor,
+} from "@/utility/generateTimes.util";
 import SlotCard from "@/features/slot/booking/TimeCard";
 import { useAuth } from "@/context/auth.context";
 import { toast } from "sonner";
@@ -19,13 +22,13 @@ const SlotBooking: React.FC = () => {
   const [slotData, setSlotData] = useState<ISlotPopulatedDTO | null>(null);
   const [selectedSlot, setSelectedSlot] = useState<{
     date: string;
+    day: string;
     startTime: string;
     endTime: string;
   } | null>(null);
-  const [bookingConfirmed, setBookingConfirmed] = useState(false);
+
   const { courseId } = useParams();
   const { user } = useAuth();
-
 
   useEffect(() => {
     (async () => {
@@ -37,10 +40,9 @@ const SlotBooking: React.FC = () => {
     })();
   }, [courseId]);
 
-  const Slots = useMemo(() => (slotData ? getSlotDatesForMentor(slotData) : []), [slotData]);
-  const slotTimes = useMemo(
-    () => (slotData ? createSlotTime(slotData.slotDuration, slotData.startTime, slotData.endTime) : []),
-    [slotData]
+  const upcomingDays = useMemo(
+    () => (slotData ? getSlotDatesForMentor(slotData) : []),
+    [slotData],
   );
 
   const onBookSlot = async () => {
@@ -50,9 +52,10 @@ const SlotBooking: React.FC = () => {
     }
 
     try {
-      const payload:ISessionBooking = {
+      const payload: ISessionBooking = {
+        mentorId: slotData.mentor._id,
         date: selectedSlot.date,
-        courseId:courseId as string,
+        courseId: courseId as string,
         startTime: selectedSlot.startTime,
         endTime: selectedSlot.endTime,
         learnerId: user.id,
@@ -60,14 +63,9 @@ const SlotBooking: React.FC = () => {
         status: "Pending",
       };
 
-     const checkoutURL= await SlotBookingSercie.bookSlot(payload);
-     
+      const checkoutURL = await SlotBookingSercie.bookSlot(payload);
       toast.success("Slot booked successfully!");
-      if(checkoutURL){
-        window.location.href=checkoutURL
-      }
-      setBookingConfirmed(true);
-      setTimeout(() => setBookingConfirmed(false), 3000);
+      if (checkoutURL) window.location.href = checkoutURL;
     } catch (error) {
       if (error instanceof Error) toast.error(error.message);
     }
@@ -80,43 +78,64 @@ const SlotBooking: React.FC = () => {
 
         <div className="p-6 bg-gray-50 rounded-2xl shadow-inner">
           <h3 className="font-semibold text-lg text-gray-800 flex items-center gap-2 mb-6">
-            <CalendarDays className="text-orange-500" size={20} /> Available Slots (Next 7 Days)
+            <CalendarDays className="text-orange-500" size={20} /> Available
+            Slots (Next 7 Days)
           </h3>
 
           <div className="flex flex-col gap-6">
-            {Slots.map((day, index) => (
-              <div key={index} className="bg-white rounded-xl border border-gray-200 p-4 shadow-sm">
-                <div className="flex items-center justify-between mb-3">
-                  <div>
-                    <h4 className="text-base font-semibold text-gray-900">{day.formattedDate}</h4>
-                    <p className="text-xs text-gray-500 flex items-center gap-1">
-                      <Clock size={14} /> {day.startTime} – {day.endTime}
-                    </p>
+            {upcomingDays.map((dayObj, index) => {
+              const daySlot = slotData?.selectedDays.find(
+                (sd) => sd.day === dayObj.day,
+              );
+              if (!daySlot) return null;
+              if (!slotData) return;
+              const slotTimes = createSlotTime(
+                slotData.slotDuration,
+                daySlot.startTime,
+                daySlot.endTime,
+              );
+
+              return (
+                <div
+                  key={index}
+                  className="bg-white rounded-xl border border-gray-200 p-4 shadow-sm"
+                >
+                  <div className="flex items-center justify-between mb-3">
+                    <div>
+                      <h4 className="text-base font-semibold text-gray-900">
+                        {dayObj.formattedDate}
+                      </h4>
+                      <p className="text-xs text-gray-500 flex items-center gap-1">
+                        <Clock size={14} /> {daySlot.startTime} –{" "}
+                        {daySlot.endTime}
+                      </p>
+                    </div>
+                  </div>
+
+                  <div className="grid grid-cols-3 sm:grid-cols-4 lg:grid-cols-5 gap-2">
+                    {slotTimes.map((time, i) => (
+                      <SlotCard
+                        key={i}
+                        startTime={time.start}
+                        endTime={time.end}
+                        isSelected={
+                          selectedSlot?.date === dayObj.date.toISOString() &&
+                          selectedSlot?.startTime === time.start
+                        }
+                        onClick={() =>
+                          setSelectedSlot({
+                            date: dayObj.date.toISOString(),
+                            day: dayObj.day,
+                            startTime: time.start,
+                            endTime: time.end,
+                          })
+                        }
+                      />
+                    ))}
                   </div>
                 </div>
-
-                <div className="grid grid-cols-3 sm:grid-cols-4 lg:grid-cols-5 gap-2">
-                  {slotTimes.map((time, i) => (
-                    <SlotCard
-                      key={i}
-                      startTime={time.start}
-                      endTime={time.end}
-                      isSelected={
-                        selectedSlot?.date === day.formattedDate &&
-                        selectedSlot?.startTime === time.start
-                      }
-                      onClick={() =>
-                        setSelectedSlot({
-                          date: day.formattedDate,
-                          startTime: time.start,
-                          endTime: time.end,
-                        })
-                      }
-                    />
-                  ))}
-                </div>
-              </div>
-            ))}
+              );
+            })}
           </div>
 
           <div className="flex justify-end mt-8">

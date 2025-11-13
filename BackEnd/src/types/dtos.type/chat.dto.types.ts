@@ -10,7 +10,7 @@ export interface IBaseChatDTO {
 }
 
 export interface IChatDTO extends IBaseChatDTO {
-  users: string[];
+  users: Types.ObjectId[];
 }
 
 export interface IChatListDTO extends IBaseChatDTO {

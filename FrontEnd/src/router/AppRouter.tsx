@@ -33,6 +33,10 @@ import MentorDashboard from "@/pages/Mentor_Page/mentor dashboard/MentorDashboar
 import ChatPage from "@/pages/chat page/ChatPage";
 import SlotManagement from "@/pages/Mentor_Page/slot management/SlotManagement";
 import SlotBooking from "@/pages/Slots/MentorSlot";
+import { VideoRoom } from "@/pages/Video Session Page/VideoSession";
+
+import LearnerBookedSlots from "@/pages/Slots/LearnersBooked";
+import MentorBookedSlots from "@/pages/Slots/MentorsBooked";
 
 function Form_Courses_Provider() {
   return (
@@ -77,6 +81,8 @@ export const router = createBrowserRouter([
       { path: "enrolled-courses/:id", element: <EnrolledCourseDetails /> },
       { path: "chats", element: <ChatPage /> },
       { path: "slot-booking/:courseId", element: <SlotBooking /> },
+      { path: "booked-slots", element: <LearnerBookedSlots /> },
+      { path: "video-session/:bookingId", element: <VideoRoom /> },
     ],
   },
   // MENTOR ROUTES
@@ -94,6 +100,8 @@ export const router = createBrowserRouter([
       { path: "data", element: <MentorDataForm /> },
       { path: "chats", element: <ChatPage /> },
       { path: "slot-management", element: <SlotManagement /> },
+      { path: "booked-slot-list", element: <MentorBookedSlots /> },
+      { path: "video-session/:bookingId", element: <VideoRoom /> },
       {
         path: "courses",
         element: <Form_Courses_Provider />,

@@ -9,10 +9,10 @@ import { toast } from "sonner";
 
 interface MentorProps {
   mentorId: string;
-  courseId:string
+  courseId: string;
 }
 
-const MentorProfile: React.FC<MentorProps> = ({ mentorId ,courseId}) => {
+const MentorProfile: React.FC<MentorProps> = ({ mentorId, courseId }) => {
   const [mentorProfile, setMentorProfile] = useState<MentorDTO>({
     name: "",
     bio: "",
@@ -109,7 +109,6 @@ const MentorProfile: React.FC<MentorProps> = ({ mentorId ,courseId}) => {
             )}
           </div>
           <div className="flex gap-3">
-
             <button
               onClick={createChatRoom}
               className="inline-flex items-center gap-3 bg-orange-500 hover:bg-orange-600 text-white font-semibold px-6 py-3 rounded-full shadow-lg transition-all duration-300 hover:shadow-xl"

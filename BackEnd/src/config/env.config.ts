@@ -77,4 +77,7 @@ export const env = {
   get REDIS() {
     return process.env.REDIS;
   },
+  get EARLY_JOIN_BUFFER() {
+    return process.env.EARLY_JOIN_BUFFER;
+  },
 };

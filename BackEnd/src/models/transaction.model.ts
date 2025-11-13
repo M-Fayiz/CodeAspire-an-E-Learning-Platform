@@ -9,12 +9,12 @@ export interface ITransactionModel
 const TransactionSchema = new mongoose.Schema<ITransactionModel>(
   {
     orderId: {
-      type: Schema.Types.ObjectId, 
+      type: Schema.Types.ObjectId,
       ref: DbModelName.ORDER,
     },
     slotId: {
       type: Schema.Types.ObjectId,
-      ref:DbModelName.SLOT,
+      ref: DbModelName.SLOT,
     },
     slotBookingId: {
       type: Schema.Types.ObjectId,
@@ -36,7 +36,7 @@ const TransactionSchema = new mongoose.Schema<ITransactionModel>(
     userId: {
       type: Schema.Types.ObjectId,
       required: true,
-      ref:DbModelName.USER,
+      ref: DbModelName.USER,
     },
     mentorId: {
       type: Schema.Types.ObjectId,

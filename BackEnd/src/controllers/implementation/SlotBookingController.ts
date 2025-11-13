@@ -15,10 +15,18 @@ export class SlotBookingController implements ISlotBookingController {
     next: NextFunction,
   ): Promise<void> => {
     try {
-      const { learnerId, slotId, date, courseId, startTime, endTime } =
-        req.body;
+      const {
+        learnerId,
+        slotId,
+        date,
+        courseId,
+        startTime,
+        endTime,
+        mentorId,
+      } = req.body;
 
       const bookingData: ISlotBooking = {
+        mentorId,
         learnerId,
         courseId,
         slotId,
@@ -27,12 +35,70 @@ export class SlotBookingController implements ISlotBookingController {
         endTime,
       };
 
+      console.log(bookingData);
+
       const checkoutURL =
         await this._slotBookingService.createBooking(bookingData);
 
       res
         .status(HttpStatus.OK)
         .json(successResponse(HttpResponse.OK, { checkoutURL }));
+    } catch (error) {
+      next(error);
+    }
+  };
+  listBookedSlot = async (
+    req: Request,
+    res: Response,
+    next: NextFunction,
+  ): Promise<void> => {
+    try {
+      const { learnerId } = req.params;
+
+      const listsOfBooked =
+        await this._slotBookingService.ListLearnerBookedSlots(learnerId);
+
+      res
+        .status(HttpStatus.OK)
+        .json(successResponse(HttpResponse.OK, { listsOfBooked }));
+    } catch (error) {
+      next(error);
+    }
+  };
+  listBookedSlotOnMentor = async (
+    req: Request,
+    res: Response,
+    next: NextFunction,
+  ): Promise<void> => {
+    try {
+      const { mentorId } = req.params;
+
+      const listsOfBooked =
+        await this._slotBookingService.ListLearnerBookedSlots("", mentorId);
+
+      res
+        .status(HttpStatus.OK)
+        .json(successResponse(HttpResponse.OK, { listsOfBooked }));
+    } catch (error) {
+      next(error);
+    }
+  };
+  addFeedBack = async (
+    req: Request,
+    res: Response,
+    next: NextFunction,
+  ): Promise<void> => {
+    try {
+      const { bookedId } = req.params;
+      const { feedback } = req.body;
+
+      const updatedFeedback = await this._slotBookingService.addFeedback(
+        bookedId,
+        feedback,
+      );
+      res
+        .status(HttpStatus.OK)
+        .json(successResponse(HttpResponse.OK, { updatedFeedback }));
     } catch (error) {
       next(error);
     }

@@ -81,4 +81,7 @@ const courseSchema = new mongoose.Schema<ICourses>(
   { timestamps: true },
 );
 
-export const courseModel = mongoose.model<ICourses>(DbModelName.COURSE, courseSchema);
+export const courseModel = mongoose.model<ICourses>(
+  DbModelName.COURSE,
+  courseSchema,
+);

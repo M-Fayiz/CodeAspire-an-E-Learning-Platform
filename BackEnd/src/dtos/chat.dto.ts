@@ -6,14 +6,13 @@ import {
 } from "../types/dtos.type/chat.dto.types";
 
 export function chatDto(data: IChatModel): IChatDTO {
-  const chat = data.toObject();
   return {
-    _id: chat._id,
-    participantKey: chat.participantKey,
-    users: chat.users,
-    latestMessage: chat.latestMessage ?? null,
-    lastMessageTime: chat.lastMessageTime,
-    createdAt: chat.createdAt,
+    _id: data._id,
+    participantKey: data.participantKey,
+    users: data.users,
+    latestMessage: data.latestMessage ?? null,
+    lastMessageTime: data.lastMessageTime,
+    createdAt: data.createdAt,
   };
 }
 
