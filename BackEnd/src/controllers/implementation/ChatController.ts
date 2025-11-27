@@ -31,13 +31,18 @@ export class ChatCOntroller implements IChatController {
     res: Response,
     next: NextFunction,
   ): Promise<void> => {
-    const { senderId } = req.params;
-
-    const ChatUser = await this._chatService.listUsers(senderId);
-
-    res
-      .status(HttpStatusCode.Ok)
-      .json(successResponse(HttpResponse.OK, { ChatUser }));
+    try {
+      
+      const { senderId } = req.params;
+  
+      const ChatUser = await this._chatService.listUsers(senderId);
+  
+      res
+        .status(HttpStatusCode.Ok)
+        .json(successResponse(HttpResponse.OK, { ChatUser }));
+    } catch (error) {
+      next(error)
+    }
   };
   getChatMessages = async (
     req: Request,

@@ -57,6 +57,7 @@ export const API = {
     APPROVE_CURSE: (courseId: string) => `/courses/admin/approve/${courseId}`,
     REJECT_COURSE: (courseId: string) => `/courses/admin/reject/${courseId}`,
     LIST_COURSE_FOR_SLOT: (mentorId: string) => `/courses/mentor/${mentorId}`,
+    GET_COURSE_FORM_DATA: (courseId: string) => `/courses/form/${courseId}`,
   },
   PAYMENT: {
     CREATE_PAYMENT_INTENT: "/orders/create-checkout-session",
@@ -74,6 +75,8 @@ export const API = {
       `/enrollements/course/${courseId}/chart`,
     GET_MENTOR_DASH_DATA: (mentorId: string) =>
       `/enrollements/mentor/${mentorId}/dashboard`,
+    GET_REVANUE_GRAPH: `/enrollements/mentor/dashboard/revanue`,
+    GET_ADMIN_REVANUE_GRAPH: `/enrollements/admin/dashboard/revanue`,
   },
   REVIEW: {
     ADD_REVIEW: "/reviews/",

@@ -1,7 +1,7 @@
-import { Types } from "mongoose";
-import { IEnrolledModel } from "../../models/enrolled.model";
+
 import { ICourses, ILecture, ISession } from "../../types/courses.type";
 import {
+  ICourseCreateForm,
   ICourseDTO,
   ICourseListDTO,
   IFormCourseDTO,
@@ -10,7 +10,7 @@ import {
 import { INotificationDTO } from "../../types/dtos.type/notification.dto.types";
 
 export interface ICourseService {
-  createCourses(course: ICourses): Promise<ICourses | null>;
+  createCourses(course: ICourses): Promise<ICourseCreateForm | null>;
   fetchCourses(
     page: number,
     limit: number,
@@ -63,4 +63,5 @@ export interface ICourseService {
   ): Promise<{ courseStatus: string | null; notifyDTO: INotificationDTO }>;
   publishCourse(courseId: string): Promise<string | null>;
   fetchCourseListForSlot(mentorId: string): Promise<IListCourseSlot[] | null>;
+  getCourseFormData(courseId:string):Promise<ICourseCreateForm>
 }

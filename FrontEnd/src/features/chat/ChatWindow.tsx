@@ -193,14 +193,14 @@ const ChatWindow: React.FC<ChatWindowProps> = ({ userData }) => {
     else if (selectedFile.type.startsWith("application")) fileCategory = "pdf";
 
     const tempId = `temp-${uuid()}`;
-    const tempMessage: IMessageDto = {
-      _id: tempId,
-      sender: user!.id,
-      content: selectedFile.name,
-      type: fileCategory as FileType,
-      mediaUrl: URL.createObjectURL(selectedFile),
-      createdAt: new Date().toISOString(),
-    };
+    // const tempMessage: IMessageDto = {
+    //   _id: tempId,
+    //   sender: user!.id,
+    //   content: selectedFile.name,
+    //   type: fileCategory as FileType,
+    //   mediaUrl: URL.createObjectURL(selectedFile),
+    //   createdAt: new Date().toISOString(),
+    // };
     // setMessages((prev) => [...prev, tempMessage]);
 
     try {

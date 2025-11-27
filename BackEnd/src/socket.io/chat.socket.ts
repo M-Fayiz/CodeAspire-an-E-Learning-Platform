@@ -51,11 +51,11 @@ export const registerChatHandler = (
 
   socket.on(ChatEvents.SEND, async (payload, ack) => {
     try {
-      const { roomId, content, type = "text", mediaUrl, tempId } = payload;
+      const { roomId, content, type = "text", mediaUrl} = payload;
       if (!roomId || (!content && type == "text")) {
         return ack?.({ error: "Invalid payload" });
       }
-      console.log("tyepe :", type, " - - ", mediaUrl);
+
       const chat = await chatService.findChat(roomId);
 
       if (!chat || !chat.users.map(String).includes(userId)) {
@@ -77,9 +77,23 @@ export const registerChatHandler = (
         status: "sent",
         mediaUrl,
       });
+        let previewMessage = "";
 
-      const updatedChat = await chatService.updateChat(room_id, {
-        latestMessage: messageData._id,
+        if (type === "text") {
+          previewMessage = content as string;
+        } else if (type === "image") {
+          previewMessage = "📷 Image";
+        } else if (type === "pdf") {
+          previewMessage = "📎 File";
+        } else if (type === "video") {
+          previewMessage = "🎥 Video";
+        } else if (type === "audio") {
+          previewMessage = "🎵 Audio";
+        } else {
+          previewMessage = "Message";
+        }
+       await chatService.updateChat(room_id, {
+        latestMessage: previewMessage,
         lastMessageTime: new Date().toISOString(),
       });
 
@@ -115,7 +129,7 @@ export const registerChatHandler = (
   });
 
   socket.on(ChatEvents.READ, async ({ roomId, messageIds }) => {
-    const chatMessage = await chatService.readMessages(messageIds);
+    await chatService.readMessages(messageIds);
     io.to(`chat:${roomId}`).emit(ChatEvents.DELIVERED, {
       messageIds,
       status: "read",

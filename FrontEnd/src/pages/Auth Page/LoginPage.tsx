@@ -32,7 +32,7 @@ const LoginPage: React.FC = () => {
         setUser(payloadData);
         setLoading(true);
         setTimeout(() => {
-          navigate(from, { replace: true });
+          navigate("/", { replace: true });
         }, 3000);
       }
     } catch (error) {

@@ -10,10 +10,6 @@ export interface ILecture {
 export interface ISession {
   title: string;
   lectures: ILecture[];
-  review: {
-    status: "pending" | "success" | "failed";
-    time: Date;
-  };
 }
 export interface ICourses extends Document {
   id?: string;
@@ -22,7 +18,7 @@ export interface ICourses extends Document {
   thumbnail?: string;
   categoryId: Types.ObjectId | object;
   subCategoryId: Types.ObjectId | object;
-  language: string;
+  language: string; 
   level: "Beginner" | "Intermediate" | "Advanced";
   price: number;
   mentorsId: Types.ObjectId | IMenterModel;

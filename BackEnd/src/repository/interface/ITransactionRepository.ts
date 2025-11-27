@@ -1,8 +1,10 @@
-import { Types } from "mongoose";
+import { FilterQuery, Types } from "mongoose";
 import { ITransaction } from "../../types/transaction.type";
 import { IRevenueAggregationResult } from "../../types/courseDashboard.type";
 import { IMentorTotalRevanue } from "../../types/mentorDashboard.types";
-import { IAdminRevenue } from "../../types/adminDahsboard.type";
+import { ITransactionModel } from "../../models/transaction.model";
+import { revanueGrapsh } from "../../types/adminDahsboard.type";
+
 
 export interface ITransactionRepository {
   createTransaction(transactionData: ITransaction): Promise<ITransaction>;
@@ -12,5 +14,7 @@ export interface ITransactionRepository {
   getMentorTotalRevenue(
     mentorId: Types.ObjectId,
   ): Promise<IMentorTotalRevanue[]>;
-  getAdminRevenue(): Promise<IAdminRevenue[]>;
+  getMentorRevanueONSlot(filter:FilterQuery<ITransactionModel>): Promise<revanueGrapsh[]>;
+  getMentorRevanueONCourse(filter:FilterQuery<ITransactionModel>): Promise<revanueGrapsh[]>;
+  
 }

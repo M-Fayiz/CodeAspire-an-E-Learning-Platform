@@ -2,7 +2,7 @@ import { FilterQuery, Types } from "mongoose";
 import { ISlotModel, SlotModel } from "../../models/slot.model";
 import { BaseRepository } from "../baseRepository";
 import { ISlotRepository } from "../interface/ISlotRepository";
-import { SlotDay } from "../../types/slot.type";
+
 import {
   ISlotpopultedDataFromDB,
   mentorUnPopulatedSlots,

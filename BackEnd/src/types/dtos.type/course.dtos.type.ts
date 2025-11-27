@@ -1,5 +1,5 @@
 import { Types } from "mongoose";
-import { ICourses, ISession } from "../courses.type";
+import {  ISession } from "../courses.type";
 import { ICategory } from "../category.types";
 import { IMenterModel } from "../../models/user.model";
 
@@ -11,6 +11,8 @@ export interface IBaseCourse {
   language: string;
   level: "Beginner" | "Intermediate" | "Advanced";
   price: number;
+
+  subCategoryId: ICategory;
   sessions?: ISession[];
   isActive?: boolean;
   isDraft?: boolean;
@@ -70,4 +72,23 @@ export interface IFormCourseDTO {
 export interface IListCourseSlot {
   _id: Types.ObjectId;
   title: string;
+}
+
+
+
+export interface IBaseFormCourse{
+    title: string;
+    description: string;
+    price: number;
+    thumbnail: string;
+     status:"inProgress" | "draft" | "published" | "approved" | "rejected",
+    level: "Beginner" | "Intermediate" | "Advanced";
+    language: string;
+    categoryId: Types.ObjectId;
+    subCategoryId: Types.ObjectId;
+    mentorId:Types.ObjectId
+}
+export interface ICourseCreateForm extends IBaseFormCourse{
+  _id: Types.ObjectId;
+  sessions: ISession[];
 }

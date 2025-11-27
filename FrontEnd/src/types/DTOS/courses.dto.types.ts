@@ -8,10 +8,6 @@ export interface ISession {
   _id?: string;
   title: string;
   lectures: ILecture[];
-  review?: {
-    status: "pending" | "success" | "failed" | "draft";
-    time: Date | null;
-  };
 }
 
 export interface ICourseData {
@@ -56,7 +52,7 @@ export interface CourseForm {
   level: "Beginner" | "Intermediate" | "Advanced";
   price: number;
   mentorsId: string;
-  sessions?: ISession[];
+  sessions: ISession[];
   status?: "inProgress" | "draft" | "published" | "approved" | "rejected";
 }
 

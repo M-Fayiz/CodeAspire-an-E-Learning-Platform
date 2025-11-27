@@ -1,198 +1,176 @@
+"use client";
+
 import { useEffect, useState } from "react";
 import { TrendingUp, DollarSign, Users, Star } from "lucide-react";
+
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+
 import type { IMentorDhasboardDTO } from "@/types/DTOS/mentorDashboard.dto.type";
 import { useAuth } from "@/context/auth.context";
 import { EnrolledService } from "@/service/Learner/enrolledCourse.service";
 import StatCard from "./DashboardCard";
 import MentorDashboardSkeleton from "@/components/shared/Dashboard";
 import { useNavigate } from "react-router";
+import { FilterByDate } from "@/constants/filter.const";
+import RevenueChart, { type RevenuePoint } from "@/features/dashboard/graph";
 
-const MentorDashboard = () => {
-  const [selectedPeriod, setSelectedPeriod] = useState("Last 12 Month");
+const EMPTY_CHART: RevenuePoint[] = [];
+
+export default function MentorDashboard() {
+  const { user } = useAuth();
+  const navigate = useNavigate();
+
+  const [loading, setLoading] = useState(false);
+  const [selectedPeriod, setSelectedPeriod] = useState(FilterByDate.MONTH);
+  const [selectedTab, setSelectedTab] = useState("slot");
+
   const [mentorDashData, setMentorDashData] =
     useState<IMentorDhasboardDTO | null>(null);
-  const [loading, setLoading] = useState(false);
-  const navigate = useNavigate();
-  const { user } = useAuth();
+
+  const [slotRevenue, setSlotRevenue] = useState<RevenuePoint[]>(EMPTY_CHART);
+  const [courseRevenue, setCourseRevenue] =
+    useState<RevenuePoint[]>(EMPTY_CHART);
+
   useEffect(() => {
+    if (!user) return;
+
     (async () => {
       setLoading(true);
       const data = await EnrolledService.getMentorDashboardData(user!.id);
 
-      if (data) {
-        setMentorDashData(data);
-        setLoading(false);
-      } else {
+      if (!data) {
         navigate("/course/create");
+        return;
       }
+
+      setMentorDashData(data);
+      setLoading(false);
     })();
   }, [user]);
+
+  useEffect(() => {
+    if (!user) return;
+
+    (async () => {
+      const graph = await EnrolledService.graphForRevenue(
+        selectedPeriod,
+        user.id,
+      );
+
+      if (graph) {
+        setSlotRevenue(graph.slotRevanue || EMPTY_CHART);
+        setCourseRevenue(graph.courseRevanue || EMPTY_CHART);
+      }
+    })();
+  }, [selectedPeriod, user]);
+
+  const currentGraph = selectedTab === "slot" ? slotRevenue : courseRevenue;
 
   return (
     <>
       {loading && <MentorDashboardSkeleton />}
+
       <div className="min-h-screen bg-gray-50 p-6">
         <div className="max-w-7xl mx-auto space-y-6">
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
             <StatCard
               Icon={<DollarSign className="w-5 h-5 text-white" />}
               title="Total Revenue"
-              value={
-                mentorDashData?.revanue
-                  ? (mentorDashData?.revanue as number)
-                  : 0
-              }
+              value={mentorDashData?.revanue || 0}
               bgColor="bg-gradient-to-br from-orange-400 to-orange-600"
             />
+
             <StatCard
               Icon={<Star className="w-5 h-5 text-white" />}
               title="Average Rating"
-              value={
-                mentorDashData?.summary.avgRating
-                  ? (mentorDashData?.summary.avgRating as number)
-                  : 0
-              }
+              value={mentorDashData?.summary.avgRating || 0}
               bgColor="bg-gradient-to-br from-orange-400 to-orange-600"
             />
+
             <StatCard
               Icon={<Users className="w-5 h-5 text-white" />}
-              title="Total Student"
-              value={
-                mentorDashData?.summary.totalStudents
-                  ? (mentorDashData?.summary.totalStudents as number)
-                  : 0
-              }
+              title="Total Students"
+              value={mentorDashData?.summary.totalStudents || 0}
               bgColor="bg-gradient-to-br from-gray-700 to-gray-900"
             />
           </div>
 
-          <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-            <div className="lg:col-span-2 bg-white rounded-lg p-6 shadow-sm border border-gray-100">
-              <div className="flex items-center justify-between mb-6">
-                <h3 className="text-lg font-semibold text-gray-900">Revenue</h3>
-                <div className="flex items-center gap-4">
-                  <div className="flex items-center gap-6 text-sm">
-                    <div className="flex items-center gap-2">
-                      <div className="w-3 h-3 bg-gray-700 rounded"></div>
-                      <span className="text-gray-600">Course Visit</span>
-                    </div>
-                    <div className="flex items-center gap-2">
-                      <div className="w-3 h-3 bg-orange-500 rounded"></div>
-                      <span className="text-gray-600">Course Sale</span>
-                    </div>
-                    <div className="flex items-center gap-2">
-                      <div className="w-3 h-3 bg-orange-600 rounded"></div>
-                      <span className="text-gray-600">Revenue</span>
-                    </div>
-                  </div>
-                  <select
-                    value={selectedPeriod}
-                    onChange={(e) => setSelectedPeriod(e.target.value)}
-                    className="border border-gray-300 rounded-lg px-3 py-1 text-sm focus:outline-none focus:ring-2 focus:ring-orange-500"
-                  >
-                    <option>Last 12 Month</option>
-                    <option>Last 6 Month</option>
-                    <option>Last 3 Month</option>
-                  </select>
-                </div>
-              </div>
+          <div className="bg-white rounded-lg p-6 shadow-sm border border-gray-100">
+            <div className="flex items-center justify-between mb-4">
+              <h2 className="text-lg font-semibold">Revenue Overview</h2>
 
-              {/* <div className="relative h-64">
-              <div className="absolute inset-0 flex items-end justify-between gap-2 px-2">
-                {revenueData.map((data, i) => (
-                  <div key={i} className="flex-1 flex flex-col items-center gap-1">
-                    <div className="w-full flex flex-col justify-end" style={{ height: '100%' }}>
-                      <div 
-                        className="w-full bg-orange-600 rounded-t"
-                        style={{ height: `${(data.revenue / maxValue) * 100}%` }}
-                      ></div>
-                      <div 
-                        className="w-full bg-orange-500"
-                        style={{ height: `${(data.courseSale / maxValue) * 100}%` }}
-                      ></div>
-                      <div 
-                        className="w-full bg-gray-700 rounded-b"
-                        style={{ height: `${(data.courseVisit / maxValue) * 100}%` }}
-                      ></div>
-                    </div>
-                    <span className="text-xs text-gray-500 mt-2">{data.month}</span>
-                  </div>
-                ))}
-              </div>
-            </div> */}
+              <Select value={selectedPeriod} onValueChange={setSelectedPeriod}>
+                <SelectTrigger className="w-[180px]">
+                  <SelectValue placeholder="Select Period" />
+                </SelectTrigger>
+
+                <SelectContent>
+                  <SelectItem value={FilterByDate.Today}>Today</SelectItem>
+                  <SelectItem value={FilterByDate.WEEK}>Last 7 Days</SelectItem>
+                  <SelectItem value={FilterByDate.MONTH}>
+                    Last 30 Days
+                  </SelectItem>
+                  <SelectItem value={FilterByDate.YEAR}>
+                    Last 12 Months
+                  </SelectItem>
+                </SelectContent>
+              </Select>
             </div>
 
-            <div className="space-y-6">
-              <div className="bg-white rounded-lg p-6 shadow-sm border border-gray-100">
-                <h3 className="text-lg font-semibold text-gray-900 mb-4">
-                  Top Performing Course
-                </h3>
-                <div className="space-y-4">
-                  {mentorDashData?.topCourse.map((course, i) => (
-                    <div key={i} className="flex items-center gap-3">
-                      <div
-                        className={`w-10 h-10 rounded-lg flex items-center justify-center text-white font-semibold  bg-gray-300`}
-                      >
-                        {course.title.charAt(0)}
-                      </div>
-                      <div className="flex-1">
-                        <p className="text-sm font-medium text-gray-900">
-                          {course.title}
-                        </p>
-                        {/* <p className="text-xs text-gray-500">{course.time}</p> */}
-                      </div>
-                      <div className="flex items-center gap-1 text-gray-500">
-                        <Users className="w-4 h-4" />
-                        <span className="text-xs">
-                          {course.enrolledStudent}
-                        </span>
-                      </div>
-                    </div>
-                  ))}
-                </div>
-              </div>
+            <Tabs
+              value={selectedTab}
+              onValueChange={setSelectedTab}
+              className="w-full"
+            >
+              <TabsList className="grid grid-cols-2 w-[240px] mb-4">
+                <TabsTrigger value="slot">Slot Revenue</TabsTrigger>
+                <TabsTrigger value="course">Course Revenue</TabsTrigger>
+              </TabsList>
 
-              {/* Your Earnings */}
-              <div className="bg-white rounded-lg p-6 shadow-sm border border-gray-100">
-                <div className="flex items-center justify-between mb-4">
-                  <h3 className="text-lg font-semibold text-gray-900">
-                    Your Earnings
-                  </h3>
-                  <TrendingUp className="w-5 h-5 text-green-500" />
-                </div>
+              <TabsContent value="slot">
+                <RevenueChart data={slotRevenue} />
+              </TabsContent>
 
-                <div className="grid grid-cols-3 gap-4 mb-4">
-                  <div>
-                    <p className="text-xs text-gray-500 mb-1">Today Earning</p>
-                    <p className="text-xl font-bold text-gray-900">$15,010</p>
+              <TabsContent value="course">
+                <RevenueChart data={courseRevenue} />
+              </TabsContent>
+            </Tabs>
+          </div>
+
+          <div className="bg-white rounded-lg p-6 shadow-sm border border-gray-100">
+            <h3 className="text-lg font-semibold mb-4">
+              Top Performing Courses
+            </h3>
+
+            <div className="space-y-4">
+              {mentorDashData?.topCourse.map((course, i) => (
+                <div key={i} className="flex items-center gap-3">
+                  <div className="w-10 h-10 rounded-lg flex items-center justify-center text-white font-semibold bg-gray-400">
+                    {course.title.charAt(0)}
                   </div>
-                  <div>
-                    <p className="text-xs text-gray-500 mb-1">Pending</p>
-                    <p className="text-xl font-bold text-orange-500">$58</p>
+
+                  <div className="flex-1">
+                    <p className="text-sm font-medium">{course.title}</p>
                   </div>
-                  <div>
-                    <p className="text-xs text-gray-500 mb-1">In Review</p>
-                    <p className="text-xl font-bold text-gray-900">$70</p>
+
+                  <div className="flex items-center gap-1 text-gray-500">
+                    <Users className="w-4 h-4" />
+                    <span className="text-xs">{course.enrolledStudent}</span>
                   </div>
                 </div>
-
-                <div className="flex gap-3">
-                  <button className="flex-1 bg-gray-800 hover:bg-gray-900 text-white py-3 rounded-lg font-medium text-sm transition-colors">
-                    Available
-                    <br />
-                    $167
-                  </button>
-                  <button className="flex-1 bg-orange-500 hover:bg-orange-600 text-white py-3 rounded-lg font-medium text-sm transition-colors">
-                    Withdraw
-                  </button>
-                </div>
-              </div>
+              ))}
             </div>
           </div>
         </div>
       </div>
     </>
   );
-};
-
-export default MentorDashboard;
+}

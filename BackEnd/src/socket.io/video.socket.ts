@@ -14,7 +14,7 @@ export const registerVideoHandlers = (
 ) => {
   const userId = socket.data.userId;
 
-  // Join video room
+ 
   socket.on("video:join", ({ roomId }) => {
     if (!roomId) return;
 
@@ -26,7 +26,7 @@ export const registerVideoHandlers = (
     socket.to(`video:${roomId}`).emit("video:peer-joined", { userId });
   });
 
-  // Offer/Answer
+ 
   socket.on("video:offer", ({ roomId, sdp }) => {
     socket.to(`video:${roomId}`).emit("video:offer", { sdp, from: userId });
   });
@@ -35,14 +35,14 @@ export const registerVideoHandlers = (
     socket.to(`video:${roomId}`).emit("video:answer", { sdp, from: userId });
   });
 
-  // ICE
+
   socket.on("video:ice-candidate", ({ roomId, candidate }) => {
     socket
       .to(`video:${roomId}`)
       .emit("video:ice-candidate", { candidate, from: userId });
   });
 
-  // Leave room explicitly
+
   socket.on("video:leave", ({ roomId }) => {
     console.log("rooid ", roomId);
     socket.leave(`video:${roomId}`);
@@ -53,7 +53,7 @@ export const registerVideoHandlers = (
     socket.to(`video:${roomId}`).emit("video:peer-left", { userId });
   });
 
-  // Cleanup on disconnect
+
   socket.on("disconnect", () => {
     for (const [roomId, members] of Object.entries(videoRooms)) {
       if (members.has(userId)) {

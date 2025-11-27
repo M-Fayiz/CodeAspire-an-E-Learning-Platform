@@ -2,7 +2,7 @@ import { Types } from "mongoose";
 import { IEnrolledModel } from "../models/enrolled.model";
 import { IFormCourseDTO } from "../types/dtos.type/course.dtos.type";
 import {
-  ICourseProgess,
+
   IEnrolledCoursedetailsDTO,
   IEnrolledListDto,
 } from "../types/dtos.type/enrolled.dto.type";

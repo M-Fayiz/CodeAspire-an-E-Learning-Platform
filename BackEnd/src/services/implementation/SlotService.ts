@@ -180,7 +180,7 @@ export class SlotService implements ISlotService {
       throw createHttpError(HttpStatus.NOT_FOUND, HttpResponse.ITEM_NOT_FOUND);
     }
 
-    const bookedSlots = await this._slotBookingRepository.findAllSlots({
+    await this._slotBookingRepository.findAllSlots({
       courseId: course_Id,
       status: "booked",
     });

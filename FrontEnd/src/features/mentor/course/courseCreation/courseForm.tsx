@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { ClipboardPen, Layers, CloudUpload } from "lucide-react";
 import Taps from "@/components/common/Taps";
 import { useCourseFormContext } from "@/context/courseForm.context";
@@ -8,10 +8,11 @@ import CourseCurriculum from "./CourseCurriculum";
 import BasicCourseInformation from "./BasicIformation";
 import Publish from "../Publish";
 
+
 export default function CourseCreateLayout() {
   const [activeTab, setActiveTab] = useState("basic");
-  const { courseId } = useCourseFormContext();
-
+   const { courseId } = useCourseFormContext();
+  
   const handleActiveTap = (tap: string) => {
     if (tap !== "basic" && !courseId) {
       toast.info("Please Fillout Basic Course Information!");
@@ -20,12 +21,8 @@ export default function CourseCreateLayout() {
     setActiveTab(tap);
   };
 
-  useEffect(() => {
-    if (courseId) {
-      console.info("coursId", courseId);
-      setActiveTab("curriculum");
-    }
-  }, [courseId]);
+
+
 
   return (
     <div className="w-full  bg-white rounded-sm border ">

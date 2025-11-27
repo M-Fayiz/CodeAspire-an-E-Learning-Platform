@@ -6,10 +6,12 @@ import {
 } from "../../types/dtos.type/slotBooking.dto.type";
 import { Types } from "mongoose";
 
+import { INotificationDTO } from "../../types/dtos.type/notification.dto.types";
+
 export interface ISlotBookingService {
   createBooking(bookingData: ISlotBooking): Promise<string | null>;
   handleSlotBooking(session: Stripe.Checkout.Session): Promise<void>;
-  findBookedSlot(bookedId: string): Promise<IVideoSessionDTO>;
+  findBookedSlot(bookedId: string): Promise<{sesionData:IVideoSessionDTO,createdMentorNotify:INotificationDTO ,createdLearnerNotify:INotificationDTO }> ;
   ListLearnerBookedSlots(
     learnerId?: string,
     mentorId?: string,

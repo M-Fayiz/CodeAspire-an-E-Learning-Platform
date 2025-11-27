@@ -1,12 +1,13 @@
 import { Types } from "mongoose";
 
-import { ICourses } from "../types/courses.type";
+import { ICourses, ISession } from "../types/courses.type";
 import {
   ICourseDTO,
   ICourseListDTO,
   IPopulatedCourse,
   IFormCourseDTO,
   IListCourseSlot,
+  ICourseCreateForm,
 } from "../types/dtos.type/course.dtos.type";
 
 export function courseListDTO(
@@ -90,4 +91,24 @@ export function listCourseForSLot(course: ICourses): IListCourseSlot {
     _id: course._id as Types.ObjectId,
     title: course.title,
   };
+}
+
+
+export function CourseFormDataDTO(course:ICourses):ICourseCreateForm{
+  return {
+    _id:course._id as Types.ObjectId,
+   
+      title:course.title,
+      language:course.language,
+      level:course.level,
+      price:course.price,
+      status:course.status,
+      description:course.description as string,
+      thumbnail:course.thumbnail as string,
+      categoryId:course.categoryId as Types.ObjectId,
+      subCategoryId:course.subCategoryId as Types.ObjectId,
+      mentorId:course.mentorsId as Types.ObjectId,
+   
+    sessions:course.sessions as ISession[]
+  }
 }

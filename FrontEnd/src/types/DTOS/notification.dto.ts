@@ -4,8 +4,10 @@ export interface INotificationDTO {
   message: string;
   isRead: boolean;
   title: string;
-  type: "info" | "warning" | "success" | "error";
+  type: notificationType;
   link?: string;
   createdAt: Date;
   updatedAt?: Date;
 }
+
+export type notificationType = "info" | "warning" | "success" | "error";

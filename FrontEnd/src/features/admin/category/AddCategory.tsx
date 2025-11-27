@@ -9,21 +9,26 @@ import {
 } from "@/components/ui/accordion";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import type { ICategoryTree } from "@/types/category.types";
+import type { ICategory } from "@/types/category.types";
 import { SelectInput } from "@/components/ui/SelectInput";
 import { categorySchema } from "@/schema/category.schema";
 
 interface IAddCategoryProps {
-  allCategories: ICategoryTree[];
-  addCat: (title: string, parentId: string) => void;
+  allCategories: ICategory[];
+  addCat: (title: string, parentId: string | null) => void;
 }
 
 const AddCategoryAccordion: React.FC<IAddCategoryProps> = ({
   allCategories,
   addCat,
 }) => {
-  const [formData, setFormData] = useState({ title: "", parentId: "" });
-  const [errors, setErros] = useState<{ [key: string]: string }>({});
+  const [formData, setFormData] = useState({
+    title: "",
+    parentId: "",
+  });
+
+  const [errors, setErrors] = useState<{ [key: string]: string }>({});
+
   const handleChange = (e: { target: { name: string; value: string } }) => {
     const { name, value } = e.target;
     setFormData((prev) => ({ ...prev, [name]: value }));
@@ -31,48 +36,61 @@ const AddCategoryAccordion: React.FC<IAddCategoryProps> = ({
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    const result = categorySchema.safeParse({ title: formData.title });
-    const fieldErros: Record<string, string> = {};
+
+    const result = categorySchema.safeParse(formData);
+
+    const fieldErrors: Record<string, string> = {};
+
     if (!result.success) {
       result.error.issues.forEach((err) => {
-        const fieldName = err.path.join(".");
-        fieldErros[fieldName] = err.message;
+        fieldErrors[err.path[0]] = err.message;
       });
-      setErros(fieldErros);
+      setErrors(fieldErrors);
       return;
     }
-    addCat(formData.title, formData.parentId);
+
+    const parentToSend = formData.parentId || null;
+
+    addCat(formData.title, parentToSend);
+
     setFormData({ title: "", parentId: "" });
+    setErrors({});
   };
 
   return (
     <Accordion type="single" collapsible className="w-full max-w-md mx-auto">
       <AccordionItem value="add-category">
-        <AccordionTrigger className="flex text-1xl items-center gap-2 text-gray-700 font-semibold hover:text-grey-700 transition-colors duration-200">
+        <AccordionTrigger className="flex text-xl items-center gap-2 text-gray-700 font-semibold hover:text-gray-900 transition">
           Add New Category
         </AccordionTrigger>
+
         <AccordionContent>
           <form onSubmit={handleSubmit} className="space-y-4 pt-4">
-            <Input
-              name="title"
-              placeholder="Category Title"
-              value={formData.title}
-              onChange={handleChange}
-              required
-            />
-            {errors && <p className="text-red-400 text-sm">{errors.tile}</p>}
+            <div>
+              <Input
+                name="title"
+                placeholder="Category Title"
+                value={formData.title}
+                onChange={handleChange}
+              />
+              {errors.title && (
+                <p className="text-red-400 text-sm mt-1">{errors.title}</p>
+              )}
+            </div>
+
             <SelectInput
               name="parentId"
               value={formData.parentId}
               onChange={handleChange}
               options={[
-                { label: "None", value: "none" },
+                { label: "None (Parent Category)", value: "" },
                 ...allCategories.map((cat) => ({
                   label: cat.label,
-                  value: cat.key,
+                  value: cat._id,
                 })),
               ]}
             />
+
             <Button
               type="submit"
               className="bg-indigo-600 hover:bg-indigo-700 text-white px-6 py-2 rounded-md"

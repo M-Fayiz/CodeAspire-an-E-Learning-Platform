@@ -1,3 +1,4 @@
+import { revanueGrapsh } from "../../types/adminDahsboard.type";
 import {
   CourseDashboardDTO,
   IChartTrendDTO,
@@ -7,7 +8,7 @@ import {
   IEnrolledListDto,
 } from "../../types/dtos.type/enrolled.dto.type";
 import { IMentorDhasboardDTO } from "../../types/dtos.type/mentorDashboard.dto.type";
-import { filter, IProgressTrack } from "../../types/enrollment.types";
+import {  filter, IProgressTrack } from "../../types/enrollment.types";
 
 export interface IEnrolledService {
   getEnrolledCourses(learnerId: string): Promise<IEnrolledListDto[]>;
@@ -30,4 +31,6 @@ export interface IEnrolledService {
     endDate?: string,
   ): Promise<IChartTrendDTO[]>;
   getMentorDashboardData(mentorId: string): Promise<IMentorDhasboardDTO>;
+  getRevenueGraph(filter:string,mentorId?:string):Promise<{slotRevanue:revanueGrapsh[],courseRevanue:revanueGrapsh[]}>
+  
 }

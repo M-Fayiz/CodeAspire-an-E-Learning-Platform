@@ -1,4 +1,4 @@
-import { Types } from "mongoose";
+import { FilterQuery, Types } from "mongoose";
 import {
   ITransactionModel,
   transactionModel,
@@ -8,7 +8,8 @@ import { BaseRepository } from "../baseRepository";
 import { ITransactionRepository } from "../interface/ITransactionRepository";
 import { IRevenueAggregationResult } from "../../types/courseDashboard.type";
 import { IMentorTotalRevanue } from "../../types/mentorDashboard.types";
-import { IAdminRevenue } from "../../types/adminDahsboard.type";
+import { IAdminRevenue, revanueGrapsh } from "../../types/adminDahsboard.type";
+
 
 export class TransactionRepositoy
   extends BaseRepository<ITransactionModel>
@@ -68,5 +69,49 @@ export class TransactionRepositoy
         $unwind: "$revenue",
       },
     ]);
+  }
+  async getMentorRevanueONSlot(filter:FilterQuery<ITransactionModel>): Promise<revanueGrapsh[]> {
+    console.log('= = = ',filter)
+    return await this.aggregate([
+      { $match: filter },
+      {
+        $group: {
+          _id: {
+            date: { $dateToString: { format: "%Y-%m-%d", date: "$createdAt" } }
+          },
+          revenue: { $sum: "$mentorShare" }
+        }
+      },
+      {
+        $project: {
+          _id: 0,
+          date: "$_id.date",
+          revenue: 1
+        }
+      },
+      { $sort: { date: 1 } }
+    ])
+  }
+  async getMentorRevanueONCourse(filter:FilterQuery<ITransactionModel>): Promise<revanueGrapsh[]> {
+
+    return await this.aggregate([
+      { $match: filter },
+      {
+        $group: {
+          _id: {
+            date: { $dateToString: { format: "%Y-%m-%d", date: "$createdAt" } }
+          },
+          revenue: { $sum: "$mentorShare" }
+        }
+      },
+      {
+        $project: {
+          _id: 0,
+          date: "$_id.date",
+          revenue: 1
+        }
+      },
+      { $sort: { date: 1 } }
+    ])
   }
 }

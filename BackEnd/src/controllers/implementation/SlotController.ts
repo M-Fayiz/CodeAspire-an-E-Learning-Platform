@@ -4,7 +4,7 @@ import { ISlotController } from "../interface/ISlotController";
 import { HttpStatus } from "../../const/http-status";
 import { successResponse } from "../../utils/response.util";
 import { HttpResponse } from "../../const/error-message";
-import { convertTo12Hour } from "../../utils/timeManagement.util";
+
 
 export class SlotController implements ISlotController {
   constructor(private _slotService: ISlotService) {}
@@ -31,7 +31,7 @@ export class SlotController implements ISlotController {
   ): Promise<void> => {
     try {
       const { mentorId } = req.params;
-      console.log(mentorId);
+     
       const mentorSlots = await this._slotService.getMontorSlots(mentorId);
 
       res

@@ -63,13 +63,6 @@ const courseSchema = new mongoose.Schema<ICourses>(
             lectureContent: String,
           },
         ],
-        review: {
-          status: {
-            type: String,
-            enum: ["pending", "success", "failed"],
-            time: Date,
-          },
-        },
       },
     ],
     status: {

@@ -29,7 +29,6 @@ export const EnrolledService = {
         ) ?? [],
       );
       return signedCourse;
-      console.log("enrolled ", response.data);
     } catch (error) {
       throwAxiosError(error);
     }
@@ -97,21 +96,13 @@ export const EnrolledService = {
       throwAxiosError(error);
     }
   },
-  FilterGraph: async (
-    courseId: string,
-    filter: ChartFilter,
-    startData?: Date,
-    endDate?: Date,
-  ) => {
-    console.log(" filter ", filter);
+  FilterGraph: async (courseId: string, filter: ChartFilter) => {
     try {
       const response = await axiosInstance.get(
         API.ENROLLEMENT.GET_FILTERED_GRAPH(courseId),
         {
           params: {
             filter,
-            startData,
-            endDate,
           },
         },
       );
@@ -129,6 +120,34 @@ export const EnrolledService = {
         API.ENROLLEMENT.GET_MENTOR_DASH_DATA(mentorId),
       );
       return response.data.dashboardData;
+    } catch (error) {
+      throwAxiosError(error);
+    }
+  },
+  graphForRevenue: async (filter: string, mentorId?: string) => {
+    try {
+      const response = await axiosInstance.get(
+        API.ENROLLEMENT.GET_REVANUE_GRAPH,
+        {
+          params: { filter, mentorId },
+        },
+      );
+      console.log(response.data);
+      return response.data;
+    } catch (error) {
+      throwAxiosError(error);
+    }
+  },
+  adminGraphRevanue: async (filter: string) => {
+    try {
+      const response = await axiosInstance.get(
+        API.ENROLLEMENT.GET_ADMIN_REVANUE_GRAPH,
+        {
+          params: { filter },
+        },
+      );
+
+      return response.data;
     } catch (error) {
       throwAxiosError(error);
     }

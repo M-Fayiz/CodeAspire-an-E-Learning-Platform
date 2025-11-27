@@ -36,4 +36,5 @@ export interface ICourseController {
     res: Response,
     next: NextFunction,
   ): Promise<void>;
+  getCourseFormData(req: Request, res: Response, next: NextFunction): Promise<void>;
 }

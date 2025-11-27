@@ -4,10 +4,8 @@ import { useEffect, useState } from "react";
 import { useAuth } from "@/context/auth.context";
 import courseService from "@/service/mentor/course.service";
 import type { IFormCourseDTO } from "@/types/DTOS/courses.dto.types";
-import { useCourseFormContext } from "@/context/courseForm.context";
-import { Link, useNavigate, useSearchParams } from "react-router";
+import { Link, useSearchParams } from "react-router-dom";
 import MyCourseCard from "@/features/mentor/course/MentorCours";
-import { CourseFormDTO } from "@/types/DTOS/CourseForm.dto.type";
 import { Spinner } from "@/components/templates/Spinner";
 
 import { PlusCircle } from "lucide-react";
@@ -18,13 +16,14 @@ import useDebounce from "@/hooks/useDebounce";
 function MYCourses() {
   const [courses, setCourses] = useState<IFormCourseDTO[] | null>(null);
   const [loading, setLoading] = useState(true);
-  const navigate = useNavigate();
+
   const { user } = useAuth();
-  const { setFormData, setCourseId } = useCourseFormContext();
+
   const [searchParams, setSearchParams] = useSearchParams();
   const [totalPage, setTotalPage] = useState(1);
   const searchQuery = useDebounce(searchParams.get("search"), 500) || "";
   const currentPage = searchParams.get("page");
+
   useEffect(() => {
     async function fetchDraftedCourse() {
       setLoading(true);
@@ -44,10 +43,9 @@ function MYCourses() {
   }, [user, searchParams]);
 
   const handleEditCourse = (data: IFormCourseDTO) => {
-    setCourseId(data._id as string);
-    const mappedCourse = CourseFormDTO(data);
-    setFormData({ ...mappedCourse });
-    navigate("/mentor/courses/create");
+    // const mappedCourse = CourseFormDTO(data);
+    // setFormData({ ...mappedCourse });
+    // console.log('_id form course',data._id)
   };
   const handleSearch = (query: string) => {
     setSearchParams((prv) => {
@@ -66,7 +64,6 @@ function MYCourses() {
   return (
     <ManagementLayout title="My Course List" description="Manage your courses">
       <div className="flex items-center justify-between p-6 gap-4">
-        {/* Create Course Button */}
         <Link
           to={"/mentor/courses/create"}
           className="flex items-center bg-gray-200 gap-2 px-6 py-3 rounded-sm shadow-md text-black transition-transform hover:scale-105"

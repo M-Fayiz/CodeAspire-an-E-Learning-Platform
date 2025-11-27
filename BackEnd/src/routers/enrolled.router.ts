@@ -49,6 +49,18 @@ enrolledRouter.get(
   authorizedRole(IRole.Mentor),
   enrolledController.getMentorDashboardData,
 );
+enrolledRouter.get(
+  "/mentor/dashboard/revanue",
+  verifyUser,
+  authorizedRole(IRole.Mentor),
+  enrolledController.getmentorRevanue,
+);
+enrolledRouter.get(
+  "/admin/dashboard/revanue",
+  verifyUser,
+  authorizedRole(IRole.Admin),
+  enrolledController.getAdminRevanue,
+);
 
 enrolledRouter.put(
   "/:enrolledId",

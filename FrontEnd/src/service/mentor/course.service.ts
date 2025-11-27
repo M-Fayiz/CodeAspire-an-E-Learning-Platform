@@ -17,6 +17,7 @@ import { throwAxiosError } from "@/utility/throwErrot";
 const courseService = {
   createCourse: async (courseData: ICourseData): Promise<ICourseData> => {
     try {
+      console.log(" thumbnail :", courseData);
       if (courseData.thumbnail) {
         const uploadAndFileUrl = await sharedService.getS3BucketUploadUrl(
           courseData.thumbnail as File,
@@ -176,6 +177,7 @@ const courseService = {
     courseData: ICourseData,
   ): Promise<CourseForm> => {
     try {
+      console.log("this is thubnail :", courseData.thumbnail);
       if (courseData.thumbnail instanceof File) {
         const uploadAndFileUrl = await sharedService.getS3BucketUploadUrl(
           courseData.thumbnail as File,
@@ -300,6 +302,14 @@ const courseService = {
       throwAxiosError(error);
     }
   },
+  getCourseFormData:async(courseId:string):Promise<CourseForm>=>{
+    try {
+      const response=await axiosInstance.get(API.COURSE.GET_COURSE_FORM_DATA(courseId))
+      return response.data.courseFormData
+    } catch (error) {
+      throwAxiosError(error)
+    }
+  }
 };
 
 export default courseService;

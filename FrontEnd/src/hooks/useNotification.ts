@@ -37,7 +37,16 @@ export function useNotifications(userId: string) {
     if (!socket) return;
 
     const handleNotification = (payload: INotificationDTO) => {
-      console.log("this the payload 💬:", payload);
+      switch (payload.type) {
+        case "error":
+          toast.error(payload.message);
+          break;
+        case "info":
+          toast.info(payload.message);
+          break;
+        case "success":
+          toast.success(payload.message);
+      }
       setNotifications((prev) => [payload, ...prev]);
       setCount((prev) => prev + 1);
     };

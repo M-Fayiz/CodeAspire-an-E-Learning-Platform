@@ -23,6 +23,9 @@ import {
 } from "../../dtos/slotBooking.dto";
 import { FilterQuery, Types } from "mongoose";
 import { ISlotBookingModel } from "../../models/sessionBooking.model";
+import { INotificationRepository } from "../../repository/interface/INotificationRepository";
+import { NotificationTemplates } from "../../template/notification.template";
+import { INotificationDTO } from "../../types/dtos.type/notification.dto.types";
 
 export class SlotBookingService implements ISlotBookingService {
   private _stripe;
@@ -31,6 +34,7 @@ export class SlotBookingService implements ISlotBookingService {
     private _slotBookingRepository: ISlotBookingRepository,
     private _slotRepository: ISlotRepository,
     private _transactionRepostiory: ITransactionRepository,
+    private _notificationRepository:INotificationRepository
   ) {
     this._stripe = new Stripe(env.STRIPE_SECRETE_KEY as string);
   }
@@ -196,7 +200,7 @@ export class SlotBookingService implements ISlotBookingService {
     await this._transactionRepostiory.createTransaction(transactionData);
   }
 
-  async findBookedSlot(bookedId: string): Promise<IVideoSessionDTO> {
+  async findBookedSlot(bookedId: string): Promise<{sesionData:IVideoSessionDTO,createdMentorNotify:INotificationDTO ,createdLearnerNotify:INotificationDTO }> {
     const booked_id = parseObjectId(bookedId);
     if (!booked_id) {
       throw createHttpError(HttpStatus.BAD_REQUEST, HttpResponse.INVALID_ID);
@@ -218,19 +222,23 @@ export class SlotBookingService implements ISlotBookingService {
 
     const currentDate = now.toISOString().split("T")[0];
     const sessionDate = new Date(bookedData.date).toISOString().split("T")[0];
-    if (currentDate !== sessionDate) {
-      throw createHttpError(HttpStatus.CONFLICT, HttpResponse.SLOT_DATE);
-    }
+    // if (currentDate !== sessionDate) {
+    //   throw createHttpError(HttpStatus.CONFLICT, HttpResponse.SLOT_DATE);
+    // }
 
-    if (now.getTime() < startTime.getTime() - EARLY_JOIN_BUFFER) {
-      throw createHttpError(HttpStatus.CONFLICT, HttpResponse.NOT_STARTED);
-    }
+    // if (now.getTime() < startTime.getTime() - EARLY_JOIN_BUFFER) {
+    //   throw createHttpError(HttpStatus.CONFLICT, HttpResponse.NOT_STARTED);
+    // }
 
-    if (now.getTime() > endTime.getTime()) {
-      throw createHttpError(HttpStatus.CONFLICT, HttpResponse.SESSION_ENDED);
-    }
+    // if (now.getTime() > endTime.getTime()) {
+    //   throw createHttpError(HttpStatus.CONFLICT, HttpResponse.SESSION_ENDED);
+    // }
+    const notifyDataMentor=NotificationTemplates.JoinNowSession(bookedData.mentorId)
+    const notifyDataLerner=NotificationTemplates.JoinNowSession(bookedData.learnerId)
 
-    return videoSessionDTO(bookedData);
+    const createdMentorNotify=await this._notificationRepository.createNotification(notifyDataMentor)
+    const createdLearnerNotify=await this._notificationRepository.createNotification(notifyDataLerner)
+    return {sesionData:videoSessionDTO(bookedData),createdMentorNotify,createdLearnerNotify}
   }
   async ListLearnerBookedSlots(
     learnerId?: string,

@@ -9,7 +9,7 @@ import {
   IReviewDTO,
   IReviewPopulatedDTO,
 } from "../../types/dtos.type/review.dto.types";
-import { popularedReviewDTO, reviewDTO } from "../../dtos/review.dto";
+import { popularedReviewDTO } from "../../dtos/review.dto";
 
 export class ReviewService implements IReviewSevice {
   constructor(private _reviewRepository: IReviewRepository) {}

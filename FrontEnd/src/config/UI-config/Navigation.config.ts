@@ -77,7 +77,7 @@ const navigationConfig = {
         badge: 2,
       },
       { icon: Activity, label: "Progress", path: "/learner/progress" },
-      { icon: CalendarDays, label: "Slots", path: "/learner/slot-booking" },
+      { icon: CalendarDays, label: "Slots", path: "/learner/booked-slots" },
     ],
     secondary: [
       { icon: ShoppingCart, label: "Course Store", path: "/learner/store" },

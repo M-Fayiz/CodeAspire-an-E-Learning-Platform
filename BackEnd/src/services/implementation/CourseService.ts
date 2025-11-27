@@ -10,9 +10,11 @@ import {
   IPopulatedCourse,
   IFormCourseDTO,
   IListCourseSlot,
+  ICourseCreateForm,
 } from "../../types/dtos.type/course.dtos.type";
 import {
   courseDTO,
+  CourseFormDataDTO,
   courseListDTO,
   formCourseDto,
   listCourseForSLot,
@@ -36,9 +38,19 @@ export class CourseService implements ICourseService {
     private _notificationRepository: INotificationRepository,
   ) {}
 
-  async createCourses(course: ICourses): Promise<ICourses | null> {
-    return await this._courseRepository.createCourses(course);
+  async createCourses(course: ICourses): Promise<ICourseCreateForm | null> {
+
+    const mentorCourse=await this._courseRepository.findAllCourse({mentorsId:course.mentorsId,categoryId:course.categoryId})
+
+    if(mentorCourse&&mentorCourse.length>2){
+      throw createHttpError(HttpStatus.CONFLICT,HttpResponse.ITEM_EXIST)
+    }
+
+    const createdCourse=await this._courseRepository.createCourses(course);
+    return CourseFormDataDTO(createdCourse as ICourses)
   }
+
+
   async fetchCourses(
     page: number,
     limit: number,
@@ -67,7 +79,7 @@ export class CourseService implements ICourseService {
       query["title"] = { $regex: search, $options: "i" };
     }
     if (category) {
-      query["categoryId"] = category;
+      query["`categoryId`"] = category;
     }
     if (subcategory) {
       query["subCategoryId"] = subcategory;
@@ -75,7 +87,9 @@ export class CourseService implements ICourseService {
     if (level) {
       query["level"] = level;
     }
+
     query["status"] = "approved";
+
     const [courseList, totalDocument] = await Promise.all([
       this._courseRepository.fetchCourses(
         limit,
@@ -110,6 +124,7 @@ export class CourseService implements ICourseService {
     courseUpdatePart: "sessions" | "lecture" | "baseInformation",
   ): Promise<ICourses | null> {
     const Id = parseObjectId(courseId);
+    console.log('udate course',Id)
     if (!Id) {
       throw createHttpError(HttpStatus.BAD_REQUEST, HttpResponse.INVALID_ID);
     }
@@ -169,7 +184,7 @@ export class CourseService implements ICourseService {
 
     query["mentorsId"] = mentorId;
 
-    console.log("query", query);
+    
     const [data, documnetCount] = await Promise.all([
       this._courseRepository.getMentorDraftedCourses(search, limit, skip, id),
       this._courseRepository.findDocumentCount(query),
@@ -250,6 +265,7 @@ export class CourseService implements ICourseService {
     baseInfo: ICourses,
   ): Promise<ICourseDTO> {
     const id = parseObjectId(courseId);
+    console.log('base infor ',id)
     if (!id) {
       throw createHttpError(HttpStatus.BAD_REQUEST, HttpResponse.INVALID_ID);
     }
@@ -359,5 +375,18 @@ export class CourseService implements ICourseService {
     }
 
     return courseList.map((course) => listCourseForSLot(course));
+  }
+  async getCourseFormData(courseId: string): Promise<ICourseCreateForm> {
+      const course_Id=parseObjectId(courseId)
+      if(!course_Id){
+        throw createHttpError(HttpStatus.BAD_REQUEST,HttpResponse.INVALID_ID)
+      }
+
+      const courseFormData=await this._courseRepository.getCourseFormData(course_Id)
+      if(!courseFormData){
+        throw createHttpError(HttpStatus.NOT_FOUND,HttpResponse.COURSE_NOT_FOUND)
+      }
+
+      return CourseFormDataDTO(courseFormData )
   }
 }

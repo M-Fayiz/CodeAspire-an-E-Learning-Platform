@@ -12,21 +12,27 @@ import { FileUp } from "lucide-react";
 import { sharedService } from "@/service/shared.service";
 import { Spinner } from "@/components/ui/shadcn-io/spinner";
 import type { ICategoryDTO } from "@/types/DTOS/category.dto.type";
+import { toast } from "sonner";
+import { courseFormSchema } from "@/schema/courseForm.schema";
+import courseService from "@/service/mentor/course.service";
+import { useAuth } from "@/context/auth.context";
 interface BaseCaourseProps {
-  handleTap?: (tap: "basic" | "curriculum" | "publish") => void;
+  handleTap: (tap: "basic" | "curriculum" | "publish") => void;
 }
 
-const BasicCourseInformation: React.FC<BaseCaourseProps> = () => {
+const BasicCourseInformation: React.FC<BaseCaourseProps> = ({handleTap}) => {
   const [categories, setCategories] = useState<ICategoryDTO[]>([]);
   const [selectedCategory, setSelectedCategory] = useState("");
+  const [zodError, setErrors] = useState<{ [key: string]: string }>({});
   const [image, setImage] = useState("");
   const [spin] = useState(false);
-  const { formData, updateBaseField, OnSubmit, setField, zodError } =
-    useCourseFormContext();
+  const { courseId, formData, setField,setCourseId } = useCourseFormContext();
+  const {user}=useAuth()
+
+  // Category
   useEffect(() => {
     const fetchCategories = async () => {
       const result = await categoryService.listCategory();
-      console.log(" result for category : ", result);
       if (result) {
         setCategories(result);
       }
@@ -34,9 +40,10 @@ const BasicCourseInformation: React.FC<BaseCaourseProps> = () => {
     fetchCategories();
   }, []);
 
+  // Thumbnail
   useEffect(() => {
     async function getImageUrl() {
-      if (typeof formData.thumbnail == "string") {
+      if (formData.thumbnail && typeof formData.thumbnail == "string") {
         const resultURl = await sharedService.getPreSignedDownloadURL(
           formData.thumbnail,
         );
@@ -56,7 +63,6 @@ const BasicCourseInformation: React.FC<BaseCaourseProps> = () => {
   };
 
   const { categoryOptions, subCategoryOptions } = useMemo(() => {
-    console.log("categories  ::", categories);
     const categoryOptions = categories.map((category) => ({
       _id: category._id,
       label: category.label,
@@ -72,7 +78,56 @@ const BasicCourseInformation: React.FC<BaseCaourseProps> = () => {
 
     return { categoryOptions, subCategoryOptions };
   }, [categories, selectedCategory]);
-  console.log("selected cate : ", selectedCategory);
+
+  const handleBaseFormSubmit = async (e: React.FormEvent) => {
+        
+    e.preventDefault();
+    const fieldErrors: Record<string, string> = {};
+    try {
+      const courseData = courseFormSchema.safeParse(formData);
+      if (!courseData.success) {
+        courseData.error.issues.forEach((err) => {
+          const fieldName = err.path.join(".");
+          fieldErrors[fieldName] = err.message;
+        });
+        setErrors(fieldErrors);
+        return;
+      }
+    
+      if (courseId) {
+     
+         const updatedData = await courseService.updateBaseInformation(
+          courseId,
+          {
+            ...courseData.data,
+            mentorsId: user!.id,
+          },
+        );
+        if (updatedData) {
+          // setFormData(updatedData);
+          setCourseId(updatedData._id as string)
+           handleTap('curriculum')
+          toast.success("Base Information Updated Successfully");
+        }
+        return;
+      }
+            console.log(3)
+      const savedCourseData = await courseService.createCourse({
+        ...courseData.data,
+        mentorsId: user!.id,
+      });
+      console.log('> >',savedCourseData)
+      if (savedCourseData._id) {
+        setCourseId(savedCourseData._id);
+        handleTap('curriculum')
+      }
+    } catch (error) {
+      if (error instanceof Error) {
+        toast.error(error.message);
+      }
+    }
+  };
+  console.log('| | | | :',formData)
   return (
     <div className="p-4 sm:p-6">
       <div className="flex items-center justify-between mb-4">
@@ -80,21 +135,21 @@ const BasicCourseInformation: React.FC<BaseCaourseProps> = () => {
           Basic Information
         </h2>
       </div>
-      <form onSubmit={OnSubmit}>
+      <form onSubmit={handleBaseFormSubmit}>
         <div className="w-full space-y-4">
           <Input
             placeholder="Course Title"
             label="Course Title"
             name="title"
             value={formData.title}
-            onChange={updateBaseField}
+            onChange={(e) => setField("title", e.target.value)}
             error={zodError.title}
           />
 
           <Input
             textArea
             name="description"
-            onChange={updateBaseField}
+            onChange={(e) => setField("description", e.target.value)}
             value={formData.description}
             placeholder="write Course description"
             label={"Course description"}
@@ -107,7 +162,7 @@ const BasicCourseInformation: React.FC<BaseCaourseProps> = () => {
             label="Course Price"
             name="price"
             value={Number(formData.price)}
-            onChange={updateBaseField}
+            onChange={(e) => setField("price",Number(e.target.value) )}
             error={zodError.price}
             min="1"
           />
@@ -118,10 +173,10 @@ const BasicCourseInformation: React.FC<BaseCaourseProps> = () => {
                 label="Choose a Category"
                 value={formData.categoryId}
                 boxOptions={categoryOptions}
-                name="categoryId"
                 setCategory={handleSubCategory}
-                onChange={setField}
+                onChange={(id) => setField("categoryId", id)}
               />
+
               <p className="text-red-400 text-sm">{zodError.categoryId}</p>
             </div>
             {subCategoryOptions.length > 0 && (
@@ -130,9 +185,9 @@ const BasicCourseInformation: React.FC<BaseCaourseProps> = () => {
                   label="Choose a SubCategory"
                   value={formData.subCategoryId || ""}
                   boxOptions={subCategoryOptions}
-                  name="subCategoryId"
-                  onChange={setField}
+                  onChange={(id) => setField("subCategoryId", id)}
                 />
+
               </>
             )}
           </div>
@@ -140,32 +195,23 @@ const BasicCourseInformation: React.FC<BaseCaourseProps> = () => {
           <div className="grid grid-cols-1 md:grid-cols-3">
             <div className="flex flex-col gap-2">
               <Combobox
-                label="Select a Language"
+                label="Select Language"
                 value={formData.language}
-                boxOptions={[
-                  ...COURSE_LANGUAGE.map((data) => ({
-                    label: data,
-                    _id: data,
-                  })),
-                ]}
-                name="language"
-                onChange={setField}
+                boxOptions={COURSE_LANGUAGE.map(l => ({ _id: l, label: l }))}
+                onChange={(lang) => setField("language", lang)}
               />
+
+
               <p className="text-red-400 text-sm">{zodError.language}</p>
             </div>
             <div className="flex flex-col gap-2">
               <Combobox
-                label="Select a Course Level"
+                label="Course Level"
                 value={formData.level}
-                boxOptions={[
-                  ...COURSE_LEVEL.map((data) => ({
-                    label: data,
-                    _id: data,
-                  })),
-                ]}
-                name="level"
-                onChange={setField}
+                boxOptions={COURSE_LEVEL.map(l => ({ _id: l, label: l }))}
+                onChange={(lvl) => setField("level", lvl)}
               />
+
               <p className="text-red-400 text-sm">{zodError.level}</p>
             </div>
           </div>
@@ -184,7 +230,11 @@ const BasicCourseInformation: React.FC<BaseCaourseProps> = () => {
                   type="file"
                   name="thumbnail"
                   accept="image/*"
-                  onChange={updateBaseField}
+                  onChange={(e) => {
+                    if (e.target.files?.[0]) {
+                      setField("thumbnail", e.target.files[0] as File);
+                    }
+                  }}
                   className="block w-full text-sm text-gray-600 
                           file:mr-4 file:py-2 file:px-4 
                           file:rounded-lg file:border-0 

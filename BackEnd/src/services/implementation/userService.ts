@@ -20,7 +20,7 @@ import {
   IMentorDTO,
   RoleModelMap,
 } from "../../types/dtos.type/user.dto.types";
-import logger from "../../config/logger.config";
+// import logger from "../../config/logger.config";
 import { NotificationTemplates } from "../../template/notification.template";
 import { INotificationRepository } from "../../repository/interface/INotificationRepository";
 import { INotificationDTO } from "../../types/dtos.type/notification.dto.types";

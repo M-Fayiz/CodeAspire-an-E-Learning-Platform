@@ -1,39 +1,39 @@
 import { z } from "zod";
-
 export const courseFormSchema = z.object({
   title: z
     .string()
     .min(4, { message: "Title must be at least 4 characters" })
-    .max(150, "Title must be within 150 characters"),
+    .max(150),
 
   description: z
     .string()
     .min(10, { message: "Description must be at least 10 characters" }),
 
-  level: z.enum(["Beginner", "Intermediate", "Advanced"], {
-    message: "please select given options",
-  }),
+  level: z.enum(["Beginner", "Intermediate", "Advanced"]),
 
-  language: z.string().min(3, { message: "language is required" }),
+  language: z.string().min(2, "Language is required"),
 
-  thumbnail: z.string().or(
+  thumbnail: z.union([
+    z.string().min(1, "Thumbnail required"),
     z
-      .instanceof(File, { message: "Please choose a thumbnail" })
+      .instanceof(File)
       .refine(
-        (file) => file && ["image/jpeg", "image/png"].includes(file.type),
-        {
-          message: "Only JPEG and PNG files are allowed",
-        },
+        (file) => ["image/jpeg", "image/png"].includes(file.type),
+        "Only JPEG and PNG are allowed",
       ),
-  ),
-  categoryId: z.string().min(3, { message: "select a category" }),
+  ]),
 
-  subCategoryId: z
-    .string()
-    .min(3, { message: "Please select a subcategory" })
-    .optional(),
+  categoryId: z.string().min(3, "Select a category"),
 
-  price: z.number().min(1, { message: "Price must be at least 1" }),
+  subCategoryId: z.union([
+    z.string().min(3, "Select a valid subcategory"),
+    z.literal(""), // allow empty string
+    z.undefined(),
+  ]),
+
+  price: z.number().min(1, "Price must be at least 1"),
+
+  sessions: z.array(z.any()).optional(),
 });
 
 export const sessionSchema = z.object({

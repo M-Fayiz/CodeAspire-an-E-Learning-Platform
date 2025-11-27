@@ -2,10 +2,12 @@ import express from "express";
 import { SlotRepository } from "../repository/implementation/SlotRepository";
 import { SlotService } from "../services/implementation/SlotService";
 import { SlotController } from "../controllers/implementation/SlotController";
+import { SlotBookingRepository } from "../repository/implementation/SlotBookingRepositoy";
 const slotRouter = express.Router();
 
 const slotRepository = new SlotRepository();
-const slotService = new SlotService(slotRepository);
+const slotBookingRepository=new SlotBookingRepository()
+const slotService = new SlotService(slotRepository,slotBookingRepository);
 const slotController = new SlotController(slotService);
 
 slotRouter.post("/create", slotController.createSlot);

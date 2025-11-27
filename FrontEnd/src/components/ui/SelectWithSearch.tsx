@@ -20,67 +20,58 @@ export interface IBoxOptions {
   label: string;
 }
 
-interface IComboboxProps {
-  name: string;
-  value: string;
+interface IComboboxProps<T extends string = string> {
+  value: T;
   label: string;
-  setCategory?: (selectedLabel: string | undefined) => void;
-  onChange?: (name: string, value: string) => void;
-  boxOptions: IBoxOptions[];
+  onChange?: (value: T) => void;
+  boxOptions: { _id: T; label: string }[];
+  setCategory?: (label?: string) => void;
 }
 
-export function Combobox({
-  name,
+export function Combobox<T extends string = string>({
   value,
   onChange,
   boxOptions,
   setCategory,
   label,
-}: IComboboxProps) {
+}: IComboboxProps<T>) {
+
   const [open, setOpen] = useState(false);
-  console.log("box options :: ", boxOptions);
+
   useEffect(() => {
-    const selectedLabel = boxOptions.find((item) => item._id === value)?.label;
+    const selectedLabel = boxOptions.find(o => o._id === value)?.label;
     setCategory?.(selectedLabel);
   }, [value, boxOptions]);
 
-  const selectedLabel = boxOptions.find((item) => item._id === value)?.label;
+  const selectedLabel = boxOptions.find(o => o._id === value)?.label;
 
   return (
     <div>
-      <label className="block text-sm font-semibold text-gray-700 mb-1">
-        {label}
-      </label>
+      <label className="block text-sm font-semibold">{label}</label>
+
       <Popover open={open} onOpenChange={setOpen}>
         <PopoverTrigger asChild>
-          <Button
-            variant="outline"
-            role="combobox"
-            aria-expanded={open}
-            className="w-[200px] justify-between text-gray-500"
-          >
-            {selectedLabel || "Select Option..."}
-            <ChevronsUpDownIcon className="ml-2 h-4 w-4 shrink-0 opacity-50" />
+          <Button variant="outline" className="w-[200px] justify-between">
+            {selectedLabel || "Select Option"}
+            <ChevronsUpDownIcon />
           </Button>
         </PopoverTrigger>
+
         <PopoverContent className="w-[200px] p-0">
           <Command>
             <CommandInput placeholder="Search..." />
             <CommandList>
-              <CommandEmpty>No option found.</CommandEmpty>
               <CommandGroup>
-                {boxOptions.map((data) => (
+                {boxOptions.map((item) => (
                   <CommandItem
-                    key={data._id}
-                    value={data.label}
+                    key={item._id}
+                    value={item.label}
                     onSelect={() => {
-                      const newValue = data._id === value ? "" : data._id;
-                      console.log("new valuew", newValue);
-                      onChange?.(name, newValue);
+                      onChange?.(item._id as T);
                       setOpen(false);
                     }}
                   >
-                    {data.label}
+                    {item.label}
                   </CommandItem>
                 ))}
               </CommandGroup>
@@ -91,5 +82,3 @@ export function Combobox({
     </div>
   );
 }
-
-export default React.memo(Combobox);

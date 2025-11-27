@@ -1,6 +1,6 @@
 import { FilterQuery, Types } from "mongoose";
 import { ISlotModel } from "../../models/slot.model";
-import { SlotDay } from "../../types/slot.type";
+
 import {
   ISlotpopultedDataFromDB,
   mentorUnPopulatedSlots,

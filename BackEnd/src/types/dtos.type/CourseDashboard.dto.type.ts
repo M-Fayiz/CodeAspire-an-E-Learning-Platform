@@ -1,5 +1,4 @@
-import { Types } from "mongoose";
-import { ICourseDTO } from "./course.dtos.type";
+
 export interface IRevenue {
   admin: number;
   mentor: number;

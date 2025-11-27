@@ -32,4 +32,14 @@ export interface IEnrolledController {
     res: Response,
     next: NextFunction,
   ): Promise<void>;
+  getmentorRevanue(
+    req: Request,
+    res: Response,
+    next: NextFunction,
+  ): Promise<void>;
+  getAdminRevanue(
+    req: Request,
+    res: Response,
+    next: NextFunction,
+  ): Promise<void>;
 }

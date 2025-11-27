@@ -6,14 +6,17 @@ import { SlotBookingService } from "../services/implementation/SlotBookingServic
 import { SlotBookingController } from "../controllers/implementation/SlotBookingController";
 import { SlotRepository } from "../repository/implementation/SlotRepository";
 import { TransactionRepositoy } from "../repository/implementation/TransactionRepository";
+import { NotificationRepository } from "../repository/implementation/NotificationRepository";
 
 const slotBookingRepository = new SlotBookingRepository();
 const slotRepository = new SlotRepository();
 const tansactionRepository = new TransactionRepositoy();
+const notificationRepository=new NotificationRepository()
 const slotBookingService = new SlotBookingService(
   slotBookingRepository,
   slotRepository,
   tansactionRepository,
+  notificationRepository
 );
 
 const slotBookingController = new SlotBookingController(slotBookingService);

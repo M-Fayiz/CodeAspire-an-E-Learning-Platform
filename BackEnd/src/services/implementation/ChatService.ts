@@ -3,7 +3,7 @@ import { HttpResponse } from "../../const/error-message";
 import { HttpStatus } from "../../const/http-status";
 import { chatDto, chatListDTO } from "../../dtos/chat.dto";
 import { MessageDto } from "../../dtos/messaage.dto";
-import { IChatModel } from "../../models/chat.model";
+
 import { parseObjectId } from "../../mongoose/objectId";
 import { IChatRespository } from "../../repository/interface/IChatRepository";
 import { IMessageRepository } from "../../repository/interface/IMessageRepository";

@@ -18,11 +18,13 @@ import { OrderRepositoy } from "../repository/implementation/OrderRepository";
 import { CourseRepository } from "../repository/implementation/CourseRepository";
 import { EnrolledRepository } from "../repository/implementation/EnrolledRepository";
 import { TransactionRepositoy } from "../repository/implementation/TransactionRepository";
+import { NotificationRepository } from "../repository/implementation/NotificationRepository";
 
 const orderRepositoy = new OrderRepositoy();
 const courseRepositoy = new CourseRepository();
 const enrolledRepositoy = new EnrolledRepository();
 const transactionRepositoy = new TransactionRepositoy();
+const notificationRepository=new NotificationRepository()
 
 const ordreService = new OrderService(
   orderRepositoy,
@@ -34,6 +36,7 @@ const slotBookingService = new SlotBookingService(
   slotBookingRepository,
   slotRepository,
   transactionRepositoy,
+  notificationRepository
 );
 const webhookService = new WebhookService(ordreService, slotBookingService);
 const webhookController = new WebhookController(webhookService);

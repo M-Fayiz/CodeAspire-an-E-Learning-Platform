@@ -1,4 +1,4 @@
-import { Types } from "mongoose";
+import { FilterQuery, Types } from "mongoose";
 import { HttpResponse } from "../../const/error-message";
 import { HttpStatus } from "../../const/http-status";
 import { parseObjectId } from "../../mongoose/objectId";
@@ -20,7 +20,7 @@ import {
 } from "../../dtos/enrolled.dto";
 import { IEnrolledModel } from "../../models/enrolled.model";
 import { IEnrolledService } from "../interface/IEnrolledService";
-import { ICourses } from "../../types/courses.type";
+
 import {
   chartFilter,
   filter,
@@ -38,6 +38,11 @@ import {
 import { IMentorDhasboardDTO } from "../../types/dtos.type/mentorDashboard.dto.type";
 import { mentorDashboardDTO } from "../../dtos/mentorDashboard.dto";
 import { timeFilter } from "../../utils/dashFilterGenerator.utils";
+import { ITransactionModel } from "../../models/transaction.model";
+import { TransactionType } from "../../const/transaction";
+import { revanueGrapsh } from "../../types/adminDahsboard.type";
+import { FilterByDate } from "../../const/filter.const";
+import { buildDateFilter } from "../../utils/dateBuilder";
 
 export class EnrolledService implements IEnrolledService {
   constructor(
@@ -195,4 +200,39 @@ export class EnrolledService implements IEnrolledService {
     ]);
     return mentorDashboardDTO(studentsAndRating[0], topCourse, revanue);
   }
+  async getRevenueGraph(
+  filter: string,
+  mentorId?: string
+): Promise<{ slotRevanue: revanueGrapsh[]; courseRevanue: revanueGrapsh[] }> {
+  
+  const dateMatch = buildDateFilter(filter);
+
+  const matchStage: FilterQuery<ITransactionModel> = {
+    ...dateMatch,
+  };
+
+  if (mentorId) {
+    const mentor_id = parseObjectId(mentorId);
+    if (!mentor_id) {
+      throw createHttpError(HttpStatus.BAD_REQUEST, HttpResponse.INVALID_ID);
+    }
+    matchStage.mentorId = mentor_id;
+  }
+  
+  const slotRevenue = await this._transactionRepository.getMentorRevanueONSlot({
+    ...matchStage,
+    paymentType: TransactionType.SLOT_BOOKING,
+  });
+
+  const courseRevenue = await this._transactionRepository.getMentorRevanueONCourse({
+    ...matchStage,
+    paymentType: TransactionType.COURSE_PURCHASE,
+  });
+
+  return {
+    slotRevanue: slotRevenue,
+    courseRevanue: courseRevenue,
+  };
+}
+
 }

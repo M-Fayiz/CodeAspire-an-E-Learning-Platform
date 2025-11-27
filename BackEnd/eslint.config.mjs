@@ -31,7 +31,7 @@ export default tseslint.config(
       ],
       "@typescript-eslint/explicit-function-return-type": "off",
       "no-undef": "off",
-      "no-unused-vars": "off", // handled by TS
+      "no-unused-vars": "off",
     },
-  },
+  }
 );

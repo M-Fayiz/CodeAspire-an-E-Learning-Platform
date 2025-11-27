@@ -5,7 +5,7 @@ import { HttpStatus } from "../../const/http-status";
 import { successResponse } from "../../utils/response.util";
 import { HttpResponse } from "../../const/error-message";
 import { updatePart } from "../../types/courses.type";
-import logger from "../../config/logger.config";
+
 import { sendNotification } from "../../utils/socket.utils";
 
 export class CourseController implements ICourseController {
@@ -17,6 +17,7 @@ export class CourseController implements ICourseController {
     next: NextFunction,
   ): Promise<void> => {
     try {
+      console.log('created course :')
       const createdCourseData = await this._courseService.createCourses(
         req.body.courseData,
       );
@@ -199,7 +200,6 @@ export class CourseController implements ICourseController {
     next: NextFunction,
   ): Promise<void> => {
     try {
-      logger.info("just get into updateInfo");
       const { courseId } = req.params;
       const { courseData } = req.body;
       const updatedData = await this._courseService.updateBaseCourseInfo(
@@ -234,7 +234,7 @@ export class CourseController implements ICourseController {
   ): Promise<void> => {
     try {
       const { courseId } = req.params;
-      console.log("get in to contr cour det", courseId);
+    
       const courseDetails =
         await this._courseService.getCourseDetails(courseId);
       res
@@ -252,10 +252,6 @@ export class CourseController implements ICourseController {
     try {
       const { courseId } = req.params;
       const status = await this._courseService.approveCourse(courseId);
-      const data = {
-        title: status.notifyDTO.title,
-        message: status.notifyDTO.message,
-      };
       sendNotification(status.notifyDTO.userId, status.notifyDTO);
       res
         .status(HttpStatus.OK)
@@ -318,4 +314,17 @@ export class CourseController implements ICourseController {
       next(error);
     }
   };
+  getCourseFormData=async(req: Request, res: Response, next: NextFunction): Promise<void>=> {
+      try {
+        const {courseId}=req.params
+
+      const courseFormData=  await this._courseService.getCourseFormData(courseId)
+      console.log('(       )',courseFormData)
+      res
+        .status(HttpStatus.OK)
+        .json(successResponse(HttpResponse.OK, { courseFormData }));
+      } catch (error) {
+       next(error) 
+      }
+  }
 }
