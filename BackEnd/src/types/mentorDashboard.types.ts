@@ -1,4 +1,5 @@
 import { Types } from "mongoose";
+import { IPaymentTypes } from "./transaction.type";
 
 export interface IMentorDashboardData {
   avgRating: number;
@@ -6,7 +7,7 @@ export interface IMentorDashboardData {
 }
 
 export interface IMentorTotalRevanue {
-  _id: null;
+  _id: IPaymentTypes;
   revenue: number;
 }
 export interface ITopCourse {

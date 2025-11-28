@@ -8,7 +8,7 @@ import { BaseRepository } from "../baseRepository";
 import { ITransactionRepository } from "../interface/ITransactionRepository";
 import { IRevenueAggregationResult } from "../../types/courseDashboard.type";
 import { IMentorTotalRevanue } from "../../types/mentorDashboard.types";
-import { IAdminRevenue, revanueGrapsh } from "../../types/adminDahsboard.type";
+import {  graphPrps, revanueGrapsh, SourceOfRevanye } from "../../types/adminDahsboard.type";
 
 
 export class TransactionRepositoy
@@ -49,7 +49,7 @@ export class TransactionRepositoy
       },
       {
         $group: {
-          _id: null,
+          _id: "$paymentType",
           revenue: {
             $sum: "$mentorShare",
           },
@@ -57,21 +57,19 @@ export class TransactionRepositoy
       },
     ]);
   }
-  async getAdminRevenue(): Promise<IAdminRevenue[]> {
-    return this.aggregate<IAdminRevenue>([
+  async getAdminRevenue(): Promise<SourceOfRevanye[]> {
+    return this.aggregate<SourceOfRevanye>([
       {
         $group: {
-          _id: null,
+          _id: "$paymentType",
           revenue: { $sum: "$adminShare" },
+
         },
-      },
-      {
-        $unwind: "$revenue",
       },
     ]);
   }
-  async getMentorRevanueONSlot(filter:FilterQuery<ITransactionModel>): Promise<revanueGrapsh[]> {
-    console.log('= = = ',filter)
+  async getMentorRevanueONSlot(filter:FilterQuery<ITransactionModel>): Promise<graphPrps[]> {
+    
     return await this.aggregate([
       { $match: filter },
       {
@@ -79,20 +77,20 @@ export class TransactionRepositoy
           _id: {
             date: { $dateToString: { format: "%Y-%m-%d", date: "$createdAt" } }
           },
-          revenue: { $sum: "$mentorShare" }
+          value: { $sum: "$mentorShare" }
         }
       },
       {
         $project: {
           _id: 0,
           date: "$_id.date",
-          revenue: 1
+          value: 1
         }
       },
       { $sort: { date: 1 } }
     ])
   }
-  async getMentorRevanueONCourse(filter:FilterQuery<ITransactionModel>): Promise<revanueGrapsh[]> {
+  async getMentorRevanueONCourse(filter:FilterQuery<ITransactionModel>): Promise<graphPrps[]> {
 
     return await this.aggregate([
       { $match: filter },
@@ -101,17 +99,18 @@ export class TransactionRepositoy
           _id: {
             date: { $dateToString: { format: "%Y-%m-%d", date: "$createdAt" } }
           },
-          revenue: { $sum: "$mentorShare" }
+          value: { $sum: "$mentorShare" }
         }
       },
       {
         $project: {
           _id: 0,
           date: "$_id.date",
-          revenue: 1
+          value: 1
         }
       },
       { $sort: { date: 1 } }
     ])
   }
+
 }

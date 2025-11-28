@@ -18,20 +18,23 @@ import { EnrolledService } from "@/service/Learner/enrolledCourse.service";
 
 import { FilterByDate } from "@/constants/filter.const";
 import type { IAdminDashboardDTO } from "@/types/DTOS/adminDashboard.type";
-import type { RevenuePoint } from "@/features/dashboard/graph";
+import type { graphPrps } from "@/features/dashboard/graph";
 
 import RevenueChart from "@/features/dashboard/graph";
 
-// ⬇ ADD SHADCN TABS
+
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
+import {RevenueDonutChart} from "@/components/ui/PieGraph";
+
 
 const AdminDashboard = () => {
   const { user, loading } = useAuth();
 
   const [dashData, setDashData] = useState<IAdminDashboardDTO | null>(null);
-  const [slotRevenue, setSlotRevenue] = useState<RevenuePoint[]>([]);
-  const [courseRevenue, setCourseRevenue] = useState<RevenuePoint[]>([]);
-
+  const [slotRevenue, setSlotRevenue] = useState<graphPrps[]>([]);
+  const [signedUser,setSignedUsers]=useState<graphPrps[]>([])
+  const [courseRevenue, setCourseRevenue] = useState<graphPrps[]>([]);
+  const [totalRevanue,setTotalRevanue]=useState(0)
   const [selectedTab, setSelectedTab] = useState("slot");
   const [selectedPeriod, setSelectedPeriod] = useState(FilterByDate.MONTH);
 
@@ -41,17 +44,21 @@ const AdminDashboard = () => {
   useEffect(() => {
     (async () => {
       const data = await adminService.getDashboardCardsdata();
+
       setDashData(data);
+      let total=data.SourceOfRevenue.reduce((acc,vl)=>acc+=vl.value,0)
+      setTotalRevanue(total)
     })();
   }, []);
 
   useEffect(() => {
     (async () => {
       const graph = await EnrolledService.adminGraphRevanue(selectedPeriod);
-
+      console.log('graph > :',graph)
       if (graph) {
         setSlotRevenue(graph.slotRevanue || []);
         setCourseRevenue(graph.courseRevanue || []);
+        setSignedUsers(graph.signedUsers||[])
       }
     })();
   }, [selectedPeriod]);
@@ -63,7 +70,7 @@ const AdminDashboard = () => {
       { label: "Total Mentors", value: dashData?.totalMentors, icon: BookCopy },
       {
         label: "Total Revenue",
-        value: dashData?.totalRevenue,
+        value:totalRevanue,
         icon: DollarSign,
       },
       { label: "Total Courses", value: dashData?.totalCourses, icon: Activity },
@@ -77,7 +84,7 @@ const AdminDashboard = () => {
         <p className="text-gray-600">Welcome back, {user.name}!</p>
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
         {content.stats.map((stat, index) => (
           <div
             key={index}
@@ -101,8 +108,8 @@ const AdminDashboard = () => {
 
           <div className="space-y-4">
             {dashData?.topSelling.course.map((course, i) => (
-              <div key={i} className="flex items-center gap-3">
-                <div className="w-10 h-10 rounded-lg bg-gray-400 text-white flex items-center justify-center font-bold">
+              <div key={i} className="flex items-center gap-3 bg-gray-100 p-2 rounded-sm">
+                <div className="w-10 h-10 rounded-sm bg-gray-400 text-white flex items-center justify-center font-bold">
                   {course.title.charAt(0)}
                 </div>
 
@@ -119,7 +126,7 @@ const AdminDashboard = () => {
           </div>
         </div>
 
-        <div className="bg-white rounded-lg p-6 shadow-sm border border-gray-100 lg:col-span-1">
+        <div className="bg-white rounded-lg p-6 shadow-sm border border-gray-100 lg:col-span-2">
           <div className="flex items-center justify-between mb-4">
             <h2 className="text-lg font-semibold">Revenue Overview</h2>
 
@@ -151,7 +158,7 @@ const AdminDashboard = () => {
           </Tabs>
         </div>
 
-        <div className="bg-white rounded-lg p-6 shadow-sm border border-gray-100">
+        {/* <div className="bg-white rounded-lg p-6 shadow-sm border border-gray-100">
           <h3 className="text-lg font-semibold mb-4">
             Top Performing Categories
           </h3>
@@ -174,7 +181,33 @@ const AdminDashboard = () => {
               </div>
             ))}
           </div>
-        </div>
+        </div> */}
+        <RevenueDonutChart Options={dashData?.SourceOfRevenue||[] }/>
+
+
+            
+             <div className="bg-white grid-cols-3 rounded-lg p-6 shadow-sm border border-gray-100 lg:col-span-2 ">
+               <div className="flex items-center justify-between mb-4">
+            <h2 className="text-lg font-semibold">Users</h2>
+
+            <select
+              value={selectedPeriod}
+              onChange={(e) => setSelectedPeriod(e.target.value)}
+              className="border rounded-md px-3 py-2 text-sm"
+            >
+              <option value={FilterByDate.Today}>Today</option>
+              <option value={FilterByDate.WEEK}>Last 7 Days</option>
+              <option value={FilterByDate.MONTH}>Last 30 Days</option>
+              <option value={FilterByDate.YEAR}>Last 12 Months</option>
+            </select>
+          </div>
+              <RevenueChart data={signedUser} />
+             </div>
+            
+
+
+       
+         
       </div>
     </div>
   );

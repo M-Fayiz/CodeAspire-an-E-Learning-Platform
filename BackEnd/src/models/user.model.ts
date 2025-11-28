@@ -2,7 +2,7 @@ import mongoose, { Document, Types } from "mongoose";
 import { IUser, IAdmin, ILearner, IMentor, IRole } from "../types/user.types";
 import { DbModelName } from "../const/modelName";
 
-const option = { discriminatorKey: "role", timeStamps: true };
+const option = { discriminatorKey: "role", timestamps: true };
 
 export interface IUserModel
   extends Document<Types.ObjectId>,
@@ -32,6 +32,7 @@ const BaseUserSchema = new mongoose.Schema(
       default: "pending",
     },
     isRequested: { type: Boolean, default: false },
+    
   },
   option,
 );

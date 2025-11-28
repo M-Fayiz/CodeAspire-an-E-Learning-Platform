@@ -16,7 +16,7 @@ export interface IUser {
   profilePicture?: string;
   isActive: boolean;
   createdAt: Date;
-  updatedAt: DataTransfer;
+  updatedAt: Date;
   bio?: string;
   ApprovalStatus: mentorApprovalStatus;
   isRequested: boolean;

@@ -7,16 +7,16 @@ import {
 } from "@/components/ui/chart";
 import { AreaChart, Area, CartesianGrid, XAxis } from "recharts";
 
-export interface RevenuePoint {
+export interface graphPrps {
   date: string;
-  revenue: number;
+  value: number;
 }
 
-function RevenueChart({ data }: { data: RevenuePoint[] }) {
+function RevenueChart({ data }: { data: graphPrps[] }) {
   return (
     <ChartContainer
       config={{
-        revenue: { label: "Revenue", color: "var(--chart-1)" },
+        value: { label: "Revenue", color: "var(--chart-1)" }, 
       }}
       className="h-[280px] w-full"
     >
@@ -37,7 +37,7 @@ function RevenueChart({ data }: { data: RevenuePoint[] }) {
         />
 
         <Area
-          dataKey="revenue"
+          dataKey="value"
           type="natural"
           fill="url(#fillRevenue)"
           stroke="var(--chart-1)"

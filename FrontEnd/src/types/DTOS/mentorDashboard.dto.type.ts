@@ -1,6 +1,8 @@
+import type { SourceOfRevanye } from "./adminDashboard.type";
+
 export interface IMentorDhasboardDTO {
   summary: IMentorDashboardData;
-  revanue: number;
+  revanue: SourceOfRevanye[];
   topCourse: ITopCourse[];
 }
 

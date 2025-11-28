@@ -104,7 +104,7 @@ const BasicCourseInformation: React.FC<BaseCaourseProps> = ({handleTap}) => {
           },
         );
         if (updatedData) {
-          // setFormData(updatedData);
+   
           setCourseId(updatedData._id as string)
            handleTap('curriculum')
           toast.success("Base Information Updated Successfully");

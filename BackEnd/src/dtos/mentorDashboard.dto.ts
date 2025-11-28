@@ -10,7 +10,7 @@ export function mentorDashboardDTO(
   topCourse: ITopCourse[],
   revanue: IMentorTotalRevanue[],
 ): IMentorDhasboardDTO {
-  const rev = revanue.length === 0 ? 0 : revanue[0].revenue;
+  const updatedFrmt=revanue.map(data=>({name:data._id,value:data.revenue}))
 
   const summary = {
     avgRating: studenAndRatinng?.avgRating ?? 0,
@@ -20,6 +20,6 @@ export function mentorDashboardDTO(
   return {
     summary,
     topCourse,
-    revanue: rev,
+    revanue: updatedFrmt,
   };
 }

@@ -152,7 +152,7 @@ export class EnrolledController implements IEnrolledController {
             const { filter, mentorId } = req.query;
 
             const {courseRevanue,slotRevanue}=await this._enrolledService.getRevenueGraph(filter as string,mentorId as string)
-            console.log(courseRevanue,' == == ',slotRevanue)
+       
         res.status(HttpStatus.OK).json(successResponse(HttpResponse.OK,{courseRevanue,slotRevanue}))
       } catch (error) {
         next(error)
@@ -161,8 +161,8 @@ export class EnrolledController implements IEnrolledController {
   getAdminRevanue=async(req: Request, res: Response, next: NextFunction): Promise<void>=> {
       try {
          const { filter } = req.query;
-        const {courseRevanue,slotRevanue}=await this._enrolledService.getRevenueGraph(filter as string)
-        res.status(HttpStatus.OK).json(successResponse(HttpResponse.OK,{courseRevanue,slotRevanue}))
+        const {courseRevanue,slotRevanue,signedUsers}=await this._enrolledService.getRevenueGraph(filter as string)
+        res.status(HttpStatus.OK).json(successResponse(HttpResponse.OK,{courseRevanue,slotRevanue,signedUsers}))
       } catch (error) {
         next(error)
       }

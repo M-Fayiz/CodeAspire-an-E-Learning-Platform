@@ -62,3 +62,9 @@ export type RoleModelMap = {
   mentor: IMenterModel;
   admin: IAdminModel;
 };
+
+
+export interface ISignedUsers{
+  data:string,
+  value:number
+}

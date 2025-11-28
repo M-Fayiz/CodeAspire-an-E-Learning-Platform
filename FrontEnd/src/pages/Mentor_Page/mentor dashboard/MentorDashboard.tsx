@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { TrendingUp, DollarSign, Users, Star } from "lucide-react";
+import { DollarSign, Users, Star } from "lucide-react";
 
 import {
   Select,
@@ -21,6 +21,7 @@ import MentorDashboardSkeleton from "@/components/shared/Dashboard";
 import { useNavigate } from "react-router";
 import { FilterByDate } from "@/constants/filter.const";
 import RevenueChart, { type RevenuePoint } from "@/features/dashboard/graph";
+import { RevenueDonutChart } from "@/components/ui/PieGraph";
 
 const EMPTY_CHART: RevenuePoint[] = [];
 
@@ -31,7 +32,7 @@ export default function MentorDashboard() {
   const [loading, setLoading] = useState(false);
   const [selectedPeriod, setSelectedPeriod] = useState(FilterByDate.MONTH);
   const [selectedTab, setSelectedTab] = useState("slot");
-
+  const [totalRevenue,setTotalRevenue]=useState(0)
   const [mentorDashData, setMentorDashData] =
     useState<IMentorDhasboardDTO | null>(null);
 
@@ -52,6 +53,8 @@ export default function MentorDashboard() {
       }
 
       setMentorDashData(data);
+      let total=data.revanue.reduce((acc,vl)=>acc+=vl.value,0)
+      setTotalRevenue(total)
       setLoading(false);
     })();
   }, [user]);
@@ -84,7 +87,7 @@ export default function MentorDashboard() {
             <StatCard
               Icon={<DollarSign className="w-5 h-5 text-white" />}
               title="Total Revenue"
-              value={mentorDashData?.revanue || 0}
+              value={totalRevenue || 0}
               bgColor="bg-gradient-to-br from-orange-400 to-orange-600"
             />
 
@@ -144,6 +147,7 @@ export default function MentorDashboard() {
               </TabsContent>
             </Tabs>
           </div>
+          <div className="flex gap-5">
 
           <div className="bg-white rounded-lg p-6 shadow-sm border border-gray-100">
             <h3 className="text-lg font-semibold mb-4">
@@ -168,6 +172,8 @@ export default function MentorDashboard() {
                 </div>
               ))}
             </div>
+          </div>
+           <RevenueDonutChart Options={mentorDashData?.revanue||[] }/>
           </div>
         </div>
       </div>

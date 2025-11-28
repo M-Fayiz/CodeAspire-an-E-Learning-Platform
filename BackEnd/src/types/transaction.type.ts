@@ -17,3 +17,8 @@ export interface ITransaction {
   createdAt?: Date;
   updatedAt?: Date;
 }
+export enum IPaymentTypes{
+  COURSE='COURSE_PURCHASE',
+  SLOTS= "SLOT_BOOKING"
+
+} ;

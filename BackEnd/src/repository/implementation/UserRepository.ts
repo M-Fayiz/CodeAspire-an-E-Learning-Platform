@@ -11,6 +11,7 @@ import { Profile } from "passport-google-oauth20";
 import { IRole, searchProps } from "../../types/user.types";
 import { FilterQuery, Types } from "mongoose";
 import { buildUserFilter } from "../../utils/searchQuery";
+import { ISignedUsers } from "../../types/dtos.type/user.dto.types";
 
 export class UserRepository
   extends BaseRepository<IUserModel>
@@ -137,5 +138,27 @@ export class UserRepository
   }
   async findDashBoardUserCount(role: IRole): Promise<number> {
     return await this.countDocuments({ role: role });
+  }
+  async SignedUsers(filter: FilterQuery<IUserModel>): Promise<graphPrps[]> {
+
+      return await this.aggregate([
+        { $match:filter },
+        {
+        $group: {
+          _id: {
+            date: { $dateToString: { format: "%Y-%m-%d", date: "$createdAt" } }
+          },
+          value: { $sum:1 }
+        }
+      },
+      {
+        $project: {
+          _id: 0,
+          date: "$_id.date",
+          value: 1
+        }
+      },
+      { $sort: { date: 1 } }
+      ])
   }
 }

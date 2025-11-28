@@ -9,13 +9,16 @@ import { verifyUser } from "../middlewares/authentication.middleware";
 import { authorizedRole } from "../middlewares/authorisation.middleware";
 import { TransactionRepositoy } from "../repository/implementation/TransactionRepository";
 import { IRole } from "../types/user.types";
+import { UserRepository } from "../repository/implementation/UserRepository";
 const transactionRepository = new TransactionRepositoy();
 const enrolledRepository = new EnrolledRepository();
 const courseRepository = new CourseRepository();
+const userRepository=new UserRepository()
 const enrolledService = new EnrolledService(
   enrolledRepository,
   courseRepository,
   transactionRepository,
+  userRepository
 );
 const enrolledController = new EnrolledController(enrolledService);
 

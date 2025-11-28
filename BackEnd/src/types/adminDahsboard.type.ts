@@ -1,9 +1,15 @@
+import { IPaymentTypes } from "./transaction.type";
+
 export interface IAdminRevenue {
   _id: null;
   revenue: number;
 }
 
-export interface revanueGrapsh{
+export interface graphPrps{
   date:string,
-  revanue:number
+  value:number
+}
+export interface SourceOfRevanye{
+  _id:IPaymentTypes,
+  value:number
 }

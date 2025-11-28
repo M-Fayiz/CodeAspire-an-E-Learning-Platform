@@ -7,6 +7,7 @@ import {
 } from "../../models/user.model";
 import { IRole, searchProps } from "../../types/user.types";
 import { FilterQuery, Types } from "mongoose";
+import { ISignedUsers } from "../../types/dtos.type/user.dto.types";
 
 export interface IUserRepo {
   createUser(user: IUserModel): Promise<IUserModel>;
@@ -60,4 +61,5 @@ export interface IUserRepo {
     filter: FilterQuery<IUserModel>,
   ): Promise<IUserModel | IMenterModel | ILearnerModel | IAdminModel | null>;
   findDashBoardUserCount(role: IRole): Promise<number>;
+  SignedUsers(filter:FilterQuery<IUserModel>):Promise<graphPrps[]>
 }

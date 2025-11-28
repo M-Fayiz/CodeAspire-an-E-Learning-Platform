@@ -195,12 +195,12 @@ export class AdminService implements IAdminService {
         await this._enrolledRepository.getTopSellingCourse(),
         await this._enrolledRepository.getTopSellingCategory(),
       ]);
-
+  
     return adminDashboardDTO(
       mentors,
       learners,
       courseCount,
-      revenue[0].revenue,
+      revenue,
       topCourse,
       topCategory,
     );

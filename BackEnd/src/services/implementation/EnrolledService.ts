@@ -43,12 +43,15 @@ import { TransactionType } from "../../const/transaction";
 import { revanueGrapsh } from "../../types/adminDahsboard.type";
 import { FilterByDate } from "../../const/filter.const";
 import { buildDateFilter } from "../../utils/dateBuilder";
+import { IUserRepo } from "../../repository/interface/IUserRepo";
+import { ISignedUsers } from "../../types/dtos.type/user.dto.types";
 
 export class EnrolledService implements IEnrolledService {
   constructor(
     private _erolledRepository: IEnrolledRepository,
     private _courseRepository: ICourseRepository,
     private _transactionRepository: ITransactionRepository,
+    private _userRepository:IUserRepo
   ) {}
 
   async getEnrolledCourses(learnerId: string): Promise<IEnrolledListDto[]> {
@@ -203,7 +206,7 @@ export class EnrolledService implements IEnrolledService {
   async getRevenueGraph(
   filter: string,
   mentorId?: string
-): Promise<{ slotRevanue: revanueGrapsh[]; courseRevanue: revanueGrapsh[] }> {
+): Promise<{ slotRevanue: graphPrps[]; courseRevanue: graphPrps[],signedUsers:graphPrps[]}> {
   
   const dateMatch = buildDateFilter(filter);
 
@@ -229,9 +232,13 @@ export class EnrolledService implements IEnrolledService {
     paymentType: TransactionType.COURSE_PURCHASE,
   });
 
+  const signedUsers=await this._userRepository.SignedUsers(dateMatch)
+ 
+
   return {
     slotRevanue: slotRevenue,
     courseRevanue: courseRevenue,
+    signedUsers
   };
 }
 
