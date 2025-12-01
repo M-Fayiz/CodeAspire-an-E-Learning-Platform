@@ -1,4 +1,3 @@
-
 import { ICourses, ILecture, ISession } from "../../types/courses.type";
 import {
   ICourseCreateForm,
@@ -63,5 +62,5 @@ export interface ICourseService {
   ): Promise<{ courseStatus: string | null; notifyDTO: INotificationDTO }>;
   publishCourse(courseId: string): Promise<string | null>;
   fetchCourseListForSlot(mentorId: string): Promise<IListCourseSlot[] | null>;
-  getCourseFormData(courseId:string):Promise<ICourseCreateForm>
+  getCourseFormData(courseId: string): Promise<ICourseCreateForm>;
 }

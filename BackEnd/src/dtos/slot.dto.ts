@@ -7,11 +7,14 @@ import {
   mentorUnPopulatedSlots,
 } from "../types/dtos.type/slots.dto.type";
 
-export function slotDTO(slotData: ISlotModel): ISlotDTO {
+export function slotDTO(slotData: ISlotModel, courseName: string): ISlotDTO {
   return {
     _id: slotData._id,
     mentorId: slotData.mentorId,
-    courseId: slotData.courseId,
+    course: {
+      _id: slotData.courseId,
+      title: courseName,
+    },
     selectedDays: slotData.selectedDays,
     slotDuration: slotData.slotDuration,
     pricePerSlot: slotData.pricePerSlot,
@@ -36,7 +39,10 @@ export function slotPopulatedMapper(
 export function mentorSlotsDTO(slotData: mentorUnPopulatedSlots): ISlotDTO {
   return {
     _id: slotData._id,
-    courseId: slotData.courseId._id as Types.ObjectId,
+    course: {
+      _id: slotData.courseId._id as Types.ObjectId,
+      title: slotData.courseId.title,
+    },
     mentorId: slotData.mentorId,
     selectedDays: slotData.selectedDays,
     slotDuration: slotData.slotDuration,

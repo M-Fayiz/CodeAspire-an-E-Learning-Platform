@@ -13,4 +13,9 @@ export interface ISlotBookingController {
     next: NextFunction,
   ): Promise<void>;
   addFeedBack(req: Request, res: Response, next: NextFunction): Promise<void>;
+  getBookedSlots(
+    req: Request,
+    res: Response,
+    next: NextFunction,
+  ): Promise<void>;
 }

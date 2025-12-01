@@ -1,10 +1,10 @@
 import { Types } from "mongoose";
-import { IBaseSlot, IMentorSlot } from "../slot.type";
+import { IBaseSlot, ISlotsDTOS } from "../slot.type";
 import { IMentorDTO } from "./user.dto.types";
 import { ICourseDTO } from "./course.dtos.type";
 import { ICourses } from "../courses.type";
 
-export interface ISlotDTO extends IMentorSlot {
+export interface ISlotDTO extends ISlotsDTOS {
   _id: Types.ObjectId;
 }
 

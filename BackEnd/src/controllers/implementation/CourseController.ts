@@ -17,7 +17,7 @@ export class CourseController implements ICourseController {
     next: NextFunction,
   ): Promise<void> => {
     try {
-      console.log('created course :')
+      console.log("created course :");
       const createdCourseData = await this._courseService.createCourses(
         req.body.courseData,
       );
@@ -234,7 +234,7 @@ export class CourseController implements ICourseController {
   ): Promise<void> => {
     try {
       const { courseId } = req.params;
-    
+
       const courseDetails =
         await this._courseService.getCourseDetails(courseId);
       res
@@ -314,17 +314,22 @@ export class CourseController implements ICourseController {
       next(error);
     }
   };
-  getCourseFormData=async(req: Request, res: Response, next: NextFunction): Promise<void>=> {
-      try {
-        const {courseId}=req.params
+  getCourseFormData = async (
+    req: Request,
+    res: Response,
+    next: NextFunction,
+  ): Promise<void> => {
+    try {
+      const { courseId } = req.params;
 
-      const courseFormData=  await this._courseService.getCourseFormData(courseId)
-      console.log('(       )',courseFormData)
+      const courseFormData =
+        await this._courseService.getCourseFormData(courseId);
+      console.log("(       )", courseFormData);
       res
         .status(HttpStatus.OK)
         .json(successResponse(HttpResponse.OK, { courseFormData }));
-      } catch (error) {
-       next(error) 
-      }
-  }
+    } catch (error) {
+      next(error);
+    }
+  };
 }

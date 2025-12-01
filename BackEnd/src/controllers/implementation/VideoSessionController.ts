@@ -16,13 +16,15 @@ export class VideoSessionController implements IVideoSeesionController {
   ): Promise<void> => {
     try {
       const { bookedId } = req.params;
-      const {sesionData,createdLearnerNotify,createdMentorNotify} =
+      const { sesionData, createdLearnerNotify, createdMentorNotify } =
         await this._slotBookingSevice.findBookedSlot(bookedId);
-      sendNotification(createdMentorNotify.userId,createdMentorNotify)
-      sendNotification(createdLearnerNotify.userId,createdLearnerNotify)
+      sendNotification(createdMentorNotify.userId, createdMentorNotify);
+      sendNotification(createdLearnerNotify.userId, createdLearnerNotify);
       res
         .status(HttpStatus.OK)
-        .json(successResponse(HttpResponse.OK, { videoSessionData :sesionData}));
+        .json(
+          successResponse(HttpResponse.OK, { videoSessionData: sesionData }),
+        );
     } catch (error) {
       next(error);
     }

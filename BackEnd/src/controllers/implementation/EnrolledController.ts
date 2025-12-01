@@ -146,25 +146,47 @@ export class EnrolledController implements IEnrolledController {
       next(error);
     }
   };
-  getmentorRevanue=async(req: Request, res: Response, next: NextFunction): Promise<void>=> {
-      try {
-  
-            const { filter, mentorId } = req.query;
+  getmentorRevanue = async (
+    req: Request,
+    res: Response,
+    next: NextFunction,
+  ): Promise<void> => {
+    try {
+      const { filter, mentorId } = req.query;
 
-            const {courseRevanue,slotRevanue}=await this._enrolledService.getRevenueGraph(filter as string,mentorId as string)
-       
-        res.status(HttpStatus.OK).json(successResponse(HttpResponse.OK,{courseRevanue,slotRevanue}))
-      } catch (error) {
-        next(error)
-      }
-  }
-  getAdminRevanue=async(req: Request, res: Response, next: NextFunction): Promise<void>=> {
-      try {
-         const { filter } = req.query;
-        const {courseRevanue,slotRevanue,signedUsers}=await this._enrolledService.getRevenueGraph(filter as string)
-        res.status(HttpStatus.OK).json(successResponse(HttpResponse.OK,{courseRevanue,slotRevanue,signedUsers}))
-      } catch (error) {
-        next(error)
-      }
-  }
+      const { courseRevanue, slotRevanue } =
+        await this._enrolledService.getRevenueGraph(
+          filter as string,
+          mentorId as string,
+        );
+
+      res
+        .status(HttpStatus.OK)
+        .json(successResponse(HttpResponse.OK, { courseRevanue, slotRevanue }));
+    } catch (error) {
+      next(error);
+    }
+  };
+  getAdminRevanue = async (
+    req: Request,
+    res: Response,
+    next: NextFunction,
+  ): Promise<void> => {
+    try {
+      const { filter } = req.query;
+      const { courseRevanue, slotRevanue, signedUsers } =
+        await this._enrolledService.getRevenueGraph(filter as string);
+      res
+        .status(HttpStatus.OK)
+        .json(
+          successResponse(HttpResponse.OK, {
+            courseRevanue,
+            slotRevanue,
+            signedUsers,
+          }),
+        );
+    } catch (error) {
+      next(error);
+    }
+  };
 }

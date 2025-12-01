@@ -8,7 +8,7 @@ export interface ICategoryService {
   ): Promise<ICategory | null>;
   listCategories(): Promise<ICaregoryTreeDTO[] | null>;
   editCategory(
-    slug: string,
+    categoryId: string,
     title: string,
     parentId: string | null,
   ): Promise<ICategory | null>;

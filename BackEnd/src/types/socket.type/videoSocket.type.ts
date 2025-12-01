@@ -27,4 +27,5 @@ export interface VideoEmitEvents {
   }) => void;
   "video:ice-candidate": (payload: { candidate: any; from: string }) => void;
   "video:peer-left": (payload: { userId: string }) => void;
+  "video:force-leave": (data: { reason: string }) => void;
 }

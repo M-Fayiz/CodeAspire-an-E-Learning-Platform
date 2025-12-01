@@ -11,12 +11,12 @@ import { NotificationRepository } from "../repository/implementation/Notificatio
 const slotBookingRepository = new SlotBookingRepository();
 const slotRepository = new SlotRepository();
 const tansactionRepository = new TransactionRepositoy();
-const notificationRepository=new NotificationRepository()
+const notificationRepository = new NotificationRepository();
 const slotBookingService = new SlotBookingService(
   slotBookingRepository,
   slotRepository,
   tansactionRepository,
-  notificationRepository
+  notificationRepository,
 );
 
 const slotBookingController = new SlotBookingController(slotBookingService);
@@ -27,5 +27,6 @@ bookingROuter.get(
   slotBookingController.listBookedSlotOnMentor,
 );
 bookingROuter.post("/create", slotBookingController.createBooking);
+bookingROuter.get("/list-slots", slotBookingController.getBookedSlots);
 
 export default bookingROuter;

@@ -93,22 +93,21 @@ export function listCourseForSLot(course: ICourses): IListCourseSlot {
   };
 }
 
-
-export function CourseFormDataDTO(course:ICourses):ICourseCreateForm{
+export function CourseFormDataDTO(course: ICourses): ICourseCreateForm {
   return {
-    _id:course._id as Types.ObjectId,
-   
-      title:course.title,
-      language:course.language,
-      level:course.level,
-      price:course.price,
-      status:course.status,
-      description:course.description as string,
-      thumbnail:course.thumbnail as string,
-      categoryId:course.categoryId as Types.ObjectId,
-      subCategoryId:course.subCategoryId as Types.ObjectId,
-      mentorId:course.mentorsId as Types.ObjectId,
-   
-    sessions:course.sessions as ISession[]
-  }
+    _id: course._id as Types.ObjectId,
+
+    title: course.title,
+    language: course.language,
+    level: course.level,
+    price: course.price,
+    status: course.status,
+    description: course.description as string,
+    thumbnail: course.thumbnail as string,
+    categoryId: course.categoryId as Types.ObjectId,
+    subCategoryId: course.subCategoryId as Types.ObjectId,
+    mentorId: course.mentorsId as Types.ObjectId,
+
+    sessions: course.sessions as ISession[],
+  };
 }

@@ -32,16 +32,15 @@ export class ChatCOntroller implements IChatController {
     next: NextFunction,
   ): Promise<void> => {
     try {
-      
       const { senderId } = req.params;
-  
+
       const ChatUser = await this._chatService.listUsers(senderId);
-  
+
       res
         .status(HttpStatusCode.Ok)
         .json(successResponse(HttpResponse.OK, { ChatUser }));
     } catch (error) {
-      next(error)
+      next(error);
     }
   };
   getChatMessages = async (

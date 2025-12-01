@@ -1,4 +1,3 @@
-
 export interface IRevenue {
   admin: number;
   mentor: number;

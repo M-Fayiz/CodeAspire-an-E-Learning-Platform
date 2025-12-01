@@ -23,7 +23,7 @@ export function ListBookedSlotOfLearner(
     hour: "2-digit",
     minute: "2-digit",
     hour12: true,
-    timeZone: "Asia/Kolkata",
+    timeZone: "UTC",
   };
 
   const start = new Date(slot.startTime);
@@ -31,6 +31,7 @@ export function ListBookedSlotOfLearner(
 
   const startTime = start.toLocaleTimeString("en-IN", options);
   const endTime = end.toLocaleTimeString("en-IN", options);
+
   return {
     _id: slot._id,
 

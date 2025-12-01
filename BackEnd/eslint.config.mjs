@@ -33,5 +33,5 @@ export default tseslint.config(
       "no-undef": "off",
       "no-unused-vars": "off",
     },
-  }
+  },
 );

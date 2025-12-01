@@ -61,5 +61,5 @@ export interface ICourseRepository {
   findCourse(courseId: Types.ObjectId): Promise<ICourses | null>;
   findDocumentCount(query: FilterQuery<ICourses>): Promise<number>;
   findAllCourse(query: FilterQuery<ICourses>): Promise<ICourses[] | null>;
-  getCourseFormData(courseId:Types.ObjectId):Promise<ICourses | null>;
+  getCourseFormData(courseId: Types.ObjectId): Promise<ICourses | null>;
 }

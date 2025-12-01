@@ -51,7 +51,7 @@ export const registerChatHandler = (
 
   socket.on(ChatEvents.SEND, async (payload, ack) => {
     try {
-      const { roomId, content, type = "text", mediaUrl} = payload;
+      const { roomId, content, type = "text", mediaUrl } = payload;
       if (!roomId || (!content && type == "text")) {
         return ack?.({ error: "Invalid payload" });
       }
@@ -77,22 +77,22 @@ export const registerChatHandler = (
         status: "sent",
         mediaUrl,
       });
-        let previewMessage = "";
+      let previewMessage = "";
 
-        if (type === "text") {
-          previewMessage = content as string;
-        } else if (type === "image") {
-          previewMessage = "📷 Image";
-        } else if (type === "pdf") {
-          previewMessage = "📎 File";
-        } else if (type === "video") {
-          previewMessage = "🎥 Video";
-        } else if (type === "audio") {
-          previewMessage = "🎵 Audio";
-        } else {
-          previewMessage = "Message";
-        }
-       await chatService.updateChat(room_id, {
+      if (type === "text") {
+        previewMessage = content as string;
+      } else if (type === "image") {
+        previewMessage = "📷 Image";
+      } else if (type === "pdf") {
+        previewMessage = "📎 File";
+      } else if (type === "video") {
+        previewMessage = "🎥 Video";
+      } else if (type === "audio") {
+        previewMessage = "🎵 Audio";
+      } else {
+        previewMessage = "Message";
+      }
+      await chatService.updateChat(room_id, {
         latestMessage: previewMessage,
         lastMessageTime: new Date().toISOString(),
       });

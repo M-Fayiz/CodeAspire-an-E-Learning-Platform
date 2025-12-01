@@ -11,4 +11,5 @@ export enum DbModelName {
   TRANSACTION = "Transaction",
   USER = "User",
   MESSAGE = "Message",
+  CERTIFICATE = "Certificate",
 }

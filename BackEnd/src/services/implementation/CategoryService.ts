@@ -1,4 +1,3 @@
-import slugify from "slugify";
 import startCase from "lodash/startCase.js";
 import { parseObjectId } from "../../mongoose/objectId";
 import { ICategoryRepository } from "../../repository/interface/ICategoryRepository";
@@ -21,11 +20,11 @@ export class CategoryService implements ICategoryService {
     if (isExist) {
       throw createHttpError(HttpStatus.CONFLICT, HttpResponse.ITEM_EXIST);
     }
-    const categorySlug = slugify(title, { lower: true, strict: true });
+
     title = startCase(title);
     return await this._categoryRepository.createCategory(
       title,
-      categorySlug,
+
       parentId,
     );
   }
@@ -35,12 +34,12 @@ export class CategoryService implements ICategoryService {
     categories?.forEach((cat) => {
       map.set(cat._id.toString(), {
         _id: cat._id.toString(),
-        label: cat.title,
-        slug: cat.slug,
-        parent: null,
+        title: cat.title,
+        parent: cat.parentId,
         children: [],
       });
     });
+
     const tree: ICaregoryTreeDTO[] = [];
 
     categories?.forEach((cat) => {
@@ -49,7 +48,7 @@ export class CategoryService implements ICategoryService {
         const parent = map.get(cat.parentId.toString());
 
         if (parent) {
-          node.parent = parent.key;
+          node.parent = parent._id;
           parent.children.push(node);
         }
       } else {
@@ -60,13 +59,19 @@ export class CategoryService implements ICategoryService {
     return tree;
   }
   async editCategory(
-    slug: string,
+    categoryId: string,
     title: string,
     parentId: string | null,
   ): Promise<ICategory | null> {
     title = startCase(title);
+    const category_Id = parseObjectId(categoryId);
+
+    if (!category_Id) {
+      throw createHttpError(HttpStatus.BAD_REQUEST, HttpResponse.INVALID_ID);
+    }
+
     const editedResult = await this._categoryRepository.editCategory(
-      slug,
+      category_Id,
       title,
       parentId,
     );
@@ -76,7 +81,7 @@ export class CategoryService implements ICategoryService {
         HttpResponse.INVALID_CREDNTIALS,
       );
     }
-    console.log("edited resukt", editedResult);
+
     return editedResult;
   }
 }

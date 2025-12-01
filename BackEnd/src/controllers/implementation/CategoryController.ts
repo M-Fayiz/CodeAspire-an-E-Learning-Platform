@@ -44,10 +44,10 @@ export class CategoryController implements ICategoryController {
     next: NextFunction,
   ): Promise<void> => {
     try {
-      const slug = req.params.categoryId;
+      const { categoryId } = req.params;
       const { title, parentId } = req.body;
       const editedData = await this._categoryService.editCategory(
-        slug,
+        categoryId,
         title,
         parentId,
       );

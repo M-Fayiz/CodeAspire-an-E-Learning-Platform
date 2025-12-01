@@ -24,7 +24,7 @@ const orderRepositoy = new OrderRepositoy();
 const courseRepositoy = new CourseRepository();
 const enrolledRepositoy = new EnrolledRepository();
 const transactionRepositoy = new TransactionRepositoy();
-const notificationRepository=new NotificationRepository()
+const notificationRepository = new NotificationRepository();
 
 const ordreService = new OrderService(
   orderRepositoy,
@@ -36,7 +36,7 @@ const slotBookingService = new SlotBookingService(
   slotBookingRepository,
   slotRepository,
   transactionRepositoy,
-  notificationRepository
+  notificationRepository,
 );
 const webhookService = new WebhookService(ordreService, slotBookingService);
 const webhookController = new WebhookController(webhookService);

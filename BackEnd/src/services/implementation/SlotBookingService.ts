@@ -34,7 +34,7 @@ export class SlotBookingService implements ISlotBookingService {
     private _slotBookingRepository: ISlotBookingRepository,
     private _slotRepository: ISlotRepository,
     private _transactionRepostiory: ITransactionRepository,
-    private _notificationRepository:INotificationRepository
+    private _notificationRepository: INotificationRepository,
   ) {
     this._stripe = new Stripe(env.STRIPE_SECRETE_KEY as string);
   }
@@ -200,7 +200,13 @@ export class SlotBookingService implements ISlotBookingService {
     await this._transactionRepostiory.createTransaction(transactionData);
   }
 
-  async findBookedSlot(bookedId: string): Promise<{sesionData:IVideoSessionDTO,createdMentorNotify:INotificationDTO ,createdLearnerNotify:INotificationDTO }> {
+  async findBookedSlot(
+    bookedId: string,
+  ): Promise<{
+    sesionData: IVideoSessionDTO;
+    createdMentorNotify: INotificationDTO;
+    createdLearnerNotify: INotificationDTO;
+  }> {
     const booked_id = parseObjectId(bookedId);
     if (!booked_id) {
       throw createHttpError(HttpStatus.BAD_REQUEST, HttpResponse.INVALID_ID);
@@ -233,12 +239,22 @@ export class SlotBookingService implements ISlotBookingService {
     // if (now.getTime() > endTime.getTime()) {
     //   throw createHttpError(HttpStatus.CONFLICT, HttpResponse.SESSION_ENDED);
     // }
-    const notifyDataMentor=NotificationTemplates.JoinNowSession(bookedData.mentorId)
-    const notifyDataLerner=NotificationTemplates.JoinNowSession(bookedData.learnerId)
+    const notifyDataMentor = NotificationTemplates.JoinNowSession(
+      bookedData.mentorId,
+    );
+    const notifyDataLerner = NotificationTemplates.JoinNowSession(
+      bookedData.learnerId,
+    );
 
-    const createdMentorNotify=await this._notificationRepository.createNotification(notifyDataMentor)
-    const createdLearnerNotify=await this._notificationRepository.createNotification(notifyDataLerner)
-    return {sesionData:videoSessionDTO(bookedData),createdMentorNotify,createdLearnerNotify}
+    const createdMentorNotify =
+      await this._notificationRepository.createNotification(notifyDataMentor);
+    const createdLearnerNotify =
+      await this._notificationRepository.createNotification(notifyDataLerner);
+    return {
+      sesionData: videoSessionDTO(bookedData),
+      createdMentorNotify,
+      createdLearnerNotify,
+    };
   }
   async ListLearnerBookedSlots(
     learnerId?: string,
@@ -291,5 +307,12 @@ export class SlotBookingService implements ISlotBookingService {
       feedback: updatedData.feedback as string,
       bookedId: updatedData._id,
     };
+  }
+  async getBookedSlots(date: Date): Promise<Types.ObjectId[]> {
+    const slots = await this._slotBookingRepository.findAllSlots({});
+    if (!slots) {
+      throw createHttpError(HttpStatus.NOT_FOUND, HttpResponse.NO_BOOKED_SLOT);
+    }
+    return slots?.map((slot) => slot._id);
   }
 }

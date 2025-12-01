@@ -5,11 +5,11 @@ export interface IAdminRevenue {
   revenue: number;
 }
 
-export interface graphPrps{
-  date:string,
-  value:number
+export interface graphPrps {
+  date: string;
+  value: number;
 }
-export interface SourceOfRevanye{
-  _id:IPaymentTypes,
-  value:number
+export interface SourceOfRevanye {
+  _id: IPaymentTypes;
+  value: number;
 }

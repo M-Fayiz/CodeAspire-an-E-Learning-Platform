@@ -32,7 +32,6 @@ const BaseUserSchema = new mongoose.Schema(
       default: "pending",
     },
     isRequested: { type: Boolean, default: false },
-    
   },
   option,
 );

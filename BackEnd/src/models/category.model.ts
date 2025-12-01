@@ -1,8 +1,12 @@
-import mongoose from "mongoose";
+import mongoose, { Document, Types } from "mongoose";
 import { ICategory } from "../types/category.types";
 import { DbModelName } from "../const/modelName";
 
-const categorySchema = new mongoose.Schema<ICategory>({
+export interface ICategoryModel
+  extends Document<Types.ObjectId>,
+    Omit<ICategory, "_id"> {}
+
+const categorySchema = new mongoose.Schema<ICategoryModel>({
   title: {
     type: String,
     required: true,
@@ -14,7 +18,7 @@ const categorySchema = new mongoose.Schema<ICategory>({
   },
 });
 
-export const CategoryModel = mongoose.model<ICategory>(
+export const CategoryModel = mongoose.model<ICategoryModel>(
   DbModelName.CATEGORY,
   categorySchema,
 );

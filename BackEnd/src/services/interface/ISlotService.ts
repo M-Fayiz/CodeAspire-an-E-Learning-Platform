@@ -2,7 +2,6 @@ import { ISlotModel } from "../../models/slot.model";
 import {
   ISlotDTO,
   ISlotPopulatedDTO,
-
 } from "../../types/dtos.type/slots.dto.type";
 import { IMentorSlot } from "../../types/slot.type";
 

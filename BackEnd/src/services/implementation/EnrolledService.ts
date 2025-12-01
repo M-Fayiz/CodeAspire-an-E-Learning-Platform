@@ -40,7 +40,7 @@ import { mentorDashboardDTO } from "../../dtos/mentorDashboard.dto";
 import { timeFilter } from "../../utils/dashFilterGenerator.utils";
 import { ITransactionModel } from "../../models/transaction.model";
 import { TransactionType } from "../../const/transaction";
-import { revanueGrapsh } from "../../types/adminDahsboard.type";
+import { graphPrps, revanueGrapsh } from "../../types/adminDahsboard.type";
 import { FilterByDate } from "../../const/filter.const";
 import { buildDateFilter } from "../../utils/dateBuilder";
 import { IUserRepo } from "../../repository/interface/IUserRepo";
@@ -51,7 +51,7 @@ export class EnrolledService implements IEnrolledService {
     private _erolledRepository: IEnrolledRepository,
     private _courseRepository: ICourseRepository,
     private _transactionRepository: ITransactionRepository,
-    private _userRepository:IUserRepo
+    private _userRepository: IUserRepo,
   ) {}
 
   async getEnrolledCourses(learnerId: string): Promise<IEnrolledListDto[]> {
@@ -204,42 +204,45 @@ export class EnrolledService implements IEnrolledService {
     return mentorDashboardDTO(studentsAndRating[0], topCourse, revanue);
   }
   async getRevenueGraph(
-  filter: string,
-  mentorId?: string
-): Promise<{ slotRevanue: graphPrps[]; courseRevanue: graphPrps[],signedUsers:graphPrps[]}> {
-  
-  const dateMatch = buildDateFilter(filter);
+    filter: string,
+    mentorId?: string,
+  ): Promise<{
+    slotRevanue: graphPrps[];
+    courseRevanue: graphPrps[];
+    signedUsers: graphPrps[];
+  }> {
+    const dateMatch = buildDateFilter(filter);
 
-  const matchStage: FilterQuery<ITransactionModel> = {
-    ...dateMatch,
-  };
+    const matchStage: FilterQuery<ITransactionModel> = {
+      ...dateMatch,
+    };
 
-  if (mentorId) {
-    const mentor_id = parseObjectId(mentorId);
-    if (!mentor_id) {
-      throw createHttpError(HttpStatus.BAD_REQUEST, HttpResponse.INVALID_ID);
+    if (mentorId) {
+      const mentor_id = parseObjectId(mentorId);
+      if (!mentor_id) {
+        throw createHttpError(HttpStatus.BAD_REQUEST, HttpResponse.INVALID_ID);
+      }
+      matchStage.mentorId = mentor_id;
     }
-    matchStage.mentorId = mentor_id;
+
+    const slotRevenue =
+      await this._transactionRepository.getMentorRevanueONSlot({
+        ...matchStage,
+        paymentType: TransactionType.SLOT_BOOKING,
+      });
+
+    const courseRevenue =
+      await this._transactionRepository.getMentorRevanueONCourse({
+        ...matchStage,
+        paymentType: TransactionType.COURSE_PURCHASE,
+      });
+
+    const signedUsers = await this._userRepository.SignedUsers(dateMatch);
+
+    return {
+      slotRevanue: slotRevenue,
+      courseRevanue: courseRevenue,
+      signedUsers,
+    };
   }
-  
-  const slotRevenue = await this._transactionRepository.getMentorRevanueONSlot({
-    ...matchStage,
-    paymentType: TransactionType.SLOT_BOOKING,
-  });
-
-  const courseRevenue = await this._transactionRepository.getMentorRevanueONCourse({
-    ...matchStage,
-    paymentType: TransactionType.COURSE_PURCHASE,
-  });
-
-  const signedUsers=await this._userRepository.SignedUsers(dateMatch)
- 
-
-  return {
-    slotRevanue: slotRevenue,
-    courseRevanue: courseRevenue,
-    signedUsers
-  };
-}
-
 }

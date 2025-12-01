@@ -36,7 +36,7 @@ courseRouter.get("/mentor/:mentorId", courseController.getCourseListSlot);
 courseRouter.get("/form/:courseId", courseController.getCourseFormData);
 // courseRouter.put("/:id", courseController.updateCourse);
 courseRouter.put("/:courseId", courseController.updateBaseInfo);
-courseRouter.put("/:courseId/sessions", courseController.addSession); 
+courseRouter.put("/:courseId/sessions", courseController.addSession);
 courseRouter.put("/:courseId/sessions/:sessionId", courseController.addLecture);
 courseRouter.put(
   "/:courseId/sessions/:sessionId/lectures/:lectureId",

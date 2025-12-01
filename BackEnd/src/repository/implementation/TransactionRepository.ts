@@ -8,8 +8,7 @@ import { BaseRepository } from "../baseRepository";
 import { ITransactionRepository } from "../interface/ITransactionRepository";
 import { IRevenueAggregationResult } from "../../types/courseDashboard.type";
 import { IMentorTotalRevanue } from "../../types/mentorDashboard.types";
-import {  graphPrps, revanueGrapsh, SourceOfRevanye } from "../../types/adminDahsboard.type";
-
+import { graphPrps, SourceOfRevanye } from "../../types/adminDahsboard.type";
 
 export class TransactionRepositoy
   extends BaseRepository<ITransactionModel>
@@ -62,55 +61,55 @@ export class TransactionRepositoy
       {
         $group: {
           _id: "$paymentType",
-          revenue: { $sum: "$adminShare" },
-
+          value: { $sum: "$adminShare" },
         },
       },
     ]);
   }
-  async getMentorRevanueONSlot(filter:FilterQuery<ITransactionModel>): Promise<graphPrps[]> {
-    
+  async getMentorRevanueONSlot(
+    filter: FilterQuery<ITransactionModel>,
+  ): Promise<graphPrps[]> {
     return await this.aggregate([
       { $match: filter },
       {
         $group: {
           _id: {
-            date: { $dateToString: { format: "%Y-%m-%d", date: "$createdAt" } }
+            date: { $dateToString: { format: "%Y-%m-%d", date: "$createdAt" } },
           },
-          value: { $sum: "$mentorShare" }
-        }
+          value: { $sum: "$mentorShare" },
+        },
       },
       {
         $project: {
           _id: 0,
           date: "$_id.date",
-          value: 1
-        }
+          value: 1,
+        },
       },
-      { $sort: { date: 1 } }
-    ])
+      { $sort: { date: 1 } },
+    ]);
   }
-  async getMentorRevanueONCourse(filter:FilterQuery<ITransactionModel>): Promise<graphPrps[]> {
-
+  async getMentorRevanueONCourse(
+    filter: FilterQuery<ITransactionModel>,
+  ): Promise<graphPrps[]> {
     return await this.aggregate([
       { $match: filter },
       {
         $group: {
           _id: {
-            date: { $dateToString: { format: "%Y-%m-%d", date: "$createdAt" } }
+            date: { $dateToString: { format: "%Y-%m-%d", date: "$createdAt" } },
           },
-          value: { $sum: "$mentorShare" }
-        }
+          value: { $sum: "$mentorShare" },
+        },
       },
       {
         $project: {
           _id: 0,
           date: "$_id.date",
-          value: 1
-        }
+          value: 1,
+        },
       },
-      { $sort: { date: 1 } }
-    ])
+      { $sort: { date: 1 } },
+    ]);
   }
-
 }

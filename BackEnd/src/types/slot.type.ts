@@ -29,3 +29,11 @@ export interface IMentorSlot extends IBaseSlot {
   mentorId: Types.ObjectId;
   courseId: Types.ObjectId;
 }
+
+export interface ISlotsDTOS extends IBaseSlot {
+  mentorId: Types.ObjectId;
+  course: {
+    _id: Types.ObjectId;
+    title: string;
+  };
+}

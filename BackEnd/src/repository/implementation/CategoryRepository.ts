@@ -1,11 +1,11 @@
 import { Types } from "mongoose";
-import { CategoryModel } from "../../models/category.model";
+import { CategoryModel, ICategoryModel } from "../../models/category.model";
 import { ICategory } from "../../types/category.types";
 import { BaseRepository } from "../baseRepository";
 import { ICategoryRepository } from "../interface/ICategoryRepository";
 
 export class CategoryRepository
-  extends BaseRepository<ICategory>
+  extends BaseRepository<ICategoryModel>
   implements ICategoryRepository
 {
   constructor() {
@@ -14,22 +14,21 @@ export class CategoryRepository
 
   async createCategory(
     title: string,
-    slug: string,
     parentId: Types.ObjectId | null,
-  ): Promise<ICategory | null> {
-    return await this.create({ title, slug, parentId });
+  ): Promise<ICategoryModel | null> {
+    return await this.create({ title, parentId });
   }
-  async listCategories(): Promise<ICategory[] | null> {
-    return await this.model.find().lean();
+  async listCategories(): Promise<ICategoryModel[] | null> {
+    return await this.findAll();
   }
-  async findCategory(filter: string): Promise<ICategory | null> {
+  async findCategory(filter: string): Promise<ICategoryModel | null> {
     return await this.findOne({ title: { $regex: filter, $options: "i" } });
   }
   async editCategory(
-    slug: string,
+    categoryId: Types.ObjectId,
     title: string,
     parentId: string,
-  ): Promise<ICategory | null> {
-    return await this.findBySlugAndUpdate(slug, { title, parentId });
+  ): Promise<ICategoryModel | null> {
+    return await this.findByIDAndUpdate(categoryId, { title, parentId });
   }
 }

@@ -179,7 +179,6 @@ export class CourseRepository
     return await this.find(query);
   }
   async getCourseFormData(courseId: Types.ObjectId): Promise<ICourses | null> {
-      return await this.findById(courseId)
+    return await this.findById(courseId);
   }
-  
 }

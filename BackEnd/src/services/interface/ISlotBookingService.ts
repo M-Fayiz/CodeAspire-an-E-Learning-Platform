@@ -11,7 +11,13 @@ import { INotificationDTO } from "../../types/dtos.type/notification.dto.types";
 export interface ISlotBookingService {
   createBooking(bookingData: ISlotBooking): Promise<string | null>;
   handleSlotBooking(session: Stripe.Checkout.Session): Promise<void>;
-  findBookedSlot(bookedId: string): Promise<{sesionData:IVideoSessionDTO,createdMentorNotify:INotificationDTO ,createdLearnerNotify:INotificationDTO }> ;
+  findBookedSlot(
+    bookedId: string,
+  ): Promise<{
+    sesionData: IVideoSessionDTO;
+    createdMentorNotify: INotificationDTO;
+    createdLearnerNotify: INotificationDTO;
+  }>;
   ListLearnerBookedSlots(
     learnerId?: string,
     mentorId?: string,
@@ -21,4 +27,5 @@ export interface ISlotBookingService {
     bookedId: string,
     feedBack: string,
   ): Promise<{ feedback: string; bookedId: Types.ObjectId }>;
+  getBookedSlots(date: Date): Promise<Types.ObjectId[]>;
 }

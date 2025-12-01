@@ -103,4 +103,20 @@ export class SlotBookingController implements ISlotBookingController {
       next(error);
     }
   };
+  getBookedSlots = async (
+    req: Request,
+    res: Response,
+    next: NextFunction,
+  ): Promise<void> => {
+    try {
+      const date = new Date();
+      const bookedSlots = await this._slotBookingService.getBookedSlots(date);
+
+      res
+        .status(HttpStatus.OK)
+        .json(successResponse(HttpResponse.OK, { bookedSlots }));
+    } catch (error) {
+      next(error);
+    }
+  };
 }

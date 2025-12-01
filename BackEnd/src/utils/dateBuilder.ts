@@ -1,15 +1,12 @@
 import { FilterQuery } from "mongoose";
-import { FilterByDate } from "../const/filter.const"; 
+import { FilterByDate } from "../const/filter.const";
 
-
-export function buildDateFilter<T>(
-  filter: string
-): FilterQuery<T> {
+export function buildDateFilter<T>(filter: string): FilterQuery<T> {
   const now = new Date();
   const clean = filter.trim().toLowerCase();
 
   let startDate: Date | null = null;
-  const endDate = new Date(); 
+  const endDate = new Date();
 
   switch (clean) {
     case FilterByDate.Today.toLowerCase():
@@ -32,7 +29,6 @@ export function buildDateFilter<T>(
       break;
 
     default:
-     
       return {};
   }
 

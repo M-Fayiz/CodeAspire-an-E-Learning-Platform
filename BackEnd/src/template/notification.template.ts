@@ -58,15 +58,14 @@ export const NotificationTemplates = {
     createdAt: new Date(),
     updatedAt: new Date(),
   }),
-  JoinNowSession: (userId: Types.ObjectId, ): INotification => ({
+  JoinNowSession: (userId: Types.ObjectId): INotification => ({
     userId: userId,
     message: `Your session  is live now. please join the session.`,
     title: "Join Now - Live Session Started",
     type: "info",
     isRead: false,
-    link: '',
+    link: "",
     createdAt: new Date(),
     updatedAt: new Date(),
   }),
-
 };

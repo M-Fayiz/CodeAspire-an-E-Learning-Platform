@@ -7,6 +7,7 @@ import {
 } from "../../dtos/slot.dto";
 import { ISlotModel } from "../../models/slot.model";
 import { parseObjectId } from "../../mongoose/objectId";
+import { ICourseRepository } from "../../repository/interface/ICourseRepository";
 import { ISlotBookingRepository } from "../../repository/interface/ISlotBookingRepository";
 import { ISlotRepository } from "../../repository/interface/ISlotRepository";
 import {
@@ -22,6 +23,7 @@ export class SlotService implements ISlotService {
   constructor(
     private _slotRepository: ISlotRepository,
     private _slotBookingRepository: ISlotBookingRepository,
+    private _courseRepositoy: ICourseRepository,
   ) {}
   /**
    * check if there are any course exist in same mentor , same days , same time line, if there is not create new slot
@@ -73,7 +75,11 @@ export class SlotService implements ISlotService {
     }
 
     const createdSlot = await this._slotRepository.createSlot(slotData);
-    return slotDTO(createdSlot);
+    const courseName = await this._courseRepositoy.findCourse(
+      createdSlot.courseId,
+    );
+
+    return slotDTO(createdSlot, courseName?.title as string);
   }
   /**
    * fetch mentor's slot data
@@ -159,8 +165,16 @@ export class SlotService implements ISlotService {
     if (!updatedSlot) {
       throw createHttpError(HttpStatus.NOT_FOUND, HttpResponse.ITEM_NOT_FOUND);
     }
-
-    return slotDTO(updatedSlot);
+    const courseName = await this._courseRepositoy.findCourse(
+      updatedSlot.courseId,
+    );
+    if (!courseName) {
+      throw createHttpError(
+        HttpStatus.NOT_FOUND,
+        HttpResponse.COURSE_NOT_FOUND,
+      );
+    }
+    return slotDTO(updatedSlot, courseName.title);
   }
   /**
    * Fetch a mentor slot by its course ID.

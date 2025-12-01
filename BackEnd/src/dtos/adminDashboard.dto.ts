@@ -10,9 +10,8 @@ export function adminDashboardDTO(
   topCourse: ITopCourse[],
   topCategory: ITopCategory[],
 ): IAdminDashboardDTO {
+  let updated = revenue.map((data) => ({ name: data._id, value: data.value }));
 
-  let updated=revenue.map(data=>({name:data._id,value:data.revenue}))
-  console.log('???? :',updated)
   return {
     totalCourses: courses,
     totalLearners: learners,

@@ -18,7 +18,7 @@ export interface ICourses extends Document {
   thumbnail?: string;
   categoryId: Types.ObjectId | object;
   subCategoryId: Types.ObjectId | object;
-  language: string; 
+  language: string;
   level: "Beginner" | "Intermediate" | "Advanced";
   price: number;
   mentorsId: Types.ObjectId | IMenterModel;

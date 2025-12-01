@@ -12,6 +12,7 @@ import { IRole, searchProps } from "../../types/user.types";
 import { FilterQuery, Types } from "mongoose";
 import { buildUserFilter } from "../../utils/searchQuery";
 import { ISignedUsers } from "../../types/dtos.type/user.dto.types";
+import { graphPrps } from "../../types/adminDahsboard.type";
 
 export class UserRepository
   extends BaseRepository<IUserModel>
@@ -140,25 +141,24 @@ export class UserRepository
     return await this.countDocuments({ role: role });
   }
   async SignedUsers(filter: FilterQuery<IUserModel>): Promise<graphPrps[]> {
-
-      return await this.aggregate([
-        { $match:filter },
-        {
+    return await this.aggregate([
+      { $match: filter },
+      {
         $group: {
           _id: {
-            date: { $dateToString: { format: "%Y-%m-%d", date: "$createdAt" } }
+            date: { $dateToString: { format: "%Y-%m-%d", date: "$createdAt" } },
           },
-          value: { $sum:1 }
-        }
+          value: { $sum: 1 },
+        },
       },
       {
         $project: {
           _id: 0,
           date: "$_id.date",
-          value: 1
-        }
+          value: 1,
+        },
       },
-      { $sort: { date: 1 } }
-      ])
+      { $sort: { date: 1 } },
+    ]);
   }
 }

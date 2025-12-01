@@ -13,12 +13,12 @@ import { UserRepository } from "../repository/implementation/UserRepository";
 const transactionRepository = new TransactionRepositoy();
 const enrolledRepository = new EnrolledRepository();
 const courseRepository = new CourseRepository();
-const userRepository=new UserRepository()
+const userRepository = new UserRepository();
 const enrolledService = new EnrolledService(
   enrolledRepository,
   courseRepository,
   transactionRepository,
-  userRepository
+  userRepository,
 );
 const enrolledController = new EnrolledController(enrolledService);
 

@@ -14,7 +14,6 @@ export const registerVideoHandlers = (
 ) => {
   const userId = socket.data.userId;
 
- 
   socket.on("video:join", ({ roomId }) => {
     if (!roomId) return;
 
@@ -26,7 +25,6 @@ export const registerVideoHandlers = (
     socket.to(`video:${roomId}`).emit("video:peer-joined", { userId });
   });
 
- 
   socket.on("video:offer", ({ roomId, sdp }) => {
     socket.to(`video:${roomId}`).emit("video:offer", { sdp, from: userId });
   });
@@ -35,24 +33,26 @@ export const registerVideoHandlers = (
     socket.to(`video:${roomId}`).emit("video:answer", { sdp, from: userId });
   });
 
-
   socket.on("video:ice-candidate", ({ roomId, candidate }) => {
     socket
       .to(`video:${roomId}`)
       .emit("video:ice-candidate", { candidate, from: userId });
   });
 
-
   socket.on("video:leave", ({ roomId }) => {
-    console.log("rooid ", roomId);
-    socket.leave(`video:${roomId}`);
+    const room = `video:${roomId}`;
+
     if (videoRooms[roomId]) {
+      socket
+        .to(room)
+        .emit("video:force-leave", { reason: "Peer left the call" });
+
+      socket.leave(room);
       videoRooms[roomId].delete(userId);
       if (videoRooms[roomId].size === 0) delete videoRooms[roomId];
     }
     socket.to(`video:${roomId}`).emit("video:peer-left", { userId });
   });
-
 
   socket.on("disconnect", () => {
     for (const [roomId, members] of Object.entries(videoRooms)) {

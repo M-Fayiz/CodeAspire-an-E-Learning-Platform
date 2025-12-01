@@ -1,17 +1,18 @@
 import { Types } from "mongoose";
 import { ICategory } from "../../types/category.types";
+import { ICategoryModel } from "../../models/category.model";
 
 export interface ICategoryRepository {
   createCategory(
     title: string,
-    slug: string,
+
     parentId: Types.ObjectId | null,
-  ): Promise<ICategory | null>;
-  listCategories(): Promise<ICategory[] | null>;
-  findCategory(filter: string): Promise<ICategory | null>;
+  ): Promise<ICategoryModel | null>;
+  listCategories(): Promise<ICategoryModel[] | null>;
+  findCategory(filter: string): Promise<ICategoryModel | null>;
   editCategory(
-    slug: string,
+    category_Id: Types.ObjectId,
     title: string,
     parentId: string | null,
-  ): Promise<ICategory | null>;
+  ): Promise<ICategoryModel | null>;
 }

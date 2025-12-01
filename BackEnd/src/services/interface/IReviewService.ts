@@ -1,7 +1,4 @@
-import {
-  IReviewDTO,
-
-} from "../../types/dtos.type/review.dto.types";
+import { IReviewDTO } from "../../types/dtos.type/review.dto.types";
 
 export interface IReviewSevice {
   createReview(

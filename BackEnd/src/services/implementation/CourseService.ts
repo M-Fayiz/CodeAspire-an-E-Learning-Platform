@@ -39,17 +39,18 @@ export class CourseService implements ICourseService {
   ) {}
 
   async createCourses(course: ICourses): Promise<ICourseCreateForm | null> {
+    const mentorCourse = await this._courseRepository.findAllCourse({
+      mentorsId: course.mentorsId,
+      categoryId: course.categoryId,
+    });
 
-    const mentorCourse=await this._courseRepository.findAllCourse({mentorsId:course.mentorsId,categoryId:course.categoryId})
-
-    if(mentorCourse&&mentorCourse.length>2){
-      throw createHttpError(HttpStatus.CONFLICT,HttpResponse.ITEM_EXIST)
+    if (mentorCourse && mentorCourse.length > 2) {
+      throw createHttpError(HttpStatus.CONFLICT, HttpResponse.ITEM_EXIST);
     }
 
-    const createdCourse=await this._courseRepository.createCourses(course);
-    return CourseFormDataDTO(createdCourse as ICourses)
+    const createdCourse = await this._courseRepository.createCourses(course);
+    return CourseFormDataDTO(createdCourse as ICourses);
   }
-
 
   async fetchCourses(
     page: number,
@@ -124,7 +125,7 @@ export class CourseService implements ICourseService {
     courseUpdatePart: "sessions" | "lecture" | "baseInformation",
   ): Promise<ICourses | null> {
     const Id = parseObjectId(courseId);
-    console.log('udate course',Id)
+    console.log("udate course", Id);
     if (!Id) {
       throw createHttpError(HttpStatus.BAD_REQUEST, HttpResponse.INVALID_ID);
     }
@@ -184,7 +185,6 @@ export class CourseService implements ICourseService {
 
     query["mentorsId"] = mentorId;
 
-    
     const [data, documnetCount] = await Promise.all([
       this._courseRepository.getMentorDraftedCourses(search, limit, skip, id),
       this._courseRepository.findDocumentCount(query),
@@ -265,7 +265,7 @@ export class CourseService implements ICourseService {
     baseInfo: ICourses,
   ): Promise<ICourseDTO> {
     const id = parseObjectId(courseId);
-    console.log('base infor ',id)
+    console.log("base infor ", id);
     if (!id) {
       throw createHttpError(HttpStatus.BAD_REQUEST, HttpResponse.INVALID_ID);
     }
@@ -377,16 +377,20 @@ export class CourseService implements ICourseService {
     return courseList.map((course) => listCourseForSLot(course));
   }
   async getCourseFormData(courseId: string): Promise<ICourseCreateForm> {
-      const course_Id=parseObjectId(courseId)
-      if(!course_Id){
-        throw createHttpError(HttpStatus.BAD_REQUEST,HttpResponse.INVALID_ID)
-      }
+    const course_Id = parseObjectId(courseId);
+    if (!course_Id) {
+      throw createHttpError(HttpStatus.BAD_REQUEST, HttpResponse.INVALID_ID);
+    }
 
-      const courseFormData=await this._courseRepository.getCourseFormData(course_Id)
-      if(!courseFormData){
-        throw createHttpError(HttpStatus.NOT_FOUND,HttpResponse.COURSE_NOT_FOUND)
-      }
+    const courseFormData =
+      await this._courseRepository.getCourseFormData(course_Id);
+    if (!courseFormData) {
+      throw createHttpError(
+        HttpStatus.NOT_FOUND,
+        HttpResponse.COURSE_NOT_FOUND,
+      );
+    }
 
-      return CourseFormDataDTO(courseFormData )
+    return CourseFormDataDTO(courseFormData);
   }
 }
