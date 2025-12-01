@@ -1,7 +1,7 @@
 import { axiosInstance } from "@/axios/createInstance";
 import { API } from "@/constants/api.constant";
 import type { ICategory, ICategoryEdit } from "@/types/category.types";
-import type { ICategoryDTO } from "@/types/DTOS/category.dto.type";
+
 import type { AxiosError } from "axios";
 
 const categoryService = {
@@ -21,7 +21,7 @@ const categoryService = {
       throw new Error(errorMessage);
     }
   },
-  listCategory: async (): Promise<ICategoryDTO[]> => {
+  listCategory: async (): Promise<ICategory[]> => {
     try {
       const response = await axiosInstance.get(API.CATEGORY.LIST_CATEGORIES);
 

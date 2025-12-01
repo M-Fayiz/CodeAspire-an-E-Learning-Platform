@@ -20,6 +20,7 @@ import slotSchema from "@/schema/slot.schema";
 import { convertTo24Hour } from "@/utility/generateTimes.util";
 import SlotList from "@/features/mentor/slots/SlotTable";
 import { toast } from "sonner";
+import type { ISlotDTO } from "@/types/DTOS/slot.dto";
 
 const SlotManagement = () => {
   const [formData, setFormData] = useState<IMentorSlot>({
@@ -38,9 +39,10 @@ const SlotManagement = () => {
     slotDuration: 30,
     pricePerSlot: 0,
   });
+
   const [formError, setFormError] = useState<Record<string, string>>({});
   const { user } = useAuth();
-  const [slot, setSlots] = useState<IMentorSlot[]>([]);
+  const [slot, setSlots] = useState<ISlotDTO[]>([]);
   const [isOpen, setIsOpen] = useState(false);
 
   useEffect(() => {
@@ -51,6 +53,8 @@ const SlotManagement = () => {
       }
     })();
   }, []);
+
+
   const submitSlotForm = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setFormError({});
@@ -139,6 +143,7 @@ const SlotManagement = () => {
         mentorId: user?.id,
         selectedDays: updatedTime,
       });
+      
       setFormError({});
       resetForm();
       setIsOpen(false);
@@ -150,10 +155,10 @@ const SlotManagement = () => {
     }
   };
   console.log(formData);
-  const onEdit = (slot: IMentorSlot) => {
+  const onEdit = (slot: ISlotDTO) => {
     setFormData({
       _id: slot._id,
-      courseId: slot.courseId,
+      courseId: slot.course._id,
       mentorId: slot.mentorId,
       selectedDays: slot.selectedDays,
       slotDuration: slot.slotDuration,

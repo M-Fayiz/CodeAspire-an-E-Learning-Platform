@@ -1,6 +1,6 @@
 import { axiosInstance } from "@/axios/createInstance";
 import { API } from "@/constants/api.constant";
-import type { ISlotPopulatedDTO } from "@/types/DTOS/slot.dto";
+import type { ISlotDTO, ISlotPopulatedDTO } from "@/types/DTOS/slot.dto";
 import type { IMentorSlot } from "@/types/slot.types";
 import { throwAxiosError } from "@/utility/throwErrot";
 import { sharedService } from "../shared.service";
@@ -13,7 +13,7 @@ export const SlotService = {
    */
   createSlots: async (
     slotFormData: Partial<IMentorSlot>,
-  ): Promise<IMentorSlot> => {
+  ): Promise<ISlotDTO> => {
     console.log(slotFormData);
     try {
       const response = await axiosInstance.post(
@@ -31,7 +31,7 @@ export const SlotService = {
    * @param mentorId s
    * @returns an array of IMentorSlot
    */
-  getMentorSlotList: async (mentorId: string): Promise<IMentorSlot[]> => {
+  getMentorSlotList: async (mentorId: string): Promise<ISlotDTO[]> => {
     try {
       const response = await axiosInstance.get(
         API.SLOTS.GET_MENTOR_SLOTS(mentorId),

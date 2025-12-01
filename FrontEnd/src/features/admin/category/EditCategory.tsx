@@ -1,11 +1,11 @@
 import { useEffect, useState } from "react";
-import type { ICategoryEdit, ICategoryTree } from "@/types/category.types";
+import type { ICategory, ICategoryEdit } from "@/types/category.types";
 import { Input } from "@/components/ui/Inputs";
 import { SelectInput } from "@/components/ui/SelectInput";
 
 interface EditCategoryProps {
-  category: ICategoryTree;
-  allCategory: ICategoryTree[];
+  category: ICategory;
+  allCategory: ICategory[];
   editedData: (editData: ICategoryEdit) => void;
 }
 
@@ -15,45 +15,49 @@ function EditCategory({
   editedData,
 }: EditCategoryProps) {
   const [formData, setFormData] = useState<ICategoryEdit>({
-    slug: "",
+    _id: "",
     title: "",
     parentId: "",
   });
-  const [parent, setParent] = useState("");
 
-  const findParent = (categories: ICategoryTree[]) => {
-    for (let node of categories) {
-      if (node.key == category.parent) {
-        setParent(node.label);
-        return node;
-      }
-      if (node.children && node.children.length > 0) {
-        let foundNode = findParent(node.children);
-        if (foundNode) {
-          setParent(foundNode.label);
-        }
-      }
+ const [parent,setParent]=useState('')
+
+    const findParentName = (): string => {
+  for (const node of allCategory) {
+   
+    if(node._id==category.parent){
+      setParent(node.title)
     }
-  };
-  useEffect(() => {
-    findParent(allCategory);
-    setFormData((prv) => ({
-      ...prv,
-      slug: category.slug,
-      title: category.label,
-      parentId: category.parent ? category.parent : "",
-    }));
-  }, [category, allCategory]);
+    
+  }
+  return "";
+};
+
+
+useEffect(() => {
+findParentName()
+  console.log(category.parent)
+  setFormData({
+    _id: category._id,    
+    title: category.title,
+    parentId: category.parent || "none",
+  });
+}, [category]);
+
 
   const handleChange = (e: { target: { name: string; value: string } }) => {
     const { name, value } = e.target;
     setFormData((prev) => ({ ...prev, [name]: value }));
   };
   const onSubmit = (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
+  e.preventDefault();
 
-    editedData({ ...formData, slug: category.slug });
-  };
+  editedData({
+    ...formData,
+    parentId: formData.parentId === "none" ? null : formData.parentId
+  });
+};
+
 
   return (
     <div className="p-5 h-full">
@@ -65,21 +69,25 @@ function EditCategory({
             name="title"
             label="category Title"
             onChange={handleChange}
-            placeholder={category.label}
+            placeholder={category.title}
           />
 
           <SelectInput
             name="parentId"
-            placeholder={parent ? parent : "select a parent"}
-            value={formData.parentId}
+            placeholder={parent?parent:
+           
+              "No Parent"
+            }
+
+            value={formData.parentId as string}
             onChange={handleChange}
             options={[
               { label: "None", value: "none" },
               ...allCategory
-                .filter((data) => data.key !== category.key)
+                .filter((data) => data._id !== category._id)
                 .map((cat) => ({
-                  label: cat.label,
-                  value: cat.key,
+                  label: cat.title,
+                  value: cat._id,
                 })),
             ]}
           />

@@ -16,10 +16,9 @@ export const useP2PCall = (socket: Socket) => {
   const localStreamRef = useRef<MediaStream | null>(null);
   const initializedRef = useRef(false);
 
-  /** ✅ INIT: Start local stream, set up peer connection, attach listeners */
   const init = async (deps: RTCDeps) => {
     if (!socket) throw new Error("Socket not initialized");
-    if (initializedRef.current) return; // Prevent re-initialization
+    if (initializedRef.current) return; 
     initializedRef.current = true;
 
     const pc = new RTCPeerConnection({
@@ -27,7 +26,6 @@ export const useP2PCall = (socket: Socket) => {
     });
     pcRef.current = pc;
 
-    // 1️⃣ Local Stream
     try {
       localStreamRef.current = await navigator.mediaDevices.getUserMedia({
         video: true,
@@ -43,15 +41,14 @@ export const useP2PCall = (socket: Socket) => {
     deps.localVideo.srcObject = localStream;
     deps.remoteVideo.srcObject = remoteStream;
 
-    // Add local tracks
+  
     localStream.getTracks().forEach((t) => pc.addTrack(t, localStream));
 
-    // 2️⃣ Remote Tracks
     pc.ontrack = (e) => {
       e.streams[0].getTracks().forEach((t) => remoteStream.addTrack(t));
     };
 
-    // 3️⃣ ICE Candidate
+   
     pc.onicecandidate = (e) => {
       if (e.candidate) {
         socket.emit("video:ice-candidate", {
@@ -62,7 +59,6 @@ export const useP2PCall = (socket: Socket) => {
       }
     };
 
-    // 4️⃣ Connection State
     pc.onconnectionstatechange = () => {
       const state = pc.connectionState;
       console.log("Connection state:", state);
@@ -71,15 +67,16 @@ export const useP2PCall = (socket: Socket) => {
         deps.onDisconnected?.();
     };
 
-    // ✅ Remove any previous listeners before re-attaching
+ 
     socket.off("video:offer");
     socket.off("video:answer");
     socket.off("video:ice-candidate");
     socket.off("video:peer-joined");
+    socket.off("video:force-leave");
 
-    // 5️⃣ Signaling Events
+
     socket.on("video:offer", async ({ sdp, from }) => {
-      if (from === deps.userId) return; // Ignore self
+      if (from === deps.userId) return; 
       await pc.setRemoteDescription(new RTCSessionDescription(sdp));
       const answer = await pc.createAnswer();
       await pc.setLocalDescription(answer);
@@ -104,19 +101,25 @@ export const useP2PCall = (socket: Socket) => {
       }
     });
 
-    // 6️⃣ When peer joins → only one side sends offer (prevent race)
+        socket.on("video:force-leave", ({ reason }) => {
+      console.warn("Forced leave:", reason);
+
+      toast.error(reason || "Call ended");
+
+      cleanupAndExit(deps.roomId);
+    });
+
+
     socket.on("video:peer-joined", ({ userId: peerId }) => {
       if (peerId !== deps.userId) {
-        const initiator = deps.userId < peerId; // simple rule
+        const initiator = deps.userId < peerId; 
         if (initiator) call(deps.roomId, deps.userId);
       }
     });
 
-    // 7️⃣ Join Room
     socket.emit("video:join", { roomId: deps.roomId });
   };
 
-  /** 📞 CREATE OFFER */
   const call = async (roomId: string, userId: string) => {
     const pc = pcRef.current;
     if (!pc) return toast.error("Peer connection not ready");
@@ -126,21 +129,18 @@ export const useP2PCall = (socket: Socket) => {
     socket.emit("video:offer", { roomId, sdp: offer, from: userId });
   };
 
-  /** 🔇 TOGGLE MIC */
   const toggleMic = (mute: boolean) => {
     const stream = localStreamRef.current;
     if (!stream) return toast.error("Stream not initialized");
     stream.getAudioTracks().forEach((t) => (t.enabled = !mute));
   };
 
-  /** 📷 TOGGLE CAMERA */
   const toggleCamera = (off: boolean) => {
     const stream = localStreamRef.current;
     if (!stream) return toast.error("Stream not initialized");
     stream.getVideoTracks().forEach((t) => (t.enabled = !off));
   };
 
-  /** 🖥️ SCREEN SHARE */
   const shareScreen = async (on: boolean) => {
     const pc = pcRef.current;
     if (!pc) return toast.error("Join the call first.");
@@ -168,30 +168,31 @@ export const useP2PCall = (socket: Socket) => {
     }
   };
 
-  /** 🔚 HANGUP */
-  const hangup = async (roomId: string) => {
-    try {
-      const pc = pcRef.current;
-      const localStream = localStreamRef.current;
+    const hangup = async (roomId: string) => {
+      cleanupAndExit(roomId);
+    };
 
-      if (pc) {
-        pc.close();
-        pcRef.current = null;
-        console.log("🛑 Peer connection closed.");
-      }
+  const cleanupAndExit = async (roomId?: string) => {
+  const pc = pcRef.current;
+  const localStream = localStreamRef.current;
 
-      if (localStream) {
-        localStream.getTracks().forEach((t) => t.stop());
-        localStreamRef.current = null;
-        console.log("🎙 Local stream stopped.");
-      }
+  if (pc) {
+    pc.close();
+    pcRef.current = null;
+  }
 
-      socket.emit("video:leave", { roomId });
-      initializedRef.current = false;
-    } catch (err) {
-      console.error("Error during hangup:", err);
-    }
-  };
+  if (localStream) {
+    localStream.getTracks().forEach(t => t.stop());
+    localStreamRef.current = null;
+  }
+
+  initializedRef.current = false;
+
+  if (roomId) {
+    socket.emit("video:leave", { roomId });
+  }
+};
+
 
   return { init, call, hangup, toggleMic, toggleCamera, shareScreen };
 };

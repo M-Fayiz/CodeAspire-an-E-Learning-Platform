@@ -6,7 +6,7 @@ export interface ICategory {
 }
 
 export interface ICategoryEdit {
-  slug: string;
+  _id: string;
   title: string;
-  parentId: string;
+  parentId: string|null;
 }

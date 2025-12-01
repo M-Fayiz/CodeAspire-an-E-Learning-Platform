@@ -1,46 +1,42 @@
-import React, { useEffect, useState } from "react";
+import React, {  useState } from "react";
 import { Search, MessageCircle } from "lucide-react";
-import { ChatService } from "@/service/chat.service";
-import { useAuth } from "@/context/auth.context";
+
 import type { IChatListDTO } from "@/types/DTOS/chat.dto.type";
 import type { userProps } from "@/pages/chat page/ChatPage";
 
+
 interface ChatListProps {
+  chats: IChatListDTO[];
   select: (data: userProps) => void;
+  selectedChatId: string | null;
 }
-const ChatList: React.FC<ChatListProps> = ({ select }) => {
+
+const ChatList: React.FC<ChatListProps> = ({ select,chats,selectedChatId }) => {
   const [searchTerm, setSearchTerm] = useState("");
-  const [chats, setChats] = useState<IChatListDTO[]>([]);
-
-  const [selectedChat, setSelectedChat] = useState<userProps | string>("1");
-
-  const { user } = useAuth();
-  useEffect(() => {
-    (async () => {
-      const usersData = await ChatService.ListUsers(user!.id);
-      if (usersData) {
-        setChats(usersData);
-      }
-    })();
-  }, []);
 
   const filteredChats = chats.filter((chat) =>
     chat.user.name.toLowerCase().includes(searchTerm.toLowerCase()),
   );
 
-  const slectItem = (data: userProps) => {
-    setSelectedChat(data as userProps);
-    select(data);
+  const handleClick = (chat: IChatListDTO) => {
+    select({
+      _id: chat._id,
+      name: chat.user.name,
+      profile: chat.user.profile,
+      userId: chat.user._id,
+    });
   };
 
+  
+
   return (
-    <div className="flex flex-col h-screen bg-white w-96 border-r border-gray-200">
-      <div className="p-4 bg-orange-500 text-white">
+    <div className="flex flex-col h-full bg-white w-96 border-r border-gray-200">
+      {/* <div className="p-4 bg-orange-500 text-white">
         <h1 className="text-2xl font-bold flex items-center gap-2">
           <MessageCircle size={28} />
           Messages
         </h1>
-      </div>
+      </div> */}
 
       <div className="p-4 border-b border-gray-200">
         <div className="relative">
@@ -66,22 +62,15 @@ const ChatList: React.FC<ChatListProps> = ({ select }) => {
           </div>
         ) : (
           filteredChats.map((chat) => (
-            <div
-              key={chat._id}
-              onClick={() =>
-                slectItem({
-                  _id: chat._id,
-                  name: chat.user.name,
-                  profile: chat.user.profile,
-                  userId: chat.user._id,
-                })
-              }
-              className={`flex items-center gap-3 p-4 cursor-pointer transition-colors ${
-                selectedChat === chat._id
-                  ? "bg-orange-50 border-l-4 border-orange-500"
-                  : "hover:bg-gray-50 border-l-4 border-transparent"
-              }`}
-            >
+                <div
+                  key={chat._id}
+                  onClick={() => handleClick(chat)}
+                  className={`flex items-center gap-3 p-4 cursor-pointer bg-gray-50 transition-colors ${
+                    selectedChatId === chat._id
+                      ? "bg-orange-100 border-l-4 border-orange-500"
+                      : "hover:bg-gray-50 border-l-4 border-transparent"
+                  }`}
+                >
               <div className="relative">
                 <img
                   src={chat.user.profile}
@@ -98,11 +87,17 @@ const ChatList: React.FC<ChatListProps> = ({ select }) => {
                   <h3 className="font-semibold text-gray-900 truncate">
                     {chat.user.name}
                   </h3>
-                  {chat.createdAt && (
-                    <span className="text-xs text-gray-500 ml-2 flex-shrink-0">
-                      {chat.createdAt as string}
-                    </span>
-                  )}
+      {chat.createdAt && (
+        <span className="text-xs text-gray-500 ml-2 flex-shrink-0">
+          {new Date(chat.createdAt as string).toLocaleDateString("en-GB", {
+            day: "2-digit",
+            month: "short",
+            year: "numeric",
+          })}
+        </span>
+      )}
+
+
                 </div>
                 <p className="text-sm text-gray-600 truncate">
                   {chat.latestMessage}

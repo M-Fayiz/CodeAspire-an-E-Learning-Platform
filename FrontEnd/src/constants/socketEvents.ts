@@ -1,5 +1,5 @@
 export const SocketEvents = {
-  CONNECT: "connection",
+  CONNECT: "connect",
   USER_ONLINE: "user:online",
   DISCONNECT: "disconnect",
   USER_OFFLINE: "user:offline",

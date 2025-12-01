@@ -2,7 +2,15 @@ import type { IBaseSlot, IMentorSlot } from "../slot.types";
 import type { ICourseDTO } from "./courses.dto.types";
 import type { IMentorDTO } from "./user.dto";
 
-export interface ISlotDTO extends IMentorSlot {
+export interface ISlotsDTOS extends IBaseSlot{
+  mentorId:string,
+  course:{
+    _id:string,
+    title:string
+  }
+}
+
+export interface ISlotDTO extends ISlotsDTOS {
   _id: string;
 }
 

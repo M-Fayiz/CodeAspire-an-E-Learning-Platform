@@ -1,13 +1,14 @@
 import React from "react";
-import type { IMentorSlot } from "@/types/slot.types";
+
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 // import { Switch } from "@/components/ui/switch";
 import { Pencil, Clock } from "lucide-react";
+import type { ISlotDTO } from "@/types/DTOS/slot.dto";
 
 interface SlotListProps {
-  slots: IMentorSlot[];
-  onEdit: (slot: IMentorSlot) => void;
+  slots: ISlotDTO[];
+  onEdit: (slot: ISlotDTO) => void;
   onToggleActive?: (slotId: string, isActive: boolean) => void;
 }
 
@@ -16,6 +17,9 @@ const SlotList: React.FC<SlotListProps> = ({
   onEdit,
   onToggleActive,
 }) => {
+
+
+  console.log(' : : :',slots)
   if (!slots.length) {
     return (
       <Card className="bg-white border border-gray-200 text-black shadow-sm">
@@ -54,7 +58,7 @@ const SlotList: React.FC<SlotListProps> = ({
                   key={slot._id}
                   className="border-b border-gray-200 hover:bg-gray-50 transition-colors"
                 >
-                  <td className="p-3 text-gray-800">{slot.courseId}</td>
+                  <td className="p-3 text-gray-800">{slot.course.title}</td>
 
                   {/* Weekly Schedule */}
                   <td className="p-3 text-gray-700 align-top">

@@ -31,25 +31,31 @@ const AddCategoryAccordion: React.FC<IAddCategoryProps> = ({
 
   const handleChange = (e: { target: { name: string; value: string } }) => {
     const { name, value } = e.target;
+   
     setFormData((prev) => ({ ...prev, [name]: value }));
+
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-
+    
     const result = categorySchema.safeParse(formData);
 
     const fieldErrors: Record<string, string> = {};
 
     if (!result.success) {
       result.error.issues.forEach((err) => {
-        fieldErrors[err.path[0]] = err.message;
+        const key = err.path[0] as string;
+        fieldErrors[key] = err.message;
+
       });
       setErrors(fieldErrors);
       return;
     }
 
-    const parentToSend = formData.parentId || null;
+   const parentToSend =
+  formData.parentId === "none" ? null : formData.parentId;
+
 
     addCat(formData.title, parentToSend);
 
@@ -83,9 +89,9 @@ const AddCategoryAccordion: React.FC<IAddCategoryProps> = ({
               value={formData.parentId}
               onChange={handleChange}
               options={[
-                { label: "None (Parent Category)", value: "" },
+                { label: "None (Parent Category)", value: "none" },
                 ...allCategories.map((cat) => ({
-                  label: cat.label,
+                  label: cat.title,
                   value: cat._id,
                 })),
               ]}

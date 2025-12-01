@@ -10,7 +10,7 @@ import {
 import { useAuth } from "@/context/auth.context";
 import { useSocket } from "@/context/socket.context";
 import type { IMessageDto } from "@/types/DTOS/message.dto.types";
-import { ChatService } from "@/service/chat.service";
+
 import { v4 as uuid } from "uuid";
 import type { userProps } from "@/pages/chat page/ChatPage";
 import {
@@ -20,21 +20,24 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { ChatEvents, SocketEvents } from "@/constants/socketEvents";
+import { ChatEvents } from "@/constants/socketEvents";
 import { sharedService } from "@/service/shared.service";
 
 type FileType = "image" | "video" | "audio" | "pdf" | "text";
 
 interface ChatWindowProps {
   userData: userProps;
+  messages: IMessageDto[];
+  setMessages: React.Dispatch<React.SetStateAction<IMessageDto[]>>;
+  isOnline:boolean
 }
 
-const ChatWindow: React.FC<ChatWindowProps> = ({ userData }) => {
+
+const ChatWindow: React.FC<ChatWindowProps> = ({ userData,messages,setMessages,isOnline }) => {
   const { user } = useAuth();
   const socket = useSocket();
 
-  const [messages, setMessages] = useState<IMessageDto[]>([]);
-  const [isOnline, setIsOnline] = useState(false);
+
   const [inputMessage, setInputMessage] = useState("");
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
 
@@ -48,50 +51,6 @@ const ChatWindow: React.FC<ChatWindowProps> = ({ userData }) => {
   };
 
   useEffect(scrollToBottom, [messages]);
-
-  useEffect(() => {
-    if (!socket || !userData._id) return;
-
-    socket.emit(ChatEvents.JOIN, { roomId: userData._id });
-
-    const handleNewMessage = (msg: IMessageDto) => {
-      setMessages((prev) => {
-        const exists = prev.some((m) => m._id === msg._id);
-        return exists ? prev : [...prev, msg];
-      });
-    };
-
-    const handleOnline = (userId: string) => {
-      if (userId === userData.userId) setIsOnline(true);
-    };
-
-    const handleOffline = (userId: string) => {
-      if (userId === userData.userId) setIsOnline(false);
-    };
-
-    socket.on(ChatEvents.NEW_MESSAGE, handleNewMessage);
-    socket.on(SocketEvents.USER_ONLINE, handleOnline);
-    socket.on(SocketEvents.USER_OFFLINE, handleOffline);
-
-    const handleReconnect = () =>
-      socket.emit(ChatEvents.JOIN, { roomId: userData._id });
-    socket.on("connect", handleReconnect);
-
-    return () => {
-      socket.off(ChatEvents.NEW_MESSAGE, handleNewMessage);
-      socket.off(SocketEvents.USER_ONLINE, handleOnline);
-      socket.off(SocketEvents.USER_OFFLINE, handleOffline);
-      socket.off("connect", handleReconnect);
-    };
-  }, [socket, userData]);
-
-  useEffect(() => {
-    if (!userData._id) return;
-    (async () => {
-      const data = await ChatService.getChatMessage(userData._id);
-      if (data) setMessages(data);
-    })();
-  }, [userData._id]);
 
   useEffect(() => {
     const latest = messages[messages.length - 1];
@@ -116,15 +75,7 @@ const ChatWindow: React.FC<ChatWindowProps> = ({ userData }) => {
     if (!socket || !inputMessage.trim()) return;
 
     const tempId = `temp-${uuid()}`;
-    // const tempMessage: IMessageDto = {
-    //   _id: tempId,
-    //   sender: user!.id,
-    //   content: inputMessage,
-    //   type: "text",
-    //   createdAt: new Date().toISOString(),
-    // };
-
-    // setMessages((prev) => [...prev, tempMessage]);
+    
     setInputMessage("");
 
     socket.emit(
@@ -193,15 +144,6 @@ const ChatWindow: React.FC<ChatWindowProps> = ({ userData }) => {
     else if (selectedFile.type.startsWith("application")) fileCategory = "pdf";
 
     const tempId = `temp-${uuid()}`;
-    // const tempMessage: IMessageDto = {
-    //   _id: tempId,
-    //   sender: user!.id,
-    //   content: selectedFile.name,
-    //   type: fileCategory as FileType,
-    //   mediaUrl: URL.createObjectURL(selectedFile),
-    //   createdAt: new Date().toISOString(),
-    // };
-    // setMessages((prev) => [...prev, tempMessage]);
 
     try {
       const uploadResponse =
@@ -284,7 +226,8 @@ const ChatWindow: React.FC<ChatWindowProps> = ({ userData }) => {
   };
 
   return (
-    <div className="flex flex-col h-screen bg-gray-50">
+    <div className="flex flex-col h-full bg-gray-50">
+
       <div className="bg-white border-b border-gray-200 px-6 py-4">
         <div className="flex items-center gap-3">
           <div className="relative">
@@ -310,7 +253,7 @@ const ChatWindow: React.FC<ChatWindowProps> = ({ userData }) => {
       </div>
 
       <div className="flex-1 overflow-y-auto px-6 py-4">
-        <div className="max-w-4xl mx-auto space-y-4">
+        <div className="max-w-4xl mx-auto space-y-2">
           {messages.map((message) => (
             <div
               key={message._id}
@@ -347,7 +290,8 @@ const ChatWindow: React.FC<ChatWindowProps> = ({ userData }) => {
         </div>
       </div>
 
-      <div className="border-t border-gray-200 px-6 py-4 bg-white sticky bottom-0">
+      <div className="border-t border-gray-200 px-6 py-4  bg-white">
+
         {selectedFile && (
           <div className="max-w-4xl mx-auto mb-3 p-3 border border-gray-300 rounded-xl bg-gray-100 relative">
             <button

@@ -3,7 +3,7 @@ import AddCategoryAccordion from "@/features/admin/category/AddCategory";
 import categoryService from "@/service/admin/category.service";
 // import type { ICategoryTree } from "@/types/category.types"
 import { useEffect, useState } from "react";
-import { Tree } from "primereact/tree";
+
 import "primereact/resources/themes/lara-light-indigo/theme.css";
 import "primereact/resources/primereact.min.css";
 import "primeicons/primeicons.css";
@@ -15,14 +15,14 @@ import {
   SheetHeader,
   SheetTitle,
 } from "@/components/ui/sheet";
-import type { ICategoryEdit, ICategoryTree } from "@/types/category.types";
+import type { ICategoryEdit ,ICategory} from "@/types/category.types";
 import { toast } from "sonner";
 
 const CategoryManagement = () => {
-  const [fetchedData, setFetchedData] = useState<ICategoryTree[]>([]);
+  const [fetchedData, setFetchedData] = useState<ICategory[]>([]);
   const [selectedKey, setSelectedKey] = useState<string | null>(null);
   const [selectedCategory, setSelectedCategory] =
-    useState<ICategoryTree | null>(null);
+    useState<ICategory | null>(null);
   const [sheetOpen, setSheetOpen] = useState(false);
   const [toFetch, setToFetch] = useState(false);
 
@@ -37,8 +37,10 @@ const CategoryManagement = () => {
 
   const editCategry = async (editData: ICategoryEdit) => {
     try {
+      console.log('edit Date :',editData)
+      console.log('selected : ',selectedCategory)
       const result = await categoryService.editCategory(
-        editData.slug,
+        editData._id,
         editData,
       );
       if (result) {
@@ -66,9 +68,9 @@ const CategoryManagement = () => {
   };
 
   const findCategoryByKey = (key: string) => {
-    function serachNode(node: ICategoryTree[]): ICategoryTree | null {
+    function serachNode(node: ICategory[]): ICategory | null {
       for (const elem of node) {
-        if (elem.key == key) {
+        if (elem._id == key) {
           return elem;
         }
         if (elem.children?.length) {
@@ -81,18 +83,64 @@ const CategoryManagement = () => {
       return null;
     }
     const foundCatgory = serachNode(fetchedData);
-    if (foundCatgory && foundCatgory.key !== selectedCategory?.key) {
+    if (foundCatgory && foundCatgory._id !== selectedCategory?._id) {
       setSelectedCategory(foundCatgory);
     }
   };
   const onSelectionChange = (e: any) => {
-    const key = e.value;
-    setSelectedKey(key);
-    if (key) {
-      findCategoryByKey(key);
-      setSheetOpen(true);
-    }
-  };
+  const key = Object.keys(e.value || {})[0];
+
+
+  setSelectedKey(key);
+
+  if (key) {
+    findCategoryByKey(key);
+    setSheetOpen(true);
+  }
+};
+  console.log(fetchedData)
+
+const renderCategories = (categories: ICategory[]) => {
+  return categories.map(cat => (
+    <div
+      key={cat._id}
+      className="border border-gray-200 rounded-lg mb-4 bg-white shadow-sm"
+    >
+      {/* MAIN CATEGORY */}
+      <div
+        onClick={() => {
+          setSelectedCategory(cat);
+          setSheetOpen(true);
+        }}
+        className="cursor-pointer px-4 py-3 font-semibold text-gray-800 hover:bg-gray-50 flex justify-between items-center"
+      >
+        <span>{cat.title}</span>
+        <span className="text-sm text-gray-400">Edit</span>
+      </div>
+
+
+      {cat.children?.length > 0 && (
+        <div className="border-t bg-gray-50">
+          {cat.children.map(sub => (
+            <div
+              key={sub._id}
+              onClick={() => {
+                setSelectedCategory(sub);
+                setSheetOpen(true);
+              }}
+              className="cursor-pointer px-6 py-2 text-gray-700 hover:bg-gray-100 flex justify-between"
+            >
+              {sub.title}
+              <span className="text-xs text-gray-400">Edit</span>
+            </div>
+          ))}
+        </div>
+      )}
+    </div>
+  ));
+};
+
+
 
   return (
     <ManagementLayout
@@ -108,12 +156,7 @@ const CategoryManagement = () => {
         </div>
         <div className=" gap-6">
           <div className=" bg-white p-4 rounded">
-            <Tree
-              value={fetchedData}
-              selectionMode="single"
-              selectionKeys={selectedKey}
-              onSelectionChange={onSelectionChange}
-            />
+           {renderCategories(fetchedData)}
           </div>
           {selectedCategory && (
             <Sheet open={sheetOpen} onOpenChange={setSheetOpen}>
@@ -123,7 +166,7 @@ const CategoryManagement = () => {
                     Edit Category
                   </SheetTitle>
                   <SheetDescription>
-                    You are editing <strong>{selectedCategory.label}</strong>
+                    You are editing <strong>{selectedCategory.title}</strong>
                   </SheetDescription>
                 </SheetHeader>
 
