@@ -104,11 +104,11 @@ const ChatList: React.FC<ChatListProps> = ({ select,chats,selectedChatId }) => {
                 </p>
               </div>
 
-              {/* {chat.unread > 0 && (
+               {chat.unread > 0 && (
                 <div className="w-6 h-6 bg-orange-500 rounded-full flex items-center justify-center text-white text-xs font-bold flex-shrink-0">
                   {chat.unread}
                 </div>
-              )} */}
+              )} 
             </div>
           ))
         )}

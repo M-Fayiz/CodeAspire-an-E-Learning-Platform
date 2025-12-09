@@ -21,4 +21,5 @@ export interface ITopCategory {
   categoryId: string;
   title: string;
   enrolledStudent: number;
+  revenue:number
 }

@@ -15,7 +15,7 @@ const LoginPage: React.FC = () => {
   const { setUser } = useAuth();
   const navigate = useNavigate();
   const location = useLocation();
-
+  const {checkAuth}=useAuth()
   const from = location.state?.from?.pathname || "/";
 
   const handleAuthSubmit = async (data: ISignUp) => {
@@ -28,7 +28,7 @@ const LoginPage: React.FC = () => {
           email: result.email,
           role: result.role as UserRole,
         };
-
+        checkAuth()
         setUser(payloadData);
         setLoading(true);
         setTimeout(() => {

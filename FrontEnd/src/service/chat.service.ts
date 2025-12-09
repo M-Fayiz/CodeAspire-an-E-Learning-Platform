@@ -24,11 +24,18 @@ export const ChatService = {
     try {
       const response = await axiosInstance.get(API.CHAT.LIST_USERS(senderId));
       const updatedUsers = await Promise.all(
-        response.data.ChatUser.map(async (data: IChatListDTO) => {
-          const pictureURL = await sharedService.getPreSignedDownloadURL(
-            data.user.profile,
-          );
 
+        response.data.ChatUser.map(async (data: IChatListDTO) => {
+          let pictureURL
+          if(data.user.profile){
+
+             pictureURL = await sharedService.getPreSignedDownloadURL(
+              data.user.profile,
+            );
+          }
+          if(!pictureURL){
+            pictureURL="👤"
+          }
           return {
             ...data,
             user: {

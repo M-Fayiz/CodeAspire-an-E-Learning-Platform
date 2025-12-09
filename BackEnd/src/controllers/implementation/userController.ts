@@ -107,7 +107,8 @@ export class UserController implements IUserController {
   ): Promise<void> => {
     try {
       const { mentorId } = req.params;
-      const { userData } = req.body;
+      const  userData  = req.body;
+      console.log('user data :',req.body)
       const mentorDataAndNotify = await this._userService.addMentorData(
         mentorId,
         userData,

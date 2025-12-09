@@ -112,7 +112,7 @@ export class CourseController implements ICourseController {
   ): Promise<void> => {
     try {
       const { mentorId, search, page } = req.query;
-
+      console.log('mentor Id : ',mentorId)
       const draftCoursList = await this._courseService.getDraftedCourses(
         search as string,
         page as string,

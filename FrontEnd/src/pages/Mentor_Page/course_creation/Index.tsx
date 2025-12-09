@@ -14,7 +14,6 @@ const CourseCreation = () => {
   const { courseId,setFormData ,resetForm} = useCourseFormContext();
   const editId = searchParams.get('edit');
 
-  console.log('. > > > ',editId)
  
     useEffect(() => {
       if(editId){

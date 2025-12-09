@@ -198,7 +198,7 @@ function AdminCourseDetails() {
             />
           )}
           {activeTab === "mentor" && (
-            <MentorProfile mentorId={course?.mentorsId._id as string} />
+            <MentorProfile courseId={course._id} mentorId={course?.mentorsId._id as string} />
           )}
         </div>
       </div>

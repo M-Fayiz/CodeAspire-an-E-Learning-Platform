@@ -18,7 +18,7 @@ interface AuthContextProps {
   setUser: (user: User | null) => void;
   logout: () => Promise<void>;
 }
-// Context
+
 const AuthContext = createContext<AuthContextProps>({
   user: null,
   loading: false,
@@ -57,7 +57,7 @@ export const AuthProvider = ({ children }: AuthContext) => {
         setUser(result);
         setLoading(false);
       }
-      console.log("data delivered to auth context", result);
+     
     } catch (error) {
       if (error instanceof Error) {
         toast.error(error.message);
@@ -67,7 +67,7 @@ export const AuthProvider = ({ children }: AuthContext) => {
       setLoading(false);
     }
   };
-  console.log("USER :", user);
+
   const logout = async (): Promise<void> => {
     setLoading(true);
     try {

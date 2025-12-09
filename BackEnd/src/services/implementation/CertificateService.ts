@@ -1,3 +1,4 @@
+import path from "path";
 import { HttpResponse } from "../../const/error-message";
 import { HttpStatus } from "../../const/http-status";
 import { ICertificateModel } from "../../models/certificate.model";
@@ -9,10 +10,12 @@ import { generateCertificateId } from "../../utils/generateCerteficateId.util";
 import generateCertificateHtml, {
   generateCertificateHTML,
 } from "../../utils/generateCertificate.util";
-
+import { htmlToPdf } from "../../utils/htmlToPdf.util";
+import fs from 'fs'
 import { createHttpError } from "../../utils/http-error";
 import { ICertificateService } from "../interface/ICertificateService";
-
+import { uploadPdfToS3 } from "../../utils/uploadPdfToS3.util";
+import { ICertificate } from "../../types/certificate.type";
 export class CertificateService implements ICertificateService {
   constructor(
     private _certificateRepository: ICertificateRepository,
@@ -23,6 +26,7 @@ export class CertificateService implements ICertificateService {
   async createCertificate(
     learnerId: string,
     courseId: string,
+    programmTitle:string
   ): Promise<ICertificateModel> {
     const learner_Id = parseObjectId(learnerId);
     const course_id = parseObjectId(courseId);
@@ -50,6 +54,25 @@ export class CertificateService implements ICertificateService {
     };
 
     const html = generateCertificateHtml(certificateDate);
-    console.log(html);
+ 
+    
+    const tempPath = path.join(process.cwd(), "src","temp", `${certId}.pdf`);
+    
+    await htmlToPdf(html, tempPath);
+
+    const s3Key = await uploadPdfToS3(tempPath, `${certId}.pdf`);
+    fs.unlinkSync(tempPath);
+
+    const CertificateData:ICertificate={
+      learnerId:learner_Id,
+      courseId:course_id,
+      programmTitle:programmTitle,
+      certificateId:certId,
+      certificateUrl:s3Key,
+      issuedDate:new Date()
+    }
+
+    const createdCertificate=await this._certificateRepository.createCertificate(CertificateData)
+  return createdCertificate
   }
 }

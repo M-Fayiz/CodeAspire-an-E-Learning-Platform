@@ -1,5 +1,5 @@
 import puppeteer from "puppeteer";
-import fs from "fs";
+
 
 export async function htmlToPdf(html: string, outputPath: string) {
   const browser = await puppeteer.launch({
@@ -13,8 +13,8 @@ export async function htmlToPdf(html: string, outputPath: string) {
 
   await page.pdf({
     path: outputPath,
-    width: "1600px",
-    height: "900px",
+   width: "1123px",
+height:" 800px",
     printBackground: true,
   });
 

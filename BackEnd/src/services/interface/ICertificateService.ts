@@ -4,5 +4,6 @@ export interface ICertificateService {
   createCertificate(
     learnerId: string,
     courseId: string,
+    programmTitle:string
   ): Promise<ICertificateModel>;
 }

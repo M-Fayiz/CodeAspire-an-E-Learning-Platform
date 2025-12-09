@@ -24,7 +24,7 @@ const categoryService = {
   listCategory: async (): Promise<ICategory[]> => {
     try {
       const response = await axiosInstance.get(API.CATEGORY.LIST_CATEGORIES);
-
+    
       return response.data.categories;
     } catch (error) {
       const err = error as AxiosError<{ error: string }>;

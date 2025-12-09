@@ -18,6 +18,7 @@ const CertificateSchema = new mongoose.Schema<ICertificateModel>(
       ref: DbModelName.COURSE,
       required: true,
     },
+    programmTitle:{type:String},
     certificateId: { type: String, required: true, unique: true },
     certificateUrl: { type: String, required: true },
     issuedDate: { type: Date, default: Date.now },

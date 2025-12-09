@@ -11,17 +11,18 @@ import React, { useEffect, useMemo, useState } from "react";
 import { FileUp } from "lucide-react";
 import { sharedService } from "@/service/shared.service";
 import { Spinner } from "@/components/ui/shadcn-io/spinner";
-import type { ICategoryDTO } from "@/types/DTOS/category.dto.type";
+
 import { toast } from "sonner";
 import { courseFormSchema } from "@/schema/courseForm.schema";
 import courseService from "@/service/mentor/course.service";
 import { useAuth } from "@/context/auth.context";
+import type { ICategory } from "@/types/category.types";
 interface BaseCaourseProps {
   handleTap: (tap: "basic" | "curriculum" | "publish") => void;
 }
 
 const BasicCourseInformation: React.FC<BaseCaourseProps> = ({handleTap}) => {
-  const [categories, setCategories] = useState<ICategoryDTO[]>([]);
+  const [categories, setCategories] = useState<ICategory[]>([]);
   const [selectedCategory, setSelectedCategory] = useState("");
   const [zodError, setErrors] = useState<{ [key: string]: string }>({});
   const [image, setImage] = useState("");
@@ -29,7 +30,7 @@ const BasicCourseInformation: React.FC<BaseCaourseProps> = ({handleTap}) => {
   const { courseId, formData, setField,setCourseId } = useCourseFormContext();
   const {user}=useAuth()
 
-  // Category
+ 
   useEffect(() => {
     const fetchCategories = async () => {
       const result = await categoryService.listCategory();
@@ -65,15 +66,15 @@ const BasicCourseInformation: React.FC<BaseCaourseProps> = ({handleTap}) => {
   const { categoryOptions, subCategoryOptions } = useMemo(() => {
     const categoryOptions = categories.map((category) => ({
       _id: category._id,
-      label: category.label,
+      label: category.title,
     }));
 
     const subCategoryOptions =
       categories
-        .find((c) => c.label === selectedCategory)
+        .find((c) => c.title === selectedCategory)
         ?.children?.map((child) => ({
           _id: child._id,
-          label: child.label,
+          label: child.title,
         })) || [];
 
     return { categoryOptions, subCategoryOptions };
@@ -104,8 +105,8 @@ const BasicCourseInformation: React.FC<BaseCaourseProps> = ({handleTap}) => {
           },
         );
         if (updatedData) {
-   
           setCourseId(updatedData._id as string)
+          
            handleTap('curriculum')
           toast.success("Base Information Updated Successfully");
         }
@@ -116,7 +117,7 @@ const BasicCourseInformation: React.FC<BaseCaourseProps> = ({handleTap}) => {
         ...courseData.data,
         mentorsId: user!.id,
       });
-      console.log('> >',savedCourseData)
+     
       if (savedCourseData._id) {
         setCourseId(savedCourseData._id);
         handleTap('curriculum')
@@ -127,7 +128,7 @@ const BasicCourseInformation: React.FC<BaseCaourseProps> = ({handleTap}) => {
       }
     }
   };
-  console.log('| | | | :',formData)
+
   return (
     <div className="p-4 sm:p-6">
       <div className="flex items-center justify-between mb-4">

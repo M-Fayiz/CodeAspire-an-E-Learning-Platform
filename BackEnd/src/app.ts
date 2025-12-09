@@ -60,6 +60,11 @@ app.use(passport.session());
 app.use(cors(corsSetUp));
 
 // Routers
+
+app.get("/", (req, res) => {
+  res.send("SERVER WORKING");
+});
+
 app.use("/api/v1/auth", authRouter);
 app.use("/api/v1/users", userRouter);
 app.use("/api/v1/admin", adminRouter);

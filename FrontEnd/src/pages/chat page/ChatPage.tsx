@@ -58,6 +58,13 @@ const ChatPage = () => {
       return prev;
     });
 
+    setChats(prv=>
+      prv.map(room=>
+        room._id==msg.roomId?{
+          ...room,unread:msg.roomId===selectedChat!._id?room.unread:room.unread+1
+        }:room
+      )
+    )
    
     setChats((prev) => {
       const index = prev.findIndex((c) => c._id === msg.roomId);

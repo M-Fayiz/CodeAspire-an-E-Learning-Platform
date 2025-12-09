@@ -11,7 +11,7 @@ const accessKeyID = env.AWS_S3_ACCESS_KEY as string;
 const secreteAccessKey = env.AWS_S3_SECRET_KEY as string;
 const bucketName = env.AWS_s3_BUCKET_NAME as string;
 
-const s3Bucket = new S3Client({
+export const s3Bucket = new S3Client({
   region: region,
   credentials: {
     accessKeyId: accessKeyID,
@@ -31,20 +31,20 @@ export async function getObjectURL(key: string) {
   return url;
 }
 
-export async function putObjectURl(
-  filename: string,
-  folderName: string,
-  fileType: string,
-): Promise<{ uploadURL: string; fileURL: string }> {
-  const key = `${folderName}/${Date.now()}-${filename}`;
+  export async function putObjectURl(
+    filename: string,
+    folderName: string,
+    fileType: string,
+  ): Promise<{ uploadURL: string; fileURL: string }> {
+    const key = `${folderName}/${Date.now()}-${filename}`;
 
-  const command = new PutObjectCommand({
-    Bucket: bucketName,
-    Key: key,
-    ContentType: fileType,
-  });
+    const command = new PutObjectCommand({
+      Bucket: bucketName,
+      Key: key,
+      ContentType: fileType,
+    });
 
-  const uploadURL = await getSignedUrl(s3Bucket, command);
-  const fileURL = key;
-  return { uploadURL, fileURL };
-}
+    const uploadURL = await getSignedUrl(s3Bucket, command);
+    const fileURL = key;
+    return { uploadURL, fileURL };
+  }

@@ -13,10 +13,11 @@ interface MentorProps {
 }
 
 const MentorProfile: React.FC<MentorProps> = ({ mentorId, courseId }) => {
+  console.log('mentorId ',mentorId,'courseId :',courseId)
   const [mentorProfile, setMentorProfile] = useState<MentorDTO>({
     name: "",
     bio: "",
-    experience: "",
+    experience: 0,
     expertise: [],
     socialLinks: {
       github: "",
@@ -41,8 +42,8 @@ const MentorProfile: React.FC<MentorProps> = ({ mentorId, courseId }) => {
     try {
       const data = await ChatService.createChat(user!.id, mentorId);
       if (data) {
-        navigate(`/learner/chats`);
-      }
+        navigate(`/${user?.role}/chats`);
+      }a
     } catch (error) {
       if (error instanceof Error) {
         toast.error(error.message);
@@ -116,13 +117,16 @@ const MentorProfile: React.FC<MentorProps> = ({ mentorId, courseId }) => {
               <MessageSquare className={`text-white w-4 h-4 hidden md:block`} />{" "}
               Chat with Mentor
             </button>
+              {user?.role!=='admin'&&(
             <Link
               to={`/learner/slot-booking/${courseId}`}
               className="inline-flex items-center gap-3 bg-orange-500 hover:bg-orange-600 text-white font-semibold px-6 py-3 rounded-full shadow-lg transition-all duration-300 hover:shadow-xl"
             >
+
               <MessageSquare className={`text-white w-4 h-4 hidden md:block`} />{" "}
               Book Slot With mentor
             </Link>
+              )}
           </div>
         </div>
       </div>

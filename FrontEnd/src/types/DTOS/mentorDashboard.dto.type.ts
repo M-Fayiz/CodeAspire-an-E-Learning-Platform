@@ -19,4 +19,5 @@ export interface ITopCourse {
   courseId: string;
   title: string;
   enrolledStudent: number;
+  revenue:number
 }

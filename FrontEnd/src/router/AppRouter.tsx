@@ -11,7 +11,7 @@ import ResetPassword from "../components/auth-components/ResetPassword";
 import NotFound from "../pages/not-found/Not-Found";
 import ErrorFallback from "../components/common/ErrorFallback";
 import DynamicLayout from "../pages/Daynamic-Layout/Dynamic-Dashboard";
-import AdminDashboard from "../components/layout/dynamic-layout/Dashboard-Content";
+import AdminDashboard from "../components/layout/dynamic-layout/AdminDashboard";
 import { Protected_Router } from "../components/protectedRouter/ProtectedRouter";
 import ProfileManagement from "../pages/Profile Page/Profile";
 import UserManagement from "../pages/Admin Page/user-management/UserMangement";
