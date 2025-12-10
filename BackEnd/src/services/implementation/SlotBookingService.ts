@@ -3,7 +3,7 @@ import { env } from "../../config/env.config";
 import { HttpResponse } from "../../const/error-message";
 import { HttpStatus } from "../../const/http-status";
 import { ISlotBookingRepository } from "../../repository/interface/ISlotBookingRepository";
-import { ISlotBooking } from "../../types/sessionBooking.type";
+import { BookingStatus, ISlotBooking, StudenStatus } from "../../types/sessionBooking.type";
 import { createHttpError } from "../../utils/http-error";
 import { timeAndDateGenerator } from "../../utils/timeAndDateGenerator";
 import { ISlotBookingService } from "../interface/ISlotBookingService";
@@ -314,5 +314,33 @@ export class SlotBookingService implements ISlotBookingService {
       throw createHttpError(HttpStatus.NOT_FOUND, HttpResponse.NO_BOOKED_SLOT);
     }
     return slots?.map((slot) => slot._id);
+  }
+  async updateStudents(bookedId: string, status:StudenStatus): Promise<{bookedId:Types.ObjectId,status:StudenStatus}> {
+    const booked_Id=parseObjectId(bookedId)
+    if(!booked_Id){
+      throw createHttpError(HttpStatus.BAD_REQUEST,HttpResponse.INVALID_ID)
+    }
+
+    const updatedData=await this._slotBookingRepository.updateSlotBookingData({_id:bookedId},{studentStatus:status})
+    if(!updatedData){
+      throw createHttpError(HttpStatus.BAD_REQUEST,HttpResponse.ITEM_NOT_FOUND)
+    }
+    return {
+      bookedId:updatedData?._id,
+      status:updatedData?.studentStatus as StudenStatus
+    }
+
+  }
+  async updateSlotStatus(bookedId: string, status: BookingStatus): Promise<{ bookedId: Types.ObjectId; status: BookingStatus; }> {
+    const booked_Id=parseObjectId(bookedId)
+    if(!booked_Id){
+      throw createHttpError(HttpStatus.BAD_REQUEST,HttpResponse.INVALID_ID)
+    }
+    const updatedData=await this._slotBookingRepository.updateSlotBookingData({_id:booked_Id},{status:status})
+
+    if(!updatedData){
+       throw createHttpError(HttpStatus.BAD_REQUEST,HttpResponse.ITEM_NOT_FOUND)
+    }
+    return {bookedId:updatedData._id,status:updatedData.status as BookingStatus}
   }
 }

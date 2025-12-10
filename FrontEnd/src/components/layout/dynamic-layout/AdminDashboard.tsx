@@ -15,7 +15,6 @@ import { FilterByDate } from "@/constants/filter.const";
 import type { IAdminDashboardDTO } from "@/types/DTOS/adminDashboard.type";
 import type { graphPrps } from "@/features/dashboard/graph";
 import RevenueChart from "@/features/dashboard/graph";
-import { BarGraph } from "@/components/ui/BarGraph";
 
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 import {RevenueDonutChart} from "@/components/ui/PieGraph";

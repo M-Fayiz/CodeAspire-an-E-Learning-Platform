@@ -1,6 +1,6 @@
 import { Button } from "@/components/ui/button";
 import { Book, User, Clock } from "lucide-react";
-import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
+import { Card, CardHeader, CardContent } from "@/components/ui/card";
 import type { IBookingDTOforLearner } from "@/types/DTOS/slotBooking.dto.type";
 import { MentorActionMenu } from "@/features/mentor/slots/mentorActions";
 
@@ -34,9 +34,7 @@ export const BookingTable = ({
     return (
       <Card className="bg-white border border-gray-200 text-black shadow-sm">
         <CardHeader>
-          <CardTitle className="text-xl font-semibold flex items-center gap-2 text-gray-800">
-            <Clock size={20} className="text-gray-600" /> Booked Sessions
-          </CardTitle>
+         
         </CardHeader>
         <CardContent>
           <div className="text-gray-600 text-center py-8">
@@ -49,11 +47,7 @@ export const BookingTable = ({
 
   return (
     <Card className="bg-white border border-gray-200 text-black shadow-sm">
-      <CardHeader className="pb-2">
-        <CardTitle className="text-xl font-semibold flex items-center gap-2 text-gray-800">
-          <Clock size={20} className="text-gray-600" /> Booked Sessions
-        </CardTitle>
-      </CardHeader>
+     
 
       <CardContent>
         <div className="overflow-x-auto">

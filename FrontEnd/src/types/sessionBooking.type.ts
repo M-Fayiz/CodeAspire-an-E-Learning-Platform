@@ -1,3 +1,6 @@
+
+export type studentStatus='pending'|'passed'|'failed'
+export type slotStatus="booked" | "completed" | "Pending";
 export interface ISessionBooking {
   mentorId: string;
   learnerId: string;
@@ -7,6 +10,7 @@ export interface ISessionBooking {
   startTime: string;
   endTime: string;
   type?: "free" | "paid";
-  status?: "booked" | "completed" | "Pending";
+  status?: slotStatus
+  studentStatus:studentStatus
   feedback?: string;
 }

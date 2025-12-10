@@ -4,7 +4,7 @@ import type {
   IBookingDTOforLearner,
   IBookingDTOforMentors,
 } from "@/types/DTOS/slotBooking.dto.type";
-import type { ISessionBooking } from "@/types/sessionBooking.type";
+import type { ISessionBooking, studentStatus } from "@/types/sessionBooking.type";
 import { throwAxiosError } from "@/utility/throwErrot";
 
 export const SlotBookingSercie = {
@@ -40,7 +40,7 @@ export const SlotBookingSercie = {
       const response = await axiosInstance.get(
         API.SLOT_BOOK.ListeMentorBooking(mentorId),
       );
-      console.log("the list :", response.data.listsOfBooked);
+  
       return response.data.listsOfBooked;
     } catch (error) {
       throwAxiosError(error);
@@ -51,15 +51,32 @@ export const SlotBookingSercie = {
     feedback: string,
   ): Promise<{ feedback: string; bookedId: string }> => {
     try {
-      console.log("ffff  ", feedback);
-      console.log("  kkk ", slotId);
+      
       const response = await axiosInstance.put(
         API.SLOT_BOOK.UPDATE_BOOKINGL(slotId),
         { feedback },
       );
+
       return response.data.updatedFeedback;
     } catch (error) {
       throwAxiosError(error);
     }
   },
+  updateStudentStatus:async(slotBookingId:string,studentStatus:"failed"|'passed'):Promise<{bookedId:string,status:studentStatus}>=>{
+    try {
+      const response=await axiosInstance.put(API.SLOT_BOOK.UPDATE_STUDENT_STATUS(slotBookingId),{studentStatus})
+      return response.data.updatedData
+    } catch (error) {
+       throwAxiosError(error);
+    }
+  },
+  updateBookedSlotStatus:async(bookedId:string,status:'completed')=>{
+    try {
+      const response=await axiosInstance.put(API.SLOT_BOOK.UPDATE_BOOKED_SLOT_STATUS(bookedId),{status})
+      return response.data
+    } catch (error) {
+      throwAxiosError(error)
+    }
+  }
+  
 };

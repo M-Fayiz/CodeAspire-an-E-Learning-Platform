@@ -119,4 +119,30 @@ export class SlotBookingController implements ISlotBookingController {
       next(error);
     }
   };
+  updateStudentStatus=async(req: Request, res: Response, next: NextFunction): Promise<void>=>{
+    try {
+      const {bookedId}=req.params
+      const {studentStatus}=req.body
+      console.log(bookedId,'  -          -',studentStatus)
+      const updatedData=await this._slotBookingService.updateStudents(bookedId,studentStatus)
+      res
+        .status(HttpStatus.OK)
+        .json(successResponse(HttpResponse.OK, { updatedData }));
+    } catch (error) {
+      next(error)
+    }
+    
+  }
+  updateSlotStatus=async(req: Request, res: Response, next: NextFunction): Promise<void> =>{
+    try {
+      const {bookedId}=req.params
+      const {status}=req.body
+      const updateStatus=await this._slotBookingService.updateSlotStatus(bookedId,status)
+      res
+        .status(HttpStatus.OK)
+        .json(successResponse(HttpResponse.OK, { updateStatus }));
+    } catch (error) {
+      next(error)
+    }
+  }
 }

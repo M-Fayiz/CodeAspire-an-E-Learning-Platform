@@ -1,5 +1,5 @@
 import Stripe from "stripe";
-import { ISlotBooking } from "../../types/sessionBooking.type";
+import { BookingStatus, ISlotBooking, StudenStatus } from "../../types/sessionBooking.type";
 import {
   IBookingDTOforLearner,
   IVideoSessionDTO,
@@ -28,4 +28,6 @@ export interface ISlotBookingService {
     feedBack: string,
   ): Promise<{ feedback: string; bookedId: Types.ObjectId }>;
   getBookedSlots(date: Date): Promise<Types.ObjectId[]>;
+  updateStudents(bookedId:string,status:StudenStatus):Promise<{bookedId:Types.ObjectId,status:StudenStatus}>
+  updateSlotStatus(bookedId:string,status:BookingStatus):Promise<{bookedId:Types.ObjectId,status:BookingStatus}>
 }

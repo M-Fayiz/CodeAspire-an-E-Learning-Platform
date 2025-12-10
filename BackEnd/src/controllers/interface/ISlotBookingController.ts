@@ -18,4 +18,10 @@ export interface ISlotBookingController {
     res: Response,
     next: NextFunction,
   ): Promise<void>;
+  updateStudentStatus(req: Request,
+    res: Response,
+    next: NextFunction): Promise<void>;
+    updateSlotStatus(req: Request,
+    res: Response,
+    next: NextFunction): Promise<void>;
 }

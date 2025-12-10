@@ -1,3 +1,5 @@
+import type { studentStatus } from "../sessionBooking.type";
+
 export interface IBaseBookingDTO {
   slotId: string;
   date: Date | string;
@@ -6,7 +8,7 @@ export interface IBaseBookingDTO {
   type?: "free" | "paid";
   status?: "booked" | "completed" | "Pending" | "canceled" | "refunded";
   feedback?: string;
-  studentStatus?: "passed" | "failed" | "Pending";
+  studentStatus?: studentStatus;
 }
 export interface IBookingDTOforLearner extends IBaseBookingDTO {
   _id: string;

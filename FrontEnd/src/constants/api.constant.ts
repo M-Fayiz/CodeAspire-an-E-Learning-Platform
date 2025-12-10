@@ -105,6 +105,8 @@ export const API = {
     ListeMentorBooking: (mentorId: string) =>
       `/slot-booking/mentor/${mentorId}`,
     UPDATE_BOOKINGL: (slotId: string) => `/slot-booking/${slotId}`,
+    UPDATE_STUDENT_STATUS:(slotbookingId:string)=>`/slot-booking/${slotbookingId}/student-status`,
+    UPDATE_BOOKED_SLOT_STATUS:(bookedId:string)=>`/slot-booking/${bookedId}/slot-status`
   },
   VIDEO: {
     START_VIDEO: (bookingId: string) => `/video/start/${bookingId}`,
