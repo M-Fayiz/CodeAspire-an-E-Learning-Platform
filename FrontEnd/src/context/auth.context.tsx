@@ -57,7 +57,6 @@ export const AuthProvider = ({ children }: AuthContext) => {
         setUser(result);
         setLoading(false);
       }
-     
     } catch (error) {
       if (error instanceof Error) {
         toast.error(error.message);

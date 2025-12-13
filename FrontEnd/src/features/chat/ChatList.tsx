@@ -1,9 +1,8 @@
-import React, {  useState } from "react";
+import React, { useState } from "react";
 import { Search, MessageCircle } from "lucide-react";
 
 import type { IChatListDTO } from "@/types/DTOS/chat.dto.type";
 import type { userProps } from "@/pages/chat page/ChatPage";
-
 
 interface ChatListProps {
   chats: IChatListDTO[];
@@ -11,7 +10,11 @@ interface ChatListProps {
   selectedChatId: string | null;
 }
 
-const ChatList: React.FC<ChatListProps> = ({ select,chats,selectedChatId }) => {
+const ChatList: React.FC<ChatListProps> = ({
+  select,
+  chats,
+  selectedChatId,
+}) => {
   const [searchTerm, setSearchTerm] = useState("");
 
   const filteredChats = chats.filter((chat) =>
@@ -26,8 +29,6 @@ const ChatList: React.FC<ChatListProps> = ({ select,chats,selectedChatId }) => {
       userId: chat.user._id,
     });
   };
-
-  
 
   return (
     <div className="flex flex-col h-full bg-white w-96 border-r border-gray-200">
@@ -62,15 +63,15 @@ const ChatList: React.FC<ChatListProps> = ({ select,chats,selectedChatId }) => {
           </div>
         ) : (
           filteredChats.map((chat) => (
-                <div
-                  key={chat._id}
-                  onClick={() => handleClick(chat)}
-                  className={`flex items-center gap-3 p-4 cursor-pointer bg-gray-50 transition-colors ${
-                    selectedChatId === chat._id
-                      ? "bg-orange-100 border-l-4 border-orange-500"
-                      : "hover:bg-gray-50 border-l-4 border-transparent"
-                  }`}
-                >
+            <div
+              key={chat._id}
+              onClick={() => handleClick(chat)}
+              className={`flex items-center gap-3 p-4 cursor-pointer bg-gray-50 transition-colors ${
+                selectedChatId === chat._id
+                  ? "bg-orange-100 border-l-4 border-orange-500"
+                  : "hover:bg-gray-50 border-l-4 border-transparent"
+              }`}
+            >
               <div className="relative">
                 <img
                   src={chat.user.profile}
@@ -87,28 +88,29 @@ const ChatList: React.FC<ChatListProps> = ({ select,chats,selectedChatId }) => {
                   <h3 className="font-semibold text-gray-900 truncate">
                     {chat.user.name}
                   </h3>
-      {chat.createdAt && (
-        <span className="text-xs text-gray-500 ml-2 flex-shrink-0">
-          {new Date(chat.createdAt as string).toLocaleDateString("en-GB", {
-            day: "2-digit",
-            month: "short",
-            year: "numeric",
-          })}
-        </span>
-      )}
-
-
+                  {chat.createdAt && (
+                    <span className="text-xs text-gray-500 ml-2 flex-shrink-0">
+                      {new Date(chat.createdAt as string).toLocaleDateString(
+                        "en-GB",
+                        {
+                          day: "2-digit",
+                          month: "short",
+                          year: "numeric",
+                        },
+                      )}
+                    </span>
+                  )}
                 </div>
                 <p className="text-sm text-gray-600 truncate">
                   {chat.latestMessage}
                 </p>
               </div>
 
-               {chat.unread > 0 && (
+              {chat.unread > 0 && (
                 <div className="w-6 h-6 bg-orange-500 rounded-full flex items-center justify-center text-white text-xs font-bold flex-shrink-0">
                   {chat.unread}
                 </div>
-              )} 
+              )}
             </div>
           ))
         )}

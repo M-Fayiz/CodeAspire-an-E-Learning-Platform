@@ -20,44 +20,39 @@ function EditCategory({
     parentId: "",
   });
 
- const [parent,setParent]=useState('')
+  const [parent, setParent] = useState("");
 
-    const findParentName = (): string => {
-  for (const node of allCategory) {
-   
-    if(node._id==category.parent){
-      setParent(node.title)
+  const findParentName = (): string => {
+    for (const node of allCategory) {
+      if (node._id == category.parent) {
+        setParent(node.title);
+      }
     }
-    
-  }
-  return "";
-};
+    return "";
+  };
 
-
-useEffect(() => {
-findParentName()
-  console.log(category.parent)
-  setFormData({
-    _id: category._id,    
-    title: category.title,
-    parentId: category.parent || "none",
-  });
-}, [category]);
-
+  useEffect(() => {
+    findParentName();
+    console.log(category.parent);
+    setFormData({
+      _id: category._id,
+      title: category.title,
+      parentId: category.parent || "none",
+    });
+  }, [category]);
 
   const handleChange = (e: { target: { name: string; value: string } }) => {
     const { name, value } = e.target;
     setFormData((prev) => ({ ...prev, [name]: value }));
   };
   const onSubmit = (e: React.FormEvent<HTMLFormElement>) => {
-  e.preventDefault();
+    e.preventDefault();
 
-  editedData({
-    ...formData,
-    parentId: formData.parentId === "none" ? null : formData.parentId
-  });
-};
-
+    editedData({
+      ...formData,
+      parentId: formData.parentId === "none" ? null : formData.parentId,
+    });
+  };
 
   return (
     <div className="p-5 h-full">
@@ -74,11 +69,7 @@ findParentName()
 
           <SelectInput
             name="parentId"
-            placeholder={parent?parent:
-           
-              "No Parent"
-            }
-
+            placeholder={parent ? parent : "No Parent"}
             value={formData.parentId as string}
             onChange={handleChange}
             options={[

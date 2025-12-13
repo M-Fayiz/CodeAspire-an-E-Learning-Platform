@@ -54,7 +54,6 @@ const SlotManagement = () => {
     })();
   }, []);
 
-
   const submitSlotForm = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setFormError({});
@@ -143,7 +142,7 @@ const SlotManagement = () => {
         mentorId: user?.id,
         selectedDays: updatedTime,
       });
-      
+
       setFormError({});
       resetForm();
       setIsOpen(false);

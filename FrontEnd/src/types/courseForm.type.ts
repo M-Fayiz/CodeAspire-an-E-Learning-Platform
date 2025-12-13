@@ -11,7 +11,7 @@ export interface IBaseCourse {
   subCategoryId: string;
   mentorId: string;
 }
-export interface ICourseCreateForm extends IBaseCourse{
+export interface ICourseCreateForm extends IBaseCourse {
   _id: string;
   sessions: ISession[];
 }

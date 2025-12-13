@@ -15,7 +15,7 @@ import { categorySchema } from "@/schema/category.schema";
 
 interface IAddCategoryProps {
   allCategories: ICategory[];
-  addCat: (title: string, parentId: string | null) => void;
+  addCat: (title: string, parentId: string | null) => Promise<void>;
 }
 
 const AddCategoryAccordion: React.FC<IAddCategoryProps> = ({
@@ -31,14 +31,13 @@ const AddCategoryAccordion: React.FC<IAddCategoryProps> = ({
 
   const handleChange = (e: { target: { name: string; value: string } }) => {
     const { name, value } = e.target;
-   
-    setFormData((prev) => ({ ...prev, [name]: value }));
 
+    setFormData((prev) => ({ ...prev, [name]: value }));
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    
+
     const result = categorySchema.safeParse(formData);
 
     const fieldErrors: Record<string, string> = {};
@@ -47,15 +46,13 @@ const AddCategoryAccordion: React.FC<IAddCategoryProps> = ({
       result.error.issues.forEach((err) => {
         const key = err.path[0] as string;
         fieldErrors[key] = err.message;
-
       });
       setErrors(fieldErrors);
       return;
     }
 
-   const parentToSend =
-  formData.parentId === "none" ? null : formData.parentId;
-
+    const parentToSend =
+      formData.parentId === "none" ? null : formData.parentId;
 
     addCat(formData.title, parentToSend);
 

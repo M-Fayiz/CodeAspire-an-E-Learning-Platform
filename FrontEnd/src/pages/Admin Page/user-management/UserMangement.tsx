@@ -9,6 +9,7 @@ import PaginationRounded from "../../../components/ui/Pagination";
 import type { SearchQuery } from "../../../types/parser.types";
 import useDebounce from "@/hooks/useDebounce";
 import { toast } from "sonner";
+import { SearchAndFilter } from "@/features/admin/userMangement/SerchAndFilter";
 
 const UserManagement: React.FC = () => {
   const [users, setUsers] = useState<IUserType[]>([]);
@@ -19,15 +20,13 @@ const UserManagement: React.FC = () => {
     isActive: "",
   });
 
-  // const [search,setSearch]=use
-
   const [page, setPage] = useState(1);
   const [totalPage, setTotalPage] = useState(1);
-  const debounced = useDebounce(just, 1000);
+  const debounced = useDebounce(search, 1000);
   useEffect(() => {
     async function fetchAllUsers() {
       try {
-        const userData = await adminService.fetchAllUsers(page, debounced);
+        const userData = await adminService.fetchAllUsers(page, debounced.name);
         setUsers(userData.users);
         setTotalPage(userData.totalPage);
       } catch (error) {
@@ -38,7 +37,7 @@ const UserManagement: React.FC = () => {
     }
 
     fetchAllUsers();
-  }, [page, just]);
+  }, [page, search]);
 
   const handleDelete = async (id: string) => {
     try {
@@ -61,7 +60,8 @@ const UserManagement: React.FC = () => {
     }
   };
 
-  const handlePages = (event: React.ChangeEvent<unknown>, value: number) => {
+  const handlePages = (e: React.ChangeEvent<unknown>, value: number) => {
+    console.log(e)
     setPage(value);
   };
 
@@ -93,7 +93,7 @@ const UserManagement: React.FC = () => {
 
         {/* <StatsCards users={users} /> */}
 
-        {/* <SearchAndFilter searchTerm={search} onSearchChange={handleSearch} /> */}
+        <SearchAndFilter searchTerm={search} onSearchChange={handleSearch} />
         <input
           className="bg-grey-200 h-[10px]"
           type="text"

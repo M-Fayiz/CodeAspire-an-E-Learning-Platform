@@ -18,7 +18,7 @@ export const useP2PCall = (socket: Socket) => {
 
   const init = async (deps: RTCDeps) => {
     if (!socket) throw new Error("Socket not initialized");
-    if (initializedRef.current) return; 
+    if (initializedRef.current) return;
     initializedRef.current = true;
 
     const pc = new RTCPeerConnection({
@@ -41,14 +41,12 @@ export const useP2PCall = (socket: Socket) => {
     deps.localVideo.srcObject = localStream;
     deps.remoteVideo.srcObject = remoteStream;
 
-  
     localStream.getTracks().forEach((t) => pc.addTrack(t, localStream));
 
     pc.ontrack = (e) => {
       e.streams[0].getTracks().forEach((t) => remoteStream.addTrack(t));
     };
 
-   
     pc.onicecandidate = (e) => {
       if (e.candidate) {
         socket.emit("video:ice-candidate", {
@@ -67,16 +65,14 @@ export const useP2PCall = (socket: Socket) => {
         deps.onDisconnected?.();
     };
 
- 
     socket.off("video:offer");
     socket.off("video:answer");
     socket.off("video:ice-candidate");
     socket.off("video:peer-joined");
     socket.off("video:force-leave");
 
-
     socket.on("video:offer", async ({ sdp, from }) => {
-      if (from === deps.userId) return; 
+      if (from === deps.userId) return;
       await pc.setRemoteDescription(new RTCSessionDescription(sdp));
       const answer = await pc.createAnswer();
       await pc.setLocalDescription(answer);
@@ -101,7 +97,7 @@ export const useP2PCall = (socket: Socket) => {
       }
     });
 
-        socket.on("video:force-leave", ({ reason }) => {
+    socket.on("video:force-leave", ({ reason }) => {
       console.warn("Forced leave:", reason);
 
       toast.error(reason || "Call ended");
@@ -109,10 +105,9 @@ export const useP2PCall = (socket: Socket) => {
       cleanupAndExit(deps.roomId);
     });
 
-
     socket.on("video:peer-joined", ({ userId: peerId }) => {
       if (peerId !== deps.userId) {
-        const initiator = deps.userId < peerId; 
+        const initiator = deps.userId < peerId;
         if (initiator) call(deps.roomId, deps.userId);
       }
     });
@@ -168,31 +163,30 @@ export const useP2PCall = (socket: Socket) => {
     }
   };
 
-    const hangup = async (roomId: string) => {
-      cleanupAndExit(roomId);
-    };
+  const hangup = async (roomId: string) => {
+    cleanupAndExit(roomId);
+  };
 
   const cleanupAndExit = async (roomId?: string) => {
-  const pc = pcRef.current;
-  const localStream = localStreamRef.current;
+    const pc = pcRef.current;
+    const localStream = localStreamRef.current;
 
-  if (pc) {
-    pc.close();
-    pcRef.current = null;
-  }
+    if (pc) {
+      pc.close();
+      pcRef.current = null;
+    }
 
-  if (localStream) {
-    localStream.getTracks().forEach(t => t.stop());
-    localStreamRef.current = null;
-  }
+    if (localStream) {
+      localStream.getTracks().forEach((t) => t.stop());
+      localStreamRef.current = null;
+    }
 
-  initializedRef.current = false;
+    initializedRef.current = false;
 
-  if (roomId) {
-    socket.emit("video:leave", { roomId });
-  }
-};
-
+    if (roomId) {
+      socket.emit("video:leave", { roomId });
+    }
+  };
 
   return { init, call, hangup, toggleMic, toggleCamera, shareScreen };
 };

@@ -58,7 +58,8 @@ export const API = {
     REJECT_COURSE: (courseId: string) => `/courses/admin/reject/${courseId}`,
     LIST_COURSE_FOR_SLOT: (mentorId: string) => `/courses/mentor/${mentorId}`,
     GET_COURSE_FORM_DATA: (courseId: string) => `/courses/form/${courseId}`,
-    UPDATE_SESSION:(courseId:string,sessionId:string)=>`/courses/${courseId}/session/${sessionId}`
+    UPDATE_SESSION: (courseId: string, sessionId: string) =>
+      `/courses/${courseId}/session/${sessionId}`,
   },
   PAYMENT: {
     CREATE_PAYMENT_INTENT: "/orders/create-checkout-session",
@@ -106,8 +107,10 @@ export const API = {
     ListeMentorBooking: (mentorId: string) =>
       `/slot-booking/mentor/${mentorId}`,
     UPDATE_BOOKINGL: (slotId: string) => `/slot-booking/${slotId}`,
-    UPDATE_STUDENT_STATUS:(slotbookingId:string)=>`/slot-booking/${slotbookingId}/student-status`,
-    UPDATE_BOOKED_SLOT_STATUS:(bookedId:string)=>`/slot-booking/${bookedId}/slot-status`
+    UPDATE_STUDENT_STATUS: (slotbookingId: string) =>
+      `/slot-booking/${slotbookingId}/student-status`,
+    UPDATE_BOOKED_SLOT_STATUS: (bookedId: string) =>
+      `/slot-booking/${bookedId}/slot-status`,
   },
   VIDEO: {
     START_VIDEO: (bookingId: string) => `/video/start/${bookingId}`,

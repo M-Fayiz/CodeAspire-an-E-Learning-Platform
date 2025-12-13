@@ -1,8 +1,7 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
 import {
   Command,
-  CommandEmpty,
   CommandGroup,
   CommandInput,
   CommandItem,
@@ -35,15 +34,14 @@ export function Combobox<T extends string = string>({
   setCategory,
   label,
 }: IComboboxProps<T>) {
-
   const [open, setOpen] = useState(false);
 
   useEffect(() => {
-    const selectedLabel = boxOptions.find(o => o._id === value)?.label;
+    const selectedLabel = boxOptions.find((o) => o._id === value)?.label;
     setCategory?.(selectedLabel);
   }, [value, boxOptions]);
 
-  const selectedLabel = boxOptions.find(o => o._id === value)?.label;
+  const selectedLabel = boxOptions.find((o) => o._id === value)?.label;
 
   return (
     <div>

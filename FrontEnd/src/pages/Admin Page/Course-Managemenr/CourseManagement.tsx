@@ -1,20 +1,9 @@
 import ManagementLayout from "@/components/layout/ManagementLayout";
 import PaginationRounded from "@/components/ui/Pagination";
-
 import SearchBar from "@/components/ui/searchBar";
-import useDebounce from "@/hooks/useDebounce";
 import courseService from "@/service/mentor/course.service";
 import type { IFormCourseDTO } from "@/types/DTOS/courses.dto.types";
-import {
-  BookOpen,
-  Calendar,
-  CheckCircle,
-  DollarSign,
-  Eye,
-  Target,
-  User,
-  XCircle,
-} from "lucide-react";
+import { BookOpen, Calendar, Eye, User } from "lucide-react";
 import { useEffect, useState } from "react";
 import { Link, useSearchParams } from "react-router";
 
@@ -29,14 +18,13 @@ function CourseManagement() {
   const [searchParams, setSearchParams] = useSearchParams();
   const currentPage = Number(searchParams.get("page")) || 1;
   const SearchQuery = searchParams.get("search") || "";
-  let debounced = useDebounce(SearchQuery, 500);
   useEffect(() => {
     (async () => {
       const data = await courseService.getAdminCourList();
 
       if (data) {
         setCourse(data);
-        // setTotalPage()
+        setTotalPage(1)
       }
     })();
   }, []);
@@ -49,6 +37,7 @@ function CourseManagement() {
   };
 
   const handlePageChange = (e: React.ChangeEvent<unknown>, page: number) => {
+    console.log(e)
     setSearchParams({
       page: String(page),
       search: SearchQuery,
@@ -184,13 +173,13 @@ function CourseManagement() {
           </p>
         </div>
       )}
-      {/* {courses.length > 0 && (
+      {courses.length > 0 && (
             <PaginationRounded
               currentPage={currentPage}
               totalPages={totalPage}
               onPageChange={handlePageChange}
             />
-          )} */}
+          )}
     </ManagementLayout>
   );
 }

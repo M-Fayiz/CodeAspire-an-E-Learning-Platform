@@ -24,12 +24,6 @@ export const Spinner: React.FC<SpinnerProps> = ({
     xlarge: "w-16 h-16",
   };
 
-  const gradientClasses: Record<SpinnerVariant, string> = {
-    theme: "from-blue-500 via-purple-500 to-blue-600",
-    white: "from-white via-gray-100 to-white",
-    tech: "from-blue-400 via-indigo-500 to-purple-600",
-  };
-
   const spinnerElement = (
     <div className={`${sizeClasses[size]} ${className}`}>
       <div

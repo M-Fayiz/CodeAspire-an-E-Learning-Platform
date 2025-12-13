@@ -3,7 +3,6 @@ export interface IBaseChatDTO {
   participantKey: string;
   latestMessage: string | null;
   createdAt?: Date | string;
-
 }
 
 export interface IChatDTO extends IBaseChatDTO {
@@ -16,5 +15,5 @@ export interface IChatListDTO extends IBaseChatDTO {
     name: string;
     profile: string;
   };
-  unread:number
+  unread: number;
 }

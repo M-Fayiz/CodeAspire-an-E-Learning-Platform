@@ -15,136 +15,136 @@ export interface userProps {
   userId: string;
 }
 const ChatPage = () => {
-  const {user}=useAuth()
+  const { user } = useAuth();
   const socket = useSocket();
 
   const [selectedChat, setSelectedChat] = useState<userProps | null>(null);
   const [chatList, setChats] = useState<IChatListDTO[]>([]);
   const [messages, setMessages] = useState<IMessageDto[]>([]);
-  const [isOnline,setIsOnline]=useState(false)
-  
-
-   useEffect(() => {
-       (async () => {
-         const usersData = await ChatService.ListUsers(user!.id);
-         if (usersData) {
-           setChats(usersData);
-         }
-       })();
-     }, [user?.id]);
-
-     useEffect(()=>{
-    if(!selectedChat||!socket) return
-
-    const roomId=selectedChat._id
-
-    socket.emit(ChatEvents.JOIN,{roomId});
-
-    (async()=>{
-      const data = await ChatService.getChatMessage(roomId);
-    if (data) setMessages(data);
-    })()
-  },[selectedChat?._id,socket])
+  const [isOnline, setIsOnline] = useState(false);
 
   useEffect(() => {
-  if (!socket) return;
-
-  const handleNewMessage = (msg: IMessageDto & { roomId: string }) => {
-   
-    setMessages((prev) => {
-      if (selectedChat && msg.roomId === selectedChat._id) {
-        return [...prev, msg];
+    (async () => {
+      const usersData = await ChatService.ListUsers(user!.id);
+      if (usersData) {
+        setChats(usersData);
       }
-      return prev;
-    });
+    })();
+  }, [user?.id]);
 
-    setChats(prv=>
-      prv.map(room=>
-        room._id==msg.roomId?{
-          ...room,unread:msg.roomId===selectedChat!._id?room.unread:room.unread+1
-        }:room
-      )
-    )
-   
-    setChats((prev) => {
-      const index = prev.findIndex((c) => c._id === msg.roomId);
-      if (index === -1) return prev;
+  useEffect(() => {
+    if (!selectedChat || !socket) return;
 
-      const oldChat = prev[index];
+    const roomId = selectedChat._id;
 
-     
-      let preview = msg.content || "Message";
-      if (msg.type === "image") preview = "📷 Image";
-      else if (msg.type === "video") preview = "🎥 Video";
-      else if (msg.type === "audio") preview = "🎵 Audio";
-      else if (msg.type === "pdf" || msg.type?.startsWith("application"))
-        preview = "📎 File";
+    socket.emit(ChatEvents.JOIN, { roomId });
 
-      const updatedChat = {
-        ...oldChat,
-        latestMessage: preview,
-        lastMessageTime: msg.createdAt,
-      };
+    (async () => {
+      const data = await ChatService.getChatMessage(roomId);
+      if (data) setMessages(data);
+    })();
+  }, [selectedChat?._id, socket]);
 
-      const copy = [...prev];
-      copy.splice(index, 1);        
-      copy.unshift(updatedChat);    
+  useEffect(() => {
+    if (!socket) return;
 
-      return copy;
-    });
-  };
+    const handleNewMessage = (msg: IMessageDto & { roomId: string }) => {
+      setMessages((prev) => {
+        if (selectedChat && msg.roomId === selectedChat._id) {
+          return [...prev, msg];
+        }
+        return prev;
+      });
 
-  socket.on(ChatEvents.NEW_MESSAGE, handleNewMessage);
+      setChats((prv) =>
+        prv.map((room) =>
+          room._id == msg.roomId
+            ? {
+                ...room,
+                unread:
+                  msg.roomId === selectedChat!._id
+                    ? room.unread
+                    : room.unread + 1,
+              }
+            : room,
+        ),
+      );
 
-  return () => {
-    socket.off(ChatEvents.NEW_MESSAGE, handleNewMessage);
-  };
-}, [socket, selectedChat?._id]);
-useEffect(() => {
-  if (!socket) return;
+      setChats((prev) => {
+        const index = prev.findIndex((c) => c._id === msg.roomId);
+        if (index === -1) return prev;
 
-  const handleOnline = (userId: string) => {
-    if(user!.id==userId){
-      setIsOnline(true)
-    }
-  };
+        const oldChat = prev[index];
 
-  const handleOffline = (userId: string) => {
-    if(user!.id==userId){
-      setIsOnline(false)
-    }
-    
-  };
+        let preview = msg.content || "Message";
+        if (msg.type === "image") preview = "📷 Image";
+        else if (msg.type === "video") preview = "🎥 Video";
+        else if (msg.type === "audio") preview = "🎵 Audio";
+        else if (msg.type === "pdf" || msg.type?.startsWith("application"))
+          preview = "📎 File";
 
-  socket.on(SocketEvents.USER_ONLINE, handleOnline);
-  socket.on(SocketEvents.USER_OFFLINE, handleOffline);
+        const updatedChat = {
+          ...oldChat,
+          latestMessage: preview,
+          lastMessageTime: msg.createdAt,
+        };
 
-  return () => {
-    socket.off(SocketEvents.USER_ONLINE, handleOnline);
-    socket.off(SocketEvents.USER_OFFLINE, handleOffline);
-  };
-}, [socket]);
+        const copy = [...prev];
+        copy.splice(index, 1);
+        copy.unshift(updatedChat);
 
+        return copy;
+      });
+    };
+
+    socket.on(ChatEvents.NEW_MESSAGE, handleNewMessage);
+
+    return () => {
+      socket.off(ChatEvents.NEW_MESSAGE, handleNewMessage);
+    };
+  }, [socket, selectedChat?._id]);
+  useEffect(() => {
+    if (!socket) return;
+
+    const handleOnline = (userId: string) => {
+      if (user!.id == userId) {
+        setIsOnline(true);
+      }
+    };
+
+    const handleOffline = (userId: string) => {
+      if (user!.id == userId) {
+        setIsOnline(false);
+      }
+    };
+
+    socket.on(SocketEvents.USER_ONLINE, handleOnline);
+    socket.on(SocketEvents.USER_OFFLINE, handleOffline);
+
+    return () => {
+      socket.off(SocketEvents.USER_ONLINE, handleOnline);
+      socket.off(SocketEvents.USER_OFFLINE, handleOffline);
+    };
+  }, [socket]);
 
   return (
     <div className="flex  h-full bg-gray-50">
       <div className="w-96 flex-shrink-0 border-r border-gray-200">
         <ChatList
-        chats={chatList}
-        selectedChatId={selectedChat?._id || null}
-        select={(data) => setSelectedChat(data)}
-      />
+          chats={chatList}
+          selectedChatId={selectedChat?._id || null}
+          select={(data) => setSelectedChat(data)}
+        />
       </div>
 
       <div className="flex-1 flex flex-col">
         {selectedChat ? (
-         <ChatWindow
-          userData={selectedChat}
-          messages={messages}
-          setMessages={setMessages}
-          isOnline={isOnline}
-        />
-
+          <ChatWindow
+            userData={selectedChat}
+            messages={messages}
+            setMessages={setMessages}
+            isOnline={isOnline}
+          />
         ) : (
           <div className="flex  flex-col flex-1 bg-gray-50 relative"></div>
         )}

@@ -23,8 +23,7 @@ export interface IMentorDTO extends IBaseRoleDTO {
 
 export type IRole = "admin" | "mentor" | "learner";
 
-
-export interface ISignedUsers{
-  data:string,
-  value:number
+export interface ISignedUsers {
+  data: string;
+  value: number;
 }

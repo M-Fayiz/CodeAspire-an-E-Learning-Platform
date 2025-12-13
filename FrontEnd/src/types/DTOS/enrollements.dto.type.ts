@@ -25,4 +25,5 @@ export interface IEnrolledCoursedetailsDTO extends IEnrolledListDto {
   learnerId: string;
   progress: ICourseProgess;
   rating: number;
+  level: "Beginner" | "Intermediate" | "Advanced";
 }

@@ -5,7 +5,10 @@ import type {
   IBookingDTOforMentors,
   slotStatus,
 } from "@/types/DTOS/slotBooking.dto.type";
-import type { ISessionBooking, studentStatus } from "@/types/sessionBooking.type";
+import type {
+  ISessionBooking,
+  studentStatus,
+} from "@/types/sessionBooking.type";
 import { throwAxiosError } from "@/utility/throwErrot";
 
 export const SlotBookingSercie = {
@@ -41,7 +44,7 @@ export const SlotBookingSercie = {
       const response = await axiosInstance.get(
         API.SLOT_BOOK.ListeMentorBooking(mentorId),
       );
-  
+
       return response.data.listsOfBooked;
     } catch (error) {
       throwAxiosError(error);
@@ -52,7 +55,6 @@ export const SlotBookingSercie = {
     feedback: string,
   ): Promise<{ feedback: string; bookedId: string }> => {
     try {
-      
       const response = await axiosInstance.put(
         API.SLOT_BOOK.UPDATE_BOOKINGL(slotId),
         { feedback },
@@ -63,21 +65,32 @@ export const SlotBookingSercie = {
       throwAxiosError(error);
     }
   },
-  updateStudentStatus:async(slotBookingId:string,studentStatus:"failed"|'passed'):Promise<{bookedId:string,status:studentStatus}>=>{
+  updateStudentStatus: async (
+    slotBookingId: string,
+    studentStatus: "failed" | "passed",
+  ): Promise<{ bookedId: string; status: studentStatus }> => {
     try {
-      const response=await axiosInstance.put(API.SLOT_BOOK.UPDATE_STUDENT_STATUS(slotBookingId),{studentStatus})
-      return response.data.updatedData
+      const response = await axiosInstance.put(
+        API.SLOT_BOOK.UPDATE_STUDENT_STATUS(slotBookingId),
+        { studentStatus },
+      );
+      return response.data.updatedData;
     } catch (error) {
-       throwAxiosError(error);
+      throwAxiosError(error);
     }
   },
-  updateBookedSlotStatus:async(bookedId:string,status:slotStatus):Promise<{bookedId:string,status:slotStatus}>=>{
+  updateBookedSlotStatus: async (
+    bookedId: string,
+    status: slotStatus,
+  ): Promise<{ bookedId: string; status: slotStatus }> => {
     try {
-      const response=await axiosInstance.put(API.SLOT_BOOK.UPDATE_BOOKED_SLOT_STATUS(bookedId),{status})
-      return response.data
+      const response = await axiosInstance.put(
+        API.SLOT_BOOK.UPDATE_BOOKED_SLOT_STATUS(bookedId),
+        { status },
+      );
+      return response.data;
     } catch (error) {
-      throwAxiosError(error)
+      throwAxiosError(error);
     }
-  }
-  
+  },
 };

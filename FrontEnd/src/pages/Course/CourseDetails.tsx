@@ -84,7 +84,10 @@ const CourseDetails = () => {
         <div className="p-2 md:p-5">
           {activeTap === "overview" && <CourseOverview />}
           {activeTap === "mentor" && (
-            <MentorProfile id={course?.mentorsId._id as string} />
+            <MentorProfile
+              mentorId={course?.mentorsId._id as string}
+              courseId={course?._id as string}
+            />
           )}
         </div>
       </div>

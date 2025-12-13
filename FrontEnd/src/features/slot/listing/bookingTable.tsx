@@ -33,9 +33,7 @@ export const BookingTable = ({
   if (slots.length === 0) {
     return (
       <Card className="bg-white border border-gray-200 text-black shadow-sm">
-        <CardHeader>
-         
-        </CardHeader>
+        <CardHeader></CardHeader>
         <CardContent>
           <div className="text-gray-600 text-center py-8">
             No booked sessions found.
@@ -47,8 +45,6 @@ export const BookingTable = ({
 
   return (
     <Card className="bg-white border border-gray-200 text-black shadow-sm">
-     
-
       <CardContent>
         <div className="overflow-x-auto">
           <table className="w-full text-sm table-fixed border-collapse">

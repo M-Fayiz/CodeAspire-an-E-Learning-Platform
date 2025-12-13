@@ -3,14 +3,8 @@ import type { IUserType } from "../../types/users.type";
 
 export const RoleSpecificFields: React.FC<{
   profile: IUserType;
-  isEditing: boolean;
   // onUpdate: (field: keyof IUserType, value: any) => void;
-}> = ({ profile, isEditing }) => {
-  function handleChanges(e: React.ChangeEvent<HTMLInputElement>) {
-    const { name, value } = e.target;
-    console.log(name, value);
-  }
-
+}> = ({ profile }) => {
   if (profile.role === "learner") {
     return (
       <div className="space-y-4">

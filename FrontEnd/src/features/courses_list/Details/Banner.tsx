@@ -11,6 +11,7 @@ import { useAuth } from "@/context/auth.context";
 import { toast } from "sonner";
 import { Link } from "react-router";
 import { Badge } from "@/components/ui/shadcn-io/ThemeBadge";
+import type { IEnrolledCoursedetailsDTO } from "@/types/DTOS/enrollements.dto.type";
 import type { IFormCourseDTO } from "@/types/DTOS/courses.dto.types";
 
 interface BannerProps {
@@ -19,7 +20,7 @@ interface BannerProps {
   description: string;
   imageUrl: string;
   isEnrolled?: boolean;
-  course: IFormCourseDTO;
+  course: IEnrolledCoursedetailsDTO | IFormCourseDTO;
 }
 
 const Banner: React.FC<BannerProps> = ({

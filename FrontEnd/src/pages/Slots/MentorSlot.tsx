@@ -61,7 +61,7 @@ const SlotBooking: React.FC = () => {
         learnerId: user.id,
         slotId: slotData._id,
         status: "Pending",
-        studentStatus:'pending'
+        studentStatus: "pending",
       };
 
       const checkoutURL = await SlotBookingSercie.bookSlot(payload);

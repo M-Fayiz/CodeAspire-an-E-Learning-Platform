@@ -42,11 +42,6 @@ function MYCourses() {
     fetchDraftedCourse();
   }, [user, searchParams]);
 
-  const handleEditCourse = (data: IFormCourseDTO) => {
-    // const mappedCourse = CourseFormDTO(data);
-    // setFormData({ ...mappedCourse });
-    // console.log('_id form course',data._id)
-  };
   const handleSearch = (query: string) => {
     setSearchParams((prv) => {
       prv.set("search", query);
@@ -56,6 +51,7 @@ function MYCourses() {
   };
 
   const handlePage = (event: React.ChangeEvent<unknown>, value: number) => {
+    console.log(event);
     setSearchParams((prev) => {
       prev.set("page", String(value));
       return prev;
@@ -87,11 +83,7 @@ function MYCourses() {
         <div className="grid gap-6 grid-cols-1 sm:grid-cols-2 lg:grid-cols-4">
           {courses.map((course) => (
             <Link to={`/mentor/courses/dashboard/${course._id}`}>
-              <MyCourseCard
-                course={course}
-                key={course._id}
-                onEdit={() => handleEditCourse(course)}
-              />
+              <MyCourseCard course={course} key={course._id} />
             </Link>
           ))}
         </div>

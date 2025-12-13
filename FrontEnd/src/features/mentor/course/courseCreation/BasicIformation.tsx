@@ -21,16 +21,15 @@ interface BaseCaourseProps {
   handleTap: (tap: "basic" | "curriculum" | "publish") => void;
 }
 
-const BasicCourseInformation: React.FC<BaseCaourseProps> = ({handleTap}) => {
+const BasicCourseInformation: React.FC<BaseCaourseProps> = ({ handleTap }) => {
   const [categories, setCategories] = useState<ICategory[]>([]);
   const [selectedCategory, setSelectedCategory] = useState("");
   const [zodError, setErrors] = useState<{ [key: string]: string }>({});
   const [image, setImage] = useState("");
   const [spin] = useState(false);
-  const { courseId, formData, setField,setCourseId } = useCourseFormContext();
-  const {user}=useAuth()
+  const { courseId, formData, setField, setCourseId } = useCourseFormContext();
+  const { user } = useAuth();
 
- 
   useEffect(() => {
     const fetchCategories = async () => {
       const result = await categoryService.listCategory();
@@ -81,7 +80,6 @@ const BasicCourseInformation: React.FC<BaseCaourseProps> = ({handleTap}) => {
   }, [categories, selectedCategory]);
 
   const handleBaseFormSubmit = async (e: React.FormEvent) => {
-        
     e.preventDefault();
     const fieldErrors: Record<string, string> = {};
     try {
@@ -94,10 +92,9 @@ const BasicCourseInformation: React.FC<BaseCaourseProps> = ({handleTap}) => {
         setErrors(fieldErrors);
         return;
       }
-    
+
       if (courseId) {
-     
-         const updatedData = await courseService.updateBaseInformation(
+        const updatedData = await courseService.updateBaseInformation(
           courseId,
           {
             ...courseData.data,
@@ -105,22 +102,22 @@ const BasicCourseInformation: React.FC<BaseCaourseProps> = ({handleTap}) => {
           },
         );
         if (updatedData) {
-          setCourseId(updatedData._id as string)
-          
-           handleTap('curriculum')
+          setCourseId(updatedData._id as string);
+
+          handleTap("curriculum");
           toast.success("Base Information Updated Successfully");
         }
         return;
       }
-            console.log(3)
+      console.log(3);
       const savedCourseData = await courseService.createCourse({
         ...courseData.data,
         mentorsId: user!.id,
       });
-     
+
       if (savedCourseData._id) {
         setCourseId(savedCourseData._id);
-        handleTap('curriculum')
+        handleTap("curriculum");
       }
     } catch (error) {
       if (error instanceof Error) {
@@ -163,7 +160,7 @@ const BasicCourseInformation: React.FC<BaseCaourseProps> = ({handleTap}) => {
             label="Course Price"
             name="price"
             value={Number(formData.price)}
-            onChange={(e) => setField("price",Number(e.target.value) )}
+            onChange={(e) => setField("price", Number(e.target.value))}
             error={zodError.price}
             min="1"
           />
@@ -188,7 +185,6 @@ const BasicCourseInformation: React.FC<BaseCaourseProps> = ({handleTap}) => {
                   boxOptions={subCategoryOptions}
                   onChange={(id) => setField("subCategoryId", id)}
                 />
-
               </>
             )}
           </div>
@@ -198,10 +194,9 @@ const BasicCourseInformation: React.FC<BaseCaourseProps> = ({handleTap}) => {
               <Combobox
                 label="Select Language"
                 value={formData.language}
-                boxOptions={COURSE_LANGUAGE.map(l => ({ _id: l, label: l }))}
+                boxOptions={COURSE_LANGUAGE.map((l) => ({ _id: l, label: l }))}
                 onChange={(lang) => setField("language", lang)}
               />
-
 
               <p className="text-red-400 text-sm">{zodError.language}</p>
             </div>
@@ -209,7 +204,7 @@ const BasicCourseInformation: React.FC<BaseCaourseProps> = ({handleTap}) => {
               <Combobox
                 label="Course Level"
                 value={formData.level}
-                boxOptions={COURSE_LEVEL.map(l => ({ _id: l, label: l }))}
+                boxOptions={COURSE_LEVEL.map((l) => ({ _id: l, label: l }))}
                 onChange={(lvl) => setField("level", lvl)}
               />
 

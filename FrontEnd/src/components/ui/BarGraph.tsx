@@ -6,21 +6,16 @@ import {
   YAxis,
   Tooltip,
   ResponsiveContainer,
-} from "recharts"
+} from "recharts";
 
-import {
-  Card,
-  CardContent,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card"
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 
 type BarGraphProps = {
-  title?: string
-  data: any[]
-  xKey: string
-  barKey: string
-}
+  title?: string;
+  data: any[];
+  xKey: string;
+  barKey: string;
+};
 
 export function BarGraph({
   title = "Bar Chart",
@@ -50,5 +45,5 @@ export function BarGraph({
         </ResponsiveContainer>
       </CardContent>
     </Card>
-  )
+  );
 }

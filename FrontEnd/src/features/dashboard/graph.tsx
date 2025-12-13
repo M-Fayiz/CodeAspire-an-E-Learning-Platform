@@ -12,11 +12,11 @@ export interface graphPrps {
   value: number;
 }
 
-function RevenueChart({ data ,label}: { data: graphPrps[] ,label:string}) {
+function RevenueChart({ data, label }: { data: graphPrps[]; label: string }) {
   return (
     <ChartContainer
       config={{
-        value: { label: label, color: "var(--chart-1)" }, 
+        value: { label: label, color: "var(--chart-1)" },
       }}
       className="h-[280px] w-full"
     >

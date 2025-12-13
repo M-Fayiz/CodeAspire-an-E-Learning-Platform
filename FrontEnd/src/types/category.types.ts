@@ -8,5 +8,5 @@ export interface ICategory {
 export interface ICategoryEdit {
   _id: string;
   title: string;
-  parentId: string|null;
+  parentId: string | null;
 }

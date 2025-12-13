@@ -302,14 +302,16 @@ const courseService = {
       throwAxiosError(error);
     }
   },
-  getCourseFormData:async(courseId:string):Promise<CourseForm>=>{
+  getCourseFormData: async (courseId: string): Promise<CourseForm> => {
     try {
-      const response=await axiosInstance.get(API.COURSE.GET_COURSE_FORM_DATA(courseId))
-      return response.data.courseFormData
+      const response = await axiosInstance.get(
+        API.COURSE.GET_COURSE_FORM_DATA(courseId),
+      );
+      return response.data.courseFormData;
     } catch (error) {
-      throwAxiosError(error)
+      throwAxiosError(error);
     }
-  }
+  },
   // updateSession:async(courseId:string,sessionId:string)=>{
   //   try {
   //     // const response=await axiosInstance.put(API.COURSE.UPDATE_SESSION())

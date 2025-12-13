@@ -12,9 +12,8 @@ import {
   VideoOff,
   ScreenShare,
   ScreenShareOff,
-  PhoneOff
+  PhoneOff,
 } from "lucide-react";
-
 
 export const VideoRoom = () => {
   const { bookingId } = useParams();
@@ -116,60 +115,57 @@ export const VideoRoom = () => {
       </div>
 
       {joined && (
-  <div className="flex flex-wrap gap-4 justify-center">
-    
-    {/* CALL */}
-    <button
-      onClick={handleCall}
-      className="p-3 bg-green-500 text-white rounded-full hover:scale-110 transition"
-      title="Call"
-    >
-      <Phone />
-    </button>
+        <div className="flex flex-wrap gap-4 justify-center">
+          {/* CALL */}
+          <button
+            onClick={handleCall}
+            className="p-3 bg-green-500 text-white rounded-full hover:scale-110 transition"
+            title="Call"
+          >
+            <Phone />
+          </button>
 
-    {/* MIC */}
-    <button
-      onClick={handleMic}
-      className={`p-3 rounded-full ${
-        muted ? "bg-red-500 text-white" : "bg-gray-200 text-gray-800"
-      } hover:scale-110 transition`}
-      title={muted ? "Unmute Mic" : "Mute Mic"}
-    >
-      {muted ? <MicOff /> : <Mic />}
-    </button>
+          {/* MIC */}
+          <button
+            onClick={handleMic}
+            className={`p-3 rounded-full ${
+              muted ? "bg-red-500 text-white" : "bg-gray-200 text-gray-800"
+            } hover:scale-110 transition`}
+            title={muted ? "Unmute Mic" : "Mute Mic"}
+          >
+            {muted ? <MicOff /> : <Mic />}
+          </button>
 
-    {/* CAMERA */}
-    <button
-      onClick={handleCam}
-      className={`p-3 rounded-full ${
-        camOff ? "bg-red-500 text-white" : "bg-gray-200 text-gray-800"
-      } hover:scale-110 transition`}
-      title={camOff ? "Camera On" : "Camera Off"}
-    >
-      {camOff ? <VideoOff /> : <Video />}
-    </button>
+          {/* CAMERA */}
+          <button
+            onClick={handleCam}
+            className={`p-3 rounded-full ${
+              camOff ? "bg-red-500 text-white" : "bg-gray-200 text-gray-800"
+            } hover:scale-110 transition`}
+            title={camOff ? "Camera On" : "Camera Off"}
+          >
+            {camOff ? <VideoOff /> : <Video />}
+          </button>
 
-    {/* SCREEN SHARE */}
-    <button
-      onClick={handleShare}
-      className="p-3 bg-blue-500 text-white rounded-full hover:scale-110 transition"
-      title={sharing ? "Stop Share" : "Share Screen"}
-    >
-      {sharing ? <ScreenShareOff /> : <ScreenShare />}
-    </button>
+          {/* SCREEN SHARE */}
+          <button
+            onClick={handleShare}
+            className="p-3 bg-blue-500 text-white rounded-full hover:scale-110 transition"
+            title={sharing ? "Stop Share" : "Share Screen"}
+          >
+            {sharing ? <ScreenShareOff /> : <ScreenShare />}
+          </button>
 
-    {/* END CALL */}
-    <button
-      onClick={handleHangup}
-      className="p-3 bg-red-600 text-white rounded-full hover:scale-110 transition"
-      title="End Call"
-    >
-      <PhoneOff />
-    </button>
-
-  </div>
-)}
-
+          {/* END CALL */}
+          <button
+            onClick={handleHangup}
+            className="p-3 bg-red-600 text-white rounded-full hover:scale-110 transition"
+            title="End Call"
+          >
+            <PhoneOff />
+          </button>
+        </div>
+      )}
     </div>
   );
 };

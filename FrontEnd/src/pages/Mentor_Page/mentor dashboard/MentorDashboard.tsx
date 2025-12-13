@@ -20,10 +20,10 @@ import StatCard from "./DashboardCard";
 import MentorDashboardSkeleton from "@/components/shared/Dashboard";
 import { useNavigate } from "react-router";
 import { FilterByDate } from "@/constants/filter.const";
-import RevenueChart, { type RevenuePoint } from "@/features/dashboard/graph";
+import RevenueChart, { type graphPrps } from "@/features/dashboard/graph";
 import { RevenueDonutChart } from "@/components/ui/PieGraph";
 
-const EMPTY_CHART: RevenuePoint[] = [];
+const EMPTY_CHART: graphPrps[] = [];
 
 export default function MentorDashboard() {
   const { user } = useAuth();
@@ -32,13 +32,12 @@ export default function MentorDashboard() {
   const [loading, setLoading] = useState(false);
   const [selectedPeriod, setSelectedPeriod] = useState(FilterByDate.MONTH);
   const [selectedTab, setSelectedTab] = useState("slot");
-  const [totalRevenue,setTotalRevenue]=useState(0)
+  const [totalRevenue, setTotalRevenue] = useState(0);
   const [mentorDashData, setMentorDashData] =
     useState<IMentorDhasboardDTO | null>(null);
 
-  const [slotRevenue, setSlotRevenue] = useState<RevenuePoint[]>(EMPTY_CHART);
-  const [courseRevenue, setCourseRevenue] =
-    useState<RevenuePoint[]>(EMPTY_CHART);
+  const [slotRevenue, setSlotRevenue] = useState<graphPrps[]>(EMPTY_CHART);
+  const [courseRevenue, setCourseRevenue] = useState<graphPrps[]>(EMPTY_CHART);
 
   useEffect(() => {
     if (!user) return;
@@ -53,8 +52,8 @@ export default function MentorDashboard() {
       }
 
       setMentorDashData(data);
-      let total=data.revanue.reduce((acc,vl)=>acc+=vl.value,0)
-      setTotalRevenue(total)
+      let total = data.revanue.reduce((acc, vl) => (acc += vl.value), 0);
+      setTotalRevenue(total);
       setLoading(false);
     })();
   }, [user]);
@@ -75,7 +74,7 @@ export default function MentorDashboard() {
     })();
   }, [selectedPeriod, user]);
 
-  const currentGraph = selectedTab === "slot" ? slotRevenue : courseRevenue;
+  // const currentGraph = selectedTab === "slot" ? slotRevenue : courseRevenue;
 
   return (
     <>
@@ -139,41 +138,40 @@ export default function MentorDashboard() {
               </TabsList>
 
               <TabsContent value="slot">
-                <RevenueChart data={slotRevenue} />
+                <RevenueChart data={slotRevenue} label="Slot Revenue" />
               </TabsContent>
 
               <TabsContent value="course">
-                <RevenueChart data={courseRevenue} />
+                <RevenueChart data={courseRevenue} label="Course Revenue" />
               </TabsContent>
             </Tabs>
           </div>
           <div className="flex gap-5">
+            <div className="bg-white rounded-lg p-6 shadow-sm border border-gray-100">
+              <h3 className="text-lg font-semibold mb-4">
+                Top Performing Courses
+              </h3>
 
-          <div className="bg-white rounded-lg p-6 shadow-sm border border-gray-100">
-            <h3 className="text-lg font-semibold mb-4">
-              Top Performing Courses
-            </h3>
+              <div className="space-y-4">
+                {mentorDashData?.topCourse.map((course, i) => (
+                  <div key={i} className="flex items-center gap-3">
+                    <div className="w-10 h-10 rounded-lg flex items-center justify-center text-white font-semibold bg-gray-400">
+                      {course.title.charAt(0)}
+                    </div>
 
-            <div className="space-y-4">
-              {mentorDashData?.topCourse.map((course, i) => (
-                <div key={i} className="flex items-center gap-3">
-                  <div className="w-10 h-10 rounded-lg flex items-center justify-center text-white font-semibold bg-gray-400">
-                    {course.title.charAt(0)}
+                    <div className="flex-1">
+                      <p className="text-sm font-medium">{course.title}</p>
+                    </div>
+
+                    <div className="flex items-center gap-1 text-gray-500">
+                      <Users className="w-4 h-4" />
+                      <span className="text-xs">{course.enrolledStudent}</span>
+                    </div>
                   </div>
-
-                  <div className="flex-1">
-                    <p className="text-sm font-medium">{course.title}</p>
-                  </div>
-
-                  <div className="flex items-center gap-1 text-gray-500">
-                    <Users className="w-4 h-4" />
-                    <span className="text-xs">{course.enrolledStudent}</span>
-                  </div>
-                </div>
-              ))}
+                ))}
+              </div>
             </div>
-          </div>
-           <RevenueDonutChart Options={mentorDashData?.revanue||[] }/>
+            <RevenueDonutChart Options={mentorDashData?.revanue || []} />
           </div>
         </div>
       </div>

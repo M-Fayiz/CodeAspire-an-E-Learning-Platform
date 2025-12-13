@@ -25,18 +25,22 @@ import { sharedService } from "@/service/shared.service";
 
 type FileType = "image" | "video" | "audio" | "pdf" | "text";
 
+
 interface ChatWindowProps {
   userData: userProps;
   messages: IMessageDto[];
   setMessages: React.Dispatch<React.SetStateAction<IMessageDto[]>>;
-  isOnline:boolean
+  isOnline: boolean;
 }
 
-
-const ChatWindow: React.FC<ChatWindowProps> = ({ userData,messages,setMessages,isOnline }) => {
+const ChatWindow: React.FC<ChatWindowProps> = ({
+  userData,
+  messages,
+  setMessages,
+  isOnline,
+}) => {
   const { user } = useAuth();
   const socket = useSocket();
-
 
   const [inputMessage, setInputMessage] = useState("");
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
@@ -75,13 +79,13 @@ const ChatWindow: React.FC<ChatWindowProps> = ({ userData,messages,setMessages,i
     if (!socket || !inputMessage.trim()) return;
 
     const tempId = `temp-${uuid()}`;
-    
+
     setInputMessage("");
 
     socket.emit(
       ChatEvents.SEND,
       { roomId: userData._id, content: inputMessage, tempId, type: "text" },
-      (ack) => {
+      (ack: any) => {
         if (ack?.success) {
           setMessages((prev) =>
             prev.map((m) => (m._id === tempId ? ack.message : m)),
@@ -227,7 +231,6 @@ const ChatWindow: React.FC<ChatWindowProps> = ({ userData,messages,setMessages,i
 
   return (
     <div className="flex flex-col h-full bg-gray-50">
-
       <div className="bg-white border-b border-gray-200 px-6 py-4">
         <div className="flex items-center gap-3">
           <div className="relative">
@@ -291,7 +294,6 @@ const ChatWindow: React.FC<ChatWindowProps> = ({ userData,messages,setMessages,i
       </div>
 
       <div className="border-t border-gray-200 px-6 py-4  bg-white">
-
         {selectedFile && (
           <div className="max-w-4xl mx-auto mb-3 p-3 border border-gray-300 rounded-xl bg-gray-100 relative">
             <button

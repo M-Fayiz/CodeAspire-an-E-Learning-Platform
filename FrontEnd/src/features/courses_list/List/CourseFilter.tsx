@@ -1,5 +1,5 @@
 import categoryService from "@/service/admin/category.service";
-import type { ICategoryTree } from "@/types/category.types";
+import type { ICategory } from "@/types/category.types";
 import { ChevronDown, ChevronUp, Filter } from "lucide-react";
 import { useEffect, useState } from "react";
 import type { ReactNode } from "react";
@@ -21,7 +21,6 @@ interface FiltersProps {
 }
 const FilterSidebar: React.FC<FiltersProps> = ({
   handleCategory,
-  handleSubCategory,
   handleLevel,
 }) => {
   const [expandedSections, setExpandedSections] = useState<ExpandedSections>({
@@ -30,10 +29,10 @@ const FilterSidebar: React.FC<FiltersProps> = ({
     level: true,
   });
   const [searchCategory, setSearchcategory] = useState<string[]>([]);
-  const [searchSubCat, setSearchSubCat] = useState<string[]>([]);
+
   const [levels, setLevel] = useState<string[]>([]);
 
-  const [category, setCategory] = useState<ICategoryTree[]>([]);
+  const [category, setCategory] = useState<ICategory[]>([]);
   useEffect(() => {
     async function fetchCategory() {
       const categoryData = await categoryService.listCategory();
@@ -102,18 +101,18 @@ const FilterSidebar: React.FC<FiltersProps> = ({
           {category &&
             category.map((cat) => (
               <label
-                key={cat.key}
+                key={cat._id}
                 className="flex items-center space-x-2 cursor-pointer hover:text-blue-600"
               >
                 <input
                   type="checkbox"
-                  checked={searchCategory.includes(cat.key)}
+                  checked={searchCategory.includes(cat._id)}
                   onChange={(e) =>
-                    handleSelectedCategory(cat.key, e.target.checked)
+                    handleSelectedCategory(cat._id, e.target.checked)
                   }
                   className="rounded border-gray-300 text-blue-600 focus:ring-blue-500"
                 />
-                <span className="text-sm text-gray-700">{cat.label}</span>
+                <span className="text-sm text-gray-700">{cat.title}</span>
                 {/* <span className="text-xs text-gray-500 ml-auto">
                   ({Math.floor(Math.random() * 500) + 50})
                 </span> */}

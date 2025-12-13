@@ -12,14 +12,8 @@ interface SlotListProps {
   onToggleActive?: (slotId: string, isActive: boolean) => void;
 }
 
-const SlotList: React.FC<SlotListProps> = ({
-  slots,
-  onEdit,
-  onToggleActive,
-}) => {
-
-
-  console.log(' : : :',slots)
+const SlotList: React.FC<SlotListProps> = ({ slots, onEdit }) => {
+  console.log(" : : :", slots);
   if (!slots.length) {
     return (
       <Card className="bg-white border border-gray-200 text-black shadow-sm">

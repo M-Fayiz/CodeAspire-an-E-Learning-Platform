@@ -11,7 +11,6 @@ import Banner from "@/features/courses_list/Details/Banner";
 import CourseOverview from "@/features/courses_list/Details/OverView";
 import CommentsSection from "@/features/courses_list/Details/Review";
 import CurriculumProgress from "@/features/courses_list/Enrolled Course/Progress";
-import { courseDetails } from "@/features/courses_list/List/CourseLoader";
 import { EnrolledService } from "@/service/Learner/enrolledCourse.service";
 import type { IEnrolledCoursedetailsDTO } from "@/types/DTOS/enrollements.dto.type";
 import {
@@ -40,7 +39,6 @@ const EnrolledCourseDetails = () => {
       if (result) {
         console.log(" this is the result :", result);
         setEnrolledCourse((prv) => (prv ? { ...prv, progress: result } : prv));
-        // console.log('after the updation :',enrolledCourse)
       }
     }
   };

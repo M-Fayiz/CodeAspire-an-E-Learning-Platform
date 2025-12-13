@@ -8,11 +8,10 @@ import CourseCurriculum from "./CourseCurriculum";
 import BasicCourseInformation from "./BasicIformation";
 import Publish from "../Publish";
 
-
 export default function CourseCreateLayout() {
   const [activeTab, setActiveTab] = useState("basic");
-   const { courseId } = useCourseFormContext();
-  
+  const { courseId } = useCourseFormContext();
+
   const handleActiveTap = (tap: string) => {
     if (tap !== "basic" && !courseId) {
       toast.info("Please Fillout Basic Course Information!");
@@ -20,9 +19,6 @@ export default function CourseCreateLayout() {
     }
     setActiveTab(tap);
   };
-
-
-
 
   return (
     <div className="w-full  bg-white rounded-sm border ">

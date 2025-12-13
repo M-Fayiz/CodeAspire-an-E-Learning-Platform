@@ -15,14 +15,15 @@ import {
   SheetHeader,
   SheetTitle,
 } from "@/components/ui/sheet";
-import type { ICategoryEdit ,ICategory} from "@/types/category.types";
+import type { ICategoryEdit, ICategory } from "@/types/category.types";
 import { toast } from "sonner";
 
 const CategoryManagement = () => {
   const [fetchedData, setFetchedData] = useState<ICategory[]>([]);
-  const [selectedKey, setSelectedKey] = useState<string | null>(null);
-  const [selectedCategory, setSelectedCategory] =
-    useState<ICategory | null>(null);
+
+  const [selectedCategory, setSelectedCategory] = useState<ICategory | null>(
+    null,
+  );
   const [sheetOpen, setSheetOpen] = useState(false);
   const [toFetch, setToFetch] = useState(false);
 
@@ -37,12 +38,7 @@ const CategoryManagement = () => {
 
   const editCategry = async (editData: ICategoryEdit) => {
     try {
-      console.log('edit Date :',editData)
-      console.log('selected : ',selectedCategory)
-      const result = await categoryService.editCategory(
-        editData._id,
-        editData,
-      );
+      const result = await categoryService.editCategory(editData._id, editData);
       if (result) {
         setToFetch((prv) => !prv);
         setSheetOpen(false);
@@ -54,9 +50,12 @@ const CategoryManagement = () => {
     }
   };
 
-  const AddCategory = async (title: string, parentId: string) => {
+  const AddCategory = async (title: string, parentId: string | null) => {
     try {
-      const result = await categoryService.createCategory(title, parentId);
+      const result = await categoryService.createCategory(
+        title,
+        parentId as string,
+      );
       if (result) {
         setToFetch((prv) => !prv);
       }
@@ -67,80 +66,46 @@ const CategoryManagement = () => {
     }
   };
 
-  const findCategoryByKey = (key: string) => {
-    function serachNode(node: ICategory[]): ICategory | null {
-      for (const elem of node) {
-        if (elem._id == key) {
-          return elem;
-        }
-        if (elem.children?.length) {
-          const result = serachNode(elem.children);
-          if (result) {
-            return result;
-          }
-        }
-      }
-      return null;
-    }
-    const foundCatgory = serachNode(fetchedData);
-    if (foundCatgory && foundCatgory._id !== selectedCategory?._id) {
-      setSelectedCategory(foundCatgory);
-    }
-  };
-  const onSelectionChange = (e: any) => {
-  const key = Object.keys(e.value || {})[0];
+  
 
-
-  setSelectedKey(key);
-
-  if (key) {
-    findCategoryByKey(key);
-    setSheetOpen(true);
-  }
-};
-  console.log(fetchedData)
-
-const renderCategories = (categories: ICategory[]) => {
-  return categories.map(cat => (
-    <div
-      key={cat._id}
-      className="border border-gray-200 rounded-lg mb-4 bg-white shadow-sm"
-    >
-      {/* MAIN CATEGORY */}
+  const renderCategories = (categories: ICategory[]) => {
+    return categories.map((cat) => (
       <div
-        onClick={() => {
-          setSelectedCategory(cat);
-          setSheetOpen(true);
-        }}
-        className="cursor-pointer px-4 py-3 font-semibold text-gray-800 hover:bg-gray-50 flex justify-between items-center"
+        key={cat._id}
+        className="border border-gray-200 rounded-lg mb-4 bg-white shadow-sm"
       >
-        <span>{cat.title}</span>
-        <span className="text-sm text-gray-400">Edit</span>
-      </div>
-
-
-      {cat.children?.length > 0 && (
-        <div className="border-t bg-gray-50">
-          {cat.children.map(sub => (
-            <div
-              key={sub._id}
-              onClick={() => {
-                setSelectedCategory(sub);
-                setSheetOpen(true);
-              }}
-              className="cursor-pointer px-6 py-2 text-gray-700 hover:bg-gray-100 flex justify-between"
-            >
-              {sub.title}
-              <span className="text-xs text-gray-400">Edit</span>
-            </div>
-          ))}
+        {/* MAIN CATEGORY */}
+        <div
+          onClick={() => {
+            setSelectedCategory(cat);
+            setSheetOpen(true);
+          }}
+          className="cursor-pointer px-4 py-3 font-semibold text-gray-800 hover:bg-gray-50 flex justify-between items-center"
+        >
+          <span>{cat.title}</span>
+          <span className="text-sm text-gray-400">Edit</span>
         </div>
-      )}
-    </div>
-  ));
-};
 
-
+        {cat.children?.length > 0 && (
+          <div className="border-t bg-gray-50">
+            {cat.children.map((sub) => (
+              <div
+                key={sub._id}
+                onClick={() => {
+                  setSelectedCategory(sub);
+                  setSheetOpen(true);
+                }}
+                className="cursor-pointer px-6 py-2 text-gray-700 hover:bg-gray-100 flex justify-between"
+              >
+                {sub.title}
+                <span className="text-xs text-gray-400">Edit</span>
+              </div>
+            ))}
+          </div>
+        )}
+      </div>
+    ));
+  };
 
   return (
     <ManagementLayout
@@ -156,7 +121,7 @@ const renderCategories = (categories: ICategory[]) => {
         </div>
         <div className=" gap-6">
           <div className=" bg-white p-4 rounded">
-           {renderCategories(fetchedData)}
+            {renderCategories(fetchedData)}
           </div>
           {selectedCategory && (
             <Sheet open={sheetOpen} onOpenChange={setSheetOpen}>

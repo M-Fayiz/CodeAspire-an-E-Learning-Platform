@@ -2,7 +2,6 @@
 import { LoginComponent } from "../../components/auth-components/Login";
 import type { ISignUp, UserRole } from "../../types/auth.types";
 import { AuthService } from "../../service/auth.service";
-import { useLocation } from "react-router-dom";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { HttpError } from "../../utility/error.util";
@@ -14,9 +13,8 @@ const LoginPage: React.FC = () => {
   const [isLoading, setLoading] = useState(false);
   const { setUser } = useAuth();
   const navigate = useNavigate();
-  const location = useLocation();
-  const {checkAuth}=useAuth()
-  const from = location.state?.from?.pathname || "/";
+
+  const { checkAuth } = useAuth();
 
   const handleAuthSubmit = async (data: ISignUp) => {
     try {
@@ -28,7 +26,7 @@ const LoginPage: React.FC = () => {
           email: result.email,
           role: result.role as UserRole,
         };
-        checkAuth()
+        checkAuth();
         setUser(payloadData);
         setLoading(true);
         setTimeout(() => {
