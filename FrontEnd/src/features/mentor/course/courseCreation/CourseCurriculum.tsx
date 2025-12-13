@@ -58,7 +58,7 @@ const CourseCurriculum: React.FC<CurriculumProps> = () => {
       [name]: value,
     }));
   };
-
+  //Save Session
   const saveSessions = async (e: React.FormEvent) => {
     e.preventDefault();
 
@@ -94,178 +94,194 @@ const CourseCurriculum: React.FC<CurriculumProps> = () => {
     setSelectedSession(sessionId);
     setSheet("addLecture");
   };
-
+  const handleUpdateSession=async(sessionId:string)=>{
+    // const updatedSession=await courseService.
+  }
+  
   const handleEditLecture = (sessionId: string, lecture: ILecture) => {
     setSelectedSession(sessionId);
     setPassLecture(lecture);
     setSheet("editLecture");
   };
   return (
-    <div>
-      <h3 className="text-lg font-semibold ml-5 m-4 mb-2">Curriculum</h3>
-      <div className="m-4 p-3 flex flex-col gap-3">
-        {formData.sessions && formData.sessions.length > 0 ? (
-          formData.sessions.map((session, index) => (
-            <div
-              key={index}
-              className="bg-sky-100 rounded-sm p-4 space-y-2 shadow-sm"
-            >
-              <div className="flex items-center justify-between">
-                <div className="flex items-center gap-2">
-                  <Menu size={18} />
-                  <h4 className="font-semibold text-gray-800">
-                    {session.title}
-                  </h4>
-                </div>
-                <div className="flex gap-2">
-                  <Button
-                    type="button"
-                    variant="outline"
-                    size="sm"
-                    onClick={() => handleSelectSession(session._id || "")}
-                  >
-                    <BetweenHorizontalStart className="mr-1" size={14} />
-                    Add Lectures
-                  </Button>
-                  <Button
-                    type="button"
-                    variant="destructive"
-                    size="sm"
-                    // onClick={() => removeSession(index)}
-                  >
-                    <Trash2 size={14} className="mr-1" />
-                    Remove
-                  </Button>
-                  <Button type="button" variant="secondary" size="sm">
-                    <Edit size={14} className="text-gray-600" />
-                    Edit
-                  </Button>
-                </div>
+  <div className="bg-white min-h-screen">
+    {/* Header */}
+    <h3 className="text-xl font-semibold text-gray-900 px-6 py-4 border-b">
+      Curriculum
+    </h3>
+
+    {/* Session List */}
+    <div className="px-6 py-4 flex flex-col gap-4">
+      {formData.sessions && formData.sessions.length > 0 ? (
+        formData.sessions.map((session, index) => (
+          <div
+            key={index}
+            className="bg-gray-200 border border-gray-200 rounded-lg p-5 space-y-4 hover:shadow-sm transition"
+          >
+            {/* Session Header */}
+            <div className="flex justify-between items-center">
+              <div className="flex items-center gap-2">
+                <Menu size={17} className="text-gray-500" />
+                <h4 className="text-base font-medium text-gray-900">
+                  {session.title}
+                </h4>
               </div>
 
-              {session.lectures.length > 0 && (
-                <div className="ml-7 mt-2 space-y-1">
-                  {session.lectures.map((lecture) => (
-                    <div
-                      key={lecture._id}
-                      className="text-sm bg-sky-50 p-2 rounded-sm text-gray-700 pl-1"
-                    >
-                      <div className="flex items-center justify-between">
-                        <div className="flex items-center gap-2">
-                          <h4 className="flex gap-1 justify-center pl-2 align-middle font-semibold text-gray-800">
-                            <Notebook size={16} className="text-gray-500" />{" "}
-                            {lecture.title}
-                          </h4>
-                        </div>
-                        <div className="flex gap-2">
-                          <Button
-                            type="button"
-                            variant="ghost"
-                            className=""
-                            size="sm"
+              {/* Session Actions */}
+              <div className="flex gap-2">
+                <Button
+                  type="button"
+                  size="sm"
+                  className="border border-gray-300 bg-white text-gray-700 hover:bg-gray-100"
+                  onClick={() => handleSelectSession(session._id || "")}
+                >
+                  <BetweenHorizontalStart size={13} className="mr-1" />
+                  Lectures
+                </Button>
 
-                            // onClick={() => removeSession(index)}
-                          >
-                            <Trash2 size={10} className="mr-1" />
-                          </Button>
-                          <Button
-                            type="button"
-                            variant="ghost"
-                            size="sm"
-                            onClick={() =>
-                              handleEditLecture(session._id as string, lecture)
-                            }
-                          >
-                            <Edit size={14} className="text-gray-600" />
-                          </Button>
-                        </div>
-                      </div>
-                    </div>
-                  ))}
-                </div>
-              )}
+                <Button
+                  type="button"
+                  size="sm"
+                  className="border border-gray-300 bg-white text-gray-700 hover:text-red-600 hover:bg-gray-100"
+                >
+                  <Trash2 size={13} className="mr-1" />
+                </Button>
+
+                <Button
+                  type="button"
+                  size="sm"
+                  className="border border-gray-300 bg-white text-gray-700 hover:bg-gray-100"
+                >
+                  <Edit size={13} />
+                </Button>
+              </div>
             </div>
-          ))
-        ) : (
-          <p className="text-sm text-gray-500 italic">No sessions added yet.</p>
-        )}
-      </div>
 
-      <div>
-        <Accordion
-          type="single"
-          collapsible
-          className="bg-amber-100 m-5  rounded-sm pl-6 pr-6"
-        >
-          <AccordionItem value="item-1">
-            <AccordionTrigger className="no-underline">
-              Add Session
-            </AccordionTrigger>
-            <AccordionContent className="flex flex-row gap-2 justify-between">
-              <Input
-                type="text"
-                placeholder="Insert Session"
-                name="title"
-                value={sessions.title}
-                onChange={handleChanges}
-                error={errors.title}
-              />
-              <Button
-                type="button"
-                className={`bg-white ${sessionSpin && "disabled"}`}
-                variant="outline"
-                onClick={saveSessions}
-              >
-                Save Session
-                {sessionSpin && <Spinner />}
-              </Button>
-            </AccordionContent>
-          </AccordionItem>
-        </Accordion>
-      </div>
-      {/* //lecture add */}
-      <div>
-        <Sheet open={!!sheet} onOpenChange={(open) => !open && setSheet(null)}>
-          <SheetContent>
-            <SheetHeader>
-              {sheet == "addLecture" ? (
-                <SheetTitle className="flex gap-2 text-gray-700 text-lg">
-                  <ClipboardPaste size={25} />
-                  Adding Lecture
-                </SheetTitle>
-              ) : sheet == "editLecture" ? (
-                <SheetTitle className="flex gap-2 text-gray-700 text-lg">
-                  {" "}
-                  <ClipboardPen size={25} /> Edit Lecture
-                </SheetTitle>
-              ) : (
-                sheet == "editSession" && <SheetTitle> Edit Session</SheetTitle>
-              )}
-            </SheetHeader>
-            {/* <ProgressBar mode="determinate" style={{ height: '6px' }}></ProgressBar> */}
-            <SheetDescription>
-              {sheet == "addLecture" && (
-                <AddLecture
-                  courseId={courseId}
-                  sessionId={selectedSession}
-                  closeSheet={() => setSheet(null)}
-                />
-              )}
-              {sheet == "editLecture" && (
-                <EditLecture
-                  courseId={courseId}
-                  editLecture={passLecture as ILecture}
-                  lectureId={passLecture?._id as string}
-                  sessionId={selectedSession}
-                  closeSheet={() => setSheet(null)}
-                />
-              )}
-            </SheetDescription>
-          </SheetContent>
-        </Sheet>
-      </div>
+            {/* Lecture List */}
+            {session.lectures.length > 0 && (
+              <div className="ml-5 space-y-2 border-l pl-4">
+                {session.lectures.map((lecture) => (
+                  <div
+                    key={lecture._id}
+                    className="bg-gray-50 border border-gray-200 rounded p-3 flex justify-between items-center"
+                  >
+                    <div className="flex items-center gap-2">
+                      <Notebook size={15} className="text-gray-500" />
+                      <span className="text-sm text-gray-800 font-medium">
+                        {lecture.title}
+                      </span>
+                    </div>
+
+                    <div className="flex gap-2">
+                      <Button
+                        size="sm"
+                        className="text-gray-500 hover:text-black"
+                        variant="ghost"
+                      >
+                        <Trash2 size={13} />
+                      </Button>
+
+                      <Button
+                        size="sm"
+                        className="text-gray-500 hover:text-black"
+                        variant="ghost"
+                        onClick={() =>
+                          handleEditLecture(session._id as string, lecture)
+                        }
+                      >
+                        <Edit size={13} />
+                      </Button>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            )}
+          </div>
+        ))
+      ) : (
+        <p className="text-sm text-gray-500 italic">
+          No sessions added yet.
+        </p>
+      )}
     </div>
-  );
+
+    {/* Add Session */}
+    <div className="px-6 pb-6">
+      <Accordion
+        type="single"
+        collapsible
+        className="bg-white border border-gray-300 rounded-lg"
+      >
+        <AccordionItem value="item-1">
+          <AccordionTrigger className="px-4 py-3 text-sm font-medium text-gray-800 hover:no-underline">
+            Add Session
+          </AccordionTrigger>
+
+          <AccordionContent className="flex gap-3 px-4 pb-4">
+            <Input
+              type="text"
+              placeholder="Session title"
+              name="title"
+              value={sessions.title}
+              onChange={handleChanges}
+              error={errors.title}
+            />
+
+            <Button
+              type="button"
+              className="bg-black text-white hover:bg-gray-900 flex gap-2 items-center"
+              onClick={saveSessions}
+            >
+              Save
+              {sessionSpin && <Spinner />}
+            </Button>
+          </AccordionContent>
+        </AccordionItem>
+      </Accordion>
+    </div>
+
+    {/* Lecture Sheet */}
+    <Sheet open={!!sheet} onOpenChange={(open) => !open && setSheet(null)}>
+      <SheetContent className="bg-white border-l shadow-xl">
+        <SheetHeader>
+          {sheet === "addLecture" && (
+            <SheetTitle className="flex gap-2 text-black font-medium">
+              <ClipboardPaste size={22} />
+              Add Lecture
+            </SheetTitle>
+          )}
+          {sheet === "editLecture" && (
+            <SheetTitle className="flex gap-2 text-black font-medium">
+              <ClipboardPen size={22} />
+              Edit Lecture
+            </SheetTitle>
+          )}
+        </SheetHeader>
+
+        <SheetDescription className="mt-4">
+          {sheet === "addLecture" && (
+            <AddLecture
+              courseId={courseId}
+              sessionId={selectedSession}
+              closeSheet={() => setSheet(null)}
+            />
+          )}
+
+          {sheet === "editLecture" && (
+            <EditLecture
+              courseId={courseId}
+              editLecture={passLecture as ILecture}
+              lectureId={passLecture?._id as string}
+              sessionId={selectedSession}
+              closeSheet={() => setSheet(null)}
+            />
+          )}
+        </SheetDescription>
+      </SheetContent>
+    </Sheet>
+  </div>
+);
+
 };
 
 export default CourseCurriculum;

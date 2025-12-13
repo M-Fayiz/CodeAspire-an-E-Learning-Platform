@@ -116,12 +116,15 @@ export default function MentorBookedSlots() {
   ) => {
     try {
       setLoading(true);
-      const updatedStatus=await SlotBookingSercie.
-      setMentorSlots((prev) =>
-        prev.map((s) =>
-          s._id === slotId ? { ...s, status: sessionStatus } : s,
-        ),
-      );
+      const updatedStatus=await SlotBookingSercie.updateBookedSlotStatus(slotId,sessionStatus)
+      if(updatedStatus){
+
+        setMentorSlots((prev) =>
+          prev.map((s) =>
+            s._id === updatedStatus.bookedId ? { ...s, status: updatedStatus.status } : s,
+          ),
+        );
+      }
 
       toast.success("Session marked as completed!");
     } catch (error) {

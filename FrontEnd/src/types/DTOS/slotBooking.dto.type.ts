@@ -1,12 +1,14 @@
 import type { studentStatus } from "../sessionBooking.type";
 
+
+export type slotStatus="booked" | "completed" | "Pending" | "canceled" | "refunded";
 export interface IBaseBookingDTO {
   slotId: string;
   date: Date | string;
   startTime: Date | string;
   endTime: Date | string;
   type?: "free" | "paid";
-  status?: "booked" | "completed" | "Pending" | "canceled" | "refunded";
+  status?: slotStatus
   feedback?: string;
   studentStatus?: studentStatus;
 }

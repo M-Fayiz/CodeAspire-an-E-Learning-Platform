@@ -3,6 +3,7 @@ import { API } from "@/constants/api.constant";
 import type {
   IBookingDTOforLearner,
   IBookingDTOforMentors,
+  slotStatus,
 } from "@/types/DTOS/slotBooking.dto.type";
 import type { ISessionBooking, studentStatus } from "@/types/sessionBooking.type";
 import { throwAxiosError } from "@/utility/throwErrot";
@@ -70,7 +71,7 @@ export const SlotBookingSercie = {
        throwAxiosError(error);
     }
   },
-  updateBookedSlotStatus:async(bookedId:string,status:'completed')=>{
+  updateBookedSlotStatus:async(bookedId:string,status:slotStatus):Promise<{bookedId:string,status:slotStatus}>=>{
     try {
       const response=await axiosInstance.put(API.SLOT_BOOK.UPDATE_BOOKED_SLOT_STATUS(bookedId),{status})
       return response.data

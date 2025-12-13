@@ -6,7 +6,7 @@ export const env = {
     return process.env.Port;
   },
   get MONGO_URL() {
-    return process.env.DBMS;
+    return process.env.MONGO_URL;
   },
   get CLIENT_ORGIN() {
     return process.env.client_Orgin;
@@ -74,10 +74,19 @@ export const env = {
   get HASH_SALT() {
     return process.env.SALT;
   },
-  get REDIS() {
-    return process.env.REDIS;
+  get REDIS_URL() {
+    return process.env.REDIS_URL;
   },
   get EARLY_JOIN_BUFFER() {
     return process.env.EARLY_JOIN_BUFFER;
+  },
+  get REDIS_HOST() {
+    return process.env.REDIS_HOST;
+  },
+  get REDIS_PORT() {
+    return process.env.REDIS_PORT;
+  },
+  get REDIS_PASS_KEY() {
+    return process.env.REDIS_PASS_KEY;
   },
 };

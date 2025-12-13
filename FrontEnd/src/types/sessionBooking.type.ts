@@ -1,6 +1,7 @@
+import type { slotStatus } from "./DTOS/slotBooking.dto.type";
 
 export type studentStatus='pending'|'passed'|'failed'
-export type slotStatus="booked" | "completed" | "Pending";
+
 export interface ISessionBooking {
   mentorId: string;
   learnerId: string;

@@ -58,6 +58,7 @@ export const API = {
     REJECT_COURSE: (courseId: string) => `/courses/admin/reject/${courseId}`,
     LIST_COURSE_FOR_SLOT: (mentorId: string) => `/courses/mentor/${mentorId}`,
     GET_COURSE_FORM_DATA: (courseId: string) => `/courses/form/${courseId}`,
+    UPDATE_SESSION:(courseId:string,sessionId:string)=>`/courses/${courseId}/session/${sessionId}`
   },
   PAYMENT: {
     CREATE_PAYMENT_INTENT: "/orders/create-checkout-session",

@@ -310,6 +310,13 @@ const courseService = {
       throwAxiosError(error)
     }
   }
+  // updateSession:async(courseId:string,sessionId:string)=>{
+  //   try {
+  //     // const response=await axiosInstance.put(API.COURSE.UPDATE_SESSION())
+  //   } catch (error) {
+  //     throwAxiosError(error)
+  //   }
+  // }
 };
 
 export default courseService;

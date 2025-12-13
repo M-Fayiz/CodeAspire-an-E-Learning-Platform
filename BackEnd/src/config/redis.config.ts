@@ -2,11 +2,12 @@ import { RedisClientType, createClient } from "redis";
 import { env } from "./env.config";
 
 const redisClient: RedisClientType = createClient({
-  url: env.REDIS,
+  url: env.REDIS_URL,
   socket: {
     connectTimeout: 10000,
   },
 });
+
 
 redisClient.on("connect", () => {
   console.log("🛜 Redis connected");
