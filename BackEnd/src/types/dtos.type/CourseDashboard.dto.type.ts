@@ -1,3 +1,5 @@
+import { Types } from "mongoose";
+
 export interface IRevenue {
   admin: number;
   mentor: number;
@@ -6,7 +8,7 @@ export interface CourseDashboardDTO {
   enrolledStudents: number;
   avgRating: number;
   course: {
-    _id: string;
+    _id: Types.ObjectId;
     title: string;
     description: string;
     price: number;

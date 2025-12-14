@@ -11,7 +11,6 @@ import { Profile } from "passport-google-oauth20";
 import { IRole, searchProps } from "../../types/user.types";
 import { FilterQuery, Types } from "mongoose";
 import { buildUserFilter } from "../../utils/searchQuery";
-import { ISignedUsers } from "../../types/dtos.type/user.dto.types";
 import { graphPrps } from "../../types/adminDahsboard.type";
 
 export class UserRepository
@@ -38,9 +37,9 @@ export class UserRepository
       case "learner":
         return user as unknown as ILearnerModel;
       case "admin":
-        return user as IAdminModel;
+        return user as unknown as  IAdminModel;
       default:
-        return user as IUserModel;
+        return user as unknown as  IUserModel;
     }
   }
   async updateUserPassword(

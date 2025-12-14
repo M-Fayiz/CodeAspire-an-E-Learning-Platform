@@ -1,8 +1,8 @@
 import express from "express";
 const userRouter = express.Router();
-import { UserController } from "../controllers/implementation/UserController";
+import { UserController } from "../controllers/implementation/UserController"; 
 import { UserRepository } from "../repository/implementation/UserRepository";
-import { UserService } from "../services/implementation/UserService";
+import { UserService } from "../services/implementation/userService";
 import { verifyUser } from "../middlewares/authentication.middleware";
 import { MentorRepository } from "../repository/implementation/MentorRepository";
 import { NotificationRepository } from "../repository/implementation/NotificationRepository";

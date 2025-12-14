@@ -4,8 +4,8 @@ import { IUser } from "../user.types";
 export interface IBaseChatDTO {
   _id: Types.ObjectId;
   participantKey: string;
-  latestMessage: Types.ObjectId | null;
-  lastMessageTime: Date;
+  latestMessage: string | null;
+  lastMessageTime: Date|null;
   createdAt?: Date;
 }
 

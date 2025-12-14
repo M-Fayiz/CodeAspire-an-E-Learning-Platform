@@ -5,18 +5,19 @@ import {
 } from "../types/dtos.type/courseDashboard.dto.type";
 import { IRevenueAggregationResult } from "../types/courseDashboard.type";
 import { chartAggregation } from "../types/enrollment.types";
+import { IPopulatedCourse } from "../types/dtos.type/course.dtos.type";
 
 export function courseDashboardDTO(
   enrolledStudents: number,
   avgRating: number,
-  course: ICourses,
+  course: IPopulatedCourse,
   revenue: IRevenueAggregationResult,
 ): CourseDashboardDTO {
   return {
     enrolledStudents,
     avgRating,
     course: {
-      _id: course.id as string,
+      _id: course._id ,
       title: course.title as string,
       description: course.description as string,
       price: course.price,

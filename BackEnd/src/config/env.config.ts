@@ -47,8 +47,8 @@ export const env = {
   get AWS_s3_BUCKET_NAME() {
     return process.env.AWS_S3_BUCKET_NAME;
   },
-  get STRIPE_SECRETE_KEY() {
-    return process.env.STRIPE_SECRETE_KEY;
+  get STRIPE_SECRET_KEY() {
+    return process.env.STRIPE_SECRET_KEY;
   },
   get WEB_HOOK_SECRETE_KEY() {
     return process.env.WEB_HOOK_SECRET_KEY;
@@ -75,7 +75,7 @@ export const env = {
     return process.env.SALT;
   },
   get REDIS_URL() {
-    return process.env.REDIS_URL;
+  return process.env.REDIS_URL;
   },
   get EARLY_JOIN_BUFFER() {
     return process.env.EARLY_JOIN_BUFFER;

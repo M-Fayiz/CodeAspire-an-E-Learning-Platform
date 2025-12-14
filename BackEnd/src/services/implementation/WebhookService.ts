@@ -4,21 +4,27 @@ import Stripe from "stripe";
 import { env } from "../../config/env.config";
 import { IOrderService } from "../interface/IOrderService";
 import { ISlotBookingService } from "../interface/ISlotBookingService";
-
+import { stripe } from "../../config/stripe.config";
+import { createHttpError } from "../../utils/http-error";
+import { HttpStatus } from "../../const/http-status";
+import { HttpResponse } from "../../const/error-message";
 export class WebhookService implements IWebhookService {
-  private _stripe;
+ 
   constructor(
     private _orderService: IOrderService,
     private _slotBookingService: ISlotBookingService,
   ) {
-    this._stripe = new Stripe(env.STRIPE_SECRETE_KEY as string);
+   
   }
   async processEvent(req: Request): Promise<void> {
     const sig = req.headers["stripe-signature"];
     let event;
+      if(!stripe){
+        throw createHttpError(HttpStatus.INTERNAL_SERVER_ERROR,HttpResponse.STRIPR_NOT_AVAILABLE)
+      }
 
     try {
-      event = this._stripe.webhooks.constructEvent(
+      event = stripe.webhooks.constructEvent(
         req.body as Buffer,
         sig as string,
         env.WEB_HOOK_SECRETE_KEY as string,

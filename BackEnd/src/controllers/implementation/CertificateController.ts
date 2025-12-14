@@ -14,12 +14,12 @@ export class CertificateController implements ICertificateController {
     next: NextFunction,
   ): Promise<void> => {
     try {
-      const { learnerId, courseId } = req.body;
+      const { learnerId, courseId ,programmTitle} = req.body;
 
       const createdCertificated =
-        await this._certificateService.createCertificate(learnerId, courseId);
+        await this._certificateService.createCertificate(learnerId, courseId,programmTitle);
 
-      res.status(HttpStatus.OK).json(successResponse(HttpResponse.OK));
+      res.status(HttpStatus.OK).json(successResponse(HttpResponse.OK,{createdCertificated}));
     } catch (error) {
       next(error);
     }

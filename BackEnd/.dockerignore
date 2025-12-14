@@ -1,6 +1,13 @@
 node_modules
+dist
+logs
 .npm
+
+
 .env
 .git
 .gitignore
 
+.vscode
+Dockerfile
+docker-compose*.yml

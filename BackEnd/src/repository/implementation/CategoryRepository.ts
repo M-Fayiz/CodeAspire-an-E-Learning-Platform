@@ -1,6 +1,5 @@
 import { Types } from "mongoose";
 import { CategoryModel, ICategoryModel } from "../../models/category.model";
-import { ICategory } from "../../types/category.types";
 import { BaseRepository } from "../baseRepository";
 import { ICategoryRepository } from "../interface/ICategoryRepository";
 

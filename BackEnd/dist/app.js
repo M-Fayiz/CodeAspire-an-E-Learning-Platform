@@ -9,39 +9,70 @@ const dotenv_1 = __importDefault(require("dotenv"));
 const morgan_1 = __importDefault(require("morgan"));
 const db_config_1 = require("./config/db.config");
 const env_config_1 = require("./config/env.config");
-const error_handling_1 = require("./middlewares/error-handling");
+const error_handling_middleware_1 = require("./middlewares/error-handling.middleware");
 const cors_config_1 = require("./config/cors.config");
-const authRouter_1 = __importDefault(require("./routers/authRouter"));
+const auth_router_1 = __importDefault(require("./routers/auth.router"));
 const cookie_parser_1 = __importDefault(require("cookie-parser"));
 const express_session_1 = __importDefault(require("express-session"));
 const passport_1 = __importDefault(require("passport"));
-const userRouter_1 = __importDefault(require("./routers/userRouter"));
-const adminRouter_1 = __importDefault(require("./routers/adminRouter"));
+const user_router_1 = __importDefault(require("./routers/user.router"));
+const admin_router_1 = __importDefault(require("./routers/admin.router"));
+const category_router_1 = __importDefault(require("./routers/category.router"));
+const courses_router_1 = __importDefault(require("./routers/courses.router"));
+const shared_router_1 = __importDefault(require("./routers/shared.router"));
+// import { orderRouter, webhookRouter } from "./routers/order.router";
+const enrolled_router_1 = __importDefault(require("./routers/enrolled.router"));
+const review_router_1 = __importDefault(require("./routers/review.router"));
+const http_1 = __importDefault(require("http"));
+const session_config_1 = require("./config/session.config");
+const socket_io_1 = require("./socket.io");
+const notification_router_1 = __importDefault(require("./routers/notification.router"));
+const chat_router_1 = __importDefault(require("./routers/chat.router"));
+const slots_router_1 = __importDefault(require("./routers/slots.router"));
+const slotbooking_router_1 = __importDefault(require("./routers/slotbooking.router"));
+const order_router_1 = __importDefault(require("./routers/order.router"));
+const webhook_router_1 = __importDefault(require("./routers/webhook.router"));
+const videoSession_router_1 = __importDefault(require("./routers/videoSession.router"));
+const certificate_router_1 = __importDefault(require("./routers/certificate.router"));
 dotenv_1.default.config();
 const app = (0, express_1.default)();
-const secrete = env_config_1.env.SESSION_SECRET;
 // MIddlewares
 app.use((0, cookie_parser_1.default)());
-app.use((0, morgan_1.default)("dev"));
+app.use((0, morgan_1.default)("dev")); //morgan
+/// exceptional case
+app.use("/api/v1/webhook", express_1.default.raw({ type: "application/json" }), webhook_router_1.default);
 app.use(express_1.default.json());
 app.use(express_1.default.urlencoded({ extended: true }));
-app.use((0, express_session_1.default)({
-    secret: secrete,
-    resave: false,
-    saveUninitialized: true,
-    cookie: { secure: false },
-}));
+app.use((0, express_session_1.default)(session_config_1.sessionConfig));
+const server = http_1.default.createServer(app);
+//socket
+(0, socket_io_1.intitializeSocket)(server);
 app.use(passport_1.default.initialize());
 app.use(passport_1.default.session());
 app.use((0, cors_1.default)(cors_config_1.corsSetUp));
-// Routers 
-app.use('/auth', authRouter_1.default);
-app.use('/users', userRouter_1.default);
-app.use('/admin', adminRouter_1.default);
-// Error Handler
-app.use(error_handling_1.errorHandler);
+// Routers
+app.get("/", (req, res) => {
+    res.send("SERVER WORKING");
+});
+app.use("/api/v1/auth", auth_router_1.default);
+app.use("/api/v1/users", user_router_1.default);
+app.use("/api/v1/admin", admin_router_1.default);
+app.use("/api/v1/categories", category_router_1.default);
+app.use("/api/v1/courses", courses_router_1.default);
+app.use("/api/v1/shared", shared_router_1.default);
+app.use("/api/v1/orders", order_router_1.default);
+app.use("/api/v1/enrollements", enrolled_router_1.default);
+app.use("/api/v1/reviews", review_router_1.default);
+app.use("/api/v1/notifications", notification_router_1.default);
+app.use("/api/v1/chats", chat_router_1.default);
+app.use("/api/v1/slots", slots_router_1.default);
+app.use("/api/v1/slot-booking", slotbooking_router_1.default);
+app.use("/api/v1/video", videoSession_router_1.default);
+app.use("/api/v1/certificate", certificate_router_1.default);
 const port = env_config_1.env.port;
 (0, db_config_1.dbConnect)();
-app.listen(port, () => {
-    console.log('✅ Server  Running....');
+// Error Handler
+app.use(error_handling_middleware_1.errorHandler);
+server.listen(port, () => {
+    console.log(`✅ Server  Running.... at${port} `);
 });

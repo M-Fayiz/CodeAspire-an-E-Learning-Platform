@@ -15,9 +15,10 @@ import { ITransactionRepository } from "../../repository/interface/ITransactionR
 import { ITransaction } from "../../types/transaction.type";
 import { calculateShares } from "../../utils/calculateSplit.util";
 import { TransactionType } from "../../const/transaction";
+import { stripe } from "../../config/stripe.config";
 
 export class OrderService implements IOrderService {
-  private _stripe;
+ 
 
   constructor(
     private _orderRepository: IOrderRepository,
@@ -25,7 +26,7 @@ export class OrderService implements IOrderService {
     private _enrolledRepository: IEnrolledRepository,
     private _transactionRepository: ITransactionRepository,
   ) {
-    this._stripe = new Stripe(env.STRIPE_SECRETE_KEY as string);
+    
   }
 
   /**
@@ -154,8 +155,10 @@ export class OrderService implements IOrderService {
     }
     const orderId = String(orderData._id);
     const idemKey = `order_${orderData._id}`;
-
-    const session = await this._stripe.checkout.sessions.create(
+if(!stripe){
+      throw createHttpError(HttpStatus.INTERNAL_SERVER_ERROR,HttpResponse.STRIPR_NOT_AVAILABLE)
+    }
+    const session = await stripe.checkout.sessions.create(
       {
         payment_method_types: ["card"],
         line_items: [
@@ -183,7 +186,7 @@ export class OrderService implements IOrderService {
           userId,
           amount,
           mentorId: String(course.mentorsId._id),
-          categoryId: String(course.categoryId._id),
+          categoryId: String(course.categoryId._id ),
         },
       },
       { idempotencyKey: idemKey },
@@ -203,7 +206,10 @@ export class OrderService implements IOrderService {
     sessionId: string,
   ): Promise<Stripe.Response<Stripe.Checkout.Session>> {
     console.log("session Id  :", sessionId);
-    const session = await this._stripe.checkout.sessions.retrieve(sessionId, {
+    if(!stripe){
+      throw createHttpError(HttpStatus.INTERNAL_SERVER_ERROR,HttpResponse.STRIPR_NOT_AVAILABLE)
+    }
+    const session = await stripe.checkout.sessions.retrieve(sessionId, {
       expand: ["payment_intent", "invoice"],
     });
 

@@ -26,9 +26,9 @@ import { ISlotBookingModel } from "../../models/sessionBooking.model";
 import { INotificationRepository } from "../../repository/interface/INotificationRepository";
 import { NotificationTemplates } from "../../template/notification.template";
 import { INotificationDTO } from "../../types/dtos.type/notification.dto.types";
-
+import { stripe } from "../../config/stripe.config";
 export class SlotBookingService implements ISlotBookingService {
-  private _stripe;
+
 
   constructor(
     private _slotBookingRepository: ISlotBookingRepository,
@@ -36,7 +36,7 @@ export class SlotBookingService implements ISlotBookingService {
     private _transactionRepostiory: ITransactionRepository,
     private _notificationRepository: INotificationRepository,
   ) {
-    this._stripe = new Stripe(env.STRIPE_SECRETE_KEY as string);
+   
   }
   /**
    * * Creates a new slot booking for a learner.
@@ -105,7 +105,9 @@ export class SlotBookingService implements ISlotBookingService {
       });
       return null;
     }
-
+    if(!stripe){
+      throw createHttpError(HttpStatus.INTERNAL_SERVER_ERROR,HttpResponse.STRIPR_NOT_AVAILABLE)
+    }
     const mentorSlot = await this._slotRepository.findSlotByFilter({
       _id: bookingData.slotId,
     });
@@ -117,7 +119,7 @@ export class SlotBookingService implements ISlotBookingService {
     }
     const createdPaidSlot =
       await this._slotBookingRepository.createBooking(bookingData);
-    const session = await this._stripe.checkout.sessions.create({
+    const session = await stripe.checkout.sessions.create({
       payment_method_types: ["card"],
       mode: "payment",
       line_items: [
@@ -228,17 +230,17 @@ export class SlotBookingService implements ISlotBookingService {
 
     const currentDate = now.toISOString().split("T")[0];
     const sessionDate = new Date(bookedData.date).toISOString().split("T")[0];
-    // if (currentDate !== sessionDate) {
-    //   throw createHttpError(HttpStatus.CONFLICT, HttpResponse.SLOT_DATE);
-    // }
+    if (currentDate !== sessionDate) {
+      throw createHttpError(HttpStatus.CONFLICT, HttpResponse.SLOT_DATE);
+    }
 
-    // if (now.getTime() < startTime.getTime() - EARLY_JOIN_BUFFER) {
-    //   throw createHttpError(HttpStatus.CONFLICT, HttpResponse.NOT_STARTED);
-    // }
+    if (now.getTime() < startTime.getTime() - EARLY_JOIN_BUFFER) {
+      throw createHttpError(HttpStatus.CONFLICT, HttpResponse.NOT_STARTED);
+    }
 
-    // if (now.getTime() > endTime.getTime()) {
-    //   throw createHttpError(HttpStatus.CONFLICT, HttpResponse.SESSION_ENDED);
-    // }
+    if (now.getTime() > endTime.getTime()) {
+      throw createHttpError(HttpStatus.CONFLICT, HttpResponse.SESSION_ENDED);
+    }
     const notifyDataMentor = NotificationTemplates.JoinNowSession(
       bookedData.mentorId,
     );

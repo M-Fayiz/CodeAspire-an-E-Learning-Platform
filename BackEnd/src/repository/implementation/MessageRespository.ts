@@ -22,7 +22,6 @@ export class MessageRepository
   }
   async getChats(
     chatId: Types.ObjectId,
-    limit: number,
   ): Promise<IMessageModel[] | null> {
     const filter = {
       chatId: chatId,

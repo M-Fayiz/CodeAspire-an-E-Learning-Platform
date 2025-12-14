@@ -11,7 +11,7 @@ export interface ICourseRepository {
     category?: Types.ObjectId,
     subcategory?: Types.ObjectId,
     level?: string,
-  ): Promise<ICourses[] | null>;
+  ): Promise<IPopulatedCourse[] | null>;
   updateCourse(
     courseId: Types.ObjectId,
     courseData: Partial<ICourses>,
@@ -30,7 +30,7 @@ export interface ICourseRepository {
     limit: number,
     skip: number,
     mentorId: Types.ObjectId,
-  ): Promise<ICourses[] | null>;
+  ): Promise<IPopulatedCourse[] | null>;
   addLecture(
     courseId: Types.ObjectId,
     sessionId: Types.ObjectId,
@@ -58,7 +58,7 @@ export interface ICourseRepository {
   appproveCourse(courseId: Types.ObjectId): Promise<ICourses | null>;
   rejectCourse(courseId: Types.ObjectId): Promise<ICourses | null>;
   publishCourse(courseId: Types.ObjectId): Promise<ICourses | null>;
-  findCourse(courseId: Types.ObjectId): Promise<ICourses | null>;
+  findCourse(courseId: Types.ObjectId): Promise<IPopulatedCourse | null>;
   findDocumentCount(query: FilterQuery<ICourses>): Promise<number>;
   findAllCourse(query: FilterQuery<ICourses>): Promise<ICourses[] | null>;
   getCourseFormData(courseId: Types.ObjectId): Promise<ICourses | null>;

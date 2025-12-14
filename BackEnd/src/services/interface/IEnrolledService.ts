@@ -1,14 +1,13 @@
-import { graphPrps, revanueGrapsh } from "../../types/adminDahsboard.type";
-import {
-  CourseDashboardDTO,
-  IChartTrendDTO,
-} from "../../types/dtos.type/courseDashboard.dto.type";
+import { graphPrps } from "../../types/adminDahsboard.type";
+import type {  CourseDashboardDTO, IChartTrendDTO } from "../../types/dtos.type/courseDashboard.dto.type";
+
+
 import {
   IEnrolledCoursedetailsDTO,
   IEnrolledListDto,
 } from "../../types/dtos.type/enrolled.dto.type";
 import { IMentorDhasboardDTO } from "../../types/dtos.type/mentorDashboard.dto.type";
-import { ISignedUsers } from "../../types/dtos.type/user.dto.types";
+
 import { filter, IProgressTrack } from "../../types/enrollment.types";
 
 export interface IEnrolledService {

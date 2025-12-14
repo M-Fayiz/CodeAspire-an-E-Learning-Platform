@@ -32,7 +32,8 @@ export const HttpResponse = {
   NOT_STARTED:
     "The session has not started yet. Please wait until the start time.",
   SESSION_ENDED: "The session has already ended.",
-  SLOT_EXIST_DAYS: (day: Days, existing: string, requested?: string) =>
+  SLOT_EXIST_DAYS: (day: Days, existing: string) =>
     `You have already a slot on ${day} ${existing}`,
   SLOT_DATE: "You can only join on the scheduled date.",
+  STRIPR_NOT_AVAILABLE:'Stripe Payment is not Available'
 };

@@ -7,7 +7,6 @@ import {
 } from "../../models/user.model";
 import { IRole, searchProps } from "../../types/user.types";
 import { FilterQuery, Types } from "mongoose";
-import { ISignedUsers } from "../../types/dtos.type/user.dto.types";
 import { graphPrps } from "../../types/adminDahsboard.type";
 
 export interface IUserRepo {

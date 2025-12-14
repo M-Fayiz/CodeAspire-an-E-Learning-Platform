@@ -12,39 +12,44 @@ import { Types } from "mongoose";
 
 const userRepo = new UserRepository();
 
-const clientID = env.CLIENT_ID as string;
+const clientID = env.CLIENT_ID as string; 
 const clientSecret = env.CLIENT_SECRET as string;
 const callBack = env.CALLBACK_URL as string;
 
-passport.use(
-  new GoogleStrategy(
-    {
-      clientID: clientID,
-      clientSecret: clientSecret,
-      callbackURL: callBack,
-      passReqToCallback: true,
-    },
-    async (
-      req: Request,
-      accessToken: string,
-      refreshToken: string,
-      profile: Profile,
-      done: VerifyCallback,
-    ) => {
-      try {
-        const role = (req.session.role as IRole) || "learner";
-        const user = await userRepo.findOrCreateUser(profile, role);
-        if (!user) {
-          throw new Error("Internal Error");
-        }
+if (clientID && clientSecret && callBack) {
+  passport.use(
+    new GoogleStrategy(
+      {
+        clientID,
+        clientSecret,
+        callbackURL: callBack,
+        passReqToCallback: true,
+      },
+      async (
+        req: Request,
+        accessToken: string,
+        refreshToken: string,
+        profile: Profile,
+        done: VerifyCallback,
+      ) => {
+        try {
+          const role = (req.session.role as IRole) || "learner";
+          const user = await userRepo.findOrCreateUser(profile, role);
 
-        return done(null, user);
-      } catch (error) {
-        return done(error);
-      }
-    },
-  ),
-);
+          if (!user) {
+            throw new Error("Internal Error");
+          }
+
+          return done(null, user);
+        } catch (error) {
+          return done(error as Error);
+        }
+      },
+    ),
+  );
+} else {
+  console.warn("⚠️ Google OAuth disabled: missing environment variables");
+}
 passport.serializeUser((user: any, done) => {
   done(null, user.id);
 });

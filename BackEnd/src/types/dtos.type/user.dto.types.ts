@@ -43,13 +43,6 @@ export interface IUserDTO {
   isRequested?: boolean;
 }
 
-export interface ICategoryDTO {
-  _id: string;
-  title: string;
-  slug: string;
-  parentId: string | null;
-  children?: ICategoryDTO[];
-}
 
 export interface IPayloadDTO {
   _id: Types.ObjectId;

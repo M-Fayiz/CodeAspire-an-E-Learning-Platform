@@ -26,7 +26,7 @@ import {
   filter,
   IProgressTrack,
 } from "../../types/enrollment.types";
-import {
+import type {
   CourseDashboardDTO,
   IChartTrendDTO,
 } from "../../types/dtos.type/courseDashboard.dto.type";
@@ -40,11 +40,9 @@ import { mentorDashboardDTO } from "../../dtos/mentorDashboard.dto";
 import { timeFilter } from "../../utils/dashFilterGenerator.utils";
 import { ITransactionModel } from "../../models/transaction.model";
 import { TransactionType } from "../../const/transaction";
-import { graphPrps, revanueGrapsh } from "../../types/adminDahsboard.type";
-import { FilterByDate } from "../../const/filter.const";
+import { graphPrps } from "../../types/adminDahsboard.type";
 import { buildDateFilter } from "../../utils/dateBuilder";
 import { IUserRepo } from "../../repository/interface/IUserRepo";
-import { ISignedUsers } from "../../types/dtos.type/user.dto.types";
 
 export class EnrolledService implements IEnrolledService {
   constructor(

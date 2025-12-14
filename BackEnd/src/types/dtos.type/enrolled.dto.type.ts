@@ -8,7 +8,6 @@ export interface IEnrolledListDto {
 }
 
 export interface ICourseProgess {
-  completedSessions: Types.ObjectId[];
   completedLectures: Types.ObjectId[];
   lastAccessedLecture: Types.ObjectId | null;
   completionPercentage: number;

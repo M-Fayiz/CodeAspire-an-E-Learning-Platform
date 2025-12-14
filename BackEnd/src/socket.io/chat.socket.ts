@@ -112,7 +112,7 @@ export const registerChatHandler = (
       // ack?.({ success: true, message: messageToEmit, tempId });
     } catch (error) {
       console.error("Error handling SEND event:", error);
-      ack({ error: "Server error" });
+      
     }
   });
 

@@ -23,7 +23,7 @@ export class CourseRepository
     category?: Types.ObjectId,
     subcategory?: Types.ObjectId,
     level?: string,
-  ): Promise<ICourses[] | null> {
+  ): Promise<IPopulatedCourse[] | null> {
     let query: FilterQuery<ICourses> = {};
     if (search) {
       query["title"] = { $regex: search, $options: "i" };
@@ -39,7 +39,7 @@ export class CourseRepository
     }
     query["status"] = "approved";
 
-    return await this.findAll(query, limit, skip, [
+    return await this.findAll<IPopulatedCourse>(query, limit, skip, [
       "categoryId",
       "subCategoryId",
     ]);
@@ -58,14 +58,14 @@ export class CourseRepository
     limit: number,
     skip: number,
     mentorId: Types.ObjectId,
-  ): Promise<ICourses[] | null> {
+  ): Promise<IPopulatedCourse[] | null> {
     let query: FilterQuery<ICourses> = {};
 
     if (search) {
       query["title"] = { $regex: search, $options: "i" };
     }
     query["mentorsId"] = mentorId;
-    return await this.findAll(query, limit, skip, [
+    return await this.findAll<IPopulatedCourse>(query, limit, skip, [
       "categoryId",
       "subCategoryId",
     ]);
@@ -163,8 +163,8 @@ export class CourseRepository
   async publishCourse(courseId: Types.ObjectId): Promise<ICourses | null> {
     return await this.findByIDAndUpdate(courseId, { status: "published" });
   }
-  async findCourse(courseId: Types.ObjectId): Promise<ICourses | null> {
-    return await this.findById(courseId, [
+  async findCourse(courseId: Types.ObjectId): Promise<IPopulatedCourse | null> {
+    return await this.findOne<IPopulatedCourse>({_id:courseId}, [
       "categoryId",
       "subCategoryId",
       "mentorsId",

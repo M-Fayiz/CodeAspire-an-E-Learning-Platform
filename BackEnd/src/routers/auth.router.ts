@@ -43,7 +43,7 @@ authRouter.patch(
 authRouter.get(
   "/google",
   (req: Request, res: Response, next: NextFunction) => {
-    console.log("get into google ");
+    
     const { role } = req.query as { role?: IRole };
     req.session.role = role || IRole.Learner;
     next();

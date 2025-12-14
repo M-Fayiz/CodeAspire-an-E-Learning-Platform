@@ -1,4 +1,4 @@
-import { IMentor, ILearner, IAdmin } from "../../types/user.types";
+import { IMentor, ILearner, IAdmin, IUser } from "../../types/user.types";
 import {
   IAdminDTO,
   ILearnerDTO,
@@ -8,7 +8,7 @@ import { IMenterModel } from "../../models/user.model";
 import { INotificationDTO } from "../../types/dtos.type/notification.dto.types";
 
 export interface IUserService {
-  fetchUser(id: string): Promise<ILearnerDTO | IMentorDTO | IAdminDTO>;
+  fetchUser(id: string): Promise<ILearnerDTO | IMentorDTO | IAdminDTO  |null>;
   changePassword(
     id: string,
     currentPassword: string,

@@ -2,6 +2,7 @@ import { Types } from "mongoose";
 import { ISession } from "../courses.type";
 import { ICategory } from "../category.types";
 import { IMenterModel } from "../../models/user.model";
+import { ICategoryModel } from "../../models/category.model";
 
 export interface IBaseCourse {
   _id: Types.ObjectId;
@@ -21,8 +22,8 @@ export interface IBaseCourse {
 }
 
 export interface IPopulatedCourse extends IBaseCourse {
-  categoryId: ICategory;
-  subCategoryId: ICategory;
+  categoryId: ICategoryModel;
+  subCategoryId: ICategoryModel;
   mentorsId: IMenterModel;
 }
 

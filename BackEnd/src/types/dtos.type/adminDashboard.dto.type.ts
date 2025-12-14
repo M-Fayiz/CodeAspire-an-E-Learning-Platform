@@ -1,4 +1,3 @@
-import { SourceOfRevanye } from "../adminDahsboard.type";
 import { ITopCategory, ITopCourse } from "../mentorDashboard.types";
 import { IPaymentTypes } from "../transaction.type";
 
