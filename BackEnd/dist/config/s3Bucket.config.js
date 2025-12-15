@@ -23,7 +23,7 @@ async function getObjectURL(key) {
         Key: key,
     });
     const url = await (0, s3_request_presigner_1.getSignedUrl)(exports.s3Bucket, command, {
-        expiresIn: Number(process.env.S3_BUCKET_URL_EXPIRE_IN),
+        expiresIn: 60,
     });
     return url;
 }
