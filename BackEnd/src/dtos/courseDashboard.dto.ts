@@ -1,4 +1,4 @@
-import { ICourses } from "../types/courses.type";
+
 import {
   CourseDashboardDTO,
   IChartTrendDTO,
