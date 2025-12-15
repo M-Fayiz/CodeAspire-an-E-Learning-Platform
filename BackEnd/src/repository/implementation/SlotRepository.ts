@@ -44,4 +44,8 @@ export class SlotRepository
   ): Promise<ISlotModel | null> {
     return await this.findOne(filter);
   }
+
+  async getUpdateSlots(slotId: Types.ObjectId, populate?: string[]): Promise<mentorUnPopulatedSlots|null> {
+    return await this.findOne<mentorUnPopulatedSlots>({_id:slotId},populate)
+  }
 }

@@ -12,7 +12,7 @@ export interface ISlotRepository {
     mentorId: Types.ObjectId,
     populate?: string[],
   ): Promise<mentorUnPopulatedSlots[] | null>;
-
+  getUpdateSlots(slotId: Types.ObjectId,populate?: string[]):Promise<mentorUnPopulatedSlots|null>
   updateSlot(
     slotId: Types.ObjectId,
     slotData: ISlotModel,

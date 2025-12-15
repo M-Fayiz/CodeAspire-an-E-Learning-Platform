@@ -1,3 +1,4 @@
+import { Types } from "mongoose";
 import { HttpResponse } from "../../const/error-message";
 import { HttpStatus } from "../../const/http-status";
 import {
@@ -25,13 +26,49 @@ export class SlotService implements ISlotService {
     private _slotBookingRepository: ISlotBookingRepository,
     private _courseRepositoy: ICourseRepository,
   ) {}
+  private async _validateSlotOverlap(
+  mentorId: Types.ObjectId,
+  selectedDays: IMentorSlot["selectedDays"],
+) {
+
+  const existingSlots = await this._slotRepository.getMentorSLots(mentorId);
+
+  if (!existingSlots) return;
+
+  for (const newDay of selectedDays) {
+    if (!newDay.active) continue;
+
+    for (const slot of existingSlots) {
+      
+
+      for (const existingDay of slot.selectedDays) {
+        if (!existingDay.active) continue;
+        if (existingDay.day !== newDay.day) continue;
+
+        if (
+          newDay.startTime < existingDay.endTime &&
+          newDay.endTime > existingDay.startTime
+        ) {
+          throw createHttpError(
+            HttpStatus.CONFLICT,
+            HttpResponse.SLOT_EXIST_DAYS(
+              newDay.day,
+              `${existingDay.startTime} - ${existingDay.endTime}`
+            )
+          );
+        }
+      }
+    }
+  }
+}
+
   /**
    * check if there are any course exist in same mentor , same days , same time line, if there is not create new slot
    * @param slotData
    * @returns created slot document from the DB
    */
   async createSlot(slotData: IMentorSlot): Promise<ISlotDTO> {
-    console.log(slotData);
+    
     const isCourseSLotExist = await this._slotRepository.findSlotByFilter({
       courseId: slotData.courseId,
     });
@@ -44,42 +81,19 @@ export class SlotService implements ISlotService {
     );
 
     if (existingSlots) {
-      for (const newDay of slotData.selectedDays) {
-        if (!newDay.active) continue;
-
-        const newStart = newDay.startTime;
-        const newEnd = newDay.endTime;
-
-        for (const existingSlot of existingSlots) {
-          for (const existingDay of existingSlot.selectedDays) {
-            if (!existingDay.active) continue;
-            if (existingDay.day !== newDay.day) continue;
-
-            const existingStart = existingDay.startTime;
-            const existingEnd = existingDay.endTime;
-
-            const overlap = newStart < existingEnd && newEnd > existingStart;
-
-            if (overlap) {
-              throw createHttpError(
-                HttpStatus.CONFLICT,
-                HttpResponse.SLOT_EXIST_DAYS(
-                  newDay.day,
-                  `${existingDay.startTime} - ${existingDay.endTime}`,
-                ),
-              );
-            }
-          }
-        }
-      }
+      await this._validateSlotOverlap(slotData.mentorId, slotData.selectedDays);
     }
 
     const createdSlot = await this._slotRepository.createSlot(slotData);
-    const courseName = await this._courseRepositoy.findCourse(
-      createdSlot.courseId,
-    );
-
-    return slotDTO(createdSlot, courseName?.title as string);
+    const updatedCourse = await this._slotRepository.getUpdateSlots(createdSlot._id,['courseId'])
+    if(!updatedCourse){
+      throw createHttpError(HttpStatus.NOT_FOUND,HttpResponse.SLOT_NOT_FOUND)
+    }
+    for (let days of updatedCourse.selectedDays) {
+        days.startTime = convertTo12Hour(days.startTime as string);
+        days.endTime = convertTo12Hour(days.endTime as string);
+      }
+    return mentorSlotsDTO(updatedCourse);
   }
   /**
    * fetch mentor's slot data
@@ -127,36 +141,7 @@ export class SlotService implements ISlotService {
     );
 
     if (existingSlots) {
-      for (const newDay of slotData.selectedDays) {
-        if (!newDay.active) continue;
-
-        const newStart = newDay.startTime;
-        const newEnd = newDay.endTime;
-
-        for (const existingSlot of existingSlots) {
-          if (existingSlot._id.toString() === slot_Id.toString()) continue;
-
-          for (const existingDay of existingSlot.selectedDays) {
-            if (!existingDay.active) continue;
-            if (existingDay.day !== newDay.day) continue;
-
-            const existingStart = existingDay.startTime;
-            const existingEnd = existingDay.endTime;
-
-            const overlap = newStart < existingEnd && newEnd > existingStart;
-
-            if (overlap) {
-              throw createHttpError(
-                HttpStatus.CONFLICT,
-                HttpResponse.SLOT_EXIST_DAYS(
-                  newDay.day,
-                  `${existingDay.startTime} - ${existingDay.endTime}`,
-                ),
-              );
-            }
-          }
-        }
-      }
+      await this._validateSlotOverlap(slotData.mentorId, slotData.selectedDays);
     }
     const updatedSlot = await this._slotRepository.updateSlot(
       slot_Id,
@@ -165,16 +150,15 @@ export class SlotService implements ISlotService {
     if (!updatedSlot) {
       throw createHttpError(HttpStatus.NOT_FOUND, HttpResponse.ITEM_NOT_FOUND);
     }
-    const courseName = await this._courseRepositoy.findCourse(
-      updatedSlot.courseId,
-    );
-    if (!courseName) {
-      throw createHttpError(
-        HttpStatus.NOT_FOUND,
-        HttpResponse.COURSE_NOT_FOUND,
-      );
+    const updatedCourse = await this._slotRepository.getUpdateSlots(updatedSlot._id,['courseId'])
+    if(!updatedCourse){
+      throw createHttpError(HttpStatus.NOT_FOUND,HttpResponse.SLOT_NOT_FOUND)
     }
-    return slotDTO(updatedSlot, courseName.title);
+    for (let days of updatedCourse.selectedDays) {
+        days.startTime = convertTo12Hour(days.startTime as string);
+        days.endTime = convertTo12Hour(days.endTime as string);
+      }
+    return mentorSlotsDTO(updatedCourse);
   }
   /**
    * Fetch a mentor slot by its course ID.

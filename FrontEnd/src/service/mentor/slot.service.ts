@@ -14,7 +14,7 @@ export const SlotService = {
   createSlots: async (
     slotFormData: Partial<IMentorSlot>,
   ): Promise<ISlotDTO> => {
-    console.log(slotFormData);
+
     try {
       const response = await axiosInstance.post(
         API.SLOTS.CREATE_SLOTS,

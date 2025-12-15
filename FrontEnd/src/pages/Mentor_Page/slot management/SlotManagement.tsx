@@ -45,15 +45,16 @@ const SlotManagement = () => {
   const [slot, setSlots] = useState<ISlotDTO[]>([]);
   const [isOpen, setIsOpen] = useState(false);
 
-  useEffect(() => {
-    (async () => {
-      const data = await SlotService.getMentorSlotList(user!.id);
-      if (data) {
-        setSlots(data);
-      }
-    })();
-  }, []);
+ useEffect(() => {
+  if (!user?.id) return;
 
+  (async () => {
+    const data = await SlotService.getMentorSlotList(user.id);
+    if (data) setSlots(data);
+  })();
+}, [user?.id]);
+
+  //Submit slot form 
   const submitSlotForm = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setFormError({});
@@ -102,7 +103,7 @@ const SlotManagement = () => {
       return;
     }
 
-    if (formData._id) {
+    
       try {
         const payload = {
           ...formData,
@@ -120,38 +121,22 @@ const SlotManagement = () => {
               slot._id === updatedData._id ? { ...slot, ...updatedData } : slot,
             ),
           );
+          resetForm();
           toast.success("Slot updated successfully!");
         } else {
           const createdData = await SlotService.createSlots(payload);
+          console.log('created Data :',createdData)
           setSlots((prev) => [...prev, createdData]);
+          resetForm();
           toast.success("Slot created successfully!");
         }
 
         setIsOpen(false);
-        resetForm();
+       
         setFormError({});
       } catch (error) {
         if (error instanceof Error) toast.error(error.message);
       }
-    }
-
-    try {
-      const { _id, ...createData } = formData;
-      const createdData = await SlotService.createSlots({
-        ...createData,
-        mentorId: user?.id,
-        selectedDays: updatedTime,
-      });
-
-      setFormError({});
-      resetForm();
-      setIsOpen(false);
-      setSlots((prev) => [...prev, createdData]);
-    } catch (error) {
-      if (error instanceof Error) {
-        toast.error(error.message);
-      }
-    }
   };
   console.log(formData);
   const onEdit = (slot: ISlotDTO) => {
@@ -170,7 +155,15 @@ const SlotManagement = () => {
     setFormData({
       _id: "",
       courseId: "",
-      selectedDays: [],
+      selectedDays: [
+      { day: "Sunday", startTime: "", endTime: "", active: false },
+      { day: "Monday", startTime: "", endTime: "", active: false },
+      { day: "Tuesday", startTime: "", endTime: "", active: false },
+      { day: "Wednesday", startTime: "", endTime: "", active: false },
+      { day: "Thursday", startTime: "", endTime: "", active: false },
+      { day: "Friday", startTime: "", endTime: "", active: false },
+      { day: "Saturday", startTime: "", endTime: "", active: false },
+    ],
       mentorId: user?.id || "",
       slotDuration: 30,
       pricePerSlot: 0,
@@ -185,13 +178,12 @@ const SlotManagement = () => {
           <div>
             <Dialog open={isOpen} onOpenChange={setIsOpen}>
               <DialogTrigger asChild>
-                <Button variant="outline">
+                <Button onClick={()=> resetForm()} variant="outline">
                   <Plus />
                   Create Slot
                 </Button>
               </DialogTrigger>
-
-              <Dialog open={isOpen} onOpenChange={setIsOpen}>
+              
                 <DialogContent className="!max-w-[90vw] !w-[70vw] md:!max-w-[1200px] overflow-y-auto max-h-[90vh]">
                   <DialogHeader>
                     <DialogTitle>Create New Slot</DialogTitle>
@@ -217,11 +209,12 @@ const SlotManagement = () => {
                     </DialogFooter>
                   </form>
                 </DialogContent>
-              </Dialog>
+              
             </Dialog>
           </div>
           <div>{slot && <SlotList slots={slot} onEdit={onEdit} />}</div>
         </div>
+        
       </ManagementLayout>
     </>
   );
