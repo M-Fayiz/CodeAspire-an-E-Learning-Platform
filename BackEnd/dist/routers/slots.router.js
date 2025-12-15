@@ -1,0 +1,22 @@
+"use strict";
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
+Object.defineProperty(exports, "__esModule", { value: true });
+const express_1 = __importDefault(require("express"));
+const SlotRepository_1 = require("../repository/implementation/SlotRepository");
+const SlotService_1 = require("../services/implementation/SlotService");
+const SlotController_1 = require("../controllers/implementation/SlotController");
+const SlotBookingRepositoy_1 = require("../repository/implementation/SlotBookingRepositoy");
+const CourseRepository_1 = require("../repository/implementation/CourseRepository");
+const slotRouter = express_1.default.Router();
+const slotRepository = new SlotRepository_1.SlotRepository();
+const slotBookingRepository = new SlotBookingRepositoy_1.SlotBookingRepository();
+const courseRepositoy = new CourseRepository_1.CourseRepository();
+const slotService = new SlotService_1.SlotService(slotRepository, slotBookingRepository, courseRepositoy);
+const slotController = new SlotController_1.SlotController(slotService);
+slotRouter.post("/create", slotController.createSlot);
+slotRouter.get("/:mentorId", slotController.getMentorSlots);
+slotRouter.get("/course/:courseId", slotController.getCourseSlot);
+slotRouter.put("/:slotId", slotController.updateSlot);
+exports.default = slotRouter;

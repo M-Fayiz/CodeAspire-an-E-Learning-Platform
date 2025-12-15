@@ -1,0 +1,26 @@
+"use strict";
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
+Object.defineProperty(exports, "__esModule", { value: true });
+const express_1 = __importDefault(require("express"));
+const userRouter = express_1.default.Router();
+const UserController_1 = require("../controllers/implementation/UserController");
+const UserRepository_1 = require("../repository/implementation/UserRepository");
+const userService_1 = require("../services/implementation/userService");
+const authentication_middleware_1 = require("../middlewares/authentication.middleware");
+const MentorRepository_1 = require("../repository/implementation/MentorRepository");
+const NotificationRepository_1 = require("../repository/implementation/NotificationRepository");
+const userRepository = new UserRepository_1.UserRepository();
+const mentorRepository = new MentorRepository_1.MentorRepository();
+const notificationRepository = new NotificationRepository_1.NotificationRepository();
+const userService = new userService_1.UserService(userRepository, mentorRepository, notificationRepository);
+const userController = new UserController_1.UserController(userService);
+userRouter.use(authentication_middleware_1.verifyUser);
+userRouter.get("/me/:userId", userController.fetchProfile);
+userRouter.patch("/:userId/change-password", userController.changePassword);
+userRouter.put("/:userId/profile-picture", userController.updateProfileImage);
+userRouter.put("/me/:userId", userController.updateUserProfile);
+userRouter.put("/:mentorId/mentor-profile", userController.addMentorData);
+userRouter.get("/:userId/profile", userController.getUserProfile);
+exports.default = userRouter;

@@ -1,0 +1,21 @@
+"use strict";
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
+Object.defineProperty(exports, "__esModule", { value: true });
+const express_1 = __importDefault(require("express"));
+const notifyRouter = express_1.default.Router();
+const NotificationRepository_1 = require("../repository/implementation/NotificationRepository");
+const NotificationService_1 = require("../services/implementation/NotificationService");
+const NotificationController_1 = require("../controllers/implementation/NotificationController");
+const authentication_middleware_1 = require("../middlewares/authentication.middleware");
+const user_types_1 = require("../types/user.types");
+const authorisation_middleware_1 = require("../middlewares/authorisation.middleware");
+const notificationRepository = new NotificationRepository_1.NotificationRepository();
+const notificationService = new NotificationService_1.NotificationService(notificationRepository);
+const notificationController = new NotificationController_1.NotificationController(notificationService);
+notifyRouter.use(authentication_middleware_1.verifyUser);
+notifyRouter.use((0, authorisation_middleware_1.authorizedRole)(user_types_1.IRole.Admin, user_types_1.IRole.Learner, user_types_1.IRole.Mentor));
+notifyRouter.get("/:userId", notificationController.getAllNotification);
+notifyRouter.put("/:notifyId", notificationController.readNotification);
+exports.default = notifyRouter;

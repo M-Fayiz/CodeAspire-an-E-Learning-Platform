@@ -1,0 +1,21 @@
+"use strict";
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
+Object.defineProperty(exports, "__esModule", { value: true });
+const express_1 = __importDefault(require("express"));
+const videoSessionRouter = express_1.default.Router();
+const VideoSessionController_1 = require("../controllers/implementation/VideoSessionController");
+const SlotBookingService_1 = require("../services/implementation/SlotBookingService");
+const SlotBookingRepositoy_1 = require("../repository/implementation/SlotBookingRepositoy");
+const SlotRepository_1 = require("../repository/implementation/SlotRepository");
+const TransactionRepository_1 = require("../repository/implementation/TransactionRepository");
+const NotificationRepository_1 = require("../repository/implementation/NotificationRepository");
+const notificationRepository = new NotificationRepository_1.NotificationRepository();
+const slotbookingRepository = new SlotBookingRepositoy_1.SlotBookingRepository();
+const slotRepository = new SlotRepository_1.SlotRepository();
+const transactionRepository = new TransactionRepository_1.TransactionRepositoy();
+const slotbookingService = new SlotBookingService_1.SlotBookingService(slotbookingRepository, slotRepository, transactionRepository, notificationRepository);
+const videoSessionController = new VideoSessionController_1.VideoSessionController(slotbookingService);
+videoSessionRouter.get("/start/:bookedId", videoSessionController.startVideoSession);
+exports.default = videoSessionRouter;

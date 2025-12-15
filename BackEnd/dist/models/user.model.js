@@ -1,0 +1,47 @@
+"use strict";
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.AdminModel = exports.LearnerModel = exports.MentorModel = exports.UserModel = void 0;
+const mongoose_1 = __importDefault(require("mongoose"));
+const user_types_1 = require("../types/user.types");
+const modelName_1 = require("../const/modelName");
+const option = { discriminatorKey: "role", timestamps: true };
+const BaseUserSchema = new mongoose_1.default.Schema({
+    name: { type: String, required: true },
+    email: { type: String, required: true },
+    phone: Number,
+    password: String,
+    profilePicture: String,
+    googleId: { type: String },
+    isActive: { type: Boolean, default: false },
+    ApprovalStatus: {
+        type: String,
+        enum: ["pending", "approved", "rejected", "requested"],
+        default: "pending",
+    },
+    isRequested: { type: Boolean, default: false },
+}, option);
+exports.UserModel = mongoose_1.default.model(modelName_1.DbModelName.USER, BaseUserSchema);
+const MentorSchema = new mongoose_1.default.Schema({
+    expertise: [String],
+    bio: String,
+    yearsOfExperience: Number,
+    mentorRating: Number,
+    socialLinks: {
+        linkedIn: String,
+        github: String,
+        portfolio: String,
+    },
+    resume: String,
+});
+exports.MentorModel = exports.UserModel.discriminator(user_types_1.IRole.Mentor, MentorSchema);
+const LearnerSchema = new mongoose_1.default.Schema({
+    enrolledCourses: [{ type: mongoose_1.default.Schema.Types.ObjectId, ref: "Course" }],
+});
+exports.LearnerModel = exports.UserModel.discriminator(user_types_1.IRole.Learner, LearnerSchema);
+const AdminSchema = new mongoose_1.default.Schema({
+    permissions: [String],
+});
+exports.AdminModel = exports.UserModel.discriminator(user_types_1.IRole.Admin, AdminSchema);

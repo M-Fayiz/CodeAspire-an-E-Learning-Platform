@@ -1,0 +1,108 @@
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.UserRepository = void 0;
+const baseRepository_1 = require("../baseRepository");
+const user_model_1 = require("../../models/user.model");
+const searchQuery_1 = require("../../utils/searchQuery");
+class UserRepository extends baseRepository_1.BaseRepository {
+    constructor() {
+        super(user_model_1.UserModel);
+    }
+    async createUser(user) {
+        const createdUser = await this.create(user);
+        return createdUser;
+    }
+    async findUserByEmail(email) {
+        const user = await this.model.findOne({ email }).lean();
+        if (!user)
+            return null;
+        switch (user?.role) {
+            case "mentor":
+                return user;
+            case "learner":
+                return user;
+            case "admin":
+                return user;
+            default:
+                return user;
+        }
+    }
+    async updateUserPassword(email, password) {
+        return await this.findUserAndUpdate({ email }, { $set: { password: password } }, { new: true });
+    }
+    async findOrCreateUser(profile, role) {
+        let user = await this.findOne({
+            $or: [{ googleId: profile.id }, { email: profile.emails?.[0].value }],
+        });
+        if (!user) {
+            user = await this.create({
+                googleId: profile.id,
+                email: profile.emails?.[0].value,
+                name: profile.displayName,
+                role: role,
+            });
+        }
+        return user;
+    }
+    async findAllUsers(limit, skip, searchQuery) {
+        const filter = (0, searchQuery_1.buildUserFilter)(searchQuery);
+        return this.model
+            .find(filter)
+            .select("-password -googleId")
+            .skip(skip)
+            .limit(limit);
+    }
+    async findUserCount(searchQuery) {
+        const filter = (0, searchQuery_1.buildUserFilter)(searchQuery);
+        return this.model.countDocuments(filter);
+    }
+    async blockUser(id) {
+        return this.model.findByIdAndUpdate(id, [{ $set: { isActive: { $not: "$isActive" } } }], {
+            new: true,
+            upsert: false,
+        });
+    }
+    async findUserById(id) {
+        return await this.findById(id);
+    }
+    async userProfilePictureUpdate(id, imageURL) {
+        return await this.model.findByIdAndUpdate(id, { profilePicture: imageURL }, { new: true });
+    }
+    async updateMentorStatus(id, status) {
+        return await this.findByIDAndUpdate(id, { ApprovalStatus: status });
+    }
+    async updateUserprofile(id, profileData) {
+        return await this.findByIDAndUpdate(id, { profileData });
+    }
+    async getUserProfile(userId) {
+        return await this.findOne({ _id: userId });
+    }
+    async findUser(filter) {
+        return await this.findOne(filter);
+    }
+    async findDashBoardUserCount(role) {
+        return await this.countDocuments({ role: role });
+    }
+    async SignedUsers(filter) {
+        return await this.aggregate([
+            { $match: filter },
+            {
+                $group: {
+                    _id: {
+                        date: { $dateToString: { format: "%Y-%m-%d", date: "$createdAt" } },
+                    },
+                    value: { $sum: 1 },
+                },
+            },
+            {
+                $project: {
+                    _id: 0,
+                    date: "$_id.date",
+                    value: 1,
+                },
+            },
+            { $sort: { date: 1 } },
+        ]);
+    }
+}
+exports.UserRepository = UserRepository;

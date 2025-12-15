@@ -1,0 +1,27 @@
+"use strict";
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
+Object.defineProperty(exports, "__esModule", { value: true });
+const express_1 = __importDefault(require("express"));
+const bookingROuter = express_1.default.Router();
+const SlotBookingRepositoy_1 = require("../repository/implementation/SlotBookingRepositoy");
+const SlotBookingService_1 = require("../services/implementation/SlotBookingService");
+const SlotBookingController_1 = require("../controllers/implementation/SlotBookingController");
+const SlotRepository_1 = require("../repository/implementation/SlotRepository");
+const TransactionRepository_1 = require("../repository/implementation/TransactionRepository");
+const NotificationRepository_1 = require("../repository/implementation/NotificationRepository");
+const slotBookingRepository = new SlotBookingRepositoy_1.SlotBookingRepository();
+const slotRepository = new SlotRepository_1.SlotRepository();
+const tansactionRepository = new TransactionRepository_1.TransactionRepositoy();
+const notificationRepository = new NotificationRepository_1.NotificationRepository();
+const slotBookingService = new SlotBookingService_1.SlotBookingService(slotBookingRepository, slotRepository, tansactionRepository, notificationRepository);
+const slotBookingController = new SlotBookingController_1.SlotBookingController(slotBookingService);
+bookingROuter.put("/:bookedId", slotBookingController.addFeedBack);
+bookingROuter.put('/:bookedId/student-status', slotBookingController.updateStudentStatus);
+bookingROuter.put('/:bookedId/slot-status', slotBookingController.updateSlotStatus);
+bookingROuter.get("/learner/:learnerId", slotBookingController.listBookedSlot);
+bookingROuter.get("/mentor/:mentorId", slotBookingController.listBookedSlotOnMentor);
+bookingROuter.post("/create", slotBookingController.createBooking);
+bookingROuter.get("/list-slots", slotBookingController.getBookedSlots);
+exports.default = bookingROuter;

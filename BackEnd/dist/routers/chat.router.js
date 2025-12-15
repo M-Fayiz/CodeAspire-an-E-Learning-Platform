@@ -1,0 +1,20 @@
+"use strict";
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
+Object.defineProperty(exports, "__esModule", { value: true });
+const express_1 = __importDefault(require("express"));
+const chatRouter = express_1.default.Router();
+const ChatRepository_1 = require("../repository/implementation/ChatRepository");
+const ChatService_1 = require("../services/implementation/ChatService");
+const ChatController_1 = require("../controllers/implementation/ChatController");
+const authentication_middleware_1 = require("../middlewares/authentication.middleware");
+const MessageRespository_1 = require("../repository/implementation/MessageRespository");
+const chatRepository = new ChatRepository_1.ChatRepository();
+const messageRepository = new MessageRespository_1.MessageRepository();
+const chatService = new ChatService_1.ChatService(chatRepository, messageRepository);
+const chatController = new ChatController_1.ChatCOntroller(chatService);
+chatRouter.get("/:chatId/messages", chatController.getChatMessages);
+chatRouter.get("/users/:senderId", authentication_middleware_1.verifyUser, chatController.listUsers);
+chatRouter.post("/get-or-create", authentication_middleware_1.verifyUser, chatController.getOrCreateChat);
+exports.default = chatRouter;

@@ -1,0 +1,16 @@
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+const express_1 = require("express");
+const certificateRouter = (0, express_1.Router)();
+const ICertificateRepository_1 = require("../repository/implementation/ICertificateRepository");
+const CourseRepository_1 = require("../repository/implementation/CourseRepository");
+const UserRepository_1 = require("../repository/implementation/UserRepository");
+const CertificateController_1 = require("../controllers/implementation/CertificateController");
+const CertificateService_1 = require("../services/implementation/CertificateService");
+const certificateRepositoy = new ICertificateRepository_1.CertificateRepository();
+const userRepository = new UserRepository_1.UserRepository();
+const courseRepository = new CourseRepository_1.CourseRepository();
+const certificateService = new CertificateService_1.CertificateService(certificateRepositoy, userRepository, courseRepository);
+const certificateController = new CertificateController_1.CertificateController(certificateService);
+certificateRouter.post("/", certificateController.createCertificate);
+exports.default = certificateRouter;

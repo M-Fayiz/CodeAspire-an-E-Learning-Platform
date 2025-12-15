@@ -1,0 +1,22 @@
+"use strict";
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
+Object.defineProperty(exports, "__esModule", { value: true });
+const express_1 = __importDefault(require("express"));
+const categoryRouter = express_1.default.Router();
+const CategoryController_1 = require("../controllers/implementation/CategoryController");
+const CategoryRepository_1 = require("../repository/implementation/CategoryRepository");
+const CategoryService_1 = require("../services/implementation/CategoryService");
+const authentication_middleware_1 = require("../middlewares/authentication.middleware");
+const authorisation_middleware_1 = require("../middlewares/authorisation.middleware");
+const user_types_1 = require("../types/user.types");
+const categoryRepository = new CategoryRepository_1.CategoryRepository();
+const categoryService = new CategoryService_1.CategoryService(categoryRepository);
+const categoryController = new CategoryController_1.CategoryController(categoryService);
+categoryRouter.get("/", categoryController.listCategories);
+categoryRouter.use(authentication_middleware_1.verifyUser);
+categoryRouter.use((0, authorisation_middleware_1.authorizedRole)(user_types_1.IRole.Mentor, user_types_1.IRole.Admin));
+categoryRouter.post("/", categoryController.createCategory);
+categoryRouter.put("/:categoryId", categoryController.editCategory);
+exports.default = categoryRouter;
