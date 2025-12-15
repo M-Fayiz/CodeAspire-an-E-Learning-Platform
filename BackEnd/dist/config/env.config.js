@@ -94,4 +94,7 @@ exports.env = {
     get REDIS_PASS_KEY() {
         return process.env.REDIS_PASS_KEY;
     },
+    get CLIENT_URL_2() {
+        return process.env.CLIENT_URL_2;
+    }
 };
