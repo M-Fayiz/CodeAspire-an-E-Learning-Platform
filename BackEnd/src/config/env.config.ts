@@ -9,7 +9,7 @@ export const env = {
     return process.env.MONGO_URL;
   },
   get CLIENT_ORGIN() {
-    return process.env.client_Orgin;
+    return process.env.CLIENT_ORIGIN;
   },
   get EMAIL() {
     return process.env.Email;
