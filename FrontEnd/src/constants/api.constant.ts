@@ -117,4 +117,8 @@ export const API = {
   VIDEO: {
     START_VIDEO: (bookingId: string) => `/video/start/${bookingId}`,
   },
+  CERTIFICATE:{
+    create:`/certificate`,
+    list_Certificate:(learnerId:string)=>`/certificate/my-certificate/${learnerId}`
+  }
 };

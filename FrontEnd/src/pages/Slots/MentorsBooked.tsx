@@ -20,6 +20,7 @@ import {
 } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { CalendarDays } from "lucide-react";
+import CertificateService from "@/service/certificate.service";
 
 export default function MentorBookedSlots() {
   const { user } = useAuth();
@@ -140,6 +141,13 @@ export default function MentorBookedSlots() {
     }
   };
 
+  const onCertificateIssue=async(learnerId:string, coourseId:string,title:string)=>{
+    const generateCrtft=await CertificateService.generateCertificate(coourseId,learnerId,title)
+    if(generateCrtft){
+      toast.success('certificate generated successfully')
+    }
+  }
+
   return (
     <div className="flex flex-col gap-3 max-w-7xl mx-auto">
       <div className=" bg-black p-5 rounded-lg flex justify-between  ">
@@ -160,6 +168,7 @@ export default function MentorBookedSlots() {
           handleUpdateStatus(slot._id.toString(), status)
         }
         onSessionComplete={handleSessionComplete}
+        onCertificateIssue={onCertificateIssue}
       />
       <Dialog open={open} onOpenChange={setOPen}>
         <DialogContent className="sm:max-w-[450px]">

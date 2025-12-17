@@ -68,4 +68,18 @@ export const NotificationTemplates = {
     createdAt: new Date(),
     updatedAt: new Date(),
   }),
+  CourseCompletionCertificate: (
+  userId: Types.ObjectId,
+  courseTitle: string
+  ): INotification => ({
+    userId,
+    title: "🎉 Course Completed Successfully!",
+    message: `Congratulations! You have successfully completed the course "${courseTitle}" and earned your certificate of completion.`,
+    type: "success",
+    isRead: false,
+    link: `/learner/my-certificates/${userId}`,
+    createdAt: new Date(),
+    updatedAt: new Date(),
+  })
+
 };

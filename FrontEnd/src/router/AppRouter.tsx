@@ -37,6 +37,7 @@ import { VideoRoom } from "@/pages/Video Session Page/VideoSession";
 
 import LearnerBookedSlots from "@/pages/Slots/LearnersBooked";
 import MentorBookedSlots from "@/pages/Slots/MentorsBooked";
+import CertificatesList from "@/pages/certificate page/ListCertificatePage";
 
 function Form_Courses_Provider() {
   return (
@@ -83,6 +84,7 @@ export const router = createBrowserRouter([
       { path: "slot-booking/:courseId", element: <SlotBooking /> },
       { path: "booked-slots", element: <LearnerBookedSlots /> },
       { path: "video-session/:bookingId", element: <VideoRoom /> },
+      { path: "my-certificate", element: <CertificatesList /> },
     ],
   },
   // MENTOR ROUTES

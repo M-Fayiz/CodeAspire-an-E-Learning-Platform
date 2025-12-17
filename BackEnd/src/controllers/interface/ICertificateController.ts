@@ -6,4 +6,9 @@ export interface ICertificateController {
     res: Response,
     next: NextFunction,
   ): Promise<void>;
+  listCertificate(
+    req: Request,
+    res: Response,
+    next: NextFunction,
+  ): Promise<void>;
 }

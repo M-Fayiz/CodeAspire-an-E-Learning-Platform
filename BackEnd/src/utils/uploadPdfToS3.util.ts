@@ -23,3 +23,21 @@ export async function uploadPdfToS3(localPath: string, fileName: string) {
 
   return key; 
 }
+
+export async function uploadImageToS3(localPath: string, fileName: string) {
+
+  const fileStream = fs.createReadStream(localPath);
+
+  const key = `preview-image/${fileName}`;
+
+  const command = new PutObjectCommand({
+    Bucket: bucketName,
+    Key: key,
+    Body: fileStream,
+    ContentType: "preview/images",
+  });
+
+  await s3Bucket.send(command);
+
+  return key; 
+}

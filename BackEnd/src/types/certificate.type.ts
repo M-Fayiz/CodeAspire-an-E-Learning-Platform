@@ -6,6 +6,7 @@ export interface ICertificate {
   programmTitle:string
   certificateId: string;
   certificateUrl: string;
+  preview_image:string
   issuedDate: Date;
   createAt?: Date;
   updatedAt?: Date;

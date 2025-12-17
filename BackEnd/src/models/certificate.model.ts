@@ -21,6 +21,7 @@ const CertificateSchema = new mongoose.Schema<ICertificateModel>(
     programmTitle:{type:String},
     certificateId: { type: String, required: true, unique: true },
     certificateUrl: { type: String, required: true },
+    preview_image:{ type: String, required: true },
     issuedDate: { type: Date, default: Date.now },
   },
   { timestamps: true },

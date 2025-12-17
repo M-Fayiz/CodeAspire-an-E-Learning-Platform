@@ -67,7 +67,7 @@ const navigationConfig = {
       {
         icon: Award,
         label: "Certificates",
-        path: "/learner/certificates",
+        path: "/learner/my-certificate",
         badge: 3,
       },
       {
@@ -76,14 +76,12 @@ const navigationConfig = {
         path: "/learner/chats",
         badge: 2,
       },
-      { icon: Activity, label: "Progress", path: "/learner/progress" },
+      
       { icon: CalendarDays, label: "Slots", path: "/learner/booked-slots" },
     ],
     secondary: [
       { icon: ShoppingCart, label: "Course Store", path: "/learner/store" },
-      { icon: Star, label: "Favorites", path: "/learner/favorites" },
-      { icon: Settings, label: "Settings", path: "/learner/settings" },
-      { icon: HelpCircle, label: "Help", path: "/learner/help" },
+      
     ],
   },
   mentor: {

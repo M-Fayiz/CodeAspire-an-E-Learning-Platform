@@ -22,7 +22,7 @@ function generateCertificateHtml({
   "template",
   "certificate.template.html"
 );
-console.log('template path :',templatePath)
+
 const imagePath = path.join(
   process.cwd(),
   "src",

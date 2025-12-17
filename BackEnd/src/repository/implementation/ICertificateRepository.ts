@@ -1,3 +1,4 @@
+import { Types } from "mongoose";
 import {
   CertificateModel,
   ICertificateModel,
@@ -17,5 +18,8 @@ export class CertificateRepository
     certificateDatas: ICertificate,
   ): Promise<ICertificateModel> {
     return await this.create(certificateDatas);
+  }
+  async listCertificate(learnerId: Types.ObjectId): Promise<ICertificateModel[]|null> {
+    return await this.find({learnerId:learnerId})
   }
 }

@@ -14,20 +14,25 @@ import { htmlToPdf } from "../../utils/htmlToPdf.util";
 import fs from 'fs'
 import { createHttpError } from "../../utils/http-error";
 import { ICertificateService } from "../interface/ICertificateService";
-import { uploadPdfToS3 } from "../../utils/uploadPdfToS3.util";
+import { uploadImageToS3, uploadPdfToS3 } from "../../utils/uploadPdfToS3.util";
 import { ICertificate } from "../../types/certificate.type";
+import { NotificationTemplates } from "../../template/notification.template";
+import { INotificationRepository } from "../../repository/interface/INotificationRepository";
+import { INotificationDTO } from "../../types/dtos.type/notification.dto.types";
+import { notificationDto } from "../../dtos/notification.dto";
 export class CertificateService implements ICertificateService {
   constructor(
     private _certificateRepository: ICertificateRepository,
     private _userRepository: IUserRepo,
     private _courseRepository: ICourseRepository,
+    private _notificatioinRepository:INotificationRepository
   ) {}
 
   async createCertificate(
     learnerId: string,
     courseId: string,
     programmTitle:string
-  ): Promise<ICertificateModel> {
+  ): Promise<{certificate:ICertificateModel,notification :INotificationDTO}> {
     const learner_Id = parseObjectId(learnerId);
     const course_id = parseObjectId(courseId);
     console.log(learner_Id, course_id);
@@ -48,7 +53,7 @@ export class CertificateService implements ICertificateService {
 
     const certificateDate: generateCertificateHTML = {
       certId: certId,
-      courseName: course.title,
+      courseName: programmTitle,
       issuedDate: issuedDate,
       studentName: learner.name,
     };
@@ -57,22 +62,48 @@ export class CertificateService implements ICertificateService {
  
     
     const tempPath = path.join(process.cwd(), "src","temp", `${certId}.pdf`);
-    
-    await htmlToPdf(html, tempPath);
+     const previewPath = path.join(process.cwd(), "src","temp",  `${certId}-preview.png`)
+
+    await htmlToPdf(html, tempPath,previewPath);
 
     const s3Key = await uploadPdfToS3(tempPath, `${certId}.pdf`);
+    const previewKey = await uploadImageToS3(
+  previewPath,
+  `${certId}-preview.png`
+)
     fs.unlinkSync(tempPath);
-
+    fs.unlinkSync(previewPath)
     const CertificateData:ICertificate={
       learnerId:learner_Id,
       courseId:course_id,
       programmTitle:programmTitle,
       certificateId:certId,
       certificateUrl:s3Key,
+      preview_image:previewKey,
       issuedDate:new Date()
     }
 
+
     const createdCertificate=await this._certificateRepository.createCertificate(CertificateData)
-  return createdCertificate
+
+    const notification =NotificationTemplates.CourseCompletionCertificate(learner_Id,course.title)
+
+    const createdNotification=await this._notificatioinRepository.createNotification(notification)
+    return{
+      certificate:createdCertificate,
+      notification:notificationDto(createdNotification)
+    } 
   }
+  async listCertificate(learnerId: string): Promise<ICertificateModel[]> {
+    const learner_id=parseObjectId(learnerId)
+    if(!learner_id){
+      throw createHttpError(HttpStatus.NOT_FOUND,HttpResponse.INVALID_ID)
+    }
+    const certificates=await this._certificateRepository.listCertificate(learner_id)
+    if(!certificates){
+      throw createHttpError(HttpStatus.NOT_FOUND,HttpResponse.ITEM_NOT_FOUND)
+    }
+    return certificates
+  }
+
 }
