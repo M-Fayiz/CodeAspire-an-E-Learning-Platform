@@ -35,7 +35,7 @@ const CourseFormProvider = ({ children }: { children: ReactNode }) => {
     sessions: [],
     thumbnail: "",
   });
-
+  
   const [courseId, setCourseId] = useState("");
 
   const setField = (name: keyof CourseForm, value: any) => {

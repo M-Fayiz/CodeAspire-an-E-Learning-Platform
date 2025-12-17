@@ -154,4 +154,25 @@ export abstract class BaseRepository<T extends Document> {
       .findOneAndUpdate(filter, updateData, { new: true })
       .lean<T>();
   }
+
+async pullItemFromArray(
+  filter: FilterQuery<T>,
+  arrayPath: string,
+  itemId: Types.ObjectId
+): Promise<T | null> {
+  const result = await this.model.findOneAndUpdate(
+    filter,
+    {
+      $pull: {
+        [arrayPath]: { _id: itemId }
+      } as any
+    },
+    { new: true }
+  );
+
+  return result ?? null;
+}
+
+
+
 }

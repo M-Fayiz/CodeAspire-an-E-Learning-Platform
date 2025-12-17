@@ -60,6 +60,8 @@ export const API = {
     GET_COURSE_FORM_DATA: (courseId: string) => `/courses/form/${courseId}`,
     UPDATE_SESSION: (courseId: string, sessionId: string) =>
       `/courses/${courseId}/session/${sessionId}`,
+    DELETE_SESSION:(courseId:string,sessionId:string)=>`/courses/${courseId}/session/${sessionId}`,
+    DELETE_LECTURE:(courseId:string,sessionId:string,lectureId:string)=>`/courses/${courseId}/session/${sessionId}/lecture/${lectureId}`,
   },
   PAYMENT: {
     CREATE_PAYMENT_INTENT: "/orders/create-checkout-session",

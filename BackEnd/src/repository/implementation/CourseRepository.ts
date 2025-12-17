@@ -181,4 +181,10 @@ export class CourseRepository
   async getCourseFormData(courseId: Types.ObjectId): Promise<ICourses | null> {
     return await this.findById(courseId);
   }
+  async removeSession(courseId: Types.ObjectId, sessionId: Types.ObjectId): Promise<ICourses | null> {
+    return await this.pullItemFromArray({_id:courseId},'sessions',sessionId)
+  }
+  async removeLecture(courseId: Types.ObjectId, sessionId: Types.ObjectId, lectureId: Types.ObjectId): Promise<ICourses | null> {
+    return await this.pullItemFromArray({_id:courseId},`sessions[${sessionId}].lectures`,lectureId)
+  }
 }

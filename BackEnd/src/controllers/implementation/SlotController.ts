@@ -30,12 +30,13 @@ export class SlotController implements ISlotController {
   ): Promise<void> => {
     try {
       const { mentorId } = req.params;
+      const {page}=req.query
 
-      const mentorSlots = await this._slotService.getMontorSlots(mentorId);
-
+      const mentorSlots = await this._slotService.getMontorSlots(mentorId,Number(page));
+      console.log('menter slot :',mentorSlots)
       res
         .status(HttpStatus.OK)
-        .json(successResponse(HttpResponse.OK, { mentorSlots }));
+        .json(successResponse(HttpResponse.OK, { mappedSlots:mentorSlots.mappedSlots,totalPage:mentorSlots.totalDocument }));
     } catch (error) {
       next(error);
     }

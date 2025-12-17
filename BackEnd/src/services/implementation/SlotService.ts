@@ -100,27 +100,30 @@ export class SlotService implements ISlotService {
    * @param mentorId
    * @returns array of mapped slot data
    */
-  async getMontorSlots(mentorId: string): Promise<ISlotDTO[]> {
+  async getMontorSlots(mentorId: string,page:number): Promise<{mappedSlots:ISlotDTO[],totalDocument:number}> {
     const mentor_Id = parseObjectId(mentorId);
     if (!mentor_Id) {
       throw createHttpError(HttpStatus.NOT_FOUND, HttpResponse.INVALID_ID);
     }
+    let limit=5
+    let skip=(page-1)*limit
 
-    const mentorSlots = await this._slotRepository.getMentorSLots(mentor_Id, [
+    const mentorSlots = await this._slotRepository.getMentorSLotsList(mentor_Id,skip,limit, [
       "courseId",
     ]);
     if (!mentorSlots) {
       throw createHttpError(HttpStatus.NOT_FOUND, HttpResponse.ITEM_NOT_FOUND);
     }
-
+    const totalDocument=await this._slotRepository.totalDocument({mentorId:mentor_Id})
+    
     for (let daySlots of mentorSlots) {
       for (let days of daySlots.selectedDays) {
         days.startTime = convertTo12Hour(days.startTime as string);
         days.endTime = convertTo12Hour(days.endTime as string);
       }
     }
-
-    return mentorSlots?.map((slot) => mentorSlotsDTO(slot));
+    const mappedSlots=mentorSlots?.map((slot) => mentorSlotsDTO(slot));
+    return {mappedSlots,totalDocument}
   }
   /**
    * Updates a mentor's slot and validates whether any other slot

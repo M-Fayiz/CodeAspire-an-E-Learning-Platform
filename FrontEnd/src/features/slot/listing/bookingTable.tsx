@@ -1,5 +1,5 @@
 import { Button } from "@/components/ui/button";
-import { Book, User, Clock } from "lucide-react";
+import { Book, User, Clock, Award } from "lucide-react";
 import { Card, CardHeader, CardContent } from "@/components/ui/card";
 import type { IBookingDTOforLearner } from "@/types/DTOS/slotBooking.dto.type";
 import { MentorActionMenu } from "@/features/mentor/slots/mentorActions";
@@ -30,6 +30,8 @@ export const BookingTable = ({
   onUpdateStatus,
   onSessionComplete,
 }: BookingTableProps) => {
+
+  
   if (slots.length === 0) {
     return (
       <Card className="bg-white border border-gray-200 text-black shadow-sm">
@@ -49,7 +51,7 @@ export const BookingTable = ({
         <div className="overflow-x-auto">
           <table className="w-full text-sm table-fixed border-collapse">
             <thead className="bg-gray-100 text-gray-700">
-              <tr>
+              <tr className="">
                 <th className="p-3 text-left font-medium min-w-[120px]">
                   Course
                 </th>
@@ -103,7 +105,7 @@ export const BookingTable = ({
 
                   <td className="p-3 text-center">
                     <span
-                      className={`px-2 py-1 rounded text-xs font-medium ${
+                      className={`px-1 py-1 rounded text-xs font-medium ${
                         slot.status === "completed"
                           ? "bg-green-100 text-green-800"
                           : slot.status === "booked"
@@ -161,6 +163,14 @@ export const BookingTable = ({
                             <Clock size={14} className="mr-1" /> Join
                           </Button>
                         )}
+                        {slot.studentStatus=='passed'&&(
+                          <Button 
+                          variant={"outline"}
+                          >
+                            certificate <Award/>
+                          </Button>
+                        )
+                        }
 
                         <MentorActionMenu
                           slot={slot}

@@ -7,7 +7,7 @@ import { IMentorSlot } from "../../types/slot.type";
 
 export interface ISlotService {
   createSlot(slotData: IMentorSlot): Promise<ISlotDTO>;
-  getMontorSlots(mentorId: string): Promise<ISlotDTO[]>;
+  getMontorSlots(mentorId: string,page:number): Promise<{mappedSlots:ISlotDTO[],totalDocument:number}>;
   updateSlot(slotId: string, slotData: ISlotModel): Promise<ISlotDTO>;
   getCourseSlot(courseId: string): Promise<ISlotPopulatedDTO>;
 }

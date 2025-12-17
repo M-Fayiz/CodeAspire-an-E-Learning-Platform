@@ -201,7 +201,7 @@ export class CourseService implements ICourseService {
       throw createHttpError(HttpStatus.CONFLICT, HttpResponse.ITEM_EXIST);
     }
       await this._courseRepository.addSession(id, session);
-    const courseData=this._courseRepository.findCourse(id)
+    const courseData=await this._courseRepository.findCourse(id)
     if(!courseData){
       throw createHttpError(HttpStatus.NOT_FOUND,HttpResponse.COURSE_NOT_FOUND)
     }
@@ -392,5 +392,15 @@ export class CourseService implements ICourseService {
     }
 
     return CourseFormDataDTO(courseFormData);
+  }
+  async removeSession(courseId: string, sessionId: string): Promise<ICourseCreateForm | null> {
+    const course_id=parseObjectId(courseId)
+    const session_id=parseObjectId(sessionId)
+    if(!course_id||!session_id){
+      throw createHttpError(HttpStatus.BAD_REQUEST,HttpResponse.INVALID_ID)
+    }
+
+    const removedData=await this._courseRepository.removeSession(course_id,session_id)
+   return CourseFormDataDTO(removedData as ICourses)
   }
 }

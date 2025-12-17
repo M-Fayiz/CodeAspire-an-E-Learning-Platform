@@ -41,4 +41,9 @@ export interface ICourseController {
     res: Response,
     next: NextFunction,
   ): Promise<void>;
+  removeSession(
+    req: Request,
+    res: Response,
+    next: NextFunction,
+  ): Promise<void>;
 }

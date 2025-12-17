@@ -21,6 +21,8 @@ import { convertTo24Hour } from "@/utility/generateTimes.util";
 import SlotList from "@/features/mentor/slots/SlotTable";
 import { toast } from "sonner";
 import type { ISlotDTO } from "@/types/DTOS/slot.dto";
+import { useSearchQuery } from "@/hooks/useSearchQuery";
+import PaginationRounded from "@/components/ui/Pagination";
 
 const SlotManagement = () => {
   const [formData, setFormData] = useState<IMentorSlot>({
@@ -39,18 +41,22 @@ const SlotManagement = () => {
     slotDuration: 30,
     pricePerSlot: 0,
   });
-
+ const [totalPage, setTotalPage] = useState(1);
+ const [page,setPage]=useState(1)
   const [formError, setFormError] = useState<Record<string, string>>({});
   const { user } = useAuth();
   const [slot, setSlots] = useState<ISlotDTO[]>([]);
+  
+ 
   const [isOpen, setIsOpen] = useState(false);
 
  useEffect(() => {
   if (!user?.id) return;
 
   (async () => {
-    const data = await SlotService.getMentorSlotList(user.id);
-    if (data) setSlots(data);
+    const data = await SlotService.getMentorSlotList({mentorId:user.id,page});
+    if (data) setSlots(data.mappedSlots);
+    setTotalPage(data.totalPage)
   })();
 }, [user?.id]);
 
@@ -125,7 +131,7 @@ const SlotManagement = () => {
           toast.success("Slot updated successfully!");
         } else {
           const createdData = await SlotService.createSlots(payload);
-          console.log('created Data :',createdData)
+         
           setSlots((prev) => [...prev, createdData]);
           resetForm();
           toast.success("Slot created successfully!");
@@ -138,7 +144,7 @@ const SlotManagement = () => {
         if (error instanceof Error) toast.error(error.message);
       }
   };
-  console.log(formData);
+  
   const onEdit = (slot: ISlotDTO) => {
     setFormData({
       _id: slot._id,
@@ -176,6 +182,7 @@ const SlotManagement = () => {
       <ManagementLayout description="mange your slot " title="slot management">
         <div className="flex flex-col gap-2.5">
           <div>
+          
             <Dialog open={isOpen} onOpenChange={setIsOpen}>
               <DialogTrigger asChild>
                 <Button onClick={()=> resetForm()} variant="outline">
@@ -214,7 +221,12 @@ const SlotManagement = () => {
           </div>
           <div>{slot && <SlotList slots={slot} onEdit={onEdit} />}</div>
         </div>
-        
+        <PaginationRounded
+        currentPage={page}
+        totalPages={totalPage}
+        onPageChange={(_, value) =>setPage(value)}
+      />
+
       </ManagementLayout>
     </>
   );

@@ -21,6 +21,7 @@ export class SlotRepository
   }
   async getMentorSLots(
     mentorId: Types.ObjectId,
+    
     populate?: string[],
   ): Promise<mentorUnPopulatedSlots[] | null> {
     return await this.find({ mentorId: mentorId }, populate);
@@ -44,8 +45,13 @@ export class SlotRepository
   ): Promise<ISlotModel | null> {
     return await this.findOne(filter);
   }
-
-  async getUpdateSlots(slotId: Types.ObjectId, populate?: string[]): Promise<mentorUnPopulatedSlots|null> {
-    return await this.findOne<mentorUnPopulatedSlots>({_id:slotId},populate)
+  async totalDocument(filter: FilterQuery<ISlotModel>): Promise<number > {
+    return await this.countDocuments(filter)
+  }
+  async getMentorSLotsList(mentorId: Types.ObjectId, skip: number, limit: number, populate?: string[]): Promise<mentorUnPopulatedSlots[] | null> {
+    return await this.findAll({ mentorId: mentorId },limit,skip, populate);
+  }
+  async  getUpdateSlots(slotId: Types.ObjectId, populate?: string[]): Promise<mentorUnPopulatedSlots | null> {
+    return await this.findOne({_id:slotId},populate)
   }
 }

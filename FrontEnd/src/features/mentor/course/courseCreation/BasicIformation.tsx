@@ -93,7 +93,7 @@ const BasicCourseInformation: React.FC<BaseCaourseProps> = ({ handleTap }) => {
         return;
       }
 
-      if (courseId) {
+      if (courseId||formData._id) {
         const updatedData = await courseService.updateBaseInformation(
           courseId,
           {

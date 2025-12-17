@@ -42,6 +42,7 @@ courseRouter.put(
   "/:courseId/sessions/:sessionId/lectures/:lectureId",
   courseController.editLecture,
 );
+courseRouter.delete('/:courseId/session/:sessionId',courseController.removeSession)
 courseRouter.patch("/publish/:courseId", courseController.publishCourse);
 courseRouter.patch("/admin/approve/:courseId", courseController.approveCourse);
 courseRouter.patch("/admin/reject/:courseId", courseController.rejectCourse);

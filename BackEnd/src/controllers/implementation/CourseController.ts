@@ -137,12 +137,12 @@ export class CourseController implements ICourseController {
     try {
       const { courseId } = req.params;
       const { session } = req.body;
-
+      
       const addedSessionData = await this._courseService.addSessions(
         courseId,
         session,
       );
-      console.warn(addedSessionData);
+      console.warn('added session :',addedSessionData);
       res
         .status(HttpStatus.OK)
         .json(successResponse(HttpResponse.OK, { addedSessionData }));
@@ -324,7 +324,6 @@ export class CourseController implements ICourseController {
 
       const courseFormData =
         await this._courseService.getCourseFormData(courseId);
-      console.log("(       )", courseFormData);
       res
         .status(HttpStatus.OK)
         .json(successResponse(HttpResponse.OK, { courseFormData }));
@@ -332,4 +331,16 @@ export class CourseController implements ICourseController {
       next(error);
     }
   };
+  removeSession=async(req: Request, res: Response, next: NextFunction): Promise<void>=> {
+    try {
+      const {courseId,sessionId}=req.params
+      console.log(courseId,'-    -',sessionId )
+      const removedSessionData=await this._courseService.removeSession(courseId,sessionId)
+      res
+        .status(HttpStatus.OK)
+        .json(successResponse(HttpResponse.OK, { removedSessionData }));
+    } catch (error) {
+      next(error)
+    }
+  }
 }
