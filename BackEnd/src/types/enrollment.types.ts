@@ -11,6 +11,10 @@ export interface IEnrolledAggregation {
   avgRating: number;
   totalStudents: number;
 }
+export enum completionStatus{
+  IN_PROGRESS='inProgress',
+  COMPLETED='completed'
+}
 
 export interface IEnrollement {
   learnerId: Types.ObjectId;
@@ -22,6 +26,7 @@ export interface IEnrollement {
     lastAccessedLecture: Types.ObjectId | null;
     completionPercentage: number;
   };
+  courseStatus:completionStatus
   rating?: number;
   createdAt?: Date;
   updatedAt?: Date;

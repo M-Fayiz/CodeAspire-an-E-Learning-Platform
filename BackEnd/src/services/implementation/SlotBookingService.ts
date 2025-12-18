@@ -3,7 +3,7 @@ import { env } from "../../config/env.config";
 import { HttpResponse } from "../../const/error-message";
 import { HttpStatus } from "../../const/http-status";
 import { ISlotBookingRepository } from "../../repository/interface/ISlotBookingRepository";
-import { BookingStatus, ISlotBooking, StudenStatus } from "../../types/sessionBooking.type";
+import { BookingStatus, bookingType, ISlotBooking, StudenStatus } from "../../types/sessionBooking.type";
 import { createHttpError } from "../../utils/http-error";
 import { timeAndDateGenerator } from "../../utils/timeAndDateGenerator";
 import { ISlotBookingService } from "../interface/ISlotBookingService";
@@ -58,7 +58,7 @@ export class SlotBookingService implements ISlotBookingService {
     const activeBooking = await this._slotBookingRepository.findSlots({
       learnerId,
       courseId,
-      status: { $in: ["booked", "Pending"] },
+      status: { $in: [BookingStatus.BOOKED,BookingStatus.PENDING] },
     });
 
     if (activeBooking) {
@@ -72,7 +72,7 @@ export class SlotBookingService implements ISlotBookingService {
 
     const isFreeBooking = previousBookings && previousBookings.length == 0;
 
-    bookingData.type = isFreeBooking ? "free" : "paid";
+    bookingData.type = isFreeBooking ?bookingType.FREE: bookingType.PAID;
 
     const { date, startTime, endTime } = timeAndDateGenerator(
       bookingData.date as string,
@@ -88,7 +88,7 @@ export class SlotBookingService implements ISlotBookingService {
       learnerId,
       startTime: { $lt: endTime },
       endTime: { $gt: startTime },
-      status: { $ne: "completed" },
+      status: { $ne:BookingStatus.COMPLETED },
     });
 
     if (overlap) {
@@ -98,10 +98,10 @@ export class SlotBookingService implements ISlotBookingService {
       );
     }
 
-    if (bookingData.type == "free") {
+    if (bookingData.type == bookingType.FREE) {
       await this._slotBookingRepository.createBooking({
         ...bookingData,
-        status: "booked",
+        status: BookingStatus.BOOKED,
       });
       return null;
     }
@@ -137,7 +137,7 @@ export class SlotBookingService implements ISlotBookingService {
       success_url: `${env.CLIENT_ORGIN}/courses/payment-success`,
       cancel_url: `${env.CLIENT_ORGIN}/slot-booking/cancel`,
       metadata: {
-        paymentType: "SLOT_BOOKING",
+        paymentType: TransactionType.SLOT_BOOKING,
         bookingId: createdPaidSlot._id.toString(),
         learnerId: learnerId.toString(),
         courseId: courseId.toString(),
@@ -230,17 +230,17 @@ export class SlotBookingService implements ISlotBookingService {
 
     const currentDate = now.toISOString().split("T")[0];
     const sessionDate = new Date(bookedData.date).toISOString().split("T")[0];
-    if (currentDate !== sessionDate) {
-      throw createHttpError(HttpStatus.CONFLICT, HttpResponse.SLOT_DATE);
-    }
+    // if (currentDate !== sessionDate) {
+    //   throw createHttpError(HttpStatus.CONFLICT, HttpResponse.SLOT_DATE);
+    // }
 
-    if (now.getTime() < startTime.getTime() - EARLY_JOIN_BUFFER) {
-      throw createHttpError(HttpStatus.CONFLICT, HttpResponse.NOT_STARTED);
-    }
+    // if (now.getTime() < startTime.getTime() - EARLY_JOIN_BUFFER) {
+    //   throw createHttpError(HttpStatus.CONFLICT, HttpResponse.NOT_STARTED);
+    // }
 
-    if (now.getTime() > endTime.getTime()) {
-      throw createHttpError(HttpStatus.CONFLICT, HttpResponse.SESSION_ENDED);
-    }
+    // if (now.getTime() > endTime.getTime()) {
+    //   throw createHttpError(HttpStatus.CONFLICT, HttpResponse.SESSION_ENDED);
+    // }
     const notifyDataMentor = NotificationTemplates.JoinNowSession(
       bookedData.mentorId,
     );

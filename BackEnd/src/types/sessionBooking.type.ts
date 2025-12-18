@@ -26,9 +26,9 @@ export interface ISlotBooking {
   date: Date | string;
   startTime: Date | string;
   endTime: Date | string;
-  type?: "free" | "paid";
-  status?: "booked" | "completed" | "Pending" | "canceled" | "refunded";
+  type?: bookingType;
+  status?:BookingStatus
   feedback?: string;
-  studentStatus?: "passed" | "failed" | "Pending";
+  studentStatus?: StudenStatus;
   mentorId: Types.ObjectId;
 }

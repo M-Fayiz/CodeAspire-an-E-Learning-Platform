@@ -24,7 +24,7 @@ export interface IBaseCourse {
 export interface IPopulatedCourse extends IBaseCourse {
   categoryId: ICategoryModel;
   subCategoryId: ICategoryModel;
-  mentorsId: IMenterModel;
+  mentorId: IMenterModel;
 }
 
 export interface ICourseListDTO {
@@ -59,7 +59,7 @@ export interface IFormCourseDTO {
   language: string;
   level: "Beginner" | "Intermediate" | "Advanced";
   price: number;
-  mentorsId: {
+  mentorId: {
     _id: Types.ObjectId;
     name: string;
     email: string;

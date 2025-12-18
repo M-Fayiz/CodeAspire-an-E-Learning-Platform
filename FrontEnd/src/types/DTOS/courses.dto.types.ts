@@ -20,7 +20,7 @@ export interface ICourseData {
   language: string;
   level: "Beginner" | "Intermediate" | "Advanced";
   price: number;
-  mentorsId: string;
+  mentorId: string;
   sessions?: ISession[];
   isActive?: boolean;
   isDraft?: boolean;
@@ -51,7 +51,7 @@ export interface CourseForm {
   language: string;
   level: "Beginner" | "Intermediate" | "Advanced";
   price: number;
-  mentorsId: string;
+  mentorId: string;
   sessions: ISession[];
   status?: "inProgress" | "draft" | "published" | "approved" | "rejected";
 }
@@ -65,7 +65,7 @@ export interface IFormCourse {
   language: string;
   level: "Beginner" | "Intermediate" | "Advanced";
   price: number;
-  mentorsId: string;
+  mentorId: string;
   sessions: ISession[];
   description: string;
   status: "inProgress" | "draft" | "published" | "rejected";
@@ -86,7 +86,7 @@ export interface IFormCourseDTO {
   language: string;
   level: "Beginner" | "Intermediate" | "Advanced";
   price: number;
-  mentorsId: {
+  mentorId: {
     _id: string;
     name: string;
     email: string;

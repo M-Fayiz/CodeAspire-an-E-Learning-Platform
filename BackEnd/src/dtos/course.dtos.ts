@@ -75,10 +75,10 @@ export function formCourseDto(course: IPopulatedCourse): IFormCourseDTO {
     language: course.language,
     level: course.level,
     price: course.price,
-    mentorsId: {
-      _id: course.mentorsId._id,
-      name: course.mentorsId.name,
-      email: course.mentorsId.email,
+    mentorId: {
+      _id: course.mentorId._id,
+      name: course.mentorId.name,
+      email: course.mentorId.email,
     },
     sessions: course.sessions ?? [],
     status: course.status,
@@ -106,7 +106,7 @@ export function CourseFormDataDTO(course: ICourses): ICourseCreateForm {
     thumbnail: course.thumbnail as string,
     categoryId: course.categoryId as Types.ObjectId,
     subCategoryId: course.subCategoryId as Types.ObjectId,
-    mentorId: course.mentorsId as Types.ObjectId,
+    mentorId: course.mentorId as Types.ObjectId,
 
     sessions: course.sessions as ISession[],
   };

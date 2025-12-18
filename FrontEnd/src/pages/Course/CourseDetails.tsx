@@ -85,7 +85,7 @@ const CourseDetails = () => {
           {activeTap === "overview" && <CourseOverview />}
           {activeTap === "mentor" && (
             <MentorProfile
-              mentorId={course?.mentorsId._id as string}
+              mentorId={course?.mentorId._id as string}
               courseId={course?._id as string}
             />
           )}

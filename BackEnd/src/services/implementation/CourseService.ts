@@ -40,7 +40,7 @@ export class CourseService implements ICourseService {
 
   async createCourses(course: ICourses): Promise<ICourseCreateForm | null> {
     const mentorCourse = await this._courseRepository.findAllCourse({
-      mentorsId: course.mentorsId,
+      mentorId: course.mentorId,
       categoryId: course.categoryId,
     });
 
@@ -173,7 +173,7 @@ export class CourseService implements ICourseService {
       query["title"] = { $regex: search, $options: "i" };
     }
 
-    query["mentorsId"] = mentorId;
+    query["mentorId"] = mentorId;
 
     const [courseData, documnetCount] = await Promise.all([
       this._courseRepository.getMentorDraftedCourses(search, limit, skip, id),
@@ -305,7 +305,7 @@ export class CourseService implements ICourseService {
       await this._courseRepository.appproveCourse(course_id);
 
     const notifyData = NotificationTemplates.courseApproval(
-      courseDetails?.mentorsId as Types.ObjectId,
+      courseDetails?.mentorId as Types.ObjectId,
       courseDetails?.title as string,
     );
     const savedNotify =
@@ -327,7 +327,7 @@ export class CourseService implements ICourseService {
     }
     const courseDetails = await this._courseRepository.rejectCourse(id);
     const notifyData = NotificationTemplates.courseRejection(
-      courseDetails?.mentorsId as Types.ObjectId,
+      courseDetails?.mentorId as Types.ObjectId,
       courseDetails?.title as string,
       feedBack,
     );
@@ -365,7 +365,7 @@ export class CourseService implements ICourseService {
     const mentor_Id = parseObjectId(mentorId);
 
     const courseList = await this._courseRepository.findAllCourse({
-      mentorsId: mentor_Id,
+      mentorId: mentor_Id,
     });
     if (!courseList) {
       throw createHttpError(

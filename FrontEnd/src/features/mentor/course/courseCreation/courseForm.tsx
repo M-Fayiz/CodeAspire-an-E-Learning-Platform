@@ -10,10 +10,10 @@ import Publish from "../Publish";
 
 export default function CourseCreateLayout() {
   const [activeTab, setActiveTab] = useState("basic");
-  const { formData } = useCourseFormContext();
+  const { formData ,courseId} = useCourseFormContext();
 
   const handleActiveTap = (tap: string) => {
-    if (tap !== "basic" && !formData._id) {
+    if (tap !== "basic" && !courseId) {
       toast.info("Please Fillout Basic Course Information!");
       return;
     }

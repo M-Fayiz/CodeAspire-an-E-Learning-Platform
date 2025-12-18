@@ -153,7 +153,7 @@ const EnrolledCourseDetails = () => {
             {activeTap === "mentor" && (
               <MentorProfile
                 courseId={enrolledCourse?.courseId as string}
-                mentorId={enrolledCourse?.course.mentorsId._id as string}
+                mentorId={enrolledCourse?.course.mentorId._id as string}
               />
             )}
             {activeTap === "curriculum" && (

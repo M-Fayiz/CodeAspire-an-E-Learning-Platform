@@ -64,7 +64,7 @@ export class CourseRepository
     if (search) {
       query["title"] = { $regex: search, $options: "i" };
     }
-    query["mentorsId"] = mentorId;
+    query["mentorId"] = mentorId;
     return await this.findAll<IPopulatedCourse>(query, limit, skip, [
       "categoryId",
       "subCategoryId",
@@ -142,7 +142,7 @@ export class CourseRepository
   async getAdminCoursList(): Promise<IPopulatedCourse[] | null> {
     return await this.find<IPopulatedCourse>(
       { status: { $in: ["published", "rejected", "approved"] } },
-      ["categoryId", "subCategoryId", "mentorsId"],
+      ["categoryId", "subCategoryId", "mentorId"],
     );
   }
   async getCourseDetails(
@@ -151,7 +151,7 @@ export class CourseRepository
     return await this.find<IPopulatedCourse>({ _id: courseId }, [
       "categoryId",
       "subCategoryId",
-      "mentorsId",
+      "mentorId",
     ]);
   }
   async appproveCourse(courseId: Types.ObjectId): Promise<ICourses | null> {
@@ -167,7 +167,7 @@ export class CourseRepository
     return await this.findOne<IPopulatedCourse>({_id:courseId}, [
       "categoryId",
       "subCategoryId",
-      "mentorsId",
+      "mentorId",
     ]);
   }
   async findDocumentCount(query: FilterQuery<ICourses>): Promise<number> {

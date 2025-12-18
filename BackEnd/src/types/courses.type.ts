@@ -21,7 +21,7 @@ export interface ICourses extends Document {
   language: string;
   level: "Beginner" | "Intermediate" | "Advanced";
   price: number;
-  mentorsId: Types.ObjectId | IMenterModel;
+  mentorId: Types.ObjectId | IMenterModel;
   sessions?: ISession[];
   isActive?: boolean;
   isDraft?: boolean;
@@ -51,7 +51,7 @@ export interface populatedCours {
   language: string;
   level: "Beginner" | "Intermediate" | "Advanced";
   price: number;
-  mentorsId: string;
+  mentorId: string;
   sessions: ISession[];
   updatedAt: string;
   status: "inProgress" | "draft" | "published" | "approved" | "rejected";

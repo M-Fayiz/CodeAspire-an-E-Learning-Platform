@@ -29,7 +29,7 @@ export const intitializeSocket = (server: HttpServer) => {
 
     try {
       const user = verifyAccesToken(token);
-      console.log("user : ", user);
+    
       socket.data.userId = user._id;
       next();
     } catch {
@@ -39,7 +39,7 @@ export const intitializeSocket = (server: HttpServer) => {
 
   io.on(SocketEvents.CONNECT, async (socket: CustomSocket) => {
     const userId = socket.data.userId;
-    console.log("User Connected", userId);
+
 
     socket.join(`user:${userId}`);
 

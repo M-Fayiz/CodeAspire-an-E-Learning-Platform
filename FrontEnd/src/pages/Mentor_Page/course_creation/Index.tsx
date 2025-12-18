@@ -28,7 +28,7 @@ const CourseCreation = () => {
     } else {
       resetForm();
     }
-  }, [editId, courseId]);
+  }, [editId]);
   return (
     <>
       <ManagementLayout

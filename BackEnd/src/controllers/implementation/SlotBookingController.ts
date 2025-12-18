@@ -35,7 +35,7 @@ export class SlotBookingController implements ISlotBookingController {
         endTime,
       };
 
-      console.log(bookingData);
+      
 
       const checkoutURL =
         await this._slotBookingService.createBooking(bookingData);
@@ -123,7 +123,7 @@ export class SlotBookingController implements ISlotBookingController {
     try {
       const {bookedId}=req.params
       const {studentStatus}=req.body
-      console.log(bookedId,'  -          -',studentStatus)
+      
       const updatedData=await this._slotBookingService.updateStudents(bookedId,studentStatus)
       res
         .status(HttpStatus.OK)

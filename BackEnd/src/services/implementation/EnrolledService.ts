@@ -243,4 +243,14 @@ export class EnrolledService implements IEnrolledService {
       signedUsers,
     };
   }
+  async learnerDashboardCardData(learnerId: string, filter: string, startDate: string, endDate: string): Promise<void> {
+    const learner_Id=parseObjectId(learnerId)
+    if(!learner_Id){
+      throw createHttpError(HttpStatus.BAD_REQUEST,HttpResponse.INVALID_ID)
+    }
+
+
+    // await this._erolledRepository.
+
+  }
 }

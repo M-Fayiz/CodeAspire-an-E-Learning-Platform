@@ -57,7 +57,7 @@ function AdminCourseDetails() {
     const status = await courseService.rejectCourse(
       course._id,
       feedback,
-      course.mentorsId.email,
+      course.mentorId.email,
     );
     if (status && course) {
       toast.success("Course status successfully rejected");
@@ -200,7 +200,7 @@ function AdminCourseDetails() {
           {activeTab === "mentor" && (
             <MentorProfile
               courseId={course._id}
-              mentorId={course?.mentorsId._id as string}
+              mentorId={course?.mentorId._id as string}
             />
           )}
         </div>

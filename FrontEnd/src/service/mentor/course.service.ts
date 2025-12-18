@@ -15,9 +15,9 @@ import { S3BucketUtil } from "@/utility/S3Bucket.util";
 import { throwAxiosError } from "@/utility/throwErrot";
 
 const courseService = {
-  createCourse: async (courseData: ICourseData): Promise<ICourseData> => {
+  createCourse: async (courseData: ICourseData): Promise<CourseForm> => {
     try {
-      console.log(" thumbnail :", courseData);
+
       if (courseData.thumbnail) {
         const uploadAndFileUrl = await sharedService.getS3BucketUploadUrl(
           courseData.thumbnail as File,

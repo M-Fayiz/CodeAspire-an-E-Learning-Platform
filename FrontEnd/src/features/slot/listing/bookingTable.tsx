@@ -45,6 +45,7 @@ export const BookingTable = ({
 }: BookingTableProps) => {
   const [title,setTitle]=useState('')
   const [errors, setErrors] = useState('');
+  const [open, setOpen] = useState(false);
 
   const onSubmitCrtfct=(courseId:string,learnerId:string,e:React.FormEvent<HTMLFormElement>)=>{  
     e.preventDefault()
@@ -172,7 +173,7 @@ export const BookingTable = ({
 
                       {role === "mentor" &&
                         slot.studentStatus === "passed" && (
-                          <Dialog>
+                          <Dialog open={open} onOpenChange={setOpen}>
                             <DialogTrigger asChild>
                               <Button variant="outline" size="sm">
                                 <Award size={14} className="mr-1" />

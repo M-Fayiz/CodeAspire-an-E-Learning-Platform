@@ -39,4 +39,5 @@ export interface IEnrolledService {
     courseRevanue: graphPrps[];
     signedUsers: graphPrps[];
   }>;
+  learnerDashboardCardData(learnerId:string,filter:string,startDate:string,endDate:string):Promise<void>
 }

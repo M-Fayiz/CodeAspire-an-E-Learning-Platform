@@ -18,12 +18,18 @@ export const useP2PCall = (socket: Socket) => {
 
   const init = async (deps: RTCDeps) => {
     if (!socket) throw new Error("Socket not initialized");
-    if (initializedRef.current) return;
+    if (initializedRef.current) {
+      reset();
+    }
     initializedRef.current = true;
+
 
     const pc = new RTCPeerConnection({
       iceServers: [{ urls: "stun:stun.l.google.com:19302" }],
     });
+
+   
+
     pcRef.current = pc;
 
     try {
@@ -56,21 +62,24 @@ export const useP2PCall = (socket: Socket) => {
         });
       }
     };
+pc.onconnectionstatechange = () => {
+  const state = pc.connectionState;
 
-    pc.onconnectionstatechange = () => {
-      const state = pc.connectionState;
-      console.log("Connection state:", state);
-      if (state === "connected") deps.onConnected?.();
-      if (["disconnected", "failed", "closed"].includes(state))
-        deps.onDisconnected?.();
-    };
+  if (state === "connected") deps.onConnected?.();
+
+  if (["disconnected", "failed", "closed"].includes(state)) {
+    deps.onDisconnected?.();
+    reset();
+  }
+};
 
     socket.off("video:offer");
     socket.off("video:answer");
     socket.off("video:ice-candidate");
     socket.off("video:peer-joined");
-    socket.off("video:force-leave");
-
+  
+    socket.off("video:peer-left");
+    
     socket.on("video:offer", async ({ sdp, from }) => {
       if (from === deps.userId) return;
       await pc.setRemoteDescription(new RTCSessionDescription(sdp));
@@ -97,7 +106,7 @@ export const useP2PCall = (socket: Socket) => {
       }
     });
 
-    socket.on("video:force-leave", ({ reason }) => {
+    socket.on("video:peer-left", ({ reason }) => {
       console.warn("Forced leave:", reason);
 
       toast.error(reason || "Call ended");
@@ -110,6 +119,10 @@ export const useP2PCall = (socket: Socket) => {
         const initiator = deps.userId < peerId;
         if (initiator) call(deps.roomId, deps.userId);
       }
+    });
+    socket.on("video:peer-left", () => {
+      deps.onDisconnected?.();
+      reset();
     });
 
     socket.emit("video:join", { roomId: deps.roomId });
@@ -135,6 +148,20 @@ export const useP2PCall = (socket: Socket) => {
     if (!stream) return toast.error("Stream not initialized");
     stream.getVideoTracks().forEach((t) => (t.enabled = !off));
   };
+  const reset = () => {
+  if (pcRef.current) {
+    pcRef.current.close();
+    pcRef.current = null;
+  }
+
+  if (localStreamRef.current) {
+    localStreamRef.current.getTracks().forEach(t => t.stop());
+    localStreamRef.current = null;
+  }
+
+  initializedRef.current = false;
+};
+
 
   const shareScreen = async (on: boolean) => {
     const pc = pcRef.current;
@@ -164,8 +191,10 @@ export const useP2PCall = (socket: Socket) => {
   };
 
   const hangup = async (roomId: string) => {
-    cleanupAndExit(roomId);
-  };
+  reset();
+  socket.emit("video:leave", { roomId });
+};
+
 
   const cleanupAndExit = async (roomId?: string) => {
     const pc = pcRef.current;

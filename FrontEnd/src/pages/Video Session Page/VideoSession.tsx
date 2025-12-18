@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from "react";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { useAuth } from "@/context/auth.context";
 import { useSocket } from "@/context/socket.context";
 import VideoService from "@/service/videoSession.service";
@@ -14,6 +14,9 @@ import {
   ScreenShareOff,
   PhoneOff,
 } from "lucide-react";
+type CallState = "idle" | "calling" | "connected" | "disconnected";
+
+
 
 export const VideoRoom = () => {
   const { bookingId } = useParams();
@@ -21,12 +24,14 @@ export const VideoRoom = () => {
   const socket = useSocket();
   const localRef = useRef<HTMLVideoElement>(null);
   const remoteRef = useRef<HTMLVideoElement>(null);
-
+const [callState, setCallState] = useState<CallState>("idle");
   const [roomId, setRoomId] = useState<string>();
   const [joined, setJoined] = useState(false);
   const [muted, setMuted] = useState(false);
   const [camOff, setCamOff] = useState(false);
   const [sharing, setSharing] = useState(false);
+
+  const navigate =useNavigate()
 
   const { init, call, hangup, toggleMic, toggleCamera, shareScreen } =
     useP2PCall(socket!);
@@ -41,14 +46,15 @@ export const VideoRoom = () => {
         setRoomId(room);
 
         if (localRef.current && remoteRef.current) {
-          await init({
-            roomId: room,
-            userId: user.id,
-            localVideo: localRef.current,
-            remoteVideo: remoteRef.current,
-            onConnected: () => console.log("✅ Connected"),
-            onDisconnected: () => console.log("❌ Disconnected"),
-          });
+         await init({
+          roomId: room,
+          userId: user.id,
+          localVideo: localRef.current,
+          remoteVideo: remoteRef.current,
+          onConnected: () => setCallState("connected"),
+          onDisconnected: () => setCallState("disconnected"),
+        });
+
           setJoined(true);
         }
       } catch (err) {
@@ -62,8 +68,27 @@ export const VideoRoom = () => {
   }, [socket, user, bookingId]);
 
   const handleCall = async () => {
-    if (roomId && user) await call(roomId, user.id);
-  };
+      if (!roomId || !user) return;
+      setCallState("calling");
+      await call(roomId, user.id);
+    };
+  const handleRejoin = async () => {
+  if (!roomId || !user) return;
+
+  if (localRef.current && remoteRef.current) {
+    await init({
+      roomId,
+      userId: user.id,
+      localVideo: localRef.current,
+      remoteVideo: remoteRef.current,
+      onConnected: () => setCallState("connected"),
+      onDisconnected: () => setCallState("disconnected"),
+    });
+
+    await call(roomId, user.id);
+  }
+};
+
 
   const handleMic = () => {
     setMuted((prev) => {
@@ -92,6 +117,13 @@ export const VideoRoom = () => {
   const handleHangup = async () => {
     if (roomId) await hangup(roomId);
     setJoined(false);
+    if(user?.role=='mentor'){
+
+      navigate('/mentor/booked-slot-list')
+    }else if(user?.role==='learner'){
+      navigate('/learner/booked-slots')
+
+    }
   };
 
   return (
@@ -116,19 +148,34 @@ export const VideoRoom = () => {
 
       {joined && (
         <div className="flex flex-wrap gap-4 justify-center">
-          {/* CALL */}
+          {/* {user?.role=='mentor'&&(
+
           <button
             onClick={handleCall}
-            className="p-3 bg-green-500 text-white rounded-full hover:scale-110 transition"
+            className="p-3 pl-6 pr-6  rounded-2xl bg-gray-500 text-white  hover:scale-110 transition"
             title="Call"
           >
             <Phone />
           </button>
+          
+          )
 
-          {/* MIC */}
+          } */}
+          {callState === "idle" && user?.role === "mentor" && (
+            <button onClick={handleCall} className="btn-primary">
+              Start Call
+            </button>
+          )}
+
+         {callState === "connected" &&(
+          <>
+          
+          
+          </>
+         )}
           <button
             onClick={handleMic}
-            className={`p-3 rounded-full ${
+            className={`p-3 pl-6 pr-6  rounded-2xl ${
               muted ? "bg-red-500 text-white" : "bg-gray-200 text-gray-800"
             } hover:scale-110 transition`}
             title={muted ? "Unmute Mic" : "Mute Mic"}
@@ -136,10 +183,9 @@ export const VideoRoom = () => {
             {muted ? <MicOff /> : <Mic />}
           </button>
 
-          {/* CAMERA */}
           <button
             onClick={handleCam}
-            className={`p-3 rounded-full ${
+            className={`p-3 pl-6 pr-6  rounded-2xl ${
               camOff ? "bg-red-500 text-white" : "bg-gray-200 text-gray-800"
             } hover:scale-110 transition`}
             title={camOff ? "Camera On" : "Camera Off"}
@@ -147,23 +193,32 @@ export const VideoRoom = () => {
             {camOff ? <VideoOff /> : <Video />}
           </button>
 
-          {/* SCREEN SHARE */}
+     
           <button
             onClick={handleShare}
-            className="p-3 bg-blue-500 text-white rounded-full hover:scale-110 transition"
+            className="p-3 pl-6 pr-6  rounded-2xl bg-blue-800 text-white  hover:scale-110 transition"
             title={sharing ? "Stop Share" : "Share Screen"}
           >
             {sharing ? <ScreenShareOff /> : <ScreenShare />}
           </button>
 
-          {/* END CALL */}
+         
           <button
             onClick={handleHangup}
-            className="p-3 bg-red-600 text-white rounded-full hover:scale-110 transition"
+            className="p-3 pl-6 pr-6  rounded-2xl bg-red-600 text-white  hover:scale-110 transition"
             title="End Call"
           >
             <PhoneOff />
           </button>
+
+          {callState === "disconnected" && (
+              <button
+                onClick={handleRejoin}
+                className="p-4 rounded-xl bg-yellow-500 text-white"
+              >
+                Rejoin Call
+              </button>
+            )}
         </div>
       )}
     </div>

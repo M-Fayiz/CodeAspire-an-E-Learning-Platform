@@ -1,5 +1,5 @@
 import mongoose, { Types, Document } from "mongoose";
-import { IEnrollement } from "../types/enrollment.types";
+import { completionStatus, IEnrollement } from "../types/enrollment.types";
 
 import { DbModelName } from "../const/modelName";
 
@@ -37,6 +37,11 @@ const enrolledSchema = new mongoose.Schema<IEnrolledModel>(
         default: null,
       },
       completionPercentage: { type: Number, default: 0 },
+    },
+    courseStatus:{
+      type: String,
+      enum:Object.values(completionStatus),
+      default:completionStatus.IN_PROGRESS
     },
     rating: {
       type: Number,

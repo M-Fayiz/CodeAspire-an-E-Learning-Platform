@@ -18,8 +18,8 @@ export class VideoSessionController implements IVideoSeesionController {
       const { bookedId } = req.params;
       const { sesionData, createdLearnerNotify, createdMentorNotify } =
         await this._slotBookingSevice.findBookedSlot(bookedId);
-      sendNotification(createdMentorNotify.userId, createdMentorNotify);
-      sendNotification(createdLearnerNotify.userId, createdLearnerNotify);
+      // sendNotification(createdMentorNotify.userId, createdMentorNotify);
+      // sendNotification(createdLearnerNotify.userId, createdLearnerNotify);
       res
         .status(HttpStatus.OK)
         .json(

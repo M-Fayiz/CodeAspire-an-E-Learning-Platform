@@ -14,5 +14,5 @@ export const sendNotification = async (
 
   io.to(`user:${userId}`).emit("notification", data);
 
-  console.log(`Notification sent to ${userId}: ${data}`);
+
 };

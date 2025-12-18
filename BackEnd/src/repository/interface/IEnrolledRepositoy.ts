@@ -45,4 +45,5 @@ export interface IEnrolledRepository {
   ): Promise<IMentorDashboardData[]>;
   getTopSellingCourse(mentorId?: Types.ObjectId): Promise<ITopCourse[]>;
   getTopSellingCategory(mentorId?: Types.ObjectId): Promise<ITopCategory[]>;
+  getLearnerDashboardData(learnerId:Types.ObjectId):Promise<void>
 }

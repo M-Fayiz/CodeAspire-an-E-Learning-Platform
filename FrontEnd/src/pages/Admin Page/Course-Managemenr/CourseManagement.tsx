@@ -84,7 +84,7 @@ function CourseManagement() {
                       <div className="flex items-center gap-2">
                         <User className="w-4 h-4 text-gray-400" />
                         <span className="text-sm text-gray-700">
-                          {course.mentorsId.name}
+                          {course.mentorId.name}
                         </span>
                         {/* <span className="text-xs text-gray-500">({course.mentor.rating}★)</span> */}
                       </div>

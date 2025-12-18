@@ -33,7 +33,7 @@ const CourseCard: React.FC<CourseCardProps> = ({ course }) => {
         <h3 className="font-semibold text-gray-900 mb-2 line-clamp-2 group-hover:text-blue-600 transition-colors">
           {course.title}
         </h3>
-        {/* <p className="text-sm text-gray-600 mb-3">{course.mentorsId}</p> */}
+        {/* <p className="text-sm text-gray-600 mb-3">{course.mentorId}</p> */}
 
         <div className="flex items-center justify-between mb-3">
           <div className="flex items-center space-x-2">

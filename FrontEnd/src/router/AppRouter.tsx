@@ -38,6 +38,7 @@ import { VideoRoom } from "@/pages/Video Session Page/VideoSession";
 import LearnerBookedSlots from "@/pages/Slots/LearnersBooked";
 import MentorBookedSlots from "@/pages/Slots/MentorsBooked";
 import CertificatesList from "@/pages/certificate page/ListCertificatePage";
+import LearnerDashboard from "@/pages/learner page/Learner-Dashboard";
 
 function Form_Courses_Provider() {
   return (
@@ -75,7 +76,7 @@ export const router = createBrowserRouter([
     ),
     children: [
       { index: true, element: <Navigate to="dashboard" /> },
-      { path: "dashboard", element: <AdminDashboard /> },
+      { path: "dashboard", element: <LearnerDashboard /> },
       { path: "profile/:id", element: <ProfileManagement /> },
       { path: "courses", element: <CourseLayout /> },
       { path: "enrolled-courses", element: <CourseEnrolledList /> },

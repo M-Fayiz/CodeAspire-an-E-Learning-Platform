@@ -1,5 +1,4 @@
 import {
-  Activity,
   Award,
   Layers,
   Book,
@@ -13,7 +12,6 @@ import {
   Settings,
   Shield,
   ShoppingCart,
-  Star,
   Users,
   CalendarDays,
   // BarChart3,

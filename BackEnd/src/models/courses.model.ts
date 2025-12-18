@@ -33,7 +33,7 @@ const courseSchema = new mongoose.Schema<ICourses>(
     price: {
       type: Number,
     },
-    mentorsId: {
+    mentorId: {
       type: mongoose.Schema.Types.ObjectId,
       ref: DbModelName.USER,
     },

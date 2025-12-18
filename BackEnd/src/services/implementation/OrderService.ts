@@ -185,7 +185,7 @@ if(!stripe){
           courseId,
           userId,
           amount,
-          mentorId: String(course.mentorsId._id),
+          mentorId: String(course.mentorId._id),
           categoryId: String(course.categoryId._id ),
         },
       },

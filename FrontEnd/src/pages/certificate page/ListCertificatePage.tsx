@@ -1,7 +1,9 @@
 import ManagementLayout from "@/components/layout/ManagementLayout"
+import { FilterByDate } from "@/constants/filter.const"
 import { useAuth } from "@/context/auth.context"
 import CertificateService from "@/service/certificate.service"
 import type { ICertificateDTO } from "@/types/DTOS/certificate.dto.type"
+import { Award } from "lucide-react"
 import React, { useEffect, useState } from "react"
 
 const CertificatesList = () => {
@@ -36,12 +38,28 @@ const CertificatesList = () => {
   }
 
   return (
-    <div className="bg-gray-100 min-h-screen p-6">
+    <div className="bg-gray-50 min-h-screen p-6">
       <div className="max-w-6xl mx-auto">
-        <h2 className="text-2xl font-semibold text-gray-900 mb-8">
-          Certificates of Completion
-        </h2>
-
+       
+        <div className=" bg-black p-5 rounded-lg flex justify-between mb-8 ">
+                <div className="flex justify-center">
+                    <Award size={30} className="text-white text-2xl"/>
+                  <h1 className="text-2xl  text-white">Certificates of Completion</h1>
+                  
+                </div>
+                {/* <div>
+                  <select
+                    value={selectedPeriod}
+                    onChange={(e) => setSelectedPeriod(e.target.value)}
+                    className="border bg-white rounded-md px-3 py-2 text-black text-sm"
+                  >
+                    <option value={FilterByDate.Today}>Today</option>
+                    <option value={FilterByDate.WEEK}>Last 7 Days</option>
+                    <option value={FilterByDate.MONTH}>Last 30 Days</option>
+                    <option value={FilterByDate.YEAR}>Last 12 Months</option>
+                  </select>
+                </div> */}
+              </div>
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
           {certificates.map((cert) => (
             <div
@@ -49,8 +67,8 @@ const CertificatesList = () => {
               className="bg-white rounded-sm border border-gray-200 shadow-sm hover:shadow-lg transition-all duration-200"
             >
               {/* Preview Area */}
-              <div className="h-38 bg-gradient-to-br from-gray-100 to-gray-200 rounde-sm flex items-center justify-center">
-                 <img className="rounded-sm" src={cert.preview_image||""} alt="" />
+              <div className="h-40 bg-gradient-to-br from-gray-100 to-gray-200 rounde-sm flex items-center justify-center">
+                 <img className="rounded-sm w-screen" src={cert.preview_image||""} alt="" />
                 <span className="text-gray-400 text-sm">
                 </span>
               </div>

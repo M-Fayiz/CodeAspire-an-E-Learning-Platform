@@ -4,6 +4,7 @@ import { EnrolleModel, IEnrolledModel } from "../../models/enrolled.model";
 import {
   chartAggregation,
   chartFilter,
+  completionStatus,
   IEnrolledAggregation,
   IEnrollement,
 } from "../../types/enrollment.types";
@@ -216,5 +217,35 @@ export class EnrolledRepository
         },
       },
     ]);
+  }
+  async getLearnerDashboardData(learnerId: Types.ObjectId): Promise<void> {
+    const result= await this.aggregate([
+      {
+        $group:{
+          _id:`$${learnerId}`,
+          courseCount:{$sum:1},
+          completedCourse:{
+            $sum:{
+              $cond:[
+                {$eq:["$courseStatus",completionStatus.COMPLETED]},
+                1,
+                0
+              ]
+            }
+          },
+          inProgressCourse:{
+            $sum:{
+              $cond:[
+                {$eq:["$courseStatus",completionStatus.IN_PROGRESS]},
+                1,
+                0
+              ]
+            }
+          }
+        },
+       
+      }
+    ])
+    console.log('aggregation :',result)
   }
 }

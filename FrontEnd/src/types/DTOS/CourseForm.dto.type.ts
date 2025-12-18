@@ -11,7 +11,7 @@ export function CourseFormDTO(course: IFormCourseDTO): CourseForm {
     language: course.language,
     level: course.level,
     price: Number(course.price),
-    mentorsId: course.mentorsId._id,
+    mentorId: course.mentorId._id,
     sessions: course.sessions || [],
     status: course.status,
   };

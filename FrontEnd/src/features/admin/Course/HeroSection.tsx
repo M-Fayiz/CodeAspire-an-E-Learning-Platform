@@ -68,7 +68,7 @@ function HeroSection({ courses }: HeroSectionProps) {
                 /> */}
               <div>
                 <div className="font-medium text-gray-900">
-                  {/* {courses.mentorsId.name} */}
+                  {/* {courses.mentorId.name} */}
                 </div>
               </div>
             </div>

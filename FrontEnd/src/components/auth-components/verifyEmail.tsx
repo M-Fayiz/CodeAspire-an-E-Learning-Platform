@@ -23,9 +23,9 @@ function VerifyEmail() {
       hasVerifiedRef.current = true;
 
       try {
-        const res = await AuthService.verifyEmail(email, token);
+        await AuthService.verifyEmail(email, token);
 
-        toast.success(res.message);
+        // toast.success(res.message);
         checkAuth();
         setTimeout(() => {
           navigate("/");
@@ -34,6 +34,7 @@ function VerifyEmail() {
         if (err instanceof Error) toast.error(err.message);
         // navigate('*')
         setError("Verification failed. Try again .");
+        
       }
     }
 
