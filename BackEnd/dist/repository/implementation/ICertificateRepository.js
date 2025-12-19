@@ -13,5 +13,8 @@ class CertificateRepository extends baseRepository_1.BaseRepository {
     async listCertificate(learnerId) {
         return await this.find({ learnerId: learnerId });
     }
+    async learnerTotalCertificate(learnerId) {
+        return await this.countDocuments({ learnerId: learnerId });
+    }
 }
 exports.CertificateRepository = CertificateRepository;

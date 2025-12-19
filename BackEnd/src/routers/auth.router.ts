@@ -1,11 +1,10 @@
 import express from "express";
 import { Validate } from "../middlewares/validate";
-import { IRole } from "../types/user.types";
+
 const authRouter = express.Router();
-import { Request, Response, NextFunction } from "express";
 import { UserRepository } from "../repository/implementation/UserRepository";
 import { AuthService } from "../services/implementation/AuthService";
-import { AuthController } from "../controllers/implementation/AuthController";
+import { AuthController } from "../controllers/implementation/AuthController"; 
 import { registerSchema } from "../utils/zod";
 import passport from "../utils/passport.util";
 import { env } from "../config/env.config";

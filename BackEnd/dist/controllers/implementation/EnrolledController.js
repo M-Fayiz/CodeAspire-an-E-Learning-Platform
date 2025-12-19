@@ -127,7 +127,11 @@ class EnrolledController {
         this.getLearnerDashboardData = async (req, res, next) => {
             try {
                 const { learnerId } = req.params;
-                await this._enrolledService.learnerDashboardCardData(learnerId);
+                const dashboardData = await this._enrolledService.learnerDashboardCardData(learnerId);
+                res.status(http_status_1.HttpStatus.OK)
+                    .json((0, response_util_1.successResponse)(error_message_1.HttpResponse.OK, {
+                    dashboardData
+                }));
             }
             catch (error) {
                 next(error);

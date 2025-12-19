@@ -202,7 +202,7 @@ class EnrolledRepository extends baseRepository_1.BaseRepository {
                 },
             }
         ]);
-        console.log('aggregation :', result);
+        return result;
     }
     async updateEnrolledData(enrolledId, data) {
         return await this.findByIDAndUpdate(enrolledId, data);

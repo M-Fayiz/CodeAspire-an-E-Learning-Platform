@@ -18,6 +18,7 @@ const LearnerDashboard = () => {
       }
     })()
   },[])
+  
   if(!learnerDashboardData){
     return <LearnerDashboardSkeleton/>
   }

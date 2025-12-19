@@ -26,6 +26,7 @@ class AuthController {
     }
     async verifyEmail(req, res, next) {
         try {
+            console.log('verify email', req.body);
             const token = await this._authSerive.verifyEmail(req.body);
             (0, cookie_util_1.setAccessToken)(res, token.accessToken);
             (0, cookie_util_1.setRefreshToken)(res, token.refreshToken);
@@ -121,10 +122,10 @@ class AuthController {
     }
     async googleAuthRedirection(req, res, next) {
         try {
-            if (!req.user) {
-                res.status(http_status_1.HttpStatus.FORBIDDEN).json(error_message_1.HttpResponse.INVALID_CREDNTIALS);
-                return;
-            }
+            // if (!req.user) {
+            //   res.status(HttpStatus.FORBIDDEN).json(HttpResponse.INVALID_CREDNTIALS);
+            //   return;
+            // }
             const Data = await this._authSerive.generateToken(req.user);
             (0, cookie_util_1.setAccessToken)(res, Data.accessToken);
             (0, cookie_util_1.setRefreshToken)(res, Data.refreshToken);

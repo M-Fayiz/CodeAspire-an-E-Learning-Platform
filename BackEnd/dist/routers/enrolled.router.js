@@ -14,11 +14,15 @@ const authorisation_middleware_1 = require("../middlewares/authorisation.middlew
 const TransactionRepository_1 = require("../repository/implementation/TransactionRepository");
 const user_types_1 = require("../types/user.types");
 const UserRepository_1 = require("../repository/implementation/UserRepository");
+const ICertificateRepository_1 = require("../repository/implementation/ICertificateRepository");
+const SlotBookingRepositoy_1 = require("../repository/implementation/SlotBookingRepositoy");
 const transactionRepository = new TransactionRepository_1.TransactionRepositoy();
 const enrolledRepository = new EnrolledRepository_1.EnrolledRepository();
 const courseRepository = new CourseRepository_1.CourseRepository();
 const userRepository = new UserRepository_1.UserRepository();
-const enrolledService = new EnrolledService_1.EnrolledService(enrolledRepository, courseRepository, transactionRepository, userRepository);
+const certificateRepository = new ICertificateRepository_1.CertificateRepository();
+const slotBookingRepository = new SlotBookingRepositoy_1.SlotBookingRepository();
+const enrolledService = new EnrolledService_1.EnrolledService(enrolledRepository, courseRepository, transactionRepository, userRepository, certificateRepository, slotBookingRepository);
 const enrolledController = new EnrolledController_1.EnrolledController(enrolledService);
 enrolledRouter.get("/:learnerId", authentication_middleware_1.verifyUser, (0, authorisation_middleware_1.authorizedRole)(user_types_1.IRole.Learner), enrolledController.getEnrolledCourse);
 enrolledRouter.get("/course/:enrolledId", authentication_middleware_1.verifyUser, (0, authorisation_middleware_1.authorizedRole)(user_types_1.IRole.Learner), enrolledController.getEnrolledDetails);

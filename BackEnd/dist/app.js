@@ -13,7 +13,6 @@ const error_handling_middleware_1 = require("./middlewares/error-handling.middle
 const cors_config_1 = require("./config/cors.config");
 const auth_router_1 = __importDefault(require("./routers/auth.router"));
 const cookie_parser_1 = __importDefault(require("cookie-parser"));
-const express_session_1 = __importDefault(require("express-session"));
 const passport_1 = __importDefault(require("passport"));
 const user_router_1 = __importDefault(require("./routers/user.router"));
 const admin_router_1 = __importDefault(require("./routers/admin.router"));
@@ -24,7 +23,6 @@ const shared_router_1 = __importDefault(require("./routers/shared.router"));
 const enrolled_router_1 = __importDefault(require("./routers/enrolled.router"));
 const review_router_1 = __importDefault(require("./routers/review.router"));
 const http_1 = __importDefault(require("http"));
-const session_config_1 = require("./config/session.config");
 const socket_io_1 = require("./socket.io");
 const notification_router_1 = __importDefault(require("./routers/notification.router"));
 const chat_router_1 = __importDefault(require("./routers/chat.router"));
@@ -43,12 +41,12 @@ app.use((0, morgan_1.default)("dev")); //morgan
 app.use("/api/v1/webhook", express_1.default.raw({ type: "application/json" }), webhook_router_1.default);
 app.use(express_1.default.json());
 app.use(express_1.default.urlencoded({ extended: true }));
-app.use((0, express_session_1.default)(session_config_1.sessionConfig));
+// app.use(session(sessionConfig));
 const server = http_1.default.createServer(app);
 //socket
 (0, socket_io_1.intitializeSocket)(server);
 app.use(passport_1.default.initialize());
-app.use(passport_1.default.session());
+// app.use(passport.session());
 app.use((0, cors_1.default)(cors_config_1.corsSetUp));
 // Routers
 app.get("/", (req, res) => {

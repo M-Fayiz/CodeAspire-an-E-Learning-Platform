@@ -13,12 +13,15 @@ const mentorDashboard_dto_1 = require("../../dtos/mentorDashboard.dto");
 const dashFilterGenerator_utils_1 = require("../../utils/dashFilterGenerator.utils");
 const transaction_1 = require("../../const/transaction");
 const dateBuilder_1 = require("../../utils/dateBuilder");
+const learnerDashnoard_dto_1 = require("../../dtos/learnerDashnoard.dto");
 class EnrolledService {
-    constructor(_erolledRepository, _courseRepository, _transactionRepository, _userRepository) {
+    constructor(_erolledRepository, _courseRepository, _transactionRepository, _userRepository, _certificateRepository, _slotbookingRepository) {
         this._erolledRepository = _erolledRepository;
         this._courseRepository = _courseRepository;
         this._transactionRepository = _transactionRepository;
         this._userRepository = _userRepository;
+        this._certificateRepository = _certificateRepository;
+        this._slotbookingRepository = _slotbookingRepository;
     }
     async getEnrolledCourses(learnerId) {
         const learner_id = (0, objectId_1.parseObjectId)(learnerId);
@@ -176,7 +179,11 @@ class EnrolledService {
         if (!learner_Id) {
             throw (0, http_error_1.createHttpError)(http_status_1.HttpStatus.BAD_REQUEST, error_message_1.HttpResponse.INVALID_ID);
         }
-        await this._erolledRepository.getLearnerDashboardCourseData(learner_Id);
+        const [courseCard, certificateCount, slotCard] = await Promise.all([this._erolledRepository.getLearnerDashboardCourseData(learner_Id), this._certificateRepository.learnerTotalCertificate(learner_Id), this._slotbookingRepository.learnerDashboardSlotCard(learner_Id)]);
+        // console.log('course :',courseCard)
+        // console.log('certificate :',certificateCount)
+        // console.log('slot :',slotCard)
+        return (0, learnerDashnoard_dto_1.learnerDashboardDetails)(courseCard[0], slotCard[0], certificateCount);
     }
 }
 exports.EnrolledService = EnrolledService;

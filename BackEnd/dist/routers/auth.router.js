@@ -5,7 +5,6 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 const express_1 = __importDefault(require("express"));
 const validate_1 = require("../middlewares/validate");
-const user_types_1 = require("../types/user.types");
 const authRouter = express_1.default.Router();
 const UserRepository_1 = require("../repository/implementation/UserRepository");
 const AuthService_1 = require("../services/implementation/AuthService");
@@ -27,13 +26,14 @@ authRouter.patch("/reset-password", authController.resetPassword.bind(authContro
 // Google Auth
 authRouter.get("/google", (req, res, next) => {
     const { role } = req.query;
-    req.session.role = role || user_types_1.IRole.Learner;
-    next();
-}, passport_util_1.default.authenticate("google", {
-    scope: ["profile", "email"],
-    prompt: "select_account",
-}));
+    passport_util_1.default.authenticate("google", {
+        scope: ["profile", "email"],
+        state: JSON.stringify({ role }),
+        prompt: "select_account",
+    })(req, res, next);
+});
 authRouter.get("/google/callback", passport_util_1.default.authenticate("google", {
+    session: false,
     failureRedirect: `${env_config_1.env.CLIENT_ORGIN}/auth/login`,
 }), authController.googleAuthRedirection.bind(authController));
 exports.default = authRouter;
