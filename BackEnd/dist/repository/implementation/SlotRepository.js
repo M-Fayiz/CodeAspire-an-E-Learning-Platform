@@ -25,5 +25,14 @@ class SlotRepository extends baseRepository_1.BaseRepository {
     async findSlotByFilter(filter) {
         return await this.findOne(filter);
     }
+    async totalDocument(filter) {
+        return await this.countDocuments(filter);
+    }
+    async getMentorSLotsList(mentorId, skip, limit, populate) {
+        return await this.findAll({ mentorId: mentorId }, limit, skip, populate);
+    }
+    async getUpdateSlots(slotId, populate) {
+        return await this.findOne({ _id: slotId }, populate);
+    }
 }
 exports.SlotRepository = SlotRepository;

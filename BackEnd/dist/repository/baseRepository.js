@@ -56,7 +56,6 @@ class BaseRepository {
     }
     async findByIDAndUpdate(id, update) {
         return this.model.findByIdAndUpdate(id, update, {
-            upsert: true,
             new: true,
         });
     }
@@ -93,6 +92,14 @@ class BaseRepository {
         return this.model
             .findOneAndUpdate(filter, updateData, { new: true })
             .lean();
+    }
+    async pullItemFromArray(filter, arrayPath, itemId) {
+        const result = await this.model.findOneAndUpdate(filter, {
+            $pull: {
+                [arrayPath]: { _id: itemId }
+            }
+        }, { new: true });
+        return result ?? null;
     }
 }
 exports.BaseRepository = BaseRepository;

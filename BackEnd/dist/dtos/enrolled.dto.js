@@ -17,6 +17,7 @@ const enrolledCourseDetailDTO = (enrolledData, CourseDetails) => {
         courseId: enrolledData.courseId,
         learnerId: enrolledData.learnerId,
         mentorId: enrolledData.mentorId,
+        rating: enrolledData.rating ?? 0,
         progress: enrolledData.progress ? enrolledData.progress : null,
     };
 };

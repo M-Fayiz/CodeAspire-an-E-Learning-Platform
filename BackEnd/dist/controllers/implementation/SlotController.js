@@ -21,10 +21,12 @@ class SlotController {
         this.getMentorSlots = async (req, res, next) => {
             try {
                 const { mentorId } = req.params;
-                const mentorSlots = await this._slotService.getMontorSlots(mentorId);
+                const { page } = req.query;
+                const mentorSlots = await this._slotService.getMontorSlots(mentorId, Number(page));
+                console.log('menter slot :', mentorSlots);
                 res
                     .status(http_status_1.HttpStatus.OK)
-                    .json((0, response_util_1.successResponse)(error_message_1.HttpResponse.OK, { mentorSlots }));
+                    .json((0, response_util_1.successResponse)(error_message_1.HttpResponse.OK, { mappedSlots: mentorSlots.mappedSlots, totalPage: mentorSlots.totalDocument }));
             }
             catch (error) {
                 next(error);

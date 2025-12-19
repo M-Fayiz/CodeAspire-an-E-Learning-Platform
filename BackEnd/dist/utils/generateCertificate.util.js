@@ -7,7 +7,6 @@ const fs_1 = __importDefault(require("fs"));
 const path_1 = __importDefault(require("path"));
 function generateCertificateHtml({ studentName, courseName, certId, issuedDate, verifyUrl, }) {
     const templatePath = path_1.default.join(process.cwd(), "src", "template", "certificate.template.html");
-    console.log('template path :', templatePath);
     const imagePath = path_1.default.join(process.cwd(), "src", "assets", "certificateModel.png");
     const imageBase64 = fs_1.default.readFileSync(imagePath, "base64");
     const BG_PATH = `data:image/png;base64,${imageBase64}`;

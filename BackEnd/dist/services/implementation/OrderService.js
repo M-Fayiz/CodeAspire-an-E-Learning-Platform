@@ -9,6 +9,7 @@ const http_error_1 = require("../../utils/http-error");
 const http_status_1 = require("../../const/http-status");
 const objectId_1 = require("../../mongoose/objectId");
 const error_message_1 = require("../../const/error-message");
+const enrollment_types_1 = require("../../types/enrollment.types");
 const logger_config_1 = __importDefault(require("../../config/logger.config"));
 const calculateSplit_util_1 = require("../../utils/calculateSplit.util");
 const transaction_1 = require("../../const/transaction");
@@ -78,7 +79,9 @@ class OrderService {
                 completedLectures: [],
                 completionPercentage: 0,
                 lastAccessedLecture: null,
+                lastAccessedSession: null
             },
+            courseStatus: enrollment_types_1.completionStatus.IN_PROGRESS
         };
         logger_config_1.default.info(" Enrolling learner:", enrollData);
         await this._enrolledRepository.enrolleCourse(enrollData);
@@ -145,7 +148,7 @@ class OrderService {
                 courseId,
                 userId,
                 amount,
-                mentorId: String(course.mentorsId._id),
+                mentorId: String(course.mentorId._id),
                 categoryId: String(course.categoryId._id),
             },
         }, { idempotencyKey: idemKey });

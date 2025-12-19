@@ -18,7 +18,7 @@ class CourseService {
     }
     async createCourses(course) {
         const mentorCourse = await this._courseRepository.findAllCourse({
-            mentorsId: course.mentorsId,
+            mentorId: course.mentorId,
             categoryId: course.categoryId,
         });
         if (mentorCourse && mentorCourse.length > 2) {
@@ -107,7 +107,7 @@ class CourseService {
         if (search) {
             query["title"] = { $regex: search, $options: "i" };
         }
-        query["mentorsId"] = mentorId;
+        query["mentorId"] = mentorId;
         const [courseData, documnetCount] = await Promise.all([
             this._courseRepository.getMentorDraftedCourses(search, limit, skip, id),
             this._courseRepository.findDocumentCount(query),
@@ -129,7 +129,7 @@ class CourseService {
             throw (0, http_error_1.createHttpError)(http_status_1.HttpStatus.CONFLICT, error_message_1.HttpResponse.ITEM_EXIST);
         }
         await this._courseRepository.addSession(id, session);
-        const courseData = this._courseRepository.findCourse(id);
+        const courseData = await this._courseRepository.findCourse(id);
         if (!courseData) {
             throw (0, http_error_1.createHttpError)(http_status_1.HttpStatus.NOT_FOUND, error_message_1.HttpResponse.COURSE_NOT_FOUND);
         }
@@ -194,7 +194,7 @@ class CourseService {
             throw (0, http_error_1.createHttpError)(http_status_1.HttpStatus.BAD_REQUEST, error_message_1.HttpResponse.INVALID_ID);
         }
         const courseDetails = await this._courseRepository.appproveCourse(course_id);
-        const notifyData = notification_template_1.NotificationTemplates.courseApproval(courseDetails?.mentorsId, courseDetails?.title);
+        const notifyData = notification_template_1.NotificationTemplates.courseApproval(courseDetails?.mentorId, courseDetails?.title);
         const savedNotify = await this._notificationRepository.createNotification(notifyData);
         const notifyDTO = (0, notification_dto_1.notificationDto)(savedNotify);
         return {
@@ -208,7 +208,7 @@ class CourseService {
             throw (0, http_error_1.createHttpError)(http_status_1.HttpStatus.BAD_REQUEST, error_message_1.HttpResponse.INVALID_ID);
         }
         const courseDetails = await this._courseRepository.rejectCourse(id);
-        const notifyData = notification_template_1.NotificationTemplates.courseRejection(courseDetails?.mentorsId, courseDetails?.title, feedBack);
+        const notifyData = notification_template_1.NotificationTemplates.courseRejection(courseDetails?.mentorId, courseDetails?.title, feedBack);
         const savedNotify = await this._notificationRepository.createNotification(notifyData);
         const notifyDTO = (0, notification_dto_1.notificationDto)(savedNotify);
         if (courseDetails?.status == "rejected") {
@@ -237,7 +237,7 @@ class CourseService {
     async fetchCourseListForSlot(mentorId) {
         const mentor_Id = (0, objectId_1.parseObjectId)(mentorId);
         const courseList = await this._courseRepository.findAllCourse({
-            mentorsId: mentor_Id,
+            mentorId: mentor_Id,
         });
         if (!courseList) {
             throw (0, http_error_1.createHttpError)(http_status_1.HttpStatus.NOT_FOUND, error_message_1.HttpResponse.COURSE_NOT_FOUND);
@@ -254,6 +254,15 @@ class CourseService {
             throw (0, http_error_1.createHttpError)(http_status_1.HttpStatus.NOT_FOUND, error_message_1.HttpResponse.COURSE_NOT_FOUND);
         }
         return (0, course_dtos_1.CourseFormDataDTO)(courseFormData);
+    }
+    async removeSession(courseId, sessionId) {
+        const course_id = (0, objectId_1.parseObjectId)(courseId);
+        const session_id = (0, objectId_1.parseObjectId)(sessionId);
+        if (!course_id || !session_id) {
+            throw (0, http_error_1.createHttpError)(http_status_1.HttpStatus.BAD_REQUEST, error_message_1.HttpResponse.INVALID_ID);
+        }
+        const removedData = await this._courseRepository.removeSession(course_id, session_id);
+        return (0, course_dtos_1.CourseFormDataDTO)(removedData);
     }
 }
 exports.CourseService = CourseService;

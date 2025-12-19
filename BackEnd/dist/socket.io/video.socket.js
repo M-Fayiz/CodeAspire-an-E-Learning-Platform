@@ -28,9 +28,6 @@ const registerVideoHandlers = (io, socket) => {
     socket.on("video:leave", ({ roomId }) => {
         const room = `video:${roomId}`;
         if (videoRooms[roomId]) {
-            socket
-                .to(room)
-                .emit("video:force-leave", { reason: "Peer left the call" });
             socket.leave(room);
             videoRooms[roomId].delete(userId);
             if (videoRooms[roomId].size === 0)

@@ -27,6 +27,10 @@ enrolledRouter.get("/course/:courseId/mentor/:mentorId", authentication_middlewa
 enrolledRouter.get("/mentor/:mentorId/dashboard", authentication_middleware_1.verifyUser, (0, authorisation_middleware_1.authorizedRole)(user_types_1.IRole.Mentor), enrolledController.getMentorDashboardData);
 enrolledRouter.get("/mentor/dashboard/revanue", authentication_middleware_1.verifyUser, (0, authorisation_middleware_1.authorizedRole)(user_types_1.IRole.Mentor), enrolledController.getmentorRevanue);
 enrolledRouter.get("/admin/dashboard/revanue", authentication_middleware_1.verifyUser, (0, authorisation_middleware_1.authorizedRole)(user_types_1.IRole.Admin), enrolledController.getAdminRevanue);
+enrolledRouter.get("/:learnerId/dashboard", 
+// verifyUser,
+// authorizedRole(IRole.Learner),
+enrolledController.getLearnerDashboardData);
 enrolledRouter.put("/:enrolledId", authentication_middleware_1.verifyUser, (0, authorisation_middleware_1.authorizedRole)(user_types_1.IRole.Learner), enrolledController.updateProgress);
 enrolledRouter.put("/:enrolledId/rating", authentication_middleware_1.verifyUser, (0, authorisation_middleware_1.authorizedRole)(user_types_1.IRole.Learner), enrolledController.addRating);
 exports.default = enrolledRouter;

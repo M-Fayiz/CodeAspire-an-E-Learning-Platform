@@ -5,6 +5,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.EnrolleModel = void 0;
 const mongoose_1 = __importDefault(require("mongoose"));
+const enrollment_types_1 = require("../types/enrollment.types");
 const modelName_1 = require("../const/modelName");
 const enrolledSchema = new mongoose_1.default.Schema({
     courseId: {
@@ -30,11 +31,20 @@ const enrolledSchema = new mongoose_1.default.Schema({
     },
     progress: {
         completedLectures: [{ type: mongoose_1.default.Schema.ObjectId }],
-        lastAccessedLectures: {
+        lastAccessedLecture: {
+            type: mongoose_1.default.Schema.Types.ObjectId,
+            default: null,
+        },
+        lastAccessedSession: {
             type: mongoose_1.default.Schema.Types.ObjectId,
             default: null,
         },
         completionPercentage: { type: Number, default: 0 },
+    },
+    courseStatus: {
+        type: String,
+        enum: Object.values(enrollment_types_1.completionStatus),
+        default: enrollment_types_1.completionStatus.IN_PROGRESS
     },
     rating: {
         type: Number,

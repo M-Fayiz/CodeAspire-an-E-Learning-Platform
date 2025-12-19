@@ -7,6 +7,7 @@ const objectId_1 = require("../../mongoose/objectId");
 const http_error_1 = require("../../utils/http-error");
 const course_dtos_1 = require("../../dtos/course.dtos");
 const enrolled_dto_1 = require("../../dtos/enrolled.dto");
+const enrollment_types_1 = require("../../types/enrollment.types");
 const courseDashboard_dto_1 = require("../../dtos/courseDashboard.dto");
 const mentorDashboard_dto_1 = require("../../dtos/mentorDashboard.dto");
 const dashFilterGenerator_utils_1 = require("../../utils/dashFilterGenerator.utils");
@@ -53,17 +54,41 @@ class EnrolledService {
         const populatedCourse = (0, course_dtos_1.formCourseDto)(courseData);
         return (0, enrolled_dto_1.enrolledCourseDetailDTO)(enrolledData, populatedCourse);
     }
-    async updatedProgress(enroledId, lecture) {
-        const enrolled_id = (0, objectId_1.parseObjectId)(enroledId);
-        const lecture_id = (0, objectId_1.parseObjectId)(lecture);
-        if (!enrolled_id || !lecture_id) {
+    async updatedProgress(enrolledId, lectureId, lastSession) {
+        const enrolledObjectId = (0, objectId_1.parseObjectId)(enrolledId);
+        const lectureObjectId = (0, objectId_1.parseObjectId)(lectureId);
+        const lastSession_id = (0, objectId_1.parseObjectId)(lastSession);
+        if (!enrolledObjectId || !lectureObjectId) {
             throw (0, http_error_1.createHttpError)(http_status_1.HttpStatus.BAD_REQUEST, error_message_1.HttpResponse.INVALID_ID);
         }
-        const enrolledData = await this._erolledRepository.updatedProgress(enrolled_id, lecture_id);
-        if (!enroledId) {
+        // atomic add (no duplicates)
+        const updatedEnrollment = await this._erolledRepository.updateEnrolledData(enrolledObjectId, {
+            $addToSet: { "progress.completedLectures": lectureObjectId },
+            $set: {
+                "progress.lastAccessedLecture": lectureObjectId,
+                "progress.lastAccessedSession": lastSession_id,
+            },
+        });
+        if (!updatedEnrollment) {
             throw (0, http_error_1.createHttpError)(http_status_1.HttpStatus.NOT_FOUND, error_message_1.HttpResponse.ITEM_NOT_FOUND);
         }
-        return enrolledData?.progress ?? null;
+        const course = await this._courseRepository.getCourse(updatedEnrollment.courseId);
+        let totalLectures = 0;
+        for (let session of course?.sessions) {
+            totalLectures += session.lectures.length;
+        }
+        const completedCount = updatedEnrollment.progress.completedLectures.length;
+        const completionPercentage = (completedCount / totalLectures) * 100;
+        const status = completionPercentage === 100
+            ? enrollment_types_1.completionStatus.COMPLETED
+            : enrollment_types_1.completionStatus.IN_PROGRESS;
+        const finalEnrollment = await this._erolledRepository.updateEnrolledData(enrolledObjectId, {
+            $set: {
+                "progress.completionPercentage": completionPercentage,
+                courseStatus: status,
+            },
+        });
+        return finalEnrollment?.progress ?? null;
     }
     async addRating(enroledId, value) {
         const enrolled_id = (0, objectId_1.parseObjectId)(enroledId);
@@ -145,6 +170,13 @@ class EnrolledService {
             courseRevanue: courseRevenue,
             signedUsers,
         };
+    }
+    async learnerDashboardCardData(learnerId, filter, startDate, endDate) {
+        const learner_Id = (0, objectId_1.parseObjectId)(learnerId);
+        if (!learner_Id) {
+            throw (0, http_error_1.createHttpError)(http_status_1.HttpStatus.BAD_REQUEST, error_message_1.HttpResponse.INVALID_ID);
+        }
+        await this._erolledRepository.getLearnerDashboardCourseData(learner_Id);
     }
 }
 exports.EnrolledService = EnrolledService;

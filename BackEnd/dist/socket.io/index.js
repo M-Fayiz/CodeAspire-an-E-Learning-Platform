@@ -27,7 +27,6 @@ const intitializeSocket = (server) => {
             return next(new Error(error_message_1.HttpResponse.UNAUTHORIZED));
         try {
             const user = (0, jwt_token_util_1.verifyAccesToken)(token);
-            console.log("user : ", user);
             socket.data.userId = user._id;
             next();
         }
@@ -37,7 +36,6 @@ const intitializeSocket = (server) => {
     });
     io.on(socketEvents_1.SocketEvents.CONNECT, async (socket) => {
         const userId = socket.data.userId;
-        console.log("User Connected", userId);
         socket.join(`user:${userId}`);
         await redis_config_1.default.hSet(redisKey_1.redisPrefix.ONLINE_USERS, userId, socket.id);
         io.emit(socketEvents_1.SocketEvents.USER_ONLINE, userId);

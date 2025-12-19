@@ -12,6 +12,5 @@ const sendNotification = async (userId, data) => {
     let user_ID = String(userId);
     await redis_config_1.default.hGet(redisKey_1.redisPrefix.ONLINE_USERS, user_ID);
     io.to(`user:${userId}`).emit("notification", data);
-    console.log(`Notification sent to ${userId}: ${data}`);
 };
 exports.sendNotification = sendNotification;

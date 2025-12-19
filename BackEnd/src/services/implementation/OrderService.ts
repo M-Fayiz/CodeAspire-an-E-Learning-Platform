@@ -9,7 +9,7 @@ import { HttpResponse } from "../../const/error-message";
 import { ICourseRepository } from "../../repository/interface/ICourseRepository";
 import { IOrder } from "../../types/order.type";
 import { IEnrolledRepository } from "../../repository/interface/IEnrolledRepositoy";
-import { IEnrollement } from "../../types/enrollment.types";
+import { completionStatus, IEnrollement } from "../../types/enrollment.types";
 import logger from "../../config/logger.config";
 import { ITransactionRepository } from "../../repository/interface/ITransactionRepository";
 import { ITransaction } from "../../types/transaction.type";
@@ -102,7 +102,9 @@ export class OrderService implements IOrderService {
         completedLectures: [],
         completionPercentage: 0,
         lastAccessedLecture: null,
+        lastAccessedSession:null
       },
+      courseStatus:completionStatus.IN_PROGRESS
     };
 
     logger.info(" Enrolling learner:", enrollData);

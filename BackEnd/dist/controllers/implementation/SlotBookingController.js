@@ -19,7 +19,6 @@ class SlotBookingController {
                     startTime,
                     endTime,
                 };
-                console.log(bookingData);
                 const checkoutURL = await this._slotBookingService.createBooking(bookingData);
                 res
                     .status(http_status_1.HttpStatus.OK)
@@ -82,7 +81,6 @@ class SlotBookingController {
             try {
                 const { bookedId } = req.params;
                 const { studentStatus } = req.body;
-                console.log(bookedId, '  -          -', studentStatus);
                 const updatedData = await this._slotBookingService.updateStudents(bookedId, studentStatus);
                 res
                     .status(http_status_1.HttpStatus.OK)

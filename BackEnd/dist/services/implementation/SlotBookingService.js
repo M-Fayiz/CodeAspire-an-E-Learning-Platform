@@ -4,6 +4,7 @@ exports.SlotBookingService = void 0;
 const env_config_1 = require("../../config/env.config");
 const error_message_1 = require("../../const/error-message");
 const http_status_1 = require("../../const/http-status");
+const sessionBooking_type_1 = require("../../types/sessionBooking.type");
 const http_error_1 = require("../../utils/http-error");
 const timeAndDateGenerator_1 = require("../../utils/timeAndDateGenerator");
 const objectId_1 = require("../../mongoose/objectId");
@@ -38,7 +39,7 @@ class SlotBookingService {
         const activeBooking = await this._slotBookingRepository.findSlots({
             learnerId,
             courseId,
-            status: { $in: ["booked", "Pending"] },
+            status: { $in: [sessionBooking_type_1.BookingStatus.BOOKED, sessionBooking_type_1.BookingStatus.PENDING] },
         });
         if (activeBooking) {
             throw (0, http_error_1.createHttpError)(http_status_1.HttpStatus.CONFLICT, error_message_1.HttpResponse.BOOKING_EXIST);
@@ -48,7 +49,7 @@ class SlotBookingService {
             courseId,
         });
         const isFreeBooking = previousBookings && previousBookings.length == 0;
-        bookingData.type = isFreeBooking ? "free" : "paid";
+        bookingData.type = isFreeBooking ? sessionBooking_type_1.bookingType.FREE : sessionBooking_type_1.bookingType.PAID;
         const { date, startTime, endTime } = (0, timeAndDateGenerator_1.timeAndDateGenerator)(bookingData.date, bookingData.startTime, bookingData.endTime);
         bookingData.date = date;
         bookingData.startTime = startTime;
@@ -57,15 +58,15 @@ class SlotBookingService {
             learnerId,
             startTime: { $lt: endTime },
             endTime: { $gt: startTime },
-            status: { $ne: "completed" },
+            status: { $ne: sessionBooking_type_1.BookingStatus.COMPLETED },
         });
         if (overlap) {
             throw (0, http_error_1.createHttpError)(http_status_1.HttpStatus.CONFLICT, error_message_1.HttpResponse.BOOKING_TIME_CONFLICT);
         }
-        if (bookingData.type == "free") {
+        if (bookingData.type == sessionBooking_type_1.bookingType.FREE) {
             await this._slotBookingRepository.createBooking({
                 ...bookingData,
-                status: "booked",
+                status: sessionBooking_type_1.BookingStatus.BOOKED,
             });
             return null;
         }
@@ -97,7 +98,7 @@ class SlotBookingService {
             success_url: `${env_config_1.env.CLIENT_ORGIN}/courses/payment-success`,
             cancel_url: `${env_config_1.env.CLIENT_ORGIN}/slot-booking/cancel`,
             metadata: {
-                paymentType: "SLOT_BOOKING",
+                paymentType: transaction_1.TransactionType.SLOT_BOOKING,
                 bookingId: createdPaidSlot._id.toString(),
                 learnerId: learnerId.toString(),
                 courseId: courseId.toString(),
@@ -165,15 +166,15 @@ class SlotBookingService {
         const EARLY_JOIN_BUFFER = Number(env_config_1.env.EARLY_JOIN_BUFFER) * 60 * 1000;
         const currentDate = now.toISOString().split("T")[0];
         const sessionDate = new Date(bookedData.date).toISOString().split("T")[0];
-        if (currentDate !== sessionDate) {
-            throw (0, http_error_1.createHttpError)(http_status_1.HttpStatus.CONFLICT, error_message_1.HttpResponse.SLOT_DATE);
-        }
-        if (now.getTime() < startTime.getTime() - EARLY_JOIN_BUFFER) {
-            throw (0, http_error_1.createHttpError)(http_status_1.HttpStatus.CONFLICT, error_message_1.HttpResponse.NOT_STARTED);
-        }
-        if (now.getTime() > endTime.getTime()) {
-            throw (0, http_error_1.createHttpError)(http_status_1.HttpStatus.CONFLICT, error_message_1.HttpResponse.SESSION_ENDED);
-        }
+        // if (currentDate !== sessionDate) {
+        //   throw createHttpError(HttpStatus.CONFLICT, HttpResponse.SLOT_DATE);
+        // }
+        // if (now.getTime() < startTime.getTime() - EARLY_JOIN_BUFFER) {
+        //   throw createHttpError(HttpStatus.CONFLICT, HttpResponse.NOT_STARTED);
+        // }
+        // if (now.getTime() > endTime.getTime()) {
+        //   throw createHttpError(HttpStatus.CONFLICT, HttpResponse.SESSION_ENDED);
+        // }
         const notifyDataMentor = notification_template_1.NotificationTemplates.JoinNowSession(bookedData.mentorId);
         const notifyDataLerner = notification_template_1.NotificationTemplates.JoinNowSession(bookedData.learnerId);
         const createdMentorNotify = await this._notificationRepository.createNotification(notifyDataMentor);

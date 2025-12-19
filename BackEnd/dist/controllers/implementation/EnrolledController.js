@@ -35,12 +35,11 @@ class EnrolledController {
         this.updateProgress = async (req, res, next) => {
             try {
                 const { enrolledId } = req.params;
-                const { lectureId } = req.body;
-                console.log(lectureId);
-                const progressData = await this._enrolledService.updatedProgress(enrolledId, lectureId);
+                const { lectureId, sessionId } = req.body;
+                const progressData = await this._enrolledService.updatedProgress(enrolledId, lectureId, sessionId);
                 res
                     .status(http_status_1.HttpStatus.OK)
-                    .json((0, response_util_1.successResponse)(error_message_1.HttpResponse.OK, progressData));
+                    .json((0, response_util_1.successResponse)(error_message_1.HttpResponse.OK, { progressData }));
             }
             catch (error) {
                 next(error);
@@ -53,7 +52,7 @@ class EnrolledController {
                 const ratingResult = await this._enrolledService.addRating(enrolledId, value);
                 res
                     .status(http_status_1.HttpStatus.OK)
-                    .json((0, response_util_1.successResponse)(error_message_1.HttpResponse.OK, ratingResult));
+                    .json((0, response_util_1.successResponse)(error_message_1.HttpResponse.OK, { ratingResult }));
             }
             catch (error) {
                 next(error);
@@ -120,6 +119,15 @@ class EnrolledController {
                     slotRevanue,
                     signedUsers,
                 }));
+            }
+            catch (error) {
+                next(error);
+            }
+        };
+        this.getLearnerDashboardData = async (req, res, next) => {
+            try {
+                const { learnerId } = req.params;
+                await this._enrolledService.learnerDashboardCardData(learnerId);
             }
             catch (error) {
                 next(error);

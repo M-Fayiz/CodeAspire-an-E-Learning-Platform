@@ -34,5 +34,6 @@ exports.HttpResponse = {
     SESSION_ENDED: "The session has already ended.",
     SLOT_EXIST_DAYS: (day, existing) => `You have already a slot on ${day} ${existing}`,
     SLOT_DATE: "You can only join on the scheduled date.",
-    STRIPR_NOT_AVAILABLE: 'Stripe Payment is not Available'
+    STRIPR_NOT_AVAILABLE: 'Stripe Payment is not Available',
+    SLOT_NOT_FOUND: 'Your Slot not found'
 };

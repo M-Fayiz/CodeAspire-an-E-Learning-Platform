@@ -58,10 +58,10 @@ function formCourseDto(course) {
         language: course.language,
         level: course.level,
         price: course.price,
-        mentorsId: {
-            _id: course.mentorsId._id,
-            name: course.mentorsId.name,
-            email: course.mentorsId.email,
+        mentorId: {
+            _id: course.mentorId._id,
+            name: course.mentorId.name,
+            email: course.mentorId.email,
         },
         sessions: course.sessions ?? [],
         status: course.status,
@@ -86,7 +86,7 @@ function CourseFormDataDTO(course) {
         thumbnail: course.thumbnail,
         categoryId: course.categoryId,
         subCategoryId: course.subCategoryId,
-        mentorId: course.mentorsId,
+        mentorId: course.mentorId,
         sessions: course.sessions,
     };
 }

@@ -1,5 +1,6 @@
 import { graphPrps } from "../../types/adminDahsboard.type";
-import type {  CourseDashboardDTO, IChartTrendDTO } from "../../types/dtos.type/courseDashboard.dto.type";
+import { CourseDashboardDTO, IChartTrendDTO } from "../../types/dtos.type/courseDashboard.dto.type";
+
 
 
 import {

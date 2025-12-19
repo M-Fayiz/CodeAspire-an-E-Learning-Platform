@@ -20,6 +20,7 @@ const CertificateSchema = new mongoose_1.default.Schema({
     programmTitle: { type: String },
     certificateId: { type: String, required: true, unique: true },
     certificateUrl: { type: String, required: true },
+    preview_image: { type: String, required: true },
     issuedDate: { type: Date, default: Date.now },
 }, { timestamps: true });
 exports.CertificateModel = mongoose_1.default.model(modelName_1.DbModelName.CERTIFICATE, CertificateSchema);

@@ -7,10 +7,13 @@ const CourseRepository_1 = require("../repository/implementation/CourseRepositor
 const UserRepository_1 = require("../repository/implementation/UserRepository");
 const CertificateController_1 = require("../controllers/implementation/CertificateController");
 const CertificateService_1 = require("../services/implementation/CertificateService");
+const NotificationRepository_1 = require("../repository/implementation/NotificationRepository");
 const certificateRepositoy = new ICertificateRepository_1.CertificateRepository();
 const userRepository = new UserRepository_1.UserRepository();
 const courseRepository = new CourseRepository_1.CourseRepository();
-const certificateService = new CertificateService_1.CertificateService(certificateRepositoy, userRepository, courseRepository);
+const notificationRepository = new NotificationRepository_1.NotificationRepository();
+const certificateService = new CertificateService_1.CertificateService(certificateRepositoy, userRepository, courseRepository, notificationRepository);
 const certificateController = new CertificateController_1.CertificateController(certificateService);
 certificateRouter.post("/", certificateController.createCertificate);
+certificateRouter.get('/my-certificate/:learnerId', certificateController.listCertificate);
 exports.default = certificateRouter;

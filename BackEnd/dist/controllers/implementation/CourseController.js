@@ -79,7 +79,7 @@ class CourseController {
                 const { courseId } = req.params;
                 const { session } = req.body;
                 const addedSessionData = await this._courseService.addSessions(courseId, session);
-                console.warn(addedSessionData);
+                console.warn('added session :', addedSessionData);
                 res
                     .status(http_status_1.HttpStatus.OK)
                     .json((0, response_util_1.successResponse)(error_message_1.HttpResponse.OK, { addedSessionData }));
@@ -205,10 +205,22 @@ class CourseController {
             try {
                 const { courseId } = req.params;
                 const courseFormData = await this._courseService.getCourseFormData(courseId);
-                console.log("(       )", courseFormData);
                 res
                     .status(http_status_1.HttpStatus.OK)
                     .json((0, response_util_1.successResponse)(error_message_1.HttpResponse.OK, { courseFormData }));
+            }
+            catch (error) {
+                next(error);
+            }
+        };
+        this.removeSession = async (req, res, next) => {
+            try {
+                const { courseId, sessionId } = req.params;
+                console.log(courseId, '-    -', sessionId);
+                const removedSessionData = await this._courseService.removeSession(courseId, sessionId);
+                res
+                    .status(http_status_1.HttpStatus.OK)
+                    .json((0, response_util_1.successResponse)(error_message_1.HttpResponse.OK, { removedSessionData }));
             }
             catch (error) {
                 next(error);

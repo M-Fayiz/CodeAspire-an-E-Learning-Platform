@@ -60,4 +60,24 @@ exports.NotificationTemplates = {
         createdAt: new Date(),
         updatedAt: new Date(),
     }),
+    CourseCompletionCertificate: (userId, courseTitle) => ({
+        userId,
+        title: "🎉 Course Completed Successfully!",
+        message: `Congratulations! You have successfully completed the course "${courseTitle}" and earned your certificate of completion.`,
+        type: "success",
+        isRead: false,
+        link: `/learner/my-certificates/${userId}`,
+        createdAt: new Date(),
+        updatedAt: new Date(),
+    }),
+    CourseCompletion: (userId, courseTitle) => ({
+        userId,
+        title: "🎉 Course Completed Successfully!",
+        message: `Congratulations! You have successfully completed the course "${courseTitle}" ,If you are , you can book your mentor slot to earn certificate.`,
+        type: "success",
+        isRead: false,
+        link: `/learner/my-certificates/${userId}`,
+        createdAt: new Date(),
+        updatedAt: new Date(),
+    })
 };

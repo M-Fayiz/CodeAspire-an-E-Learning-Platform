@@ -36,7 +36,7 @@ const courseSchema = new mongoose_1.default.Schema({
     price: {
         type: Number,
     },
-    mentorsId: {
+    mentorId: {
         type: mongoose_1.default.Schema.Types.ObjectId,
         ref: modelName_1.DbModelName.USER,
     },

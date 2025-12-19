@@ -45,7 +45,7 @@ class CourseRepository extends baseRepository_1.BaseRepository {
         if (search) {
             query["title"] = { $regex: search, $options: "i" };
         }
-        query["mentorsId"] = mentorId;
+        query["mentorId"] = mentorId;
         return await this.findAll(query, limit, skip, [
             "categoryId",
             "subCategoryId",
@@ -91,13 +91,13 @@ class CourseRepository extends baseRepository_1.BaseRepository {
         return await this.findByIDAndUpdate(courseId, baseInfo);
     }
     async getAdminCoursList() {
-        return await this.find({ status: { $in: ["published", "rejected", "approved"] } }, ["categoryId", "subCategoryId", "mentorsId"]);
+        return await this.find({ status: { $in: ["published", "rejected", "approved"] } }, ["categoryId", "subCategoryId", "mentorId"]);
     }
     async getCourseDetails(courseId) {
         return await this.find({ _id: courseId }, [
             "categoryId",
             "subCategoryId",
-            "mentorsId",
+            "mentorId",
         ]);
     }
     async appproveCourse(courseId) {
@@ -113,7 +113,7 @@ class CourseRepository extends baseRepository_1.BaseRepository {
         return await this.findOne({ _id: courseId }, [
             "categoryId",
             "subCategoryId",
-            "mentorsId",
+            "mentorId",
         ]);
     }
     async findDocumentCount(query) {
@@ -124,6 +124,12 @@ class CourseRepository extends baseRepository_1.BaseRepository {
     }
     async getCourseFormData(courseId) {
         return await this.findById(courseId);
+    }
+    async removeSession(courseId, sessionId) {
+        return await this.pullItemFromArray({ _id: courseId }, 'sessions', sessionId);
+    }
+    async removeLecture(courseId, sessionId, lectureId) {
+        return await this.pullItemFromArray({ _id: courseId }, `sessions[${sessionId}].lectures`, lectureId);
     }
 }
 exports.CourseRepository = CourseRepository;

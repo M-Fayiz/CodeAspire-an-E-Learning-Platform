@@ -3,6 +3,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.EnrolledRepository = void 0;
 const baseRepository_1 = require("../baseRepository");
 const enrolled_model_1 = require("../../models/enrolled.model");
+const enrollment_types_1 = require("../../types/enrollment.types");
 class EnrolledRepository extends baseRepository_1.BaseRepository {
     constructor() {
         super(enrolled_model_1.EnrolleModel);
@@ -173,6 +174,38 @@ class EnrolledRepository extends baseRepository_1.BaseRepository {
                 },
             },
         ]);
+    }
+    async getLearnerDashboardCourseData(learnerId) {
+        const result = await this.aggregate([
+            {
+                $group: {
+                    _id: `$${learnerId}`,
+                    courseCount: { $sum: 1 },
+                    completedCourse: {
+                        $sum: {
+                            $cond: [
+                                { $eq: ["$courseStatus", enrollment_types_1.completionStatus.COMPLETED] },
+                                1,
+                                0
+                            ]
+                        }
+                    },
+                    inProgressCourse: {
+                        $sum: {
+                            $cond: [
+                                { $eq: ["$courseStatus", enrollment_types_1.completionStatus.IN_PROGRESS] },
+                                1,
+                                0
+                            ]
+                        }
+                    }
+                },
+            }
+        ]);
+        console.log('aggregation :', result);
+    }
+    async updateEnrolledData(enrolledId, data) {
+        return await this.findByIDAndUpdate(enrolledId, data);
     }
 }
 exports.EnrolledRepository = EnrolledRepository;
