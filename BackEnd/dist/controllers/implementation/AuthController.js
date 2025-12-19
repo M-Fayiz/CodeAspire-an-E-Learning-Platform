@@ -129,7 +129,7 @@ class AuthController {
             const Data = await this._authSerive.generateToken(req.user);
             (0, cookie_util_1.setAccessToken)(res, Data.accessToken);
             (0, cookie_util_1.setRefreshToken)(res, Data.refreshToken);
-            res.redirect(`${env_config_1.env.CLIENT_ORGIN}/verify-email/?token=${Data.accessToken}`);
+            res.redirect(`${env_config_1.env.CLIENT_URL_2}/?token=${Data.accessToken}`);
         }
         catch (error) {
             res.redirect(`${env_config_1.env.CLIENT_ORGIN}/auth/signup`);

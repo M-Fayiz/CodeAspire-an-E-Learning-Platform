@@ -140,7 +140,7 @@ class OrderService {
                 },
             ],
             mode: "payment",
-            success_url: `${env_config_1.env.CLIENT_ORGIN}/courses/payment-success?session_id={CHECKOUT_SESSION_ID}`,
+            success_url: `${env_config_1.env.CLIENT_URL_2}/courses/payment-success?session_id={CHECKOUT_SESSION_ID}`,
             client_reference_id: String(orderData._id),
             metadata: {
                 paymentType: "COURSE_PURCHASE",
