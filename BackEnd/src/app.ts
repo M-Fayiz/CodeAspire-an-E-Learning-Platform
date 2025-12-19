@@ -48,14 +48,14 @@ app.use(
 app.use(express.json());
 
 app.use(express.urlencoded({ extended: true }));
-app.use(session(sessionConfig));
+// app.use(session(sessionConfig));
 
 const server = http.createServer(app);
 //socket
 intitializeSocket(server);
 
 app.use(passport.initialize());
-app.use(passport.session());
+// app.use(passport.session());
 
 app.use(cors(corsSetUp));
 

@@ -176,7 +176,7 @@ export class AuthController implements IAuthController {
       setAccessToken(res, Data.accessToken);
       setRefreshToken(res, Data.refreshToken);
 
-      res.redirect(`${env.CLIENT_URL_2}/?token=${Data.accessToken}`);
+      res.redirect(`${env.CLIENT_ORGIN}/?token=${Data.accessToken}`);
     } catch (error) {
       res.redirect(`${env.CLIENT_ORGIN}/auth/signup`);
       next(error);
