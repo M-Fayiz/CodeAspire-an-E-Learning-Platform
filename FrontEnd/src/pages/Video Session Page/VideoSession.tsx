@@ -16,22 +16,20 @@ import {
 } from "lucide-react";
 type CallState = "idle" | "calling" | "connected" | "disconnected";
 
-
-
 export const VideoRoom = () => {
   const { bookingId } = useParams();
   const { user } = useAuth();
   const socket = useSocket();
   const localRef = useRef<HTMLVideoElement>(null);
   const remoteRef = useRef<HTMLVideoElement>(null);
-const [callState, setCallState] = useState<CallState>("idle");
+  const [callState, setCallState] = useState<CallState>("idle");
   const [roomId, setRoomId] = useState<string>();
   const [joined, setJoined] = useState(false);
   const [muted, setMuted] = useState(false);
   const [camOff, setCamOff] = useState(false);
   const [sharing, setSharing] = useState(false);
 
-  const navigate =useNavigate()
+  const navigate = useNavigate();
 
   const { init, call, hangup, toggleMic, toggleCamera, shareScreen } =
     useP2PCall(socket!);
@@ -46,14 +44,14 @@ const [callState, setCallState] = useState<CallState>("idle");
         setRoomId(room);
 
         if (localRef.current && remoteRef.current) {
-         await init({
-          roomId: room,
-          userId: user.id,
-          localVideo: localRef.current,
-          remoteVideo: remoteRef.current,
-          onConnected: () => setCallState("connected"),
-          onDisconnected: () => setCallState("disconnected"),
-        });
+          await init({
+            roomId: room,
+            userId: user.id,
+            localVideo: localRef.current,
+            remoteVideo: remoteRef.current,
+            onConnected: () => setCallState("connected"),
+            onDisconnected: () => setCallState("disconnected"),
+          });
 
           setJoined(true);
         }
@@ -68,27 +66,26 @@ const [callState, setCallState] = useState<CallState>("idle");
   }, [socket, user, bookingId]);
 
   const handleCall = async () => {
-      if (!roomId || !user) return;
-      setCallState("calling");
-      await call(roomId, user.id);
-    };
-  const handleRejoin = async () => {
-  if (!roomId || !user) return;
-
-  if (localRef.current && remoteRef.current) {
-    await init({
-      roomId,
-      userId: user.id,
-      localVideo: localRef.current,
-      remoteVideo: remoteRef.current,
-      onConnected: () => setCallState("connected"),
-      onDisconnected: () => setCallState("disconnected"),
-    });
-
+    if (!roomId || !user) return;
+    setCallState("calling");
     await call(roomId, user.id);
-  }
-};
+  };
+  const handleRejoin = async () => {
+    if (!roomId || !user) return;
 
+    if (localRef.current && remoteRef.current) {
+      await init({
+        roomId,
+        userId: user.id,
+        localVideo: localRef.current,
+        remoteVideo: remoteRef.current,
+        onConnected: () => setCallState("connected"),
+        onDisconnected: () => setCallState("disconnected"),
+      });
+
+      await call(roomId, user.id);
+    }
+  };
 
   const handleMic = () => {
     setMuted((prev) => {
@@ -117,12 +114,10 @@ const [callState, setCallState] = useState<CallState>("idle");
   const handleHangup = async () => {
     if (roomId) await hangup(roomId);
     setJoined(false);
-    if(user?.role=='mentor'){
-
-      navigate('/mentor/booked-slot-list')
-    }else if(user?.role==='learner'){
-      navigate('/learner/booked-slots')
-
+    if (user?.role == "mentor") {
+      navigate("/mentor/booked-slot-list");
+    } else if (user?.role === "learner") {
+      navigate("/learner/booked-slots");
     }
   };
 
@@ -167,12 +162,7 @@ const [callState, setCallState] = useState<CallState>("idle");
             </button>
           )}
 
-         {callState === "connected" &&(
-          <>
-          
-          
-          </>
-         )}
+          {callState === "connected" && <></>}
           <button
             onClick={handleMic}
             className={`p-3 pl-6 pr-6  rounded-2xl ${
@@ -193,7 +183,6 @@ const [callState, setCallState] = useState<CallState>("idle");
             {camOff ? <VideoOff /> : <Video />}
           </button>
 
-     
           <button
             onClick={handleShare}
             className="p-3 pl-6 pr-6  rounded-2xl bg-blue-800 text-white  hover:scale-110 transition"
@@ -202,7 +191,6 @@ const [callState, setCallState] = useState<CallState>("idle");
             {sharing ? <ScreenShareOff /> : <ScreenShare />}
           </button>
 
-         
           <button
             onClick={handleHangup}
             className="p-3 pl-6 pr-6  rounded-2xl bg-red-600 text-white  hover:scale-110 transition"
@@ -212,13 +200,13 @@ const [callState, setCallState] = useState<CallState>("idle");
           </button>
 
           {callState === "disconnected" && (
-              <button
-                onClick={handleRejoin}
-                className="p-4 rounded-xl bg-yellow-500 text-white"
-              >
-                Rejoin Call
-              </button>
-            )}
+            <button
+              onClick={handleRejoin}
+              className="p-4 rounded-xl bg-yellow-500 text-white"
+            >
+              Rejoin Call
+            </button>
+          )}
         </div>
       )}
     </div>

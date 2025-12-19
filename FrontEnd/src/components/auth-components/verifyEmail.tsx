@@ -34,7 +34,6 @@ function VerifyEmail() {
         if (err instanceof Error) toast.error(err.message);
         // navigate('*')
         setError("Verification failed. Try again .");
-        
       }
     }
 

@@ -50,15 +50,16 @@ export class EnrolledController implements IEnrolledController {
   ): Promise<void> => {
     try {
       const { enrolledId } = req.params;
-      const { lectureId } = req.body;
-      console.log(lectureId);
+      const { lectureId ,sessionId} = req.body;
+    
       const progressData = await this._enrolledService.updatedProgress(
         enrolledId,
         lectureId,
+        sessionId
       );
       res
         .status(HttpStatus.OK)
-        .json(successResponse(HttpResponse.OK, progressData));
+        .json(successResponse(HttpResponse.OK,{progressData} ));
     } catch (error) {
       next(error);
     }
@@ -71,13 +72,15 @@ export class EnrolledController implements IEnrolledController {
     try {
       const { enrolledId } = req.params;
       const { value } = req.body;
+  
       const ratingResult = await this._enrolledService.addRating(
         enrolledId,
         value,
       );
+   
       res
         .status(HttpStatus.OK)
-        .json(successResponse(HttpResponse.OK, ratingResult));
+        .json(successResponse(HttpResponse.OK, {ratingResult}));
     } catch (error) {
       next(error);
     }
@@ -189,4 +192,12 @@ export class EnrolledController implements IEnrolledController {
       next(error);
     }
   };
+  getLearnerDashboardData=async(req: Request, res: Response, next: NextFunction): Promise<void> =>{
+    try {
+       const {learnerId}=req.params
+       await this._enrolledService.learnerDashboardCardData(learnerId)
+    } catch (error) {
+      next(error)
+    }
+  }
 }

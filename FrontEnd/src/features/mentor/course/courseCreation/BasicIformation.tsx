@@ -27,7 +27,15 @@ const BasicCourseInformation: React.FC<BaseCaourseProps> = ({ handleTap }) => {
   const [zodError, setErrors] = useState<{ [key: string]: string }>({});
   const [image, setImage] = useState("");
   const [spin] = useState(false);
-  const { courseId, formData, setField,hydrateFromDB, setCourseId,setIsDraftReady,isDraftReady } = useCourseFormContext();
+  const {
+    courseId,
+    formData,
+    setField,
+    hydrateFromDB,
+    setCourseId,
+    setIsDraftReady,
+    isDraftReady,
+  } = useCourseFormContext();
   const { user } = useAuth();
 
   useEffect(() => {
@@ -103,25 +111,25 @@ const BasicCourseInformation: React.FC<BaseCaourseProps> = ({ handleTap }) => {
         );
         if (updatedData) {
           setCourseId(updatedData._id as string);
-          
+
           handleTap("curriculum");
           toast.success("Base Information Updated Successfully");
         }
         return;
       }
-  
+
       const savedCourseData = await courseService.createCourse({
         ...courseData.data,
         mentorId: user!.id,
       });
-      console.log('saved Data  :: ',savedCourseData)
+      console.log("saved Data  :: ", savedCourseData);
       if (savedCourseData._id) {
         setCourseId(savedCourseData._id);
-        setIsDraftReady(true)
-        hydrateFromDB(savedCourseData)
+        setIsDraftReady(true);
+        hydrateFromDB(savedCourseData);
 
         handleTap("curriculum");
-        console.log('this is form data ::',formData)
+        console.log("this is form data ::", formData);
       }
     } catch (error) {
       if (error instanceof Error) {

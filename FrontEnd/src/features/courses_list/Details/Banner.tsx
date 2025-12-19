@@ -58,9 +58,7 @@ const Banner: React.FC<BannerProps> = ({
           </h1>
           <p className="text-lg text-gray-600 mb-6">
             {description}
-            {
-              "Another productive way to use this tool to begin a daily writing routine. One way is to generate a random paragraph with the intention to try to rewrite it while still keeping the original meaning"
-            }
+           
           </p>
           {user?.role == "learner" && (
             <>

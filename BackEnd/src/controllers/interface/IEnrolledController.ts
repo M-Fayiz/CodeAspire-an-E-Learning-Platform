@@ -42,4 +42,9 @@ export interface IEnrolledController {
     res: Response,
     next: NextFunction,
   ): Promise<void>;
+  getLearnerDashboardData(
+    req: Request,
+    res: Response,
+    next: NextFunction,
+  ): Promise<void>;
 }

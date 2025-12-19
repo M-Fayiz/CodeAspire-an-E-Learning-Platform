@@ -88,7 +88,7 @@ function CourseLayout() {
   };
 
   const handlePage = (e: React.ChangeEvent<unknown>, value: number) => {
-    console.log(e)
+    console.log(e);
     setSearchParams((prev) => {
       prev.set("page", String(value));
       return prev;

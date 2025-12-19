@@ -24,6 +24,7 @@ export interface IEnrollement {
   progress: {
     completedLectures: Types.ObjectId[];
     lastAccessedLecture: Types.ObjectId | null;
+    lastAccessedSession:Types.ObjectId|null
     completionPercentage: number;
   };
   courseStatus:completionStatus

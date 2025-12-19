@@ -18,6 +18,7 @@ export interface IEnrolledService {
   updatedProgress(
     enroledId: string,
     lecture: string,
+     lastSession:string
   ): Promise<IProgressTrack | null>;
   addRating(enroledId: string, value: number): Promise<number>;
   getCourseEnrolledDashboardData(
@@ -39,5 +40,5 @@ export interface IEnrolledService {
     courseRevanue: graphPrps[];
     signedUsers: graphPrps[];
   }>;
-  learnerDashboardCardData(learnerId:string,filter:string,startDate:string,endDate:string):Promise<void>
+  learnerDashboardCardData(learnerId:string,filter?:string,startDate?:string,endDate?:string):Promise<void>
 }

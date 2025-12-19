@@ -24,7 +24,7 @@ function CourseManagement() {
 
       if (data) {
         setCourse(data);
-        setTotalPage(1)
+        setTotalPage(1);
       }
     })();
   }, []);
@@ -37,7 +37,7 @@ function CourseManagement() {
   };
 
   const handlePageChange = (e: React.ChangeEvent<unknown>, page: number) => {
-    console.log(e)
+    console.log(e);
     setSearchParams({
       page: String(page),
       search: SearchQuery,
@@ -174,12 +174,12 @@ function CourseManagement() {
         </div>
       )}
       {courses.length > 0 && (
-            <PaginationRounded
-              currentPage={currentPage}
-              totalPages={totalPage}
-              onPageChange={handlePageChange}
-            />
-          )}
+        <PaginationRounded
+          currentPage={currentPage}
+          totalPages={totalPage}
+          onPageChange={handlePageChange}
+        />
+      )}
     </ManagementLayout>
   );
 }

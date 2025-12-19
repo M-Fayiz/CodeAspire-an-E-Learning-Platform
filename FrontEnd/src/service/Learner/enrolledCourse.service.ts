@@ -61,11 +61,12 @@ export const EnrolledService = {
   updateProgress: async (
     enrolledId: string,
     lectureId: string,
+    sessionId: string,
   ): Promise<ICourseProgess> => {
     try {
       const response = await axiosInstance.put(
         API.ENROLLEMENT.UPDATE_PROGRESS(enrolledId),
-        { lectureId },
+        { lectureId, sessionId },
       );
       console.log(response.data);
       return response.data.progressData;
@@ -81,6 +82,7 @@ export const EnrolledService = {
           value,
         },
       );
+
       return response.data.ratingResult;
     } catch (error) {
       throwAxiosError(error);

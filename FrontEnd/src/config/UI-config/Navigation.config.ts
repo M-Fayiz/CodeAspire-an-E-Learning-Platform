@@ -61,25 +61,24 @@ const navigationConfig = {
         label: "My Courses",
         path: "/learner/enrolled-courses",
       },
-      { icon: Calendar, label: "Schedule", path: "/learner/schedule" },
+      // { icon: Calendar, label: "Schedule", path: "/learner/schedule" },
       {
         icon: Award,
         label: "Certificates",
         path: "/learner/my-certificate",
-        badge: 3,
+     
       },
       {
         icon: MessageSquare,
         label: "Messages",
         path: "/learner/chats",
-        badge: 2,
-      },
       
+      },
+
       { icon: CalendarDays, label: "Slots", path: "/learner/booked-slots" },
     ],
     secondary: [
       { icon: ShoppingCart, label: "Course Store", path: "/learner/store" },
-      
     ],
   },
   mentor: {
@@ -106,12 +105,12 @@ const navigationConfig = {
         icon: MessageSquare,
         label: "Messages",
         path: "/mentor/chats",
-        badge: 8,
+       
       },
       // { icon: BarChart3, label: "Analytics", path: "/mentor/analytics" },
     ],
     secondary: [
-      { icon: Calendar, label: "Schedule", path: "/mentor/schedule" },
+      // { icon: Calendar, label: "Schedule", path: "/mentor/schedule" },
       // { icon: CreditCard, label: "Earnings", path: "/mentor/earnings" },
       // { icon: Star, label: "Reviews", path: "/mentor/reviews" },
       // { icon: Settings, label: "Settings", path: "/mentor/settings" },

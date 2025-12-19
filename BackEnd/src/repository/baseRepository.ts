@@ -94,7 +94,6 @@ export abstract class BaseRepository<T extends Document> {
     update: UpdateQuery<T>,
   ): Promise<T | null> {
     return this.model.findByIdAndUpdate(id, update, {
-      upsert: true,
       new: true,
     });
   }

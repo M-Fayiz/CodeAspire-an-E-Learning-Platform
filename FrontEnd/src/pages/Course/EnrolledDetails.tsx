@@ -27,17 +27,23 @@ const EnrolledCourseDetails = () => {
   const [activeTap, setActiveTap] = useState("overview");
   const [enrolledCourse, setEnrolledCourse] =
     useState<IEnrolledCoursedetailsDTO | null>(null);
-  const [videoUrl, setVideoUrl] = useState({ url: "", title: "", lecture: "" });
+  const [videoUrl, setVideoUrl] = useState({
+    url: "",
+    title: "",
+    lecture: "",
+    sessionId: "",
+  });
   const { user } = useAuth();
 
-  const handleVideoEnd = async (lecture: string) => {
+  const handleVideoEnd = async (lecture: string, sessionId: string) => {
     if (lecture) {
       const result = await EnrolledService.updateProgress(
         enrolledCourse?._id as string,
         lecture,
+        sessionId,
       );
       if (result) {
-        console.log(" this is the result :", result);
+        console.log("progress result :", result);
         setEnrolledCourse((prv) => (prv ? { ...prv, progress: result } : prv));
       }
     }
@@ -56,8 +62,13 @@ const EnrolledCourseDetails = () => {
     })();
   }, [id]);
 
-  const setVideo = (url: string, title: string, lecture: string) => {
-    setVideoUrl((prev) => ({ ...prev, url, title, lecture }));
+  const setVideo = (
+    url: string,
+    title: string,
+    lecture: string,
+    sessionId: string,
+  ) => {
+    setVideoUrl((prev) => ({ ...prev, url, title, lecture, sessionId }));
   };
 
   // console.log("sessions :", enrolledCourse?.course.sessions);
@@ -79,15 +90,17 @@ const EnrolledCourseDetails = () => {
               )}
             </div>
           ) : (
-            <div className="bg-white rounded-2xl shadow overflow-hidden border border-gray-200">
-              <div className="bg-gradient-to-r from-blue-100 via-blue-50 to-purple-50 p-4">
+            <div className="bg-white rounded-sm shadow overflow-hidden border border-gray-200">
+              <div className="bg-gradient-to-r from-orange-100 via-orange-50 to-purple-50 p-4">
                 <video
                   key={videoUrl.url}
                   controls
                   controlsList="nodownload"
                   disablePictureInPicture
-                  className="w-full rounded-xl shadow-md"
-                  onEnded={() => handleVideoEnd(videoUrl.lecture)}
+                  className="w-full rounded-sm shadow-md"
+                  onEnded={() =>
+                    handleVideoEnd(videoUrl.lecture, videoUrl.sessionId)
+                  }
                 >
                   <source src={videoUrl.url} type="video/mp4" />
                   Your browser does not support the video tag.
@@ -168,50 +181,109 @@ const EnrolledCourseDetails = () => {
                   </p>
                 </div>
                 <div className="space-y-2">
-                  {enrolledCourse?.course.sessions.map((session) => (
-                    <Accordion
-                      key={session._id}
-                      className="border border-gray-200 rounded-lg overflow-hidden mb-3 shadow-sm"
-                      type="single"
-                      collapsible
-                    >
-                      <AccordionItem value={`session-${session._id}`}>
-                        <AccordionTrigger className="w-full px-6 py-4 bg-gray-50 hover:bg-gray-100 text-lg flex items-center justify-between text-left transition-colors text-gray-900">
-                          <div className="flex flex-col">
-                            <span>{session.title}</span>
-                            <span className="text-sm text-gray-500">
-                              {session.lectures.length} lectures
-                            </span>
-                          </div>
-                        </AccordionTrigger>
+                  {enrolledCourse?.course.sessions
+                    .filter(
+                      (session) =>
+                        session.lectures && session.lectures.length >= 1,
+                    )
+                    .map((session) => 
+                      (
+                      <Accordion
+                        key={session._id}
+                        type="single"
+                        collapsible
+                        className="border border-gray-200 rounded-sm overflow-hidden mb-3 shadow-sm"
+                      >
+                        <AccordionItem value={`session-${session._id}`}>
+                          <AccordionTrigger className={`w-full px-6 py-4 ${
+                                        session._id==enrolledCourse.progress.lastAccessedSession
+                                          ? "bg-orange-50 border-l-4 border-orange-500"
+                                          : "hover:bg-gray-50 focus:bg-orange-50"
+                                      } text-left transition-colors text-gray-900`}>
+                            <div className="flex items-center justify-between w-full">
+                              <div className="flex flex-col gap-1">
 
-                        <AccordionContent className="bg-white">
-                          <div className="divide-y divide-gray-100">
-                            {session.lectures.map((lecture) => (
-                              <button
-                                key={lecture._id}
-                                className="w-full flex items-center justify-between px-6 py-3 hover:bg-gray-50 focus:bg-blue-50 transition-colors"
-                                onClick={() =>
-                                  setVideo(
-                                    lecture.lectureContent as string,
-                                    lecture.title,
-                                    lecture._id as string,
-                                  )
-                                }
-                              >
-                                <div className="flex items-center gap-3">
-                                  <PlayCircle className="w-5 h-5 text-blue-500" />
-                                  <span className="text-gray-800 text-sm">
-                                    {lecture.title}
-                                  </span>
-                                </div>
-                              </button>
-                            ))}
-                          </div>
-                        </AccordionContent>
-                      </AccordionItem>
-                    </Accordion>
-                  ))}
+                              <span className="text-lg font-medium">
+                                {session.title}
+                              </span>
+                              <span className="text-sm text-gray-500">
+                                {session.lectures.length} lectures
+                              </span>
+                              </div>
+                              <div>
+
+                              {session._id==enrolledCourse.progress.lastAccessedSession && (
+                                        <span className="text-xs text-orange-600 whitespace-nowrap">
+                                          Last watched
+                                        </span>
+                                      )}
+                              </div>
+                            </div>
+                          </AccordionTrigger>
+
+                          <AccordionContent className="bg-white mt-1 ">
+                            <div className="divide-y divide-gray-100">
+                              {session.lectures.map((lecture) => {
+                                const isLastAccessed =
+                                  enrolledCourse.progress
+                                    .lastAccessedLecture === lecture._id;
+
+                                return (
+                                  <button
+                                    key={lecture._id}
+                                    className={`w-full px-6 py-3 transition-colors
+                                      ${
+                                        isLastAccessed
+                                          ? "bg-orange-50 border-l-4 border-orange-500"
+                                          : "hover:bg-gray-50 focus:bg-orange-50"
+                                      }
+                                    `}
+                                    onClick={() =>
+                                      setVideo(
+                                        lecture.lectureContent as string,
+                                        lecture.title,
+                                        lecture._id as string,
+                                        session._id as string,
+                                      )
+                                    }
+                                  >
+                                    <div className="flex items-center justify-between w-full">
+                                      {/* Left side */}
+                                      <div className="flex items-center gap-3">
+                                        <PlayCircle
+                                          className={`w-5 h-5 ${
+                                            isLastAccessed
+                                              ? "text-orange-600"
+                                              : "text-orange-500"
+                                          }`}
+                                        />
+
+                                        <span
+                                          className={`text-sm ${
+                                            isLastAccessed
+                                              ? "text-orange-700 font-medium"
+                                              : "text-gray-800"
+                                          }`}
+                                        >
+                                          {lecture.title}
+                                        </span>
+                                      </div>
+
+                                      {/* Right side */}
+                                      {isLastAccessed && (
+                                        <span className="text-xs text-orange-600 whitespace-nowrap">
+                                          Last watched
+                                        </span>
+                                      )}
+                                    </div>
+                                  </button>
+                                );
+                              })}
+                            </div>
+                          </AccordionContent>
+                        </AccordionItem>
+                      </Accordion>
+                    ))}
                 </div>
               </div>
             )}

@@ -66,8 +66,6 @@ const CategoryManagement = () => {
     }
   };
 
-  
-
   const renderCategories = (categories: ICategory[]) => {
     return categories.map((cat) => (
       <div

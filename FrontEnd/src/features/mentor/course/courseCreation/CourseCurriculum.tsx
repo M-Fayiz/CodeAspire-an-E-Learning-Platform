@@ -31,7 +31,7 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
   AlertDialogTrigger,
-} from "@/components/ui/alert-dialog"
+} from "@/components/ui/alert-dialog";
 import { Input } from "@/components/ui/Inputs";
 
 import { toast } from "sonner";
@@ -53,7 +53,8 @@ const CourseCurriculum: React.FC<CurriculumProps> = () => {
     title: "",
     lectures: [],
   });
-  const { formData, addSession, courseId,setFormData } = useCourseFormContext();
+  const { formData, addSession, courseId, setFormData } =
+    useCourseFormContext();
   const [sessionSpin, setSessionSpin] = useState(false);
   const [errors, setErros] = useState<{ [key: string]: string }>({});
   const [selectedSession, setSelectedSession] = useState("");
@@ -87,7 +88,7 @@ const CourseCurriculum: React.FC<CurriculumProps> = () => {
     try {
       const addedSessions = await courseService.addSessions(courseId, sessions);
       if (addedSessions) {
-        console.log('added Session :',addedSessions)
+        console.log("added Session :", addedSessions);
         addSession(addedSessions.sessions as ISession[]);
         setSessionSpin(false);
       }
@@ -113,25 +114,25 @@ const CourseCurriculum: React.FC<CurriculumProps> = () => {
     setSheet("editLecture");
   };
 
-  const handleDeleteSession=async(sessionId:string)=>{
-   
-      const deleteSession=await courseService.removeSession(formData._id as string,sessionId)
-      if(deleteSession){
-        setFormData(prv=>({...prv,sessions:deleteSession.sessions}))
-      } 
-
-  }
-  const handleRemoveLecture=async(sessionId:string,lectureId:string)=>{
-
-  }
+  const handleDeleteSession = async (sessionId: string) => {
+    const deleteSession = await courseService.removeSession(
+      formData._id as string,
+      sessionId,
+    );
+    if (deleteSession) {
+      setFormData((prv) => ({ ...prv, sessions: deleteSession.sessions }));
+    }
+  };
+  const handleRemoveLecture = async (
+    sessionId: string,
+    lectureId: string,
+  ) => {};
   return (
     <div className="bg-white min-h-screen">
-      
       <h3 className="text-xl font-semibold text-gray-900 px-6 py-4 border-b">
         Curriculum
       </h3>
 
-     
       <div className="px-6 py-4 flex flex-col gap-4">
         {formData.sessions && formData.sessions.length > 0 ? (
           formData.sessions.map((session, index) => (
@@ -139,7 +140,6 @@ const CourseCurriculum: React.FC<CurriculumProps> = () => {
               key={index}
               className="bg-gray-200 border border-gray-200 rounded-lg p-5 space-y-4 hover:shadow-sm transition"
             >
-            
               <div className="flex justify-between items-center">
                 <div className="flex items-center gap-2">
                   <Menu size={17} className="text-gray-500" />
@@ -148,7 +148,6 @@ const CourseCurriculum: React.FC<CurriculumProps> = () => {
                   </h4>
                 </div>
 
-                
                 <div className="flex gap-2">
                   <Button
                     type="button"
@@ -161,38 +160,42 @@ const CourseCurriculum: React.FC<CurriculumProps> = () => {
                   </Button>
 
                   <AlertDialog>
-                      <AlertDialogTrigger asChild>
-                        <Button
-                          type="button"
-                          size="sm"
-                          variant="outline"
-                          className="border border-gray-300 bg-white text-gray-700 hover:text-red-600 hover:bg-gray-100"
+                    <AlertDialogTrigger asChild>
+                      <Button
+                        type="button"
+                        size="sm"
+                        variant="outline"
+                        className="border border-gray-300 bg-white text-gray-700 hover:text-red-600 hover:bg-gray-100"
+                      >
+                        <Trash2 size={13} className="mr-1" />
+                      </Button>
+                    </AlertDialogTrigger>
+
+                    <AlertDialogContent>
+                      <AlertDialogHeader>
+                        <AlertDialogTitle>
+                          Are you absolutely sure?
+                        </AlertDialogTitle>
+                        <AlertDialogDescription>
+                          This action cannot be undone. This will permanently
+                          delete your session data and lectures from our
+                          servers.
+                        </AlertDialogDescription>
+                      </AlertDialogHeader>
+
+                      <AlertDialogFooter>
+                        <AlertDialogCancel>Cancel</AlertDialogCancel>
+                        <AlertDialogAction
+                          className="bg-red-600 hover:bg-red-700"
+                          onClick={() =>
+                            handleDeleteSession(session._id as string)
+                          }
                         >
-                          <Trash2 size={13} className="mr-1" />
-                        </Button>
-                      </AlertDialogTrigger>
-
-                      <AlertDialogContent>
-                        <AlertDialogHeader>
-                          <AlertDialogTitle>Are you absolutely sure?</AlertDialogTitle>
-                          <AlertDialogDescription>
-                            This action cannot be undone. This will permanently delete your session data and lectures
-                            from our servers.
-                          </AlertDialogDescription>
-                        </AlertDialogHeader>
-
-                        <AlertDialogFooter>
-                          <AlertDialogCancel>Cancel</AlertDialogCancel>
-                          <AlertDialogAction
-                            className="bg-red-600 hover:bg-red-700"
-                            onClick={() => handleDeleteSession(session._id as string)}
-                          >
-                            Delete
-                          </AlertDialogAction>
-                        </AlertDialogFooter>
-                      </AlertDialogContent>
-                    </AlertDialog>
-
+                          Delete
+                        </AlertDialogAction>
+                      </AlertDialogFooter>
+                    </AlertDialogContent>
+                  </AlertDialog>
 
                   <Button
                     type="button"
@@ -204,7 +207,6 @@ const CourseCurriculum: React.FC<CurriculumProps> = () => {
                 </div>
               </div>
 
-             
               {session.lectures.length > 0 && (
                 <div className="ml-5 space-y-2 border-l pl-4">
                   {session.lectures.map((lecture) => (
@@ -220,40 +222,46 @@ const CourseCurriculum: React.FC<CurriculumProps> = () => {
                       </div>
 
                       <div className="flex gap-2">
-                       
+                        <AlertDialog>
+                          <AlertDialogTrigger asChild>
+                            <Button
+                              type="button"
+                              size="sm"
+                              variant="ghost"
+                              className="   text-gray-700 hover:text-red-600 "
+                            >
+                              <Trash2 size={13} />
+                            </Button>
+                          </AlertDialogTrigger>
 
-                  <AlertDialog>
-                      <AlertDialogTrigger asChild>
-                        <Button
-                          type="button"
-                          size="sm"
-                          variant="ghost"
-                          className="   text-gray-700 hover:text-red-600 "
-                        >
-                          <Trash2 size={13}  />
-                        </Button>
-                      </AlertDialogTrigger>
+                          <AlertDialogContent>
+                            <AlertDialogHeader>
+                              <AlertDialogTitle>
+                                Are you absolutely sure?
+                              </AlertDialogTitle>
+                              <AlertDialogDescription>
+                                This action cannot be undone. This will
+                                permanently delete your session data and
+                                lectures from our servers.
+                              </AlertDialogDescription>
+                            </AlertDialogHeader>
 
-                      <AlertDialogContent>
-                        <AlertDialogHeader>
-                          <AlertDialogTitle>Are you absolutely sure?</AlertDialogTitle>
-                          <AlertDialogDescription>
-                            This action cannot be undone. This will permanently delete your session data and lectures
-                            from our servers.
-                          </AlertDialogDescription>
-                        </AlertDialogHeader>
-
-                        <AlertDialogFooter>
-                          <AlertDialogCancel>Cancel</AlertDialogCancel>
-                          <AlertDialogAction
-                            className="bg-red-600 hover:bg-red-700"
-                            onClick={() => handleRemoveLecture(session._id as string,lecture._id as string)}
-                          >
-                            Delete
-                          </AlertDialogAction>
-                        </AlertDialogFooter>
-                      </AlertDialogContent>
-                    </AlertDialog>
+                            <AlertDialogFooter>
+                              <AlertDialogCancel>Cancel</AlertDialogCancel>
+                              <AlertDialogAction
+                                className="bg-red-600 hover:bg-red-700"
+                                onClick={() =>
+                                  handleRemoveLecture(
+                                    session._id as string,
+                                    lecture._id as string,
+                                  )
+                                }
+                              >
+                                Delete
+                              </AlertDialogAction>
+                            </AlertDialogFooter>
+                          </AlertDialogContent>
+                        </AlertDialog>
 
                         <Button
                           size="sm"
@@ -312,7 +320,6 @@ const CourseCurriculum: React.FC<CurriculumProps> = () => {
         </Accordion>
       </div>
 
-     
       <Sheet open={!!sheet} onOpenChange={(open) => !open && setSheet(null)}>
         <SheetContent className="bg-white border-l shadow-xl">
           <SheetHeader>

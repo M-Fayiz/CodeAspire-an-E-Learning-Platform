@@ -64,7 +64,12 @@ enrolledRouter.get(
   authorizedRole(IRole.Admin),
   enrolledController.getAdminRevanue,
 );
-
+enrolledRouter.get(
+  "/:learnerId/dashboard",
+  // verifyUser,
+  // authorizedRole(IRole.Learner),
+  enrolledController.getLearnerDashboardData,
+);
 enrolledRouter.put(
   "/:enrolledId",
   verifyUser,
@@ -77,5 +82,6 @@ enrolledRouter.put(
   authorizedRole(IRole.Learner),
   enrolledController.addRating,
 );
+
 
 export default enrolledRouter;

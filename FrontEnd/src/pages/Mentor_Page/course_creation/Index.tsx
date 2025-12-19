@@ -7,8 +7,6 @@ import { useSearchParams } from "react-router-dom";
 import { useCourseFormContext } from "@/context/courseForm.context";
 import courseService from "@/service/mentor/course.service";
 
-
-
 const CourseCreation = () => {
   const [searchParams] = useSearchParams();
   const { courseId, setFormData, resetForm } = useCourseFormContext();

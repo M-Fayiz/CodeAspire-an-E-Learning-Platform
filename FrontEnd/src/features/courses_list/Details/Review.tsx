@@ -27,7 +27,6 @@ const CommentsSection: React.FC<CommentProps> = ({
   useEffect(() => {
     (async () => {
       const data = await ReviewService.getCourseReviews(courseId);
-
       if (data) {
         setReview(data);
       }
@@ -59,6 +58,7 @@ const CommentsSection: React.FC<CommentProps> = ({
   const handleRating = async (value: number) => {
     try {
       const data = await EnrolledService.addRating(enrolledId, value);
+      console.log("ratint", data);
       if (data) {
         setRating(data);
       }

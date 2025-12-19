@@ -1,4 +1,4 @@
-import { Types } from "mongoose";
+import { FilterQuery, Types, UpdateQuery } from "mongoose";
 import { IEnrolledModel } from "../../models/enrolled.model";
 import {
   chartAggregation,
@@ -45,5 +45,6 @@ export interface IEnrolledRepository {
   ): Promise<IMentorDashboardData[]>;
   getTopSellingCourse(mentorId?: Types.ObjectId): Promise<ITopCourse[]>;
   getTopSellingCategory(mentorId?: Types.ObjectId): Promise<ITopCategory[]>;
-  getLearnerDashboardData(learnerId:Types.ObjectId):Promise<void>
+  getLearnerDashboardCourseData(learnerId:Types.ObjectId):Promise<void>
+  updateEnrolledData(enrolledId:Types.ObjectId,data:UpdateQuery<IEnrolledModel>): Promise<IEnrolledModel|null> 
 }

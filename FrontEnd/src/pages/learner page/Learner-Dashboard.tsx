@@ -1,16 +1,13 @@
-import StatsCard from "@/features/learner-dahboard/StateCard"; 
+import StatsCard from "@/features/learner-dahboard/StateCard";
 import CourseStatusList from "@/features/learner-dahboard/CourseStatus";
-import InterviewCharts from "@/features/learner-dahboard/InterviewChart"; 
+import InterviewCharts from "@/features/learner-dahboard/InterviewChart";
 
 const LearnerDashboard = () => {
   return (
     <div className="space-y-6">
-      
       {/* Header */}
       <div>
-        <h1 className="text-2xl font-bold text-gray-900">
-          Learner Dashboard
-        </h1>
+        <h1 className="text-2xl font-bold text-gray-900">Learner Dashboard</h1>
         <p className="text-gray-500">
           Track your learning and interview performance
         </p>
@@ -37,7 +34,6 @@ const LearnerDashboard = () => {
 
       {/* Charts */}
       <InterviewCharts />
-
     </div>
   );
 };

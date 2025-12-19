@@ -8,7 +8,7 @@ import {
   IEnrolledAggregation,
   IEnrollement,
 } from "../../types/enrollment.types";
-import { Types } from "mongoose";
+import { FilterQuery, Types, UpdateQuery } from "mongoose";
 import {
   IMentorDashboardData,
   ITopCategory,
@@ -218,7 +218,7 @@ export class EnrolledRepository
       },
     ]);
   }
-  async getLearnerDashboardData(learnerId: Types.ObjectId): Promise<void> {
+  async getLearnerDashboardCourseData(learnerId: Types.ObjectId): Promise<void> {
     const result= await this.aggregate([
       {
         $group:{
@@ -247,5 +247,8 @@ export class EnrolledRepository
       }
     ])
     console.log('aggregation :',result)
+  }
+  async updateEnrolledData(enrolledId:Types.ObjectId , data: UpdateQuery<IEnrolledModel>): Promise<IEnrolledModel|null> {
+    return await this.findByIDAndUpdate(enrolledId,data)
   }
 }

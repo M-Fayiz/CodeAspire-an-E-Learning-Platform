@@ -17,7 +17,6 @@ import { throwAxiosError } from "@/utility/throwErrot";
 const courseService = {
   createCourse: async (courseData: ICourseData): Promise<CourseForm> => {
     try {
-
       if (courseData.thumbnail) {
         const uploadAndFileUrl = await sharedService.getS3BucketUploadUrl(
           courseData.thumbnail as File,
@@ -76,7 +75,7 @@ const courseService = {
         API.COURSE.ADD_SESSION(courseId),
         { session },
       );
-      console.log('/> </> :',response.data.addedSessionData)
+      console.log("/> </> :", response.data.addedSessionData);
       return response.data.addedSessionData;
     } catch (error) {
       throwAxiosError(error);
@@ -320,23 +319,33 @@ const courseService = {
   //     throwAxiosError(error)
   //   }
   // }
-  removeSession:async(courseId:string,sessionId:string):Promise<CourseForm>=>{
+  removeSession: async (
+    courseId: string,
+    sessionId: string,
+  ): Promise<CourseForm> => {
     try {
-      const response=await axiosInstance.delete(API.COURSE.DELETE_SESSION(courseId,sessionId))
-      return response.data.removedSessionData
+      const response = await axiosInstance.delete(
+        API.COURSE.DELETE_SESSION(courseId, sessionId),
+      );
+      return response.data.removedSessionData;
     } catch (error) {
-      throwAxiosError(error)
+      throwAxiosError(error);
     }
   },
-  removeLecture:async(courseId:string,sessionId:string,lectureId:string):Promise<CourseForm>=>{ 
+  removeLecture: async (
+    courseId: string,
+    sessionId: string,
+    lectureId: string,
+  ): Promise<CourseForm> => {
     try {
-      const response=await axiosInstance.delete(API.COURSE.DELETE_LECTURE(courseId,sessionId,lectureId))
-      return response.data
+      const response = await axiosInstance.delete(
+        API.COURSE.DELETE_LECTURE(courseId, sessionId, lectureId),
+      );
+      return response.data;
     } catch (error) {
-      throwAxiosError(error)
+      throwAxiosError(error);
     }
-  }
-
+  },
 };
 
 export default courseService;

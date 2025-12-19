@@ -1,32 +1,31 @@
-import ManagementLayout from "@/components/layout/ManagementLayout"
-import { FilterByDate } from "@/constants/filter.const"
-import { useAuth } from "@/context/auth.context"
-import CertificateService from "@/service/certificate.service"
-import type { ICertificateDTO } from "@/types/DTOS/certificate.dto.type"
-import { Award } from "lucide-react"
-import React, { useEffect, useState } from "react"
+import ManagementLayout from "@/components/layout/ManagementLayout";
+import { FilterByDate } from "@/constants/filter.const";
+import { useAuth } from "@/context/auth.context";
+import CertificateService from "@/service/certificate.service";
+import type { ICertificateDTO } from "@/types/DTOS/certificate.dto.type";
+import { Award } from "lucide-react";
+import React, { useEffect, useState } from "react";
 
 const CertificatesList = () => {
-  const { user } = useAuth()
-  const [certificates, setCertificates] = useState<ICertificateDTO[]>([])
-  const [loading, setLoading] = useState(true)
+  const { user } = useAuth();
+  const [certificates, setCertificates] = useState<ICertificateDTO[]>([]);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    if (!user?.id) return
-
-    ;(async () => {
-      const data = await CertificateService.ListCertificate(user.id)
-      if (data) setCertificates(data)
-      setLoading(false)
-    })()
-  }, [user?.id])
+    if (!user?.id) return;
+    (async () => {
+      const data = await CertificateService.ListCertificate(user.id);
+      if (data) setCertificates(data);
+      setLoading(false);
+    })();
+  }, [user?.id]);
 
   if (loading) {
     return (
       <div className="flex justify-center py-20 text-gray-500">
         Loading certificates...
       </div>
-    )
+    );
   }
 
   if (certificates.length === 0) {
@@ -34,20 +33,18 @@ const CertificatesList = () => {
       <div className="flex justify-center py-20 text-gray-500">
         No certificates available
       </div>
-    )
+    );
   }
 
   return (
     <div className="bg-gray-50 min-h-screen p-6">
       <div className="max-w-6xl mx-auto">
-       
         <div className=" bg-black p-5 rounded-lg flex justify-between mb-8 ">
-                <div className="flex justify-center">
-                    <Award size={30} className="text-white text-2xl"/>
-                  <h1 className="text-2xl  text-white">Certificates of Completion</h1>
-                  
-                </div>
-                {/* <div>
+          <div className="flex justify-center">
+            <Award size={30} className="text-white text-2xl" />
+            <h1 className="text-2xl  text-white">Certificates of Completion</h1>
+          </div>
+          {/* <div>
                   <select
                     value={selectedPeriod}
                     onChange={(e) => setSelectedPeriod(e.target.value)}
@@ -59,7 +56,7 @@ const CertificatesList = () => {
                     <option value={FilterByDate.YEAR}>Last 12 Months</option>
                   </select>
                 </div> */}
-              </div>
+        </div>
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
           {certificates.map((cert) => (
             <div
@@ -68,9 +65,12 @@ const CertificatesList = () => {
             >
               {/* Preview Area */}
               <div className="h-40 bg-gradient-to-br from-gray-100 to-gray-200 rounde-sm flex items-center justify-center">
-                 <img className="rounded-sm w-screen" src={cert.preview_image||""} alt="" />
-                <span className="text-gray-400 text-sm">
-                </span>
+                <img
+                  className="rounded-sm w-screen"
+                  src={cert.preview_image || ""}
+                  alt=""
+                />
+                <span className="text-gray-400 text-sm"></span>
               </div>
 
               {/* Content */}
@@ -107,7 +107,7 @@ const CertificatesList = () => {
         </div>
       </div>
     </div>
-  )
-}
+  );
+};
 
-export default CertificatesList
+export default CertificatesList;

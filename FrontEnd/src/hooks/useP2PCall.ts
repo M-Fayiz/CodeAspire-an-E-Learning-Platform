@@ -23,12 +23,9 @@ export const useP2PCall = (socket: Socket) => {
     }
     initializedRef.current = true;
 
-
     const pc = new RTCPeerConnection({
       iceServers: [{ urls: "stun:stun.l.google.com:19302" }],
     });
-
-   
 
     pcRef.current = pc;
 
@@ -62,24 +59,24 @@ export const useP2PCall = (socket: Socket) => {
         });
       }
     };
-pc.onconnectionstatechange = () => {
-  const state = pc.connectionState;
+    pc.onconnectionstatechange = () => {
+      const state = pc.connectionState;
 
-  if (state === "connected") deps.onConnected?.();
+      if (state === "connected") deps.onConnected?.();
 
-  if (["disconnected", "failed", "closed"].includes(state)) {
-    deps.onDisconnected?.();
-    reset();
-  }
-};
+      if (["disconnected", "failed", "closed"].includes(state)) {
+        deps.onDisconnected?.();
+        reset();
+      }
+    };
 
     socket.off("video:offer");
     socket.off("video:answer");
     socket.off("video:ice-candidate");
     socket.off("video:peer-joined");
-  
+
     socket.off("video:peer-left");
-    
+
     socket.on("video:offer", async ({ sdp, from }) => {
       if (from === deps.userId) return;
       await pc.setRemoteDescription(new RTCSessionDescription(sdp));
@@ -106,7 +103,7 @@ pc.onconnectionstatechange = () => {
       }
     });
 
-    socket.on("video:peer-left", ({ reason }) => {
+    socket.on("video:peer-leften", ({ reason }) => {
       console.warn("Forced leave:", reason);
 
       toast.error(reason || "Call ended");
@@ -149,19 +146,18 @@ pc.onconnectionstatechange = () => {
     stream.getVideoTracks().forEach((t) => (t.enabled = !off));
   };
   const reset = () => {
-  if (pcRef.current) {
-    pcRef.current.close();
-    pcRef.current = null;
-  }
+    if (pcRef.current) {
+      pcRef.current.close();
+      pcRef.current = null;
+    }
 
-  if (localStreamRef.current) {
-    localStreamRef.current.getTracks().forEach(t => t.stop());
-    localStreamRef.current = null;
-  }
+    if (localStreamRef.current) {
+      localStreamRef.current.getTracks().forEach((t) => t.stop());
+      localStreamRef.current = null;
+    }
 
-  initializedRef.current = false;
-};
-
+    initializedRef.current = false;
+  };
 
   const shareScreen = async (on: boolean) => {
     const pc = pcRef.current;
@@ -191,10 +187,9 @@ pc.onconnectionstatechange = () => {
   };
 
   const hangup = async (roomId: string) => {
-  reset();
-  socket.emit("video:leave", { roomId });
-};
-
+    reset();
+    socket.emit("video:leave", { roomId });
+  };
 
   const cleanupAndExit = async (roomId?: string) => {
     const pc = pcRef.current;

@@ -26,13 +26,10 @@ const COLORS = ["#111827", "#D1D5DB"]; // black & gray
 const InterviewCharts = () => {
   return (
     <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-      
       {/* Circle Graph */}
       <Card className="bg-white border border-gray-200">
         <CardContent className="p-5">
-          <h3 className="text-lg font-semibold mb-4">
-            Interview Success Rate
-          </h3>
+          <h3 className="text-lg font-semibold mb-4">Interview Success Rate</h3>
 
           <ResponsiveContainer width="100%" height={220}>
             <PieChart>
@@ -56,9 +53,7 @@ const InterviewCharts = () => {
       {/* Bar Graph */}
       <Card className="bg-white border border-gray-200">
         <CardContent className="p-5">
-          <h3 className="text-lg font-semibold mb-4">
-            Interview Summary
-          </h3>
+          <h3 className="text-lg font-semibold mb-4">Interview Summary</h3>
 
           <ResponsiveContainer width="100%" height={220}>
             <BarChart data={interviewStats}>
@@ -69,7 +64,6 @@ const InterviewCharts = () => {
           </ResponsiveContainer>
         </CardContent>
       </Card>
-
     </div>
   );
 };

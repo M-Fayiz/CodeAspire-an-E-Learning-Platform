@@ -28,10 +28,7 @@ const CourseStatusList = () => {
 
         <div className="space-y-3">
           {dummyCourses.map((course, index) => (
-            <div
-              key={index}
-              className="flex items-center justify-between"
-            >
+            <div key={index} className="flex items-center justify-between">
               <p className="text-gray-700">{course.title}</p>
               <Badge className={statusColor[course.status]}>
                 {course.status}

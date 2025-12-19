@@ -62,9 +62,7 @@ const MyCourseCard: React.FC<CourseCardProps> = ({ course }) => {
 
         <div className="flex justify-between">
           <div></div>
-          <button
-            className="bg-black flex justify-center items-center gap-2 text-white px-4 py-2 rounded-md hover:bg-gray-700 transition-colors text-sm font-medium"
-          >
+          <button className="bg-black flex justify-center items-center gap-2 text-white px-4 py-2 rounded-md hover:bg-gray-700 transition-colors text-sm font-medium">
             <Eye className="w-5" />
             View Course
           </button>

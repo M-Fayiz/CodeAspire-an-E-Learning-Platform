@@ -14,7 +14,6 @@ export const SlotService = {
   createSlots: async (
     slotFormData: Partial<IMentorSlot>,
   ): Promise<ISlotDTO> => {
-
     try {
       const response = await axiosInstance.post(
         API.SLOTS.CREATE_SLOTS,
@@ -31,13 +30,16 @@ export const SlotService = {
    * @param mentorId s
    * @returns an array of IMentorSlot
    */
-  getMentorSlotList: async (query: { mentorId: string,page: number}): Promise<{mappedSlots:ISlotDTO[],totalPage:number}> => {
+  getMentorSlotList: async (query: {
+    mentorId: string;
+    page: number;
+  }): Promise<{ mappedSlots: ISlotDTO[]; totalPage: number }> => {
     try {
       const response = await axiosInstance.get(
         API.SLOTS.GET_MENTOR_SLOTS(query.mentorId),
         {
-          params: {  page:query.page }
-        }
+          params: { page: query.page },
+        },
       );
       return response.data;
     } catch (error) {

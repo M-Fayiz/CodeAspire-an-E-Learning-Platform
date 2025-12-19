@@ -40,7 +40,6 @@ const SignupComponent: React.FC<AuthComponentProps> = ({
   ) => {
     const { name, value } = e.target;
     setFormData((prv) => ({ ...prv, [name]: value }));
-    
   };
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {

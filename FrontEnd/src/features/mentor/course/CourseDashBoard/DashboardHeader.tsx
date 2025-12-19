@@ -9,12 +9,12 @@ interface courseDashboardProps {
   courseData: CourseDashboardDTO;
 }
 const DashBoardHeader: React.FC<courseDashboardProps> = ({ courseData }) => {
-  const { setCourseId ,setIsDraftReady} = useCourseFormContext();
+  const { setCourseId, setIsDraftReady } = useCourseFormContext();
 
   const navigate = useNavigate();
   const create = () => {
     setCourseId(courseData.course._id);
-    setIsDraftReady(true)
+    setIsDraftReady(true);
     navigate(`/mentor/courses/create?edit=${courseData.course._id}`);
   };
 

@@ -60,8 +60,10 @@ export const API = {
     GET_COURSE_FORM_DATA: (courseId: string) => `/courses/form/${courseId}`,
     UPDATE_SESSION: (courseId: string, sessionId: string) =>
       `/courses/${courseId}/session/${sessionId}`,
-    DELETE_SESSION:(courseId:string,sessionId:string)=>`/courses/${courseId}/session/${sessionId}`,
-    DELETE_LECTURE:(courseId:string,sessionId:string,lectureId:string)=>`/courses/${courseId}/session/${sessionId}/lecture/${lectureId}`,
+    DELETE_SESSION: (courseId: string, sessionId: string) =>
+      `/courses/${courseId}/session/${sessionId}`,
+    DELETE_LECTURE: (courseId: string, sessionId: string, lectureId: string) =>
+      `/courses/${courseId}/session/${sessionId}/lecture/${lectureId}`,
   },
   PAYMENT: {
     CREATE_PAYMENT_INTENT: "/orders/create-checkout-session",
@@ -117,8 +119,9 @@ export const API = {
   VIDEO: {
     START_VIDEO: (bookingId: string) => `/video/start/${bookingId}`,
   },
-  CERTIFICATE:{
-    create:`/certificate`,
-    list_Certificate:(learnerId:string)=>`/certificate/my-certificate/${learnerId}`
-  }
+  CERTIFICATE: {
+    create: `/certificate`,
+    list_Certificate: (learnerId: string) =>
+      `/certificate/my-certificate/${learnerId}`,
+  },
 };

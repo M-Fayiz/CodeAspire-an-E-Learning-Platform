@@ -11,7 +11,7 @@ import {
   DialogHeader,
   DialogTitle,
   DialogTrigger,
-} from "@/components/ui/dialog"
+} from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { useState } from "react";
 
@@ -29,7 +29,11 @@ interface BookingTableProps {
     status: "passed" | "failed",
   ) => void;
   onSessionComplete?: (slotId: string, status: "completed") => void;
-  onCertificateIssue?:(learnerId:string,courseId:string,programmTitle:string)=>void
+  onCertificateIssue?: (
+    learnerId: string,
+    courseId: string,
+    programmTitle: string,
+  ) => void;
 }
 
 export const BookingTable = ({
@@ -41,27 +45,31 @@ export const BookingTable = ({
   onAddFeedback,
   onUpdateStatus,
   onSessionComplete,
-  onCertificateIssue
+  onCertificateIssue,
 }: BookingTableProps) => {
-  const [title,setTitle]=useState('')
-  const [errors, setErrors] = useState('');
+  const [title, setTitle] = useState("");
+  const [errors, setErrors] = useState("");
   const [open, setOpen] = useState(false);
 
-  const onSubmitCrtfct=(courseId:string,learnerId:string,e:React.FormEvent<HTMLFormElement>)=>{  
-    e.preventDefault()
-    if(title.trim()==''){
-      setErrors('please provide programm title')
-      return
+  const onSubmitCrtfct = (
+    courseId: string,
+    learnerId: string,
+    e: React.FormEvent<HTMLFormElement>,
+  ) => {
+    e.preventDefault();
+    if (title.trim() == "") {
+      setErrors("please provide programm title");
+      return;
     }
-    if(title.length>200){
-      setErrors('please provide programm title less than 200 letter')
-      return
+    if (title.length > 200) {
+      setErrors("please provide programm title less than 200 letter");
+      return;
     }
 
-    onCertificateIssue?.(learnerId,courseId,title)
-    setTitle('')
-    setErrors('')
-  }
+    onCertificateIssue?.(learnerId, courseId, title);
+    setTitle("");
+    setErrors("");
+  };
   if (slots.length === 0) {
     return (
       <Card className="bg-white border border-gray-200 text-black shadow-sm">
@@ -78,7 +86,6 @@ export const BookingTable = ({
   return (
     <Card className="bg-white border border-gray-200 shadow-sm">
       <CardContent className="p-4">
-
         {/* ===================== DESKTOP TABLE ===================== */}
         <div className="hidden md:block overflow-x-auto">
           <table className="w-full text-sm border-collapse">
@@ -133,9 +140,7 @@ export const BookingTable = ({
                     {slot.startTime as string} – {slot.endTime as string}
                   </td>
 
-                  <td className="px-4 py-3 capitalize">
-                    {slot.type}
-                  </td>
+                  <td className="px-4 py-3 capitalize">{slot.type}</td>
 
                   <td className="px-4 py-3 text-center">
                     <span
@@ -143,10 +148,10 @@ export const BookingTable = ({
                         slot.status === "completed"
                           ? "bg-green-100 text-green-800"
                           : slot.status === "booked"
-                          ? "bg-blue-100 text-blue-800"
-                          : slot.status === "canceled"
-                          ? "bg-red-100 text-red-700"
-                          : "bg-gray-100 text-gray-600"
+                            ? "bg-blue-100 text-blue-800"
+                            : slot.status === "canceled"
+                              ? "bg-red-100 text-red-700"
+                              : "bg-gray-100 text-gray-600"
                       }`}
                     >
                       {slot.status}
@@ -171,54 +176,60 @@ export const BookingTable = ({
                         </Button>
                       )}
 
-                      {role === "mentor" &&
-                        slot.studentStatus === "passed" && (
-                          <Dialog open={open} onOpenChange={setOpen}>
-                            <DialogTrigger asChild>
-                              <Button variant="outline" size="sm">
-                                <Award size={14} className="mr-1" />
-                                Certificate
-                              </Button>
-                            </DialogTrigger>
+                      {role === "mentor" && slot.studentStatus === "passed" && (
+                        <Dialog open={open} onOpenChange={setOpen}>
+                          <DialogTrigger asChild>
+                            <Button variant="outline" size="sm">
+                              <Award size={14} className="mr-1" />
+                              Certificate
+                            </Button>
+                          </DialogTrigger>
 
-                            <DialogContent>
-                              <DialogHeader>
-                                <DialogTitle>Program Title</DialogTitle>
-                                <DialogDescription>
-                                Enter the program or course name that will be displayed on the
-                                learner’s certificate.
+                          <DialogContent>
+                            <DialogHeader>
+                              <DialogTitle>Program Title</DialogTitle>
+                              <DialogDescription>
+                                Enter the program or course name that will be
+                                displayed on the learner’s certificate.
                               </DialogDescription>
-                              </DialogHeader>
-                        <div className="space-y-4 mt-4">
-                            <div className="space-y-1">
-                              <label className="text-sm font-medium text-gray-700">
-                                Program / Course Title
-                              </label>
-                              <Input value={title} onChange={(e)=>setTitle(e.target.value)}
-                                placeholder="e.g. Full Stack Web Development"
-                              />
+                            </DialogHeader>
+                            <div className="space-y-4 mt-4">
+                              <div className="space-y-1">
+                                <label className="text-sm font-medium text-gray-700">
+                                  Program / Course Title
+                                </label>
+                                <Input
+                                  value={title}
+                                  onChange={(e) => setTitle(e.target.value)}
+                                  placeholder="e.g. Full Stack Web Development"
+                                />
+                              </div>
+                              <p className="text-red-500">{errors}</p>
+                              <div className="flex justify-end gap-2 pt-2">
+                                <DialogClose asChild>
+                                  <Button variant="outline">Cancel</Button>
+                                </DialogClose>
+
+                                <form
+                                  onSubmit={(e) =>
+                                    onSubmitCrtfct(
+                                      slot.courseId._id,
+                                      slot.learnerId._id,
+                                      e,
+                                    )
+                                  }
+                                >
+                                  <Button type="submit">
+                                    Generate Certificate
+                                  </Button>
+                                </form>
+                              </div>
                             </div>
-                            <p className="text-red-500">{errors}</p>
-                            <div className="flex justify-end gap-2 pt-2">
-                              <DialogClose asChild>
-                                <Button variant="outline">
-                                  Cancel
-                                </Button>
-                              </DialogClose>
+                          </DialogContent>
+                        </Dialog>
+                      )}
 
-                              <form onSubmit={(e) => onSubmitCrtfct(slot.courseId._id, slot.learnerId._id, e)}>
-                                <Button type="submit" >
-                                  Generate Certificate
-                                </Button>
-                              </form>
-
-                            </div>
-                          </div>
-                            </DialogContent>
-                          </Dialog>
-                        )}
-
-                      {role === "mentor" && ( 
+                      {role === "mentor" && (
                         <MentorActionMenu
                           slot={slot}
                           onViewFeedback={onViewFeedback || (() => {})}
@@ -279,8 +290,8 @@ export const BookingTable = ({
                     slot.status === "completed"
                       ? "bg-green-100 text-green-800"
                       : slot.status === "booked"
-                      ? "bg-blue-100 text-blue-800"
-                      : "bg-gray-100 text-gray-600"
+                        ? "bg-blue-100 text-blue-800"
+                        : "bg-gray-100 text-gray-600"
                   }`}
                 >
                   {slot.status}
@@ -308,9 +319,7 @@ export const BookingTable = ({
                   <MentorActionMenu
                     slot={slot}
                     onViewFeedback={onViewFeedback || (() => {})}
-                    onSaveFeedback={(slotId, fb) =>
-                      onAddFeedback?.(slotId, fb)
-                    }
+                    onSaveFeedback={(slotId, fb) => onAddFeedback?.(slotId, fb)}
                     onStudentStatusUpdate={(slotId, st) =>
                       onUpdateStatus?.({ ...slot, _id: slotId }, st)
                     }
@@ -325,6 +334,5 @@ export const BookingTable = ({
         </div>
       </CardContent>
     </Card>
-  );;
-
+  );
 };

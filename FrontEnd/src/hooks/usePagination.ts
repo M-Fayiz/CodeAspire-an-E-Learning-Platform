@@ -1,8 +1,8 @@
 import { useEffect, useState } from "react";
 
-export const usePaginatedFetch = <T,>(
+export const usePaginatedFetch = <T>(
   fetchFn: (query: any) => Promise<{ data: T[]; totalPages: number }>,
-  query: any
+  query: any,
 ) => {
   const [data, setData] = useState<T[]>([]);
   const [loading, setLoading] = useState(false);

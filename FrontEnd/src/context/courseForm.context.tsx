@@ -14,12 +14,12 @@ interface FomrContextProps {
   addSession: (sessionData: ISession[]) => void;
   setField: (name: keyof CourseForm, value: any) => void;
   courseId: string;
-  isDraftReady:boolean
+  isDraftReady: boolean;
   setFormData: React.Dispatch<React.SetStateAction<CourseForm>>;
   setCourseId: Dispatch<SetStateAction<string>>;
-  setIsDraftReady:Dispatch<SetStateAction<boolean>>;
+  setIsDraftReady: Dispatch<SetStateAction<boolean>>;
   resetForm: () => void;
-  hydrateFromDB:(course: Partial<CourseForm>)=>void
+  hydrateFromDB: (course: Partial<CourseForm>) => void;
 }
 const CourseFormCourseContext = createContext<FomrContextProps | undefined>(
   undefined,
@@ -39,9 +39,9 @@ const CourseFormProvider = ({ children }: { children: ReactNode }) => {
     sessions: [],
     thumbnail: "",
   });
-    useEffect(() => {
-  console.log("🔥 CourseFormProvider MOUNTED");
-}, []);
+  useEffect(() => {
+    console.log("🔥 CourseFormProvider MOUNTED");
+  }, []);
 
   const [courseId, setCourseId] = useState("");
   const [isDraftReady, setIsDraftReady] = useState(false);
@@ -74,23 +74,23 @@ const CourseFormProvider = ({ children }: { children: ReactNode }) => {
     });
   };
   const hydrateFromDB = (course: Partial<CourseForm>) => {
-  setFormData((prev) => ({
-    ...prev,
-    _id: course._id ?? prev._id,
-    title: course.title ?? prev.title,
-    description: course.description ?? prev.description,
-    price: course.price ?? prev.price,
-    language: course.language ?? prev.language,
-    level: course.level ?? prev.level,
-    categoryId: course.categoryId ?? prev.categoryId,
-    subCategoryId: course.subCategoryId ?? prev.subCategoryId,
-    mentorId: course.mentorId ?? prev.mentorId,
-    thumbnail: course.thumbnail ?? prev.thumbnail,
-    sessions: course.sessions ?? prev.sessions,
-  }));
-  console.log('<   -------------   >',course)
-  console.log('form inside context :',formData)
-};
+    setFormData((prev) => ({
+      ...prev,
+      _id: course._id ?? prev._id,
+      title: course.title ?? prev.title,
+      description: course.description ?? prev.description,
+      price: course.price ?? prev.price,
+      language: course.language ?? prev.language,
+      level: course.level ?? prev.level,
+      categoryId: course.categoryId ?? prev.categoryId,
+      subCategoryId: course.subCategoryId ?? prev.subCategoryId,
+      mentorId: course.mentorId ?? prev.mentorId,
+      thumbnail: course.thumbnail ?? prev.thumbnail,
+      sessions: course.sessions ?? prev.sessions,
+    }));
+    console.log("<   -------------   >", course);
+    console.log("form inside context :", formData);
+  };
 
   return (
     <CourseFormCourseContext.Provider
@@ -104,7 +104,7 @@ const CourseFormProvider = ({ children }: { children: ReactNode }) => {
         resetForm,
         hydrateFromDB,
         setIsDraftReady,
-        isDraftReady
+        isDraftReady,
       }}
     >
       {children}

@@ -23,6 +23,7 @@ import { IEnrolledService } from "../interface/IEnrolledService";
 
 import {
   chartFilter,
+  completionStatus,
   filter,
   IProgressTrack,
 } from "../../types/enrollment.types";
@@ -43,6 +44,8 @@ import { TransactionType } from "../../const/transaction";
 import { graphPrps } from "../../types/adminDahsboard.type";
 import { buildDateFilter } from "../../utils/dateBuilder";
 import { IUserRepo } from "../../repository/interface/IUserRepo";
+import { reduce } from "lodash";
+import { ISession } from "../../types/courses.type";
 
 export class EnrolledService implements IEnrolledService {
   constructor(
@@ -103,26 +106,70 @@ export class EnrolledService implements IEnrolledService {
     return enrolledCourseDetailDTO(enrolledData, populatedCourse);
   }
   async updatedProgress(
-    enroledId: string,
-    lecture: string,
-  ): Promise<IProgressTrack | null> {
-    const enrolled_id = parseObjectId(enroledId);
-    const lecture_id = parseObjectId(lecture);
+  enrolledId: string,
+  lectureId: string,
+  lastSession:string
+): Promise<IProgressTrack | null> {
 
-    if (!enrolled_id || !lecture_id) {
-      throw createHttpError(HttpStatus.BAD_REQUEST, HttpResponse.INVALID_ID);
-    }
+  const enrolledObjectId = parseObjectId(enrolledId);
+  const lectureObjectId = parseObjectId(lectureId);
+  const lastSession_id=parseObjectId(lastSession)
 
-    const enrolledData = await this._erolledRepository.updatedProgress(
-      enrolled_id,
-      lecture_id,
-    );
-    if (!enroledId) {
-      throw createHttpError(HttpStatus.NOT_FOUND, HttpResponse.ITEM_NOT_FOUND);
-    }
-
-    return enrolledData?.progress ?? null;
+  if (!enrolledObjectId || !lectureObjectId) {
+    throw createHttpError(HttpStatus.BAD_REQUEST, HttpResponse.INVALID_ID);
   }
+
+  // atomic add (no duplicates)
+  const updatedEnrollment =
+    await this._erolledRepository.updateEnrolledData(
+      enrolledObjectId,
+      {
+        $addToSet: { "progress.completedLectures": lectureObjectId },
+        $set: { 
+          "progress.lastAccessedLecture": lectureObjectId ,
+          "progress.lastAccessedSession": lastSession_id ,
+        },
+      
+      },
+    );
+
+  if (!updatedEnrollment) {
+    throw createHttpError(HttpStatus.NOT_FOUND, HttpResponse.ITEM_NOT_FOUND);
+  }
+  const course=await this._courseRepository.getCourse(updatedEnrollment.courseId as Types.ObjectId)
+  
+  let totalLectures=0
+
+  for(let session of course?.sessions as ISession[]){
+    totalLectures+=session.lectures.length
+  }
+ 
+  const completedCount =
+    updatedEnrollment.progress.completedLectures.length;
+
+   const completionPercentage =
+    (completedCount / totalLectures! ) * 100;
+
+  const status =
+    completionPercentage === 100
+      ? completionStatus.COMPLETED
+      : completionStatus.IN_PROGRESS;
+
+  const finalEnrollment =
+    await this._erolledRepository.updateEnrolledData(
+      enrolledObjectId,
+      {
+        $set: {
+          "progress.completionPercentage": completionPercentage,
+          courseStatus: status,
+          
+        },
+      },
+    );
+   
+  return finalEnrollment?.progress ?? null;
+}
+
   async addRating(enroledId: string, value: number): Promise<number> {
     const enrolled_id = parseObjectId(enroledId);
     if (!enrolled_id) {
@@ -132,6 +179,7 @@ export class EnrolledService implements IEnrolledService {
       enrolled_id,
       value,
     );
+   
     if (!updatedData?.rating) {
       throw createHttpError(
         HttpStatus.INTERNAL_SERVER_ERROR,
@@ -243,14 +291,14 @@ export class EnrolledService implements IEnrolledService {
       signedUsers,
     };
   }
-  async learnerDashboardCardData(learnerId: string, filter: string, startDate: string, endDate: string): Promise<void> {
+  async learnerDashboardCardData(learnerId: string, filter?: string, startDate?: string, endDate?: string): Promise<void> {
     const learner_Id=parseObjectId(learnerId)
     if(!learner_Id){
       throw createHttpError(HttpStatus.BAD_REQUEST,HttpResponse.INVALID_ID)
     }
 
 
-    // await this._erolledRepository.
+    await this._erolledRepository.getLearnerDashboardCourseData(learner_Id)
 
   }
 }

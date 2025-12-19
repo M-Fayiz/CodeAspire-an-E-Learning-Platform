@@ -25,7 +25,6 @@ import { sharedService } from "@/service/shared.service";
 
 type FileType = "image" | "video" | "audio" | "pdf" | "text";
 
-
 interface ChatWindowProps {
   userData: userProps;
   messages: IMessageDto[];

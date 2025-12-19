@@ -141,12 +141,20 @@ export default function MentorBookedSlots() {
     }
   };
 
-  const onCertificateIssue=async(learnerId:string, coourseId:string,title:string)=>{
-    const generateCrtft=await CertificateService.generateCertificate(coourseId,learnerId,title)
-    if(generateCrtft){
-      toast.success('certificate generated successfully')
+  const onCertificateIssue = async (
+    learnerId: string,
+    coourseId: string,
+    title: string,
+  ) => {
+    const generateCrtft = await CertificateService.generateCertificate(
+      coourseId,
+      learnerId,
+      title,
+    );
+    if (generateCrtft) {
+      toast.success("certificate generated successfully");
     }
-  }
+  };
 
   return (
     <div className="flex flex-col gap-3 max-w-7xl mx-auto">

@@ -13,7 +13,6 @@ interface SlotListProps {
 }
 
 const SlotList: React.FC<SlotListProps> = ({ slots, onEdit }) => {
-
   if (!slots.length) {
     return (
       <Card className="bg-white border border-gray-200 text-black shadow-sm">

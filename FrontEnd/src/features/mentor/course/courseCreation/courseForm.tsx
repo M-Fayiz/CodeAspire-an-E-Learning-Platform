@@ -10,7 +10,7 @@ import Publish from "../Publish";
 
 export default function CourseCreateLayout() {
   const [activeTab, setActiveTab] = useState("basic");
-  const { formData ,courseId} = useCourseFormContext();
+  const { formData, courseId } = useCourseFormContext();
 
   const handleActiveTap = (tap: string) => {
     if (tap !== "basic" && !courseId) {

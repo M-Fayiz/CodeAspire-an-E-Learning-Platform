@@ -41,26 +41,28 @@ const SlotManagement = () => {
     slotDuration: 30,
     pricePerSlot: 0,
   });
- const [totalPage, setTotalPage] = useState(1);
- const [page,setPage]=useState(1)
+  const [totalPage, setTotalPage] = useState(1);
+  const [page, setPage] = useState(1);
   const [formError, setFormError] = useState<Record<string, string>>({});
   const { user } = useAuth();
   const [slot, setSlots] = useState<ISlotDTO[]>([]);
-  
- 
+
   const [isOpen, setIsOpen] = useState(false);
 
- useEffect(() => {
-  if (!user?.id) return;
+  useEffect(() => {
+    if (!user?.id) return;
 
-  (async () => {
-    const data = await SlotService.getMentorSlotList({mentorId:user.id,page});
-    if (data) setSlots(data.mappedSlots);
-    setTotalPage(data.totalPage)
-  })();
-}, [user?.id]);
+    (async () => {
+      const data = await SlotService.getMentorSlotList({
+        mentorId: user.id,
+        page,
+      });
+      if (data) setSlots(data.mappedSlots);
+      setTotalPage(data.totalPage);
+    })();
+  }, [user?.id]);
 
-  //Submit slot form 
+  //Submit slot form
   const submitSlotForm = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setFormError({});
@@ -109,42 +111,38 @@ const SlotManagement = () => {
       return;
     }
 
-    
-      try {
-        const payload = {
-          ...formData,
-          mentorId: user?.id,
-          selectedDays: updatedTime,
-        };
+    try {
+      const payload = {
+        ...formData,
+        mentorId: user?.id,
+        selectedDays: updatedTime,
+      };
 
-        if (formData._id) {
-          const updatedData = await SlotService.updateSlot(
-            payload,
-            formData._id,
-          );
-          setSlots((prev) =>
-            prev.map((slot) =>
-              slot._id === updatedData._id ? { ...slot, ...updatedData } : slot,
-            ),
-          );
-          resetForm();
-          toast.success("Slot updated successfully!");
-        } else {
-          const createdData = await SlotService.createSlots(payload);
-         
-          setSlots((prev) => [...prev, createdData]);
-          resetForm();
-          toast.success("Slot created successfully!");
-        }
+      if (formData._id) {
+        const updatedData = await SlotService.updateSlot(payload, formData._id);
+        setSlots((prev) =>
+          prev.map((slot) =>
+            slot._id === updatedData._id ? { ...slot, ...updatedData } : slot,
+          ),
+        );
+        resetForm();
+        toast.success("Slot updated successfully!");
+      } else {
+        const createdData = await SlotService.createSlots(payload);
 
-        setIsOpen(false);
-       
-        setFormError({});
-      } catch (error) {
-        if (error instanceof Error) toast.error(error.message);
+        setSlots((prev) => [...prev, createdData]);
+        resetForm();
+        toast.success("Slot created successfully!");
       }
+
+      setIsOpen(false);
+
+      setFormError({});
+    } catch (error) {
+      if (error instanceof Error) toast.error(error.message);
+    }
   };
-  
+
   const onEdit = (slot: ISlotDTO) => {
     setFormData({
       _id: slot._id,
@@ -162,14 +160,14 @@ const SlotManagement = () => {
       _id: "",
       courseId: "",
       selectedDays: [
-      { day: "Sunday", startTime: "", endTime: "", active: false },
-      { day: "Monday", startTime: "", endTime: "", active: false },
-      { day: "Tuesday", startTime: "", endTime: "", active: false },
-      { day: "Wednesday", startTime: "", endTime: "", active: false },
-      { day: "Thursday", startTime: "", endTime: "", active: false },
-      { day: "Friday", startTime: "", endTime: "", active: false },
-      { day: "Saturday", startTime: "", endTime: "", active: false },
-    ],
+        { day: "Sunday", startTime: "", endTime: "", active: false },
+        { day: "Monday", startTime: "", endTime: "", active: false },
+        { day: "Tuesday", startTime: "", endTime: "", active: false },
+        { day: "Wednesday", startTime: "", endTime: "", active: false },
+        { day: "Thursday", startTime: "", endTime: "", active: false },
+        { day: "Friday", startTime: "", endTime: "", active: false },
+        { day: "Saturday", startTime: "", endTime: "", active: false },
+      ],
       mentorId: user?.id || "",
       slotDuration: 30,
       pricePerSlot: 0,
@@ -182,51 +180,48 @@ const SlotManagement = () => {
       <ManagementLayout description="mange your slot " title="slot management">
         <div className="flex flex-col gap-2.5">
           <div>
-          
             <Dialog open={isOpen} onOpenChange={setIsOpen}>
               <DialogTrigger asChild>
-                <Button onClick={()=> resetForm()} variant="outline">
+                <Button onClick={() => resetForm()} variant="outline">
                   <Plus />
                   Create Slot
                 </Button>
               </DialogTrigger>
-              
-                <DialogContent className="!max-w-[90vw] !w-[70vw] md:!max-w-[1200px] overflow-y-auto max-h-[90vh]">
-                  <DialogHeader>
-                    <DialogTitle>Create New Slot</DialogTitle>
-                    <DialogDescription></DialogDescription>
-                  </DialogHeader>
 
-                  <form onSubmit={submitSlotForm}>
-                    <div className="grid gap-4">
-                      <SlotBookingForm
-                        formData={formData}
-                        setFormData={setFormData}
-                        formError={formError}
-                      />
-                    </div>
+              <DialogContent className="!max-w-[90vw] !w-[70vw] md:!max-w-[1200px] overflow-y-auto max-h-[90vh]">
+                <DialogHeader>
+                  <DialogTitle>Create New Slot</DialogTitle>
+                  <DialogDescription></DialogDescription>
+                </DialogHeader>
 
-                    <DialogFooter className="mt-4">
-                      <DialogClose asChild>
-                        <Button variant="outline">Cancel</Button>
-                      </DialogClose>
-                      <Button type="submit">
-                        {formData._id ? "Update Slot" : "Create Slot"}
-                      </Button>
-                    </DialogFooter>
-                  </form>
-                </DialogContent>
-              
+                <form onSubmit={submitSlotForm}>
+                  <div className="grid gap-4">
+                    <SlotBookingForm
+                      formData={formData}
+                      setFormData={setFormData}
+                      formError={formError}
+                    />
+                  </div>
+
+                  <DialogFooter className="mt-4">
+                    <DialogClose asChild>
+                      <Button variant="outline">Cancel</Button>
+                    </DialogClose>
+                    <Button type="submit">
+                      {formData._id ? "Update Slot" : "Create Slot"}
+                    </Button>
+                  </DialogFooter>
+                </form>
+              </DialogContent>
             </Dialog>
           </div>
           <div>{slot && <SlotList slots={slot} onEdit={onEdit} />}</div>
         </div>
         <PaginationRounded
-        currentPage={page}
-        totalPages={totalPage}
-        onPageChange={(_, value) =>setPage(value)}
-      />
-
+          currentPage={page}
+          totalPages={totalPage}
+          onPageChange={(_, value) => setPage(value)}
+        />
       </ManagementLayout>
     </>
   );

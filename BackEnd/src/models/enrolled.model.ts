@@ -3,6 +3,7 @@ import { completionStatus, IEnrollement } from "../types/enrollment.types";
 
 import { DbModelName } from "../const/modelName";
 
+
 export interface IEnrolledModel
   extends Document<Types.ObjectId>,
     Omit<IEnrollement, "_id"> {}
@@ -32,7 +33,11 @@ const enrolledSchema = new mongoose.Schema<IEnrolledModel>(
     },
     progress: {
       completedLectures: [{ type: mongoose.Schema.ObjectId }],
-      lastAccessedLectures: {
+      lastAccessedLecture: {
+        type: mongoose.Schema.Types.ObjectId,
+        default: null,
+      },
+      lastAccessedSession:{
         type: mongoose.Schema.Types.ObjectId,
         default: null,
       },

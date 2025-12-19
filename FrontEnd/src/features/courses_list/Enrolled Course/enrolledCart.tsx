@@ -35,7 +35,7 @@ const EnrolledCourseCart: React.FC<EnrolledCourseProps> = ({ course }) => {
     <>
       <div
         key={course._id}
-        className="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden hover:shadow-lg transition-all duration-300 group"
+        className="bg-white rounded-lg shadow-sm border border-gray-100 overflow-hidden hover:shadow-lg transition-all duration-300 group"
         onMouseEnter={() => setHoveredCourse(course?._id as string)}
         onMouseLeave={() => setHoveredCourse(null)}
       >
@@ -62,7 +62,7 @@ const EnrolledCourseCart: React.FC<EnrolledCourseProps> = ({ course }) => {
 
         <div className="p-6">
           <div className="flex items-center justify-between mb-3">
-            <span className="text-xs font-medium text-blue-600 uppercase tracking-wide">
+            <span className="text-xs font-medium text-orange-600 uppercase tracking-wide">
               {course.course.category.title}
             </span>
             <span
@@ -73,7 +73,7 @@ const EnrolledCourseCart: React.FC<EnrolledCourseProps> = ({ course }) => {
           </div>
 
           {/* Title */}
-          <h3 className="font-bold text-gray-900 text-lg mb-3 line-clamp-2 group-hover:text-blue-600 transition-colors">
+          <h3 className="font-bold text-gray-900 text-lg mb-3 line-clamp-2 group-hover:text-orange-600 transition-colors">
             {course.course.title}
           </h3>
 
@@ -99,7 +99,7 @@ const EnrolledCourseCart: React.FC<EnrolledCourseProps> = ({ course }) => {
             </div>
             <div className="w-full bg-gray-200 rounded-full h-2">
               <div
-                className="bg-blue-500 h-2 rounded-full transition-all duration-300"
+                className="bg-orange-500 h-2 rounded-full transition-all duration-300"
                 style={{ width: `${course.completedPercentage}%` }}
               />
             </div>
@@ -127,7 +127,7 @@ const EnrolledCourseCart: React.FC<EnrolledCourseProps> = ({ course }) => {
                 Last accessed {course.lastAccessed}
               </div> */}
 
-          <button className="w-full bg-blue-200 hover:bg-blue-0 text-blue-500 font-medium py-3 px-4 rounded-lg transition-colors flex items-center justify-center gap-2">
+          <button className="w-full bg-orange-200 hover:bg-blue-0 text-orange-500 font-medium py-3 px-4 rounded-lg transition-colors flex items-center justify-center gap-2">
             <Play className="w-4 h-4" />
             Continue Course
           </button>
