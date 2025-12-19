@@ -1,10 +1,9 @@
-import ManagementLayout from "@/components/layout/ManagementLayout";
-import { FilterByDate } from "@/constants/filter.const";
+
 import { useAuth } from "@/context/auth.context";
 import CertificateService from "@/service/certificate.service";
 import type { ICertificateDTO } from "@/types/DTOS/certificate.dto.type";
 import { Award } from "lucide-react";
-import React, { useEffect, useState } from "react";
+import  { useEffect, useState } from "react";
 
 const CertificatesList = () => {
   const { user } = useAuth();

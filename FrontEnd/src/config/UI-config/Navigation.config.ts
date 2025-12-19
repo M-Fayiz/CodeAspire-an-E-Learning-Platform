@@ -3,7 +3,6 @@ import {
   Layers,
   Book,
   BookOpen,
-  Calendar,
   CreditCard,
   FileText,
   HelpCircle,
@@ -14,7 +13,7 @@ import {
   ShoppingCart,
   Users,
   CalendarDays,
-  // BarChart3,
+  
 } from "lucide-react";
 import React from "react";
 
@@ -61,7 +60,7 @@ const navigationConfig = {
         label: "My Courses",
         path: "/learner/enrolled-courses",
       },
-      // { icon: Calendar, label: "Schedule", path: "/learner/schedule" },
+     
       {
         icon: Award,
         label: "Certificates",
@@ -96,25 +95,17 @@ const navigationConfig = {
         label: "Booked Slots",
         path: "/mentor/booked-slot-list",
       },
-      // {
-      //   icon: PlusCircle,
-      //   label: "Create Course",
-      //   path: "/mentor/courses/create",
-      // },
+  
       {
         icon: MessageSquare,
         label: "Messages",
         path: "/mentor/chats",
        
       },
-      // { icon: BarChart3, label: "Analytics", path: "/mentor/analytics" },
+
     ],
     secondary: [
-      // { icon: Calendar, label: "Schedule", path: "/mentor/schedule" },
-      // { icon: CreditCard, label: "Earnings", path: "/mentor/earnings" },
-      // { icon: Star, label: "Reviews", path: "/mentor/reviews" },
-      // { icon: Settings, label: "Settings", path: "/mentor/settings" },
-      // { icon: HelpCircle, label: "Help", path: "/mentor/help" },
+      
     ],
   },
 };

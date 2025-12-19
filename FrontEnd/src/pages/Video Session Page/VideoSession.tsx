@@ -5,7 +5,6 @@ import { useSocket } from "@/context/socket.context";
 import VideoService from "@/service/videoSession.service";
 import { useP2PCall } from "@/hooks/useP2PCall";
 import {
-  Phone,
   Mic,
   MicOff,
   Video,

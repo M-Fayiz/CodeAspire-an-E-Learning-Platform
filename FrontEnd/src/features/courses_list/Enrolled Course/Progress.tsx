@@ -17,8 +17,6 @@ const CurriculumProgress: React.FC<CurriculumProgressProps> = ({
     return sessions.reduce((acc, vl) => acc + (vl.lectures?.length || 0), 0);
   }, [sessions]);
   const set = new Set(progress.completedLectures);
-  const progresPercentage = Math.floor((set.size / lectureCount) * 100);
-
   return (
     <div className="bg-white rounded-sm shadow-sm border border-gray-200 p-6 max-w-md mx-auto">
       <div className="flex justify-between items-center mb-6">

@@ -34,7 +34,6 @@ const BasicCourseInformation: React.FC<BaseCaourseProps> = ({ handleTap }) => {
     hydrateFromDB,
     setCourseId,
     setIsDraftReady,
-    isDraftReady,
   } = useCourseFormContext();
   const { user } = useAuth();
 

@@ -21,7 +21,6 @@ import { convertTo24Hour } from "@/utility/generateTimes.util";
 import SlotList from "@/features/mentor/slots/SlotTable";
 import { toast } from "sonner";
 import type { ISlotDTO } from "@/types/DTOS/slot.dto";
-import { useSearchQuery } from "@/hooks/useSearchQuery";
 import PaginationRounded from "@/components/ui/Pagination";
 
 const SlotManagement = () => {

@@ -126,7 +126,10 @@ const CourseCurriculum: React.FC<CurriculumProps> = () => {
   const handleRemoveLecture = async (
     sessionId: string,
     lectureId: string,
-  ) => {};
+  ) => {
+    const updatedLecture=await courseService.removeLecture(formData._id as string,sessionId,lectureId)
+    console.log(updatedLecture)
+  };
   return (
     <div className="bg-white min-h-screen">
       <h3 className="text-xl font-semibold text-gray-900 px-6 py-4 border-b">

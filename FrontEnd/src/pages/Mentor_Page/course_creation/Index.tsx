@@ -9,7 +9,7 @@ import courseService from "@/service/mentor/course.service";
 
 const CourseCreation = () => {
   const [searchParams] = useSearchParams();
-  const { courseId, setFormData, resetForm } = useCourseFormContext();
+  const { setFormData, resetForm } = useCourseFormContext();
   const editId = searchParams.get("edit");
 
   useEffect(() => {
