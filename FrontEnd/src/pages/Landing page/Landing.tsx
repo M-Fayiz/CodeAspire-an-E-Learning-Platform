@@ -16,7 +16,7 @@ const Landing = () => {
   // }
   return (
     <>
-      <div className="min-h-screen">
+      <div className="w-full">
         <Header />
         <HeroSection />
         <FeaturesSection />

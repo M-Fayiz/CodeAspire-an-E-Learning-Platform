@@ -22,4 +22,7 @@ export class CertificateRepository
   async listCertificate(learnerId: Types.ObjectId): Promise<ICertificateModel[]|null> {
     return await this.find({learnerId:learnerId})
   }
+  async learnerTotalCertificate(learnerId: Types.ObjectId): Promise<number> {
+    return await this.countDocuments({learnerId:learnerId})
+  }
 }

@@ -11,6 +11,7 @@ import {
   ITopCategory,
   ITopCourse,
 } from "../../types/mentorDashboard.types";
+import { LearnerCourseCard } from "../../types/learnerDashboard.type";
 
 export interface IEnrolledRepository {
   enrolleCourse(enrollData: IEnrollement): Promise<IEnrolledModel | null>;
@@ -45,6 +46,6 @@ export interface IEnrolledRepository {
   ): Promise<IMentorDashboardData[]>;
   getTopSellingCourse(mentorId?: Types.ObjectId): Promise<ITopCourse[]>;
   getTopSellingCategory(mentorId?: Types.ObjectId): Promise<ITopCategory[]>;
-  getLearnerDashboardCourseData(learnerId:Types.ObjectId):Promise<void>
+  getLearnerDashboardCourseData(learnerId:Types.ObjectId):Promise<LearnerCourseCard[]>
   updateEnrolledData(enrolledId:Types.ObjectId,data:UpdateQuery<IEnrolledModel>): Promise<IEnrolledModel|null> 
 }

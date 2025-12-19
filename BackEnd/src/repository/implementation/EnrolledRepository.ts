@@ -14,6 +14,7 @@ import {
   ITopCategory,
   ITopCourse,
 } from "../../types/mentorDashboard.types";
+import { LearnerCourseCard } from "../../types/learnerDashboard.type";
 
 export class EnrolledRepository
   extends BaseRepository<IEnrolledModel>
@@ -218,8 +219,8 @@ export class EnrolledRepository
       },
     ]);
   }
-  async getLearnerDashboardCourseData(learnerId: Types.ObjectId): Promise<void> {
-    const result= await this.aggregate([
+  async getLearnerDashboardCourseData(learnerId: Types.ObjectId): Promise<LearnerCourseCard[]> {
+    const result= await this.aggregate<LearnerCourseCard>([
       {
         $group:{
           _id:`$${learnerId}`,
@@ -246,7 +247,7 @@ export class EnrolledRepository
        
       }
     ])
-    console.log('aggregation :',result)
+    return result
   }
   async updateEnrolledData(enrolledId:Types.ObjectId , data: UpdateQuery<IEnrolledModel>): Promise<IEnrolledModel|null> {
     return await this.findByIDAndUpdate(enrolledId,data)

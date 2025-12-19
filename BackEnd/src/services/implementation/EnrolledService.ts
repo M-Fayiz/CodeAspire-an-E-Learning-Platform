@@ -44,8 +44,11 @@ import { TransactionType } from "../../const/transaction";
 import { graphPrps } from "../../types/adminDahsboard.type";
 import { buildDateFilter } from "../../utils/dateBuilder";
 import { IUserRepo } from "../../repository/interface/IUserRepo";
-import { reduce } from "lodash";
 import { ISession } from "../../types/courses.type";
+import { ICertificateRepository } from "../../repository/interface/ICertificateRepository";
+import { ISlotBookingRepository } from "../../repository/interface/ISlotBookingRepository";
+import { learnerDashboardCardsDTO } from "../../types/dtos.type/learnerDashboard.dto.type";
+import { learnerDashboardDetails } from "../../dtos/learnerDashnoard.dto";
 
 export class EnrolledService implements IEnrolledService {
   constructor(
@@ -53,6 +56,9 @@ export class EnrolledService implements IEnrolledService {
     private _courseRepository: ICourseRepository,
     private _transactionRepository: ITransactionRepository,
     private _userRepository: IUserRepo,
+    private _certificateRepository:ICertificateRepository,
+    private _slotbookingRepository:ISlotBookingRepository
+    
   ) {}
 
   async getEnrolledCourses(learnerId: string): Promise<IEnrolledListDto[]> {
@@ -291,14 +297,17 @@ export class EnrolledService implements IEnrolledService {
       signedUsers,
     };
   }
-  async learnerDashboardCardData(learnerId: string, filter?: string, startDate?: string, endDate?: string): Promise<void> {
+  async learnerDashboardCardData(learnerId: string, filter?: string, startDate?: string, endDate?: string): Promise<learnerDashboardCardsDTO> {
     const learner_Id=parseObjectId(learnerId)
     if(!learner_Id){
       throw createHttpError(HttpStatus.BAD_REQUEST,HttpResponse.INVALID_ID)
     }
 
 
-    await this._erolledRepository.getLearnerDashboardCourseData(learner_Id)
-
+    const[courseCard,certificateCount,slotCard]=await Promise.all([this._erolledRepository.getLearnerDashboardCourseData(learner_Id),this._certificateRepository.learnerTotalCertificate(learner_Id),this._slotbookingRepository.learnerDashboardSlotCard(learner_Id)]) 
+    // console.log('course :',courseCard)
+    // console.log('certificate :',certificateCount)
+    // console.log('slot :',slotCard)
+    return learnerDashboardDetails(courseCard[0],slotCard[0],certificateCount)
   }
 }

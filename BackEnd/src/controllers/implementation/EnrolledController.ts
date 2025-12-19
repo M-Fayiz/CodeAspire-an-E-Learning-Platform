@@ -195,7 +195,13 @@ export class EnrolledController implements IEnrolledController {
   getLearnerDashboardData=async(req: Request, res: Response, next: NextFunction): Promise<void> =>{
     try {
        const {learnerId}=req.params
-       await this._enrolledService.learnerDashboardCardData(learnerId)
+      const dashboardData= await this._enrolledService.learnerDashboardCardData(learnerId)
+      res.status(HttpStatus.OK)
+        .json(
+          successResponse(HttpResponse.OK, {
+            dashboardData
+          }),
+        );
     } catch (error) {
       next(error)
     }

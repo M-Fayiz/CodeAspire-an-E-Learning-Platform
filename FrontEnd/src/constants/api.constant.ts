@@ -124,4 +124,7 @@ export const API = {
     list_Certificate: (learnerId: string) =>
       `/certificate/my-certificate/${learnerId}`,
   },
+  LEARNER:{
+    LEARNER_DASHBOARD:(learnerId:string)=>`/enrollements/${learnerId}/dashboard`
+  }
 };

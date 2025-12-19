@@ -33,7 +33,10 @@ if (clientID && clientSecret && callBack) {
         done: VerifyCallback,
       ) => {
         try {
-          const role = (req.session.role as IRole) || "learner";
+          const state = req.query.state
+          ? JSON.parse(req.query.state as string)
+          : {};
+          const role = (state.role as IRole) || "learner";
           const user = await userRepo.findOrCreateUser(profile, role);
 
           if (!user) {
@@ -50,17 +53,17 @@ if (clientID && clientSecret && callBack) {
 } else {
   console.warn("⚠️ Google OAuth disabled: missing environment variables");
 }
-passport.serializeUser((user: any, done) => {
-  done(null, user.id);
-});
-passport.deserializeUser(async (id: unknown, done) => {
-  try {
-    const userId = id as Types.ObjectId;
-    const user = await userRepo.findById(userId);
-    done(null, user);
-  } catch (error) {
-    done(error);
-  }
-});
+// passport.serializeUser((user: any, done) => {
+//   done(null, user.id);
+// });
+// passport.deserializeUser(async (id: unknown, done) => {
+//   try {
+//     const userId = id as Types.ObjectId;
+//     const user = await userRepo.findById(userId);
+//     done(null, user);
+//   } catch (error) {
+//     done(error);
+//   }
+// });
 
 export default passport;

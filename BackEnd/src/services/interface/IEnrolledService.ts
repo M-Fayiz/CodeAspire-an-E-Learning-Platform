@@ -7,6 +7,8 @@ import {
   IEnrolledCoursedetailsDTO,
   IEnrolledListDto,
 } from "../../types/dtos.type/enrolled.dto.type";
+import { learnerDashboardCardsDTO } from "../../types/dtos.type/learnerDashboard.dto.type";
+
 import { IMentorDhasboardDTO } from "../../types/dtos.type/mentorDashboard.dto.type";
 
 import { filter, IProgressTrack } from "../../types/enrollment.types";
@@ -41,5 +43,5 @@ export interface IEnrolledService {
     courseRevanue: graphPrps[];
     signedUsers: graphPrps[];
   }>;
-  learnerDashboardCardData(learnerId:string,filter?:string,startDate?:string,endDate?:string):Promise<void>
+  learnerDashboardCardData(learnerId:string,filter?:string,startDate?:string,endDate?:string):Promise<learnerDashboardCardsDTO>
 }

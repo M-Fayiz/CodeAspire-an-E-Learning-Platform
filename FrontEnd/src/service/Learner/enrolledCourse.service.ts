@@ -9,6 +9,7 @@ import { sharedService } from "../shared.service";
 import { throwAxiosError } from "@/utility/throwErrot";
 import type { ChartFilter } from "@/types/enrollent.types";
 import type { IMentorDhasboardDTO } from "@/types/DTOS/mentorDashboard.dto.type";
+import type { learnerDashboardCardsDTO } from "@/types/DTOS/learnerDashboard.type";
 
 export const EnrolledService = {
   getEnrolledCourse: async (learnerId: string): Promise<IEnrolledListDto[]> => {
@@ -154,4 +155,12 @@ export const EnrolledService = {
       throwAxiosError(error);
     }
   },
+  learnerDashboardData:async(learnerId:string):Promise<learnerDashboardCardsDTO>=>{
+    try {
+      const response=await axiosInstance.get(API.LEARNER.LEARNER_DASHBOARD(learnerId))
+      return response.data.dashboardData
+    } catch (error) {
+      throwAxiosError(error)
+    }
+  }
 };

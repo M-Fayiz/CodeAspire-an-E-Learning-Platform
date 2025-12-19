@@ -2,6 +2,7 @@ import { FilterQuery, Types, UpdateQuery } from "mongoose";
 import { ISlotBookingModel } from "../../models/sessionBooking.model";
 import { ISlotBooking } from "../../types/sessionBooking.type";
 import { IPopulatedBooking } from "../../types/dtos.type/slotBooking.dto.type";
+import { LearnerSlotCard } from "../../types/learnerDashboard.type";
 
 export interface ISlotBookingRepository {
   createBooking(bookingData: Partial<ISlotBooking>): Promise<ISlotBookingModel>;
@@ -24,4 +25,5 @@ export interface ISlotBookingRepository {
     limit?: number,
     skit?: number,
   ): Promise<IPopulatedBooking[]>;
+  learnerDashboardSlotCard(learnerId:Types.ObjectId):Promise<LearnerSlotCard[]>
 }

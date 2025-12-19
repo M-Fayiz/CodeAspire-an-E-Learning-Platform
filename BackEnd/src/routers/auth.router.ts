@@ -42,21 +42,22 @@ authRouter.patch(
 // Google Auth
 authRouter.get(
   "/google",
-  (req: Request, res: Response, next: NextFunction) => {
-    
-    const { role } = req.query as { role?: IRole };
-    req.session.role = role || IRole.Learner;
-    next();
-  },
-  passport.authenticate("google", {
-    scope: ["profile", "email"],
-    prompt: "select_account",
-  }),
+  (req, res, next) => {
+    const { role } = req.query;
+
+    passport.authenticate("google", {
+      scope: ["profile", "email"],
+      state: JSON.stringify({ role }),
+      prompt: "select_account",
+    })(req, res, next);
+  }
 );
+
 
 authRouter.get(
   "/google/callback",
   passport.authenticate("google", {
+    session:false,
     failureRedirect: `${env.CLIENT_ORGIN}/auth/login`,
   }),
   authController.googleAuthRedirection.bind(authController),
