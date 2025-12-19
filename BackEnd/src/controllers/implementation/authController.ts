@@ -164,16 +164,16 @@ export class AuthController implements IAuthController {
     next: NextFunction,
   ): Promise<void> {
     try {
-      if (!req.user) {
-        res.status(HttpStatus.FORBIDDEN).json(HttpResponse.INVALID_CREDNTIALS);
-        return;
-      }
+      // if (!req.user) {
+      //   res.status(HttpStatus.FORBIDDEN).json(HttpResponse.INVALID_CREDNTIALS);
+      //   return;
+      // }
       const Data = await this._authSerive.generateToken(req.user as IUserModel);
 
       setAccessToken(res, Data.accessToken);
       setRefreshToken(res, Data.refreshToken);
 
-      res.redirect(`${env.CLIENT_ORGIN}/?token=${Data.accessToken}`);
+      res.redirect(`${env.CLIENT_ORGIN}/`);
     } catch (error) {
       res.redirect(`${env.CLIENT_ORGIN}/auth/signup`);
       next(error);
