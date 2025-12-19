@@ -31,7 +31,7 @@ export const AuthService = {
         token,
         email,
       });
-      console.log(response.data.token);
+ 
       if (response.data.token) {
         localStorage.setItem("accessToken", response.data.token);
       }
