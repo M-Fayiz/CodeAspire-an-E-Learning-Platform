@@ -10,6 +10,7 @@ import { clearCookies } from "../../utils/clearCookies.util";
 import { setAccessToken, setRefreshToken } from "../../utils/cookie.util";
 import { IUserModel } from "../../models/user.model";
 import { env } from "../../config/env.config";
+import { date } from "zod";
 
 export class AuthController implements IAuthController {
   constructor(private _authSerive: IAuthService) {}
@@ -30,6 +31,8 @@ export class AuthController implements IAuthController {
     next: NextFunction,
   ): Promise<void> {
     try {
+
+      console.log('verify email',req.body)
       const token = await this._authSerive.verifyEmail(req.body);
       setAccessToken(res, token.accessToken);
       setRefreshToken(res, token.refreshToken);
@@ -173,7 +176,7 @@ export class AuthController implements IAuthController {
       setAccessToken(res, Data.accessToken);
       setRefreshToken(res, Data.refreshToken);
 
-      res.redirect(`${env.CLIENT_ORGIN}/`);
+      res.redirect(`${env.CLIENT_URL_2}/?token=${Data.accessToken}`);
     } catch (error) {
       res.redirect(`${env.CLIENT_ORGIN}/auth/signup`);
       next(error);
