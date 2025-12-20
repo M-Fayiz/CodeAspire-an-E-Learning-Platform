@@ -44,7 +44,8 @@ const CourseEnrolledList = () => {
 }, [user?.id, page]);
 
 
-  const handlePage=(e:React.ChangeEvent<unknown>,value:number)=>{
+  const handlePage=(_e:React.ChangeEvent<unknown>,value:number)=>{
+    
     setPage(value)
   }
   const filteredCourses = useMemo(() => {

@@ -60,8 +60,8 @@ const UserManagement: React.FC = () => {
     }
   };
 
-  const handlePages = (e: React.ChangeEvent<unknown>, value: number) => {
-    console.log(e);
+  const handlePages = (_e: React.ChangeEvent<unknown>, value: number) => {
+ 
     setPage(value);
   };
 

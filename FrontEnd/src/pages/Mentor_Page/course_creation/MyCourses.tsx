@@ -50,8 +50,8 @@ function MYCourses() {
     });
   };
 
-  const handlePage = (event: React.ChangeEvent<unknown>, value: number) => {
-    console.log(event);
+  const handlePage = (_event: React.ChangeEvent<unknown>, value: number) => {
+   
     setSearchParams((prev) => {
       prev.set("page", String(value));
       return prev;

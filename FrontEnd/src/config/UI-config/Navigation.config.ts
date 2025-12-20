@@ -3,14 +3,11 @@ import {
   Layers,
   Book,
   BookOpen,
-  CreditCard,
-  FileText,
-  HelpCircle,
+  
   Home,
   MessageSquare,
   Settings,
-  Shield,
-  ShoppingCart,
+  
   Users,
   CalendarDays,
   
@@ -80,7 +77,7 @@ const navigationConfig = {
     primary: [
       { icon: Home, label: "Dashboard", path: "/mentor/dashboard" },
       { icon: Book, label: "My Courses", path: "/mentor/courses/my-courses" },
-      { icon: Users, label: "Students", path: "/mentor/students" },
+      
       {
         icon: CalendarDays,
         label: "Slots Management",

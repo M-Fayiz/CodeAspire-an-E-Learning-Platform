@@ -87,8 +87,8 @@ function CourseLayout() {
     });
   };
 
-  const handlePage = (e: React.ChangeEvent<unknown>, value: number) => {
-    console.log(e);
+  const handlePage = (_e: React.ChangeEvent<unknown>, value: number) => {
+    
     setSearchParams((prev) => {
       prev.set("page", String(value));
       return prev;

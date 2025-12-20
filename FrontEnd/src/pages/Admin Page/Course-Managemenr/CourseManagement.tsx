@@ -36,8 +36,8 @@ function CourseManagement() {
     });
   };
 
-  const handlePageChange = (e: React.ChangeEvent<unknown>, page: number) => {
-    console.log(e);
+  const handlePageChange = (_e: React.ChangeEvent<unknown>, page: number) => {
+ 
     setSearchParams({
       page: String(page),
       search: SearchQuery,
