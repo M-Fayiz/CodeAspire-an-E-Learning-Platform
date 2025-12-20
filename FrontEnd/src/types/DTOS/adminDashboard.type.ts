@@ -1,3 +1,4 @@
+import type { PieChartProps } from "@/components/ui/PieGraph";
 import type { ITopCourse } from "./mentorDashboard.dto.type";
 
 export type IPaymentTypes = "COURSE_PURCHASE" | "SLOT_BOOKING";
@@ -9,7 +10,7 @@ export interface SourceOfRevanye {
 export interface IAdminDashboardDTO {
   totalMentors: number;
   totalLearners: number;
-  SourceOfRevenue: SourceOfRevanye[];
+  SourceOfRevenue: PieChartProps<IPaymentTypes>[];
   totalCourses: number;
   topSelling: {
     course: ITopCourse[];

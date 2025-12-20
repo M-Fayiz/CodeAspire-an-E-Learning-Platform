@@ -69,7 +69,7 @@ export const EnrolledService = {
         API.ENROLLEMENT.UPDATE_PROGRESS(enrolledId),
         { lectureId, sessionId },
       );
-      console.log(response.data);
+      
       return response.data.progressData;
     } catch (error) {
       throwAxiosError(error);

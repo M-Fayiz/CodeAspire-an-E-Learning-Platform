@@ -8,7 +8,7 @@ import {
 import { createHttpError } from "../../utils/http-error";
 import { HttpStatus } from "../../const/http-status";
 import { HttpResponse } from "../../const/error-message";
-import { IAdmin, ILearner, IRole, IUser } from "../../types/user.types";
+import { IAdmin, ILearner, IRole } from "../../types/user.types";
 import { parseObjectId } from "../../mongoose/objectId";
 import { comparePassword, hashPassword } from "../../utils/bcrypt.util";
 

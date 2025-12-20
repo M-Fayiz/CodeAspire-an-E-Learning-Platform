@@ -12,7 +12,7 @@ export class WebhookController implements IWebhookController {
     next: NextFunction,
   ): Promise<void> => {
     try {
-      console.log("get into the stripe controller :");
+     
       await this._webhookService.processEvent(req);
       res.status(HttpStatus.OK).json({ received: true });
     } catch (error) {

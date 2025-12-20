@@ -1,4 +1,4 @@
-import { IMentor, ILearner, IAdmin, IUser } from "../../types/user.types";
+import { IMentor, ILearner, IAdmin } from "../../types/user.types";
 import {
   IAdminDTO,
   ILearnerDTO,

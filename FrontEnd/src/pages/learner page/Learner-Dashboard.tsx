@@ -1,24 +1,28 @@
 import StatsCard from "@/features/learner-dahboard/StateCard";
 import CourseStatusList from "@/features/learner-dahboard/CourseStatus";
-import InterviewCharts from "@/features/learner-dahboard/InterviewChart";
+
 import { useState } from "react";
 import type { learnerDashboardCardsDTO } from "@/types/DTOS/learnerDashboard.type";
 import { useAuth } from "@/context/auth.context";
 import { EnrolledService } from "@/service/Learner/enrolledCourse.service";
 import LearnerDashboardSkeleton from "@/components/skelton/learnerDashboard";
+import { RevenueDonutChart, type PieChartProps } from "@/components/ui/PieGraph";
+export type IPaymentTypes = "Cracked" | "Failed";
 
 const LearnerDashboard = () => {
   const {user}=useAuth()
   const [learnerDashboardData,setLearnerDashboardData]=useState<learnerDashboardCardsDTO|null>(null)
+  const [circleChart,setCircleChart]=useState<PieChartProps<IPaymentTypes>[]>([])
   useState(()=>{
     (async()=>{
       const dashData=await EnrolledService.learnerDashboardData(user!.id)
       if(dashData){
         setLearnerDashboardData(dashData)
+        setCircleChart([{name:'Cracked',value:dashData.slotData.totalCracked},{name:'Failed',value:dashData.slotData.totalFailed}])
       }
     })()
   },[])
-  
+
   if(!learnerDashboardData){
     return <LearnerDashboardSkeleton/>
   }
@@ -45,14 +49,14 @@ const LearnerDashboard = () => {
         <StatsCard title="Interviews Attended" value={learnerDashboardData?.slotData.totalSession as number} />
         <StatsCard title="Cracked Interviews" value={learnerDashboardData?.slotData.totalCracked as number} />
         <StatsCard title="Failed Interviews" value={learnerDashboardData?.slotData.totalFailed as number} />
-        <StatsCard title="Success Rate" value="66%" />
+        {/* <StatsCard title="Success Rate" value="66%" /> */}
       </div>
 
       
       <CourseStatusList />
 
       
-      <InterviewCharts />
+      <RevenueDonutChart  Options={circleChart}  />
     </div>
   );
 };

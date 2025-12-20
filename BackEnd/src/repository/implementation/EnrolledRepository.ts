@@ -31,7 +31,7 @@ export class EnrolledRepository
   async getEnrolledCourses(
     learnerId: Types.ObjectId,
   ): Promise<IEnrolledModel[] | null> {
-    return await this.find({ learnerId: learnerId });
+    return await this.findAll({ learnerId: learnerId });
   }
   async getEnrolledCOurseDetails(
     enrolledId: Types.ObjectId,

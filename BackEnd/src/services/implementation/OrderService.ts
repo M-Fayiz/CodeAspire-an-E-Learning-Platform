@@ -14,7 +14,7 @@ import logger from "../../config/logger.config";
 import { ITransactionRepository } from "../../repository/interface/ITransactionRepository";
 import { ITransaction } from "../../types/transaction.type";
 import { calculateShares } from "../../utils/calculateSplit.util";
-import { TransactionType } from "../../const/transaction";
+import {  OrderStatus, TransactionStatus, TransactionType } from "../../const/transaction";
 import { stripe } from "../../config/stripe.config";
 
 export class OrderService implements IOrderService {
@@ -56,14 +56,20 @@ export class OrderService implements IOrderService {
       return;
     }
 
+    
     const order = await this._orderRepository.findOrder(order_id);
 
-    if (!order) {
-      logger.error(" Order not found:", order_id);
-      throw createHttpError(HttpStatus.NOT_FOUND, HttpResponse.ITEM_NOT_FOUND);
-    }
+  if (!order) {
+    logger.error("Order not found:", order_id);
+    return;
+  }
+    if (order.status === OrderStatus.COMPLETED) {
+  logger.warn("Order already completed. Skipping:", order_id);
+  return; 
+}
 
-    await this._orderRepository.updateOrderStatus(order_id, "completed");
+
+    await this._orderRepository.updateOrderStatus(order_id, OrderStatus.COMPLETED);
 
     const adminShare = calculateShares(Number(amount), Number(env.ADMIN_SHARE));
     const mentorShare = calculateShares(
@@ -82,7 +88,7 @@ export class OrderService implements IOrderService {
       orderId: order_id,
       userId: user_id,
       mentorId: mentore_id,
-      status: "success",
+      status: TransactionStatus.SUCCESS,
       paymentMethod: "stripe",
       gatewayTransactionId: paymentIntentId as string,
       adminShare,
@@ -90,7 +96,7 @@ export class OrderService implements IOrderService {
       courseId: course_id,
     };
 
-    logger.info("✅ Creating transaction:", transactionData);
+    
     await this._transactionRepository.createTransaction(transactionData);
 
     const enrollData: IEnrollement = {
@@ -107,7 +113,7 @@ export class OrderService implements IOrderService {
       courseStatus:completionStatus.IN_PROGRESS
     };
 
-    logger.info(" Enrolling learner:", enrollData);
+    
     await this._enrolledRepository.enrolleCourse(enrollData);
   }
   /**
@@ -182,7 +188,7 @@ if(!stripe){
         success_url: `${env.CLIENT_URL_2}/courses/payment-success?session_id={CHECKOUT_SESSION_ID}`,
         client_reference_id: String(orderData._id),
         metadata: {
-          paymentType: "COURSE_PURCHASE",
+          paymentType: TransactionType.COURSE_PURCHASE,
           orderId,
           courseId,
           userId,

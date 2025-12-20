@@ -1,26 +1,32 @@
-import { useState } from "react";
-import useDebounce from "./useDebounce";
+import { useSearchParams } from "react-router-dom";
 
-export const useSearchQuery = (initialLimit = 5) => {
-  const [search, setSearch] = useState("");
-  const [page, setPage] = useState(1);
-  const [limit] = useState(initialLimit);
-  const [filters, setFilters] = useState<Record<string, string>>({});
+export function useSearchPagination(defaults = { page: 1, limit: 10 }) {
+  const [searchParams, setSearchParams] = useSearchParams();
 
-  const debouncedSearch = useDebounce(search, 500);
+  const search = searchParams.get("search") || "";
+  const page = Number(searchParams.get("page")) || defaults.page;
+ 
+
+  const setSearch = (value: string) => {
+    setSearchParams({
+      search: value,
+      page: "1", 
+      
+    });
+  };
+
+  const setPage = (value: number) => {
+    setSearchParams({
+      search,
+      page: value.toString(),
+      
+    });
+  };
 
   return {
-    query: {
-      search: debouncedSearch,
-      page,
-      limit,
-      filters,
-    },
-    actions: {
-      setSearch,
-      setPage,
-      setFilters,
-      resetPage: () => setPage(1),
-    },
+    search,
+    page,
+    setSearch,
+    setPage,
   };
-};
+}

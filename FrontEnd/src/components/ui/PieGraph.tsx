@@ -2,16 +2,17 @@ import { PieChart, Pie, Cell, Tooltip, Legend } from "recharts";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import type React from "react";
 
-const COLORS = ["#000000", "#808080", "#BFBFBF"];
+const COLORS = ["#00000f", "#808080", "#BFBFBF"];
 
-export interface SourceOfRevanye {
-  name: string;
+export interface PieChartProps<T extends string = string> {
+  name: T;
   value: number;
 }
 
-export const RevenueDonutChart: React.FC<{ Options: SourceOfRevanye[] }> = ({
+export const RevenueDonutChart: React.FC<{ Options: PieChartProps[] }> = ({
   Options,
 }) => {
+ 
   return (
     <Card className="w-full max-w-md bg-white">
       <CardHeader>

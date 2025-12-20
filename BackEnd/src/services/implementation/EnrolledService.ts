@@ -61,7 +61,7 @@ export class EnrolledService implements IEnrolledService {
     
   ) {}
 
-  async getEnrolledCourses(learnerId: string): Promise<IEnrolledListDto[]> {
+  async getEnrolledCourses(learnerId: string,): Promise<IEnrolledListDto[]> {
     const learner_id = parseObjectId(learnerId);
     if (!learner_id) {
       throw createHttpError(HttpStatus.NOT_FOUND, HttpResponse.INVALID_ID);
@@ -305,9 +305,7 @@ export class EnrolledService implements IEnrolledService {
 
 
     const[courseCard,certificateCount,slotCard]=await Promise.all([this._erolledRepository.getLearnerDashboardCourseData(learner_Id),this._certificateRepository.learnerTotalCertificate(learner_Id),this._slotbookingRepository.learnerDashboardSlotCard(learner_Id)]) 
-    // console.log('course :',courseCard)
-    // console.log('certificate :',certificateCount)
-    // console.log('slot :',slotCard)
+    
     return learnerDashboardDetails(courseCard[0],slotCard[0],certificateCount)
   }
 }

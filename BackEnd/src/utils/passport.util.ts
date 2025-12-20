@@ -8,7 +8,7 @@ import { env } from "../config/env.config";
 import { UserRepository } from "../repository/implementation/UserRepository";
 import { Request } from "express";
 import { IRole } from "../types/user.types";
-import { Types } from "mongoose";
+
 
 const userRepo = new UserRepository();
 

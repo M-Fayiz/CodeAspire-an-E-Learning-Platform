@@ -3,7 +3,6 @@ import { HttpResponse } from "../../const/error-message";
 import { HttpStatus } from "../../const/http-status";
 import {
   mentorSlotsDTO,
-  slotDTO,
   slotPopulatedMapper,
 } from "../../dtos/slot.dto";
 import { ISlotModel } from "../../models/slot.model";

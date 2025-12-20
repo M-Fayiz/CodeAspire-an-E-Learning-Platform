@@ -55,6 +55,24 @@ export class SlotBookingService implements ISlotBookingService {
   async createBooking(bookingData: ISlotBooking): Promise<string | null> {
     const { learnerId, courseId } = bookingData;
 
+      const { date, startTime, endTime } = timeAndDateGenerator(
+      bookingData.date as string,
+      bookingData.startTime as string,
+      bookingData.endTime as string,
+    );
+    const isAlreadyBooked = await this._slotBookingRepository.findSlots({
+        mentorId: bookingData.mentorId,
+        startTime: { $lt: endTime },
+        endTime: { $gt: startTime },
+      });
+      if (isAlreadyBooked) {
+        throw createHttpError(
+          HttpStatus.CONFLICT,
+          "This slot is already booked"
+        );    
+      }
+
+    console.log('booked :::',bookingData)
     const activeBooking = await this._slotBookingRepository.findSlots({
       learnerId,
       courseId,
@@ -65,6 +83,7 @@ export class SlotBookingService implements ISlotBookingService {
       throw createHttpError(HttpStatus.CONFLICT, HttpResponse.BOOKING_EXIST);
     }
 
+
     const previousBookings = await this._slotBookingRepository.findAllSlots({
       learnerId,
       courseId,
@@ -74,11 +93,7 @@ export class SlotBookingService implements ISlotBookingService {
 
     bookingData.type = isFreeBooking ?bookingType.FREE: bookingType.PAID;
 
-    const { date, startTime, endTime } = timeAndDateGenerator(
-      bookingData.date as string,
-      bookingData.startTime as string,
-      bookingData.endTime as string,
-    );
+  
 
     bookingData.date = date;
     bookingData.startTime = startTime;
