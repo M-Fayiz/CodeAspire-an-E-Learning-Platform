@@ -24,10 +24,10 @@ const StatsSection: React.FC = () => {
         <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
           {stats.map((stat, index) => (
             <div key={index} className="text-center group">
-              <div className="w-16 h-16 bg-gradient-to-r from-blue-500 to-purple-500 rounded-2xl flex items-center justify-center mx-auto mb-4 group-hover:scale-110 transition-transform duration-300">
+              <div className="w-16 h-16 bg-gradient-to-r from-orange-400 to-amber-500 rounded-2xl flex items-center justify-center mx-auto mb-4 group-hover:scale-110 transition-transform duration-300">
                 <stat.icon className="w-8 h-8 text-white" />
               </div>
-              <div className="text-4xl font-bold mb-2 bg-gradient-to-r from-blue-400 to-purple-400 bg-clip-text text-transparent">
+              <div className="text-4xl font-bold mb-2 bg-gradient-to-r from-orange-400 to-amber-400 bg-clip-text text-transparent">
                 {stat.number}
               </div>
               <div className="text-gray-500 text-lg">{stat.label}</div>

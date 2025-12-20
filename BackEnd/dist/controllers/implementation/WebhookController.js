@@ -7,7 +7,6 @@ class WebhookController {
         this._webhookService = _webhookService;
         this.handleStripeWebhook = async (req, res, next) => {
             try {
-                console.log("get into the stripe controller :");
                 await this._webhookService.processEvent(req);
                 res.status(http_status_1.HttpStatus.OK).json({ received: true });
             }

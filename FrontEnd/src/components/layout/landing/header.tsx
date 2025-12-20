@@ -44,15 +44,10 @@ const Header: React.FC = () => {
             >
               Course
             </Link>
-            <A_tag href="#interviews" label="Mock Interviews" />
+            
             <A_tag href="#about" label="About" />
             {/* <A_tag href="#about" label="About"/> */}
-            <a
-              href="#pricing"
-              className="text-gray-700 hover:text-orange-600 transition-colors font-medium"
-            >
-              Pricing
-            </a>
+            
             {user?.role ? (
               <Link to={`/${user.role}/dashboard`}>
                 <User />
@@ -89,24 +84,14 @@ const Header: React.FC = () => {
               >
                 Courses
               </Link>
-              <a
-                href="#interviews"
-                className="text-gray-700 hover:text-orange-600 transition-colors font-medium"
-              >
-                Mock Interviews
-              </a>
+             
               <a
                 href="#about"
                 className="text-gray-700 hover:text-orange-600 transition-colors font-medium"
               >
                 About
               </a>
-              <a
-                href="#pricing"
-                className="text-gray-700 hover:text-orange-600 transition-colors font-medium"
-              >
-                Pricing
-              </a>
+             
               <button className="text-left text-gray-700 hover:text-orange-600 transition-colors font-medium">
                 Login
               </button>

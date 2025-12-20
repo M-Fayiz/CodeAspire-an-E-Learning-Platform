@@ -7,7 +7,7 @@ exports.sendMail = exports.sendToken = void 0;
 const email_config_1 = __importDefault(require("../config/email.config"));
 const env_config_1 = require("../config/env.config");
 const sendToken = async (email, token, endPoint) => {
-    const verifyUrl = `${env_config_1.env.CLIENT_ORGIN}/auth/${endPoint}?token=${token}&email=${email}`;
+    const verifyUrl = `${env_config_1.env.CLIENT_URL_2}/auth/${endPoint}?token=${token}&email=${email}`;
     try {
         const option = {
             from: "",

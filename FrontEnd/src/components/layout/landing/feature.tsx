@@ -7,7 +7,7 @@ const FeaturesSection: React.FC = () => {
       title: "Interactive Courses",
       description:
         "Learn by doing with hands-on projects, coding challenges, and real-world scenarios.",
-      color: "from-blue-500 to-cyan-500",
+      color: "from-orange-500 to-cyan-500",
     },
     {
       icon: Briefcase,
@@ -51,7 +51,7 @@ const FeaturesSection: React.FC = () => {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="text-center mb-16">
           <h2 className="text-4xl lg:text-5xl font-bold text-gray-900 mb-4">
-            Why Choose TechMaster?
+            Why Choose CodeAspire?
           </h2>
           <p className="text-xl text-gray-600 max-w-3xl mx-auto">
             We combine cutting-edge technology with proven teaching methods to

@@ -4,7 +4,7 @@ const MockInterviewSection: React.FC = () => {
   return (
     <section
       id="interviews"
-      className="py-20 bg-gradient-to-r from-blue-600 to-purple-600 text-white"
+      className="py-20 bg-gradient-to-r from-orange-600 to-amber-600 text-white"
     >
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="grid lg:grid-cols-2 gap-12 items-center">
@@ -12,7 +12,7 @@ const MockInterviewSection: React.FC = () => {
             <h2 className="text-4xl lg:text-5xl font-bold mb-6">
               Ace Your Next Interview
             </h2>
-            <p className="text-xl mb-8 text-blue-100">
+            <p className="text-xl mb-8 text-orange-100">
               Practice with real industry professionals and get personalized
               feedback to boost your confidence and land your dream job.
             </p>
@@ -31,7 +31,7 @@ const MockInterviewSection: React.FC = () => {
               ))}
             </div>
 
-            <button className="bg-white text-blue-600 px-8 py-3 rounded-full font-semibold hover:shadow-lg transform hover:scale-105 transition-all duration-200">
+            <button className="bg-white text-orange-600 px-8 py-3 rounded-full font-semibold hover:shadow-lg transform hover:scale-105 transition-all duration-200">
               Book Your Mock Interview
             </button>
           </div>
@@ -40,12 +40,12 @@ const MockInterviewSection: React.FC = () => {
             <div className="bg-white/10 backdrop-blur-lg rounded-2xl p-8 border border-white/20">
               <div className="flex items-center justify-between mb-6">
                 <div className="flex items-center space-x-3">
-                  <div className="w-12 h-12 bg-gradient-to-r from-green-400 to-blue-500 rounded-full flex items-center justify-center">
+                  <div className="w-12 h-12 bg-gradient-to-r from-green-400 to-orange-500 rounded-full flex items-center justify-center">
                     <Users className="w-6 h-6 text-white" />
                   </div>
                   <div>
                     <div className="font-semibold">Mock Interview Session</div>
-                    <div className="text-sm text-blue-200">
+                    <div className="text-sm text-orange-200">
                       with Alex Johnson, Senior SWE @ Google
                     </div>
                   </div>
@@ -55,7 +55,7 @@ const MockInterviewSection: React.FC = () => {
 
               <div className="space-y-4">
                 <div className="bg-white/10 rounded-lg p-4">
-                  <div className="text-sm text-blue-200 mb-2">
+                  <div className="text-sm text-orange-200 mb-2">
                     Current Question:
                   </div>
                   <div className="font-medium">
@@ -66,11 +66,11 @@ const MockInterviewSection: React.FC = () => {
                 <div className="grid grid-cols-2 gap-4">
                   <div className="bg-white/10 rounded-lg p-3 text-center">
                     <div className="text-2xl font-bold">45:32</div>
-                    <div className="text-sm text-blue-200">Time Remaining</div>
+                    <div className="text-sm text-orange-200">Time Remaining</div>
                   </div>
                   <div className="bg-white/10 rounded-lg p-3 text-center">
                     <div className="text-2xl font-bold">3/5</div>
-                    <div className="text-sm text-blue-200">Questions Done</div>
+                    <div className="text-sm text-orange-200">Questions Done</div>
                   </div>
                 </div>
               </div>

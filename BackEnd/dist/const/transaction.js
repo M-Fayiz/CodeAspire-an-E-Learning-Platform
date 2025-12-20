@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.PaymentMethod = exports.TransactionStatus = exports.TransactionType = void 0;
+exports.OrderStatus = exports.PaymentMethod = exports.TransactionStatus = exports.TransactionType = void 0;
 var TransactionType;
 (function (TransactionType) {
     TransactionType["COURSE_PURCHASE"] = "COURSE_PURCHASE";
@@ -17,3 +17,9 @@ var PaymentMethod;
     PaymentMethod["STRIPE"] = "stripe";
     PaymentMethod["WALLET"] = "wallet";
 })(PaymentMethod || (exports.PaymentMethod = PaymentMethod = {}));
+var OrderStatus;
+(function (OrderStatus) {
+    OrderStatus["PENDING"] = "pending";
+    OrderStatus["COMPLETED"] = "completed";
+    OrderStatus["FAILED"] = "failed";
+})(OrderStatus || (exports.OrderStatus = OrderStatus = {}));

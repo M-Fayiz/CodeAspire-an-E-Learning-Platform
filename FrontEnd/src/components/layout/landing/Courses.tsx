@@ -40,7 +40,7 @@ const CoursesSection: React.FC = () => {
   return (
     <section
       id="courses"
-      className="py-20 bg-gradient-to-br from-gray-50 to-blue-50"
+      className="py-20 bg-gradient-to-br from-gray-50 to-orange-50"
     >
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="text-center mb-16">
@@ -70,7 +70,7 @@ const CoursesSection: React.FC = () => {
                   {course.tags.map((tag, tagIndex) => (
                     <span
                       key={tagIndex}
-                      className="px-3 py-1 bg-blue-100 text-blue-700 rounded-full text-sm font-medium"
+                      className="px-3 py-1 bg-orange-100 text-orange-700 rounded-full text-sm font-medium"
                     >
                       {tag}
                     </span>
@@ -99,7 +99,7 @@ const CoursesSection: React.FC = () => {
                   </span>
                 </div>
 
-                <button className="w-full bg-gradient-to-r from-blue-600 to-purple-600 text-white py-3 px-6 rounded-full font-semibold hover:shadow-lg transform hover:scale-105 transition-all duration-200 group-hover:from-purple-600 group-hover:to-blue-600">
+                <button className="w-full bg-gradient-to-r from-orange-600 to-amber-600 text-white py-3 px-6 rounded-full font-semibold hover:shadow-lg transform hover:scale-105 transition-all duration-200 group-hover:from-amto-amber-600 group-hover:to-orange-600">
                   Enroll Now
                 </button>
               </div>
@@ -108,7 +108,7 @@ const CoursesSection: React.FC = () => {
         </div>
 
         <div className="text-center mt-12">
-          <button className="bg-white text-blue-600 border-2 border-blue-600 px-8 py-3 rounded-full font-semibold hover:bg-blue-600 hover:text-white transition-all duration-300">
+          <button className="bg-white text-orange-600 border-2 border-orange-600 px-8 py-3 rounded-full font-semibold hover:bg-orange-600 hover:text-white transition-all duration-300">
             View All Courses
           </button>
         </div>

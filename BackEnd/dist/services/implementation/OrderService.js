@@ -46,10 +46,14 @@ class OrderService {
         }
         const order = await this._orderRepository.findOrder(order_id);
         if (!order) {
-            logger_config_1.default.error(" Order not found:", order_id);
-            throw (0, http_error_1.createHttpError)(http_status_1.HttpStatus.NOT_FOUND, error_message_1.HttpResponse.ITEM_NOT_FOUND);
+            logger_config_1.default.error("Order not found:", order_id);
+            return;
         }
-        await this._orderRepository.updateOrderStatus(order_id, "completed");
+        if (order.status === transaction_1.OrderStatus.COMPLETED) {
+            logger_config_1.default.warn("Order already completed. Skipping:", order_id);
+            return;
+        }
+        await this._orderRepository.updateOrderStatus(order_id, transaction_1.OrderStatus.COMPLETED);
         const adminShare = (0, calculateSplit_util_1.calculateShares)(Number(amount), Number(env_config_1.env.ADMIN_SHARE));
         const mentorShare = (0, calculateSplit_util_1.calculateShares)(Number(amount), Number(env_config_1.env.MENTOR_SHARE));
         const paymentIntentId = typeof session.payment_intent === "string"
@@ -61,14 +65,13 @@ class OrderService {
             orderId: order_id,
             userId: user_id,
             mentorId: mentore_id,
-            status: "success",
+            status: transaction_1.TransactionStatus.SUCCESS,
             paymentMethod: "stripe",
             gatewayTransactionId: paymentIntentId,
             adminShare,
             mentorShare,
             courseId: course_id,
         };
-        logger_config_1.default.info("✅ Creating transaction:", transactionData);
         await this._transactionRepository.createTransaction(transactionData);
         const enrollData = {
             courseId: course_id,
@@ -83,7 +86,6 @@ class OrderService {
             },
             courseStatus: enrollment_types_1.completionStatus.IN_PROGRESS
         };
-        logger_config_1.default.info(" Enrolling learner:", enrollData);
         await this._enrolledRepository.enrolleCourse(enrollData);
     }
     /**
@@ -143,7 +145,7 @@ class OrderService {
             success_url: `${env_config_1.env.CLIENT_URL_2}/courses/payment-success?session_id={CHECKOUT_SESSION_ID}`,
             client_reference_id: String(orderData._id),
             metadata: {
-                paymentType: "COURSE_PURCHASE",
+                paymentType: transaction_1.TransactionType.COURSE_PURCHASE,
                 orderId,
                 courseId,
                 userId,

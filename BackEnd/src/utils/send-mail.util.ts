@@ -6,7 +6,7 @@ export const sendToken = async (
   token: string,
   endPoint: string,
 ) => {
-  const verifyUrl = `${env.CLIENT_ORGIN}/auth/${endPoint}?token=${token}&email=${email}`;
+  const verifyUrl = `${env.CLIENT_URL_2}/auth/${endPoint}?token=${token}&email=${email}`;
   try {
     const option = {
       from: "",

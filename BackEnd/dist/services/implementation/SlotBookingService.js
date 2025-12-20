@@ -36,6 +36,16 @@ class SlotBookingService {
      */
     async createBooking(bookingData) {
         const { learnerId, courseId } = bookingData;
+        const { date, startTime, endTime } = (0, timeAndDateGenerator_1.timeAndDateGenerator)(bookingData.date, bookingData.startTime, bookingData.endTime);
+        const isAlreadyBooked = await this._slotBookingRepository.findSlots({
+            mentorId: bookingData.mentorId,
+            startTime: { $lt: endTime },
+            endTime: { $gt: startTime },
+        });
+        if (isAlreadyBooked) {
+            throw (0, http_error_1.createHttpError)(http_status_1.HttpStatus.CONFLICT, "This slot is already booked");
+        }
+        console.log('booked :::', bookingData);
         const activeBooking = await this._slotBookingRepository.findSlots({
             learnerId,
             courseId,
@@ -50,7 +60,6 @@ class SlotBookingService {
         });
         const isFreeBooking = previousBookings && previousBookings.length == 0;
         bookingData.type = isFreeBooking ? sessionBooking_type_1.bookingType.FREE : sessionBooking_type_1.bookingType.PAID;
-        const { date, startTime, endTime } = (0, timeAndDateGenerator_1.timeAndDateGenerator)(bookingData.date, bookingData.startTime, bookingData.endTime);
         bookingData.date = date;
         bookingData.startTime = startTime;
         bookingData.endTime = endTime;

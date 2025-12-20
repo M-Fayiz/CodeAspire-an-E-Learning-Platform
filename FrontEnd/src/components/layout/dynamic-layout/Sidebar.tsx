@@ -103,17 +103,6 @@ const Sidebar: React.FC<ISidebarProps> = ({ user, isOpen, onClose }) => {
                 ))}
               </div>
             </div>
-
-            <div>
-              <h3 className="px-3 text-xs font-semibold text-gray-500 uppercase tracking-wider mb-3">
-                Other
-              </h3>
-              <div className="space-y-1">
-                {navigation.secondary.map((item, index) => (
-                  <NavItem key={index} item={item} isSecondary />
-                ))}
-              </div>
-            </div>
           </nav>
 
           {/* <div className="p-4 border-t border-gray-200">

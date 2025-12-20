@@ -12,7 +12,7 @@ class EnrolledRepository extends baseRepository_1.BaseRepository {
         return await this.create(enrollData);
     }
     async getEnrolledCourses(learnerId) {
-        return await this.find({ learnerId: learnerId });
+        return await this.findAll({ learnerId: learnerId });
     }
     async getEnrolledCOurseDetails(enrolledId) {
         return await this.findById(enrolledId);

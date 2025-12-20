@@ -180,9 +180,6 @@ class EnrolledService {
             throw (0, http_error_1.createHttpError)(http_status_1.HttpStatus.BAD_REQUEST, error_message_1.HttpResponse.INVALID_ID);
         }
         const [courseCard, certificateCount, slotCard] = await Promise.all([this._erolledRepository.getLearnerDashboardCourseData(learner_Id), this._certificateRepository.learnerTotalCertificate(learner_Id), this._slotbookingRepository.learnerDashboardSlotCard(learner_Id)]);
-        // console.log('course :',courseCard)
-        // console.log('certificate :',certificateCount)
-        // console.log('slot :',slotCard)
         return (0, learnerDashnoard_dto_1.learnerDashboardDetails)(courseCard[0], slotCard[0], certificateCount);
     }
 }

@@ -41,10 +41,6 @@ const navigationConfig = {
       { icon: Settings, label: "System Settings", path: "/admin/settings" },
     ],
     secondary: [
-      { icon: FileText, label: "Reports", path: "/admin/reports" },
-      { icon: CreditCard, label: "Billing", path: "/admin/billing" },
-      { icon: Shield, label: "Security", path: "/admin/security" },
-      { icon: HelpCircle, label: "Support", path: "/admin/support" },
     ],
   },
   learner: {
@@ -77,7 +73,7 @@ const navigationConfig = {
       { icon: CalendarDays, label: "Slots", path: "/learner/booked-slots" },
     ],
     secondary: [
-      { icon: ShoppingCart, label: "Course Store", path: "/learner/store" },
+     
     ],
   },
   mentor: {
@@ -105,7 +101,6 @@ const navigationConfig = {
 
     ],
     secondary: [
-      
     ],
   },
 };
