@@ -2,7 +2,7 @@ import { axiosInstance } from "@/axios/createInstance";
 import { API } from "@/constants/api.constant";
 import type {
   CourseForm,
-  ICourseData,
+ 
   ICourseDTO,
   IFormCourseDTO,
   ILecture,
@@ -13,6 +13,7 @@ import type {
 import { sharedService } from "../shared.service";
 import { S3BucketUtil } from "@/utility/S3Bucket.util";
 import { throwAxiosError } from "@/utility/throwErrot";
+import type { ICourseData } from "@/types/courseForm.type";
 
 const courseService = {
   createCourse: async (courseData: ICourseData): Promise<CourseForm> => {
@@ -218,7 +219,7 @@ const courseService = {
   getCourseDetails: async (
   courseId: string,
   learnerId:string
-): Promise<{ courseDetails: IFormCourseDTO; isEnrolled: boolean }> => {
+): Promise<{ courseDetails: IFormCourseDTO; enrolledId: string|null }> => {
   try {
     const response = await axiosInstance.get(
       API.COURSE.COURSE_DETAILS(courseId),{
@@ -226,7 +227,7 @@ const courseService = {
       }
     );
 
-    const { courseDetails, isEnrolled } = response.data;
+    const { courseDetails, enrolledId } = response.data;
 
     courseDetails.thumbnail =
       await sharedService.getPreSignedDownloadURL(
@@ -242,9 +243,9 @@ const courseService = {
       }
     }
 
-    console.log("data from server:", courseDetails, isEnrolled);
+   
 
-    return { courseDetails, isEnrolled };
+    return { courseDetails, enrolledId };
   } catch (error) {
     throwAxiosError(error);
   }

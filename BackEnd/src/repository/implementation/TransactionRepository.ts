@@ -39,11 +39,14 @@ export class TransactionRepositoy
   }
   async getMentorTotalRevenue(
     mentorId: Types.ObjectId,
+    start?:Date,
+    end?:Date
   ): Promise<IMentorTotalRevanue[]> {
     return await this.aggregate<IMentorTotalRevanue>([
       {
         $match: {
           mentorId: mentorId,
+          createdAt:{$gte:start,$lte:end}
         },
       },
       {
@@ -56,8 +59,9 @@ export class TransactionRepositoy
       },
     ]);
   }
-  async getAdminRevenue(): Promise<SourceOfRevanye[]> {
+  async getAdminRevenue(start?:Date,end?:Date): Promise<SourceOfRevanye[]> {
     return this.aggregate<SourceOfRevanye>([
+      {$match:{createdAt:{$gte:start,$lte:end}}},
       {
         $group: {
           _id: "$paymentType",

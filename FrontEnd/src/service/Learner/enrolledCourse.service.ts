@@ -117,10 +117,14 @@ export const EnrolledService = {
   },
   getMentorDashboardData: async (
     mentorId: string,
+    filter:string
   ): Promise<IMentorDhasboardDTO> => {
+   
     try {
       const response = await axiosInstance.get(
-        API.ENROLLEMENT.GET_MENTOR_DASH_DATA(mentorId),
+        API.ENROLLEMENT.GET_MENTOR_DASH_DATA(mentorId),{
+          params:{filter}
+        }
       );
       return response.data.dashboardData;
     } catch (error) {
@@ -135,7 +139,7 @@ export const EnrolledService = {
           params: { filter, mentorId },
         },
       );
-      console.log(response.data);
+ 
       return response.data;
     } catch (error) {
       throwAxiosError(error);

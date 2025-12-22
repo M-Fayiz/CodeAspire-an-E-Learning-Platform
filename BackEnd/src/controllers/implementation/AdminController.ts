@@ -5,6 +5,7 @@ import { HttpStatus } from "../../const/http-status";
 import { successResponse } from "../../utils/response.util";
 import { HttpResponse } from "../../const/error-message";
 import { sendNotification } from "../../utils/socket.utils";
+import { FilterByDate } from "../../const/filter.const";
 
 export class AdminController implements IAdminController {
   constructor(private _adminService: IAdminService) {}
@@ -110,7 +111,8 @@ export class AdminController implements IAdminController {
     next: NextFunction,
   ): Promise<void> => {
     try {
-      const dashBoardData = await this._adminService.getDashboardData();
+      const {filter,startDate,endDate}=req.query
+      const dashBoardData = await this._adminService.getDashboardData(filter as FilterByDate,startDate as string,endDate as string);
       res
         .status(HttpStatus.OK)
         .json(successResponse(HttpResponse.OK, { dashBoardData }));

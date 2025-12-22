@@ -33,13 +33,13 @@ const AdminDashboard = () => {
   const [totalRevanue, setTotalRevanue] = useState(0);
   const [selectedTab, setSelectedTab] = useState("slot");
   const [selectedPeriod, setSelectedPeriod] = useState(FilterByDate.MONTH);
-
+  
   if (loading) return <Spinner />;
   if (!user) return <Navigate to="/auth/login" replace />;
 
   useEffect(() => {
     (async () => {
-      const data = await adminService.getDashboardCardsdata();
+      const data = await adminService.getDashboardCardsdata(selectedPeriod);
 
       setDashData(data);
       let total = data.SourceOfRevenue.reduce(
@@ -48,12 +48,12 @@ const AdminDashboard = () => {
       );
       setTotalRevanue(total);
     })();
-  }, []);
+  }, [selectedPeriod]);
 
   useEffect(() => {
     (async () => {
       const graph = await EnrolledService.adminGraphRevanue(selectedPeriod);
-      console.log("graph > :", graph);
+     
       if (graph) {
         setSlotRevenue(graph.slotRevanue || []);
         setCourseRevenue(graph.courseRevanue || []);
@@ -162,17 +162,6 @@ const AdminDashboard = () => {
         <div className="bg-white rounded-lg p-6 shadow-sm border border-gray-100 lg:col-span-2">
           <div className="flex items-center justify-between mb-4">
             <h2 className="text-lg font-semibold">Revenue Overview</h2>
-
-            {/* <select
-              value={selectedPeriod}
-              onChange={(e) => setSelectedPeriod(e.target.value)}
-              className="border rounded-md px-3 py-2 text-sm"
-            >
-              <option value={FilterByDate.Today}>Today</option>
-              <option value={FilterByDate.WEEK}>Last 7 Days</option>
-              <option value={FilterByDate.MONTH}>Last 30 Days</option>
-              <option value={FilterByDate.YEAR}>Last 12 Months</option>
-            </select> */}
           </div>
 
           <Tabs value={selectedTab} onValueChange={setSelectedTab}>
@@ -191,46 +180,12 @@ const AdminDashboard = () => {
           </Tabs>
         </div>
 
-        {/* <div className="bg-white rounded-lg p-6 shadow-sm border border-gray-100">
-          <h3 className="text-lg font-semibold mb-4">
-            Top Performing Categories
-          </h3>
-
-          <div className="space-y-4">
-            {dashData?.topSelling.category.map((category, i) => (
-              <div key={i} className="flex items-center gap-3">
-                <div className="w-10 h-10 rounded-lg bg-gray-400 text-white flex items-center justify-center font-bold">
-                  {category.title.charAt(0)}
-                </div>
-
-                <div className="flex-1">
-                  <p className="text-sm font-medium">{category.title}</p>
-                </div>
-
-                <div className="flex items-center gap-1 text-gray-500">
-                  <Users className="w-4 h-4" />
-                  <span className="text-xs">{category.enrolledStudent}</span>
-                </div>
-              </div>
-            ))}
-          </div>
-        </div> */}
+    
         <RevenueDonutChart Options={dashData?.SourceOfRevenue || []} />
 
         <div className="bg-white grid-cols-3 rounded-lg p-6 shadow-sm border border-gray-100 lg:col-span-2 ">
           <div className="flex items-center justify-between mb-4">
             <h2 className="text-lg font-semibold">Users</h2>
-
-            {/* <select
-              value={selectedPeriod}
-              onChange={(e) => setSelectedPeriod(e.target.value)}
-              className="border rounded-md px-3 py-2 text-sm"
-            >
-              <option value={FilterByDate.Today}>Today</option>
-              <option value={FilterByDate.WEEK}>Last 7 Days</option>
-              <option value={FilterByDate.MONTH}>Last 30 Days</option>
-              <option value={FilterByDate.YEAR}>Last 12 Months</option>
-            </select> */}
           </div>
           <RevenueChart data={signedUser} label="User Range" />
         </div>

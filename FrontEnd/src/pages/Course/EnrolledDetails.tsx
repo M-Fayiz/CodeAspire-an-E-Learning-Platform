@@ -43,24 +43,24 @@ const EnrolledCourseDetails = () => {
         sessionId,
       );
       if (result) {
-        console.log("progress result :", result);
+      
         setEnrolledCourse((prv) => (prv ? { ...prv, progress: result } : prv));
       }
     }
   };
 
-  const { id } = useParams();
+  const { enrolledId } = useParams();
 
   const handle = (tap: string) => setActiveTap(tap);
 
   useEffect(() => {
     (async () => {
-      const data = await EnrolledService.getEnrolledCourseDetails(id as string);
+      const data = await EnrolledService.getEnrolledCourseDetails(enrolledId as string);
       if (data) {
         setEnrolledCourse(data);
       }
     })();
-  }, [id]);
+  }, [enrolledId]);
 
   const setVideo = (
     url: string,
@@ -85,7 +85,7 @@ const EnrolledCourseDetails = () => {
                   description={enrolledCourse?.course.description as string}
                   imageUrl={enrolledCourse?.course.thumbnail as string}
                   title={enrolledCourse?.course.title as string}
-                  isEnrolled={true}
+                  enrolledId={enrolledCourse._id as string}
                 />
               )}
             </div>
@@ -167,6 +167,7 @@ const EnrolledCourseDetails = () => {
               <MentorProfile
                 courseId={enrolledCourse?.courseId as string}
                 mentorId={enrolledCourse?.course.mentorId._id as string}
+                enrolledId={enrolledCourse?._id as string}
               />
             )}
             {activeTap === "curriculum" && (

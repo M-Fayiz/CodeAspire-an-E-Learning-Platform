@@ -80,7 +80,7 @@ export const router = createBrowserRouter([
       { path: "profile/:id", element: <ProfileManagement /> },
       { path: "courses", element: <CourseLayout /> },
       { path: "enrolled-courses", element: <CourseEnrolledList /> },
-      { path: "enrolled-courses/:id", element: <EnrolledCourseDetails /> },
+      { path: "enrolled-courses/:enrolledId", element: <EnrolledCourseDetails /> },
       { path: "chats", element: <ChatPage /> },
       { path: "slot-booking/:courseId", element: <SlotBooking /> },
       { path: "booked-slots", element: <LearnerBookedSlots /> },

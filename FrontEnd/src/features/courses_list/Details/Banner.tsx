@@ -19,17 +19,17 @@ interface BannerProps {
   title: string;
   description: string;
   imageUrl: string;
-  isEnrolled?: boolean;
   course: IEnrolledCoursedetailsDTO | IFormCourseDTO;
+  enrolledId:string|null
 }
 
 const Banner: React.FC<BannerProps> = ({
   title,
   description,
   imageUrl,
-  isEnrolled,
   courseId,
   course,
+  enrolledId
 }) => {
   const { user } = useAuth();
 
@@ -46,7 +46,7 @@ const Banner: React.FC<BannerProps> = ({
       }
     }
   };
-
+  console.log('is Enrolled :',enrolledId)
   return (
     <div className="relative w-full py-5 px-6 md:px-16 lg:px-24">
       {course && <Badge label={course.level} type="info" />}
@@ -62,9 +62,9 @@ const Banner: React.FC<BannerProps> = ({
           </p>
           {user?.role == "learner" && (
             <>
-              {isEnrolled ? (
+              {enrolledId ? (
                 <Link
-                  to={`/learner/enrolled-courses`}
+                  to={`/learner/enrolled-courses/${enrolledId}`}
                   className="bg-orange-500 hover:bg-orange-600 text-white font-semibold px-6 py-3 rounded-lg shadow-md transition"
                 >
                   Continue learning

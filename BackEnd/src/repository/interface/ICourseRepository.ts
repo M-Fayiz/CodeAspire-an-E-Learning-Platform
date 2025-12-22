@@ -59,7 +59,7 @@ export interface ICourseRepository {
   rejectCourse(courseId: Types.ObjectId): Promise<ICourses | null>;
   publishCourse(courseId: Types.ObjectId): Promise<ICourses | null>;
   findCourse(courseId: Types.ObjectId): Promise<IPopulatedCourse | null>;
-  findDocumentCount(query: FilterQuery<ICourses>): Promise<number>;
+  findDocumentCount(query: FilterQuery<ICourses>,start?:Date,end?:Date): Promise<number>;
   findAllCourse(query: FilterQuery<ICourses>): Promise<ICourses[] | null>;
   getCourseFormData(courseId: Types.ObjectId): Promise<ICourses | null>;
   removeSession(

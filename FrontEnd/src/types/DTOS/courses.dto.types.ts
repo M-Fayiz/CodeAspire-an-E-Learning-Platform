@@ -1,31 +1,61 @@
+
+export const COURSE_LEVEL = {
+  BEGINNER: "Beginner",
+  INTERMEDIATE: "Intermediate",
+  ADVANCED: "Advanced",
+} as const;
+
+export type CourseLevel = typeof COURSE_LEVEL[keyof typeof COURSE_LEVEL];
+
+export const COURSE_STATUS = {
+  IN_PROGRESS: "inProgress",
+  DRAFT: "draft",
+  PUBLISHED: "published",
+  APPROVED: "approved",
+  REJECTED: "rejected",
+} as const;
+
+export type CourseStatus = typeof COURSE_STATUS[keyof typeof COURSE_STATUS];
+
+export const LECTURE_TYPE = {
+  VIDEO: "video",
+  PDF: "pdf",
+  NONE: "none",
+} as const;
+
+export type LectureType = typeof LECTURE_TYPE[keyof typeof LECTURE_TYPE];
+
+
+
+export interface ISearchQuery {
+  search?: string;
+  category?: string;
+  subCategory?: string;
+  level?: CourseLevel;
+  page?: number;
+  limit?: number;
+}
+
+export interface SlotCourseDTO {
+  _id: string;
+  title: string;
+}
+
+
+
 export interface ILecture {
   _id?: string;
   title: string;
-  lectureType: "video" | "pdf" | "none";
+  lectureType: LectureType
   lectureContent: File | string;
 }
+
 export interface ISession {
   _id?: string;
   title: string;
   lectures: ILecture[];
 }
 
-export interface ICourseData {
-  _id?: string;
-  title: string;
-  description?: string;
-  thumbnail?: File | string;
-  categoryId: string;
-  subCategoryId?: string;
-  language: string;
-  level: "Beginner" | "Intermediate" | "Advanced";
-  price: number;
-  mentorId: string;
-  sessions?: ISession[];
-  isActive?: boolean;
-  isDraft?: boolean;
-  isEnrolled?: boolean;
-}
 export interface ICourseListDTO {
   _id: string;
   title: string;
@@ -33,7 +63,7 @@ export interface ICourseListDTO {
   category: string;
   subCategory: string;
   language: string;
-  level: "Beginner" | "Intermediate" | "Advanced";
+  level:CourseLevel;
   price: number;
 }
 export interface ICourseDTO extends ICourseListDTO {
@@ -49,27 +79,27 @@ export interface CourseForm {
   categoryId: string;
   subCategoryId?: string;
   language: string;
-  level: "Beginner" | "Intermediate" | "Advanced";
+  level: CourseLevel
   price: number;
   mentorId: string;
   sessions: ISession[];
-  status?: "inProgress" | "draft" | "published" | "approved" | "rejected";
+  status?: CourseStatus
 }
 
-export interface IFormCourse {
-  _id: string;
-  title: string;
-  thumbnail: string;
-  categoryId: string;
-  subCategoryId: string;
-  language: string;
-  level: "Beginner" | "Intermediate" | "Advanced";
-  price: number;
-  mentorId: string;
-  sessions: ISession[];
-  description: string;
-  status: "inProgress" | "draft" | "published" | "rejected";
-}
+// export interface IFormCourse {
+//   _id: string;
+//   title: string;
+//   thumbnail: string;
+//   categoryId: string;
+//   subCategoryId: string;
+//   language: string;
+//   level: "Beginner" | "Intermediate" | "Advanced";
+//   price: number;
+//   mentorId: string;
+//   sessions: ISession[];
+//   description: string;
+//   status: "inProgress" | "draft" | "published" | "rejected";
+// }
 
 export interface IFormCourseDTO {
   _id: string;
@@ -84,7 +114,7 @@ export interface IFormCourseDTO {
     title: string;
   };
   language: string;
-  level: "Beginner" | "Intermediate" | "Advanced";
+  level:CourseLevel
   price: number;
   mentorId: {
     _id: string;
@@ -93,21 +123,16 @@ export interface IFormCourseDTO {
   };
   sessions: ISession[];
   description: string;
-  status: "inProgress" | "draft" | "published" | "approved" | "rejected";
+  status: CourseStatus
   updated: string;
-  isEnrolled?: boolean;
+  
 }
 
-export interface ISearchQuery {
-  search?: string;
-  category?: string;
-  subcategory?: string;
-  level?: string;
-  page?: number;
-  limit?: number;
+export interface COurseDetaildWIthEnrolledData extends IFormCourseDTO{
+  isEnrolled:boolean
+  enrolledId:string
 }
 
-export interface SlotCourseDTO {
-  _id: string;
-  title: string;
-}
+
+
+

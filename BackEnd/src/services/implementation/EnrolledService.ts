@@ -24,7 +24,6 @@ import { IEnrolledService } from "../interface/IEnrolledService";
 import {
   chartFilter,
   completionStatus,
-  filter,
   IProgressTrack,
 } from "../../types/enrollment.types";
 import type {
@@ -49,6 +48,7 @@ import { ICertificateRepository } from "../../repository/interface/ICertificateR
 import { ISlotBookingRepository } from "../../repository/interface/ISlotBookingRepository";
 import { learnerDashboardCardsDTO } from "../../types/dtos.type/learnerDashboard.dto.type";
 import { learnerDashboardDetails } from "../../dtos/learnerDashnoard.dto";
+import { FilterByDate } from "../../const/filter.const";
 
 export class EnrolledService implements IEnrolledService {
   constructor(
@@ -123,7 +123,7 @@ export class EnrolledService implements IEnrolledService {
       throw createHttpError(HttpStatus.BAD_REQUEST, HttpResponse.INVALID_ID);
     }
 
-    // atomic add (no duplicates)
+
     const updatedEnrollment = await this._erolledRepository.updateEnrolledData(
       enrolledObjectId,
       {
@@ -212,7 +212,7 @@ export class EnrolledService implements IEnrolledService {
   }
   async getTrendingCourseGraph(
     courseId: string,
-    filter?: filter,
+    filter: FilterByDate,
     startDate?: string,
     endDate?: string,
   ): Promise<IChartTrendDTO[]> {
@@ -236,16 +236,19 @@ export class EnrolledService implements IEnrolledService {
     );
     return graph.map((data) => chartTrendDTO(data));
   }
-  async getMentorDashboardData(mentorId: string): Promise<IMentorDhasboardDTO> {
+  async getMentorDashboardData(mentorId: string,filter:FilterByDate,startDay?: string,endDay?: string,): Promise<IMentorDhasboardDTO> {
     const mentor_id = parseObjectId(mentorId);
     if (!mentor_id) {
       throw createHttpError(HttpStatus.BAD_REQUEST, HttpResponse.INVALID_ID);
     }
 
+
+    const { start, end } = timeFilter(filter, startDay, endDay);
+
     const [studentsAndRating, topCourse, revanue] = await Promise.all([
-      this._erolledRepository.getMentorDashboardData(mentor_id),
-      this._erolledRepository.getTopSellingCourse(mentor_id),
-      this._transactionRepository.getMentorTotalRevenue(mentor_id),
+      this._erolledRepository.getMentorDashboardData(mentor_id,start,end),
+      this._erolledRepository.getTopSellingCourse(mentor_id,start,end),
+      this._transactionRepository.getMentorTotalRevenue(mentor_id,start,end),
     ]);
     return mentorDashboardDTO(studentsAndRating[0], topCourse, revanue);
   }
@@ -304,16 +307,12 @@ export class EnrolledService implements IEnrolledService {
       throw createHttpError(HttpStatus.BAD_REQUEST, HttpResponse.INVALID_ID);
     }
 
-    console.log("learener :", learner_Id);
-
     const [courseCard, certificateCount, slotCard] = await Promise.all([
       this._erolledRepository.getLearnerDashboardCourseData(learner_Id),
       this._certificateRepository.learnerTotalCertificate(learner_Id),
       this._slotbookingRepository.learnerDashboardSlotCard(learner_Id),
     ]);
-    console.log('course : ',courseCard)
-    console.log('certi :',certificateCount)
-    console.log('slotCard :',slotCard)
+
     return learnerDashboardDetails(
       courseCard[0],
       slotCard[0],

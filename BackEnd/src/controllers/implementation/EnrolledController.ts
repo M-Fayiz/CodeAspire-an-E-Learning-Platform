@@ -4,7 +4,7 @@ import { HttpStatus } from "../../const/http-status";
 import { successResponse } from "../../utils/response.util";
 import { HttpResponse } from "../../const/error-message";
 import { IEnrolledService } from "../../services/interface/IEnrolledService";
-import { filter } from "../../types/enrollment.types";
+import { FilterByDate } from "../../const/filter.const";
 
 export class EnrolledController implements IEnrolledController {
   constructor(private _enrolledService: IEnrolledService) {}
@@ -114,11 +114,11 @@ export class EnrolledController implements IEnrolledController {
     try {
       const { courseId } = req.params;
 
-      const { filter, startData, endDate } = req.query;
+      const { filter , startData, endDate } = req.query;
 
       const chartData = await this._enrolledService.getTrendingCourseGraph(
         courseId,
-        filter as filter,
+        filter  as FilterByDate,
         startData as string,
         endDate as string,
       );
@@ -137,11 +137,12 @@ export class EnrolledController implements IEnrolledController {
   ): Promise<void> => {
     try {
       const { mentorId } = req.params;
-
+      const {filter}=req.query
+      console.log('filter :',filter)
       const dashboardData =
-        await this._enrolledService.getMentorDashboardData(mentorId);
+        await this._enrolledService.getMentorDashboardData(mentorId, filter as FilterByDate);
 
-      console.info("dash board :", { dashboardData });
+    
       res
         .status(HttpStatus.OK)
         .json(successResponse(HttpResponse.OK, { dashboardData }));

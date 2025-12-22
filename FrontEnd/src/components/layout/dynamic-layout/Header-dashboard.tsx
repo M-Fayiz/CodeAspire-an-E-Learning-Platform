@@ -11,7 +11,6 @@ import {
 import React, { useState } from "react";
 import type { IDecodedUserType } from "../../../types/auth.types";
 import { useAuth } from "../../../context/auth.context";
-// import { Spinner } from "../../templates/Spinner";
 import { Link } from "react-router";
 import dayjs from "dayjs";
 import relativeTime from "dayjs/plugin/relativeTime";
@@ -56,9 +55,12 @@ const Header: React.FC<IHeaderProbs> = ({
         </div>
       </div>
 
-      <div className="flex items-center space-x-3">
+      <div className="flex items-center space-x-4">
         <div>
           <Link to={"/"}>Home</Link>
+        </div>
+        <div>
+          <Link to={"/courses"}>Course</Link>
         </div>
 
         <div className="relative">

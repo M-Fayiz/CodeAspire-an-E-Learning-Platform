@@ -12,6 +12,8 @@ export interface ITransactionRepository {
   ): Promise<IRevenueAggregationResult[]>;
   getMentorTotalRevenue(
     mentorId: Types.ObjectId,
+    start?:Date,
+    end?:Date
   ): Promise<IMentorTotalRevanue[]>;
   getMentorRevanueONSlot(
     filter: FilterQuery<ITransactionModel>,
@@ -19,5 +21,5 @@ export interface ITransactionRepository {
   getMentorRevanueONCourse(
     filter: FilterQuery<ITransactionModel>,
   ): Promise<graphPrps[]>;
-  getAdminRevenue(): Promise<SourceOfRevanye[]>;
+  getAdminRevenue(start?:Date,end?:Date): Promise<SourceOfRevanye[]>;
 }

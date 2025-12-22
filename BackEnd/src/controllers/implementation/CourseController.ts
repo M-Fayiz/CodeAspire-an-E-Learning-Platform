@@ -93,14 +93,14 @@ export class CourseController implements ICourseController {
       const { courseId } = req.params;
       const { learnerId } = req.query;
     
-      const {courseDetails,isEnrolled} = await this._courseService.getCourse(
+      const {courseDetails,enrolledId} = await this._courseService.getCourse(
         courseId,
         learnerId as string,
       );
       
       res
         .status(HttpStatus.OK)
-        .json(successResponse(HttpResponse.OK, { courseDetails,isEnrolled }));
+        .json(successResponse(HttpResponse.OK, { courseDetails,enrolledId }));
     } catch (error) {
       next(error);
     }

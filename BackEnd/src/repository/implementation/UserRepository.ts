@@ -8,7 +8,7 @@ import {
 } from "../../models/user.model";
 import { IUserRepo } from "../interface/IUserRepo";
 import { Profile } from "passport-google-oauth20";
-import { IRole, searchProps } from "../../types/user.types";
+import { IRole, mentorApprovalStatus, searchProps } from "../../types/user.types";
 import { FilterQuery, Types } from "mongoose";
 import { buildUserFilter } from "../../utils/searchQuery";
 import { graphPrps } from "../../types/adminDahsboard.type";
@@ -66,6 +66,7 @@ export class UserRepository
         email: profile.emails?.[0].value,
         name: profile.displayName,
         role: role,
+        isActive:true
       });
     }
     return user;
@@ -114,7 +115,7 @@ export class UserRepository
   }
   async updateMentorStatus(
     id: Types.ObjectId,
-    status: "approved" | "rejected",
+    status:mentorApprovalStatus,
   ): Promise<IUserModel | null> {
     return await this.findByIDAndUpdate(id, { ApprovalStatus: status });
   }
@@ -136,9 +137,20 @@ export class UserRepository
   ): Promise<IUserModel | IMenterModel | ILearnerModel | IAdminModel | null> {
     return await this.findOne(filter);
   }
-  async findDashBoardUserCount(role: IRole): Promise<number> {
-    return await this.countDocuments({ role: role });
-  }
+ async findDashBoardUserCount(
+  role: IRole,
+  start: Date,
+  end: Date
+): Promise<number> {
+  return await this.countDocuments({
+    role,
+    createdAt: {
+      $gte: start,
+      $lte: end,
+    },
+  });
+}
+
   async SignedUsers(filter: FilterQuery<IUserModel>): Promise<graphPrps[]> {
     return await this.aggregate([
       { $match: filter },

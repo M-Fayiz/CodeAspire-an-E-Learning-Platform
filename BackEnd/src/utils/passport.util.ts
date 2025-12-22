@@ -26,8 +26,8 @@ if (clientID && clientSecret && callBack) {
       },
       async (
         req: Request,
-        accessToken: string,
-        refreshToken: string,
+        _accessToken: string,
+        _refreshToken: string,
         profile: Profile,
         done: VerifyCallback,
       ) => {

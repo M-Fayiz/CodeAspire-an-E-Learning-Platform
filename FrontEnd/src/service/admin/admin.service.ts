@@ -81,9 +81,12 @@ export const adminService = {
       throwAxiosError(error);
     }
   },
-  getDashboardCardsdata: async (): Promise<IAdminDashboardDTO> => {
+  getDashboardCardsdata: async (filter:string): Promise<IAdminDashboardDTO> => {
     try {
-      const response = await axiosInstance.get(API.ADMIN.DASHBOARD_CARD);
+      
+      const response = await axiosInstance.get(API.ADMIN.DASHBOARD_CARD,{
+        params:{filter}
+      });
       return response.data.dashBoardData;
     } catch (error) {
       throwAxiosError(error);

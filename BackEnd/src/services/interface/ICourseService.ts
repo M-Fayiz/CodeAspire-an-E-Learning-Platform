@@ -1,3 +1,4 @@
+import { Types } from "mongoose";
 import { ICourses, ILecture, ISession } from "../../types/courses.type";
 import {
   ICourseCreateForm,
@@ -27,7 +28,7 @@ export interface ICourseService {
   getCourse(
     courseId: string,
     learnerId?: string,
-  ): Promise<{courseDetails:IFormCourseDTO,isEnrolled:boolean} >;
+  ): Promise<{ courseDetails: IFormCourseDTO; enrolledId: Types.ObjectId |null}>;
   getDraftedCourses(
     search: string,
     page: string,

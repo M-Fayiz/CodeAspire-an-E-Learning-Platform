@@ -1,10 +1,12 @@
 import { Types } from "mongoose";
 
-export type mentorApprovalStatus =
-  | "pending"
-  | "approved"
-  | "rejected"
-  | "requested";
+export enum mentorApprovalStatus {
+  PENDING= "pending",
+  APPROVED="approved",
+  REJECTED="rejected",
+  REQUESTED= "requested"
+}
+ 
 export interface IUser {
   _id: Types.ObjectId;
   name: string;

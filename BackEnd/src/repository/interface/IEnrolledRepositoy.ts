@@ -43,8 +43,10 @@ export interface IEnrolledRepository {
   ): Promise<chartAggregation[]>;
   getMentorDashboardData(
     mentorId: Types.ObjectId,
+    start:Date,
+    end:Date
   ): Promise<IMentorDashboardData[]>;
-  getTopSellingCourse(mentorId?: Types.ObjectId): Promise<ITopCourse[]>;
+  getTopSellingCourse(mentorId?: Types.ObjectId,start?:Date,end?:Date): Promise<ITopCourse[]>;
   getTopSellingCategory(mentorId?: Types.ObjectId): Promise<ITopCategory[]>;
   getLearnerDashboardCourseData(
     learnerId: Types.ObjectId,

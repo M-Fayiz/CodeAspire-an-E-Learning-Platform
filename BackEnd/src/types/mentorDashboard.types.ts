@@ -14,6 +14,7 @@ export interface ITopCourse {
   courseId: Types.ObjectId;
   title: string;
   enrolledStudent: number;
+  revanue:number
 }
 export interface ITopCategory {
   categoryId: Types.ObjectId;

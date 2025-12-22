@@ -30,6 +30,7 @@ import { NotificationTemplates } from "../../template/notification.template";
 import { INotificationDTO } from "../../types/dtos.type/notification.dto.types";
 import { notificationDto } from "../../dtos/notification.dto";
 
+
 export class CourseService implements ICourseService {
   constructor(
     private _courseRepository: ICourseRepository,
@@ -138,10 +139,11 @@ export class CourseService implements ICourseService {
     }
 
     return null;
-  }async getCourse(
+  }
+  async getCourse(
   courseId: string,
   learnerId?: string,
-): Promise<{ courseDetails: IFormCourseDTO; isEnrolled: boolean }> {
+): Promise<{ courseDetails: IFormCourseDTO; enrolledId: Types.ObjectId |null}> {
 
   const course_id = parseObjectId(courseId);
   if (!course_id) {
@@ -163,19 +165,21 @@ export class CourseService implements ICourseService {
       HttpResponse.ITEM_NOT_FOUND
     );
   }
+  let isEnrolled: Types.ObjectId | null = null;
 
-  const isEnrolled = learner_id
-    ? Boolean(
-        await this._enrolledRepository.isEnrolled(
-          learner_id,
-          course_id
-        )
-      )
-    : false;
+if (learner_id) {
+  const data = await this._enrolledRepository.isEnrolled(
+    learner_id,
+    course_id
+  );
 
+  if (data) {
+    isEnrolled = data._id;
+  }
+}
   return {
     courseDetails: formCourseDto(courseData[0]),
-    isEnrolled,
+    enrolledId: isEnrolled,
   };
 }
 

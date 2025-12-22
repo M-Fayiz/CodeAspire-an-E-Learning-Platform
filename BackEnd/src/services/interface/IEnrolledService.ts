@@ -1,3 +1,4 @@
+import { FilterByDate } from "../../const/filter.const";
 import { graphPrps } from "../../types/adminDahsboard.type";
 import {
   CourseDashboardDTO,
@@ -12,7 +13,7 @@ import { learnerDashboardCardsDTO } from "../../types/dtos.type/learnerDashboard
 
 import { IMentorDhasboardDTO } from "../../types/dtos.type/mentorDashboard.dto.type";
 
-import { filter, IProgressTrack } from "../../types/enrollment.types";
+import {  IProgressTrack } from "../../types/enrollment.types";
 
 export interface IEnrolledService {
   getEnrolledCourses(learnerId: string): Promise<IEnrolledListDto[]>;
@@ -31,11 +32,11 @@ export interface IEnrolledService {
   ): Promise<CourseDashboardDTO | null>;
   getTrendingCourseGraph(
     courseId: string,
-    filter?: filter,
+    filter?: FilterByDate,
     startDate?: string,
     endDate?: string,
   ): Promise<IChartTrendDTO[]>;
-  getMentorDashboardData(mentorId: string): Promise<IMentorDhasboardDTO>;
+  getMentorDashboardData(mentorId: string,filter:FilterByDate): Promise<IMentorDhasboardDTO>;
   getRevenueGraph(
     filter: string,
     mentorId?: string,

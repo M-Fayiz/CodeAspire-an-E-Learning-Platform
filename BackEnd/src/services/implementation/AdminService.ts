@@ -8,7 +8,6 @@ import { parseObjectId } from "../../mongoose/objectId";
 import { LearnerDTO, MentorDTO } from "../../dtos/role.dto";
 import { ILearnerDTO, IMentorDTO } from "../../types/dtos.type/user.dto.types";
 import { IRole, mentorApprovalStatus } from "../../types/user.types";
-import { filter } from "../../types/enrollment.types";
 import { timeFilter } from "../../utils/dashFilterGenerator.utils";
 import { NotificationTemplates } from "../../template/notification.template";
 import { INotificationRepository } from "../../repository/interface/INotificationRepository";
@@ -19,6 +18,7 @@ import { IEnrolledRepository } from "../../repository/interface/IEnrolledReposit
 import { ITransactionRepository } from "../../repository/interface/ITransactionRepository";
 import { adminDashboardDTO } from "../../dtos/adminDashboard.dto";
 import { IAdminDashboardDTO } from "../../types/dtos.type/adminDashboard.dto.type";
+import { FilterByDate } from "../../const/filter.const";
 
 export type UserFetchResponse = {
   safeUsers: IMentorDTO | ILearnerDTO[];
@@ -141,7 +141,7 @@ export class AdminService implements IAdminService {
   }
   async approveMentor(
     mentorId: string,
-    status: "approved" | "rejected",
+    status:mentorApprovalStatus,
     feedback?: string,
   ): Promise<{
     status: mentorApprovalStatus;
@@ -180,21 +180,28 @@ export class AdminService implements IAdminService {
     };
   }
   async getDashboardData(
-    filter?: filter,
+    filter?: FilterByDate,
     startDay?: string,
     endDay?: string,
   ): Promise<IAdminDashboardDTO> {
     const { start, end } = timeFilter(filter, startDay, endDay);
+    
+    const [
+  mentors,
+  learners,
+  courseCount,
+  revenue,
+  topCourse,
+  topCategory,
+] = await Promise.all([
+  this._userRepo.findDashBoardUserCount(IRole.Mentor, start, end),
+  this._userRepo.findDashBoardUserCount(IRole.Learner, start, end),
+  this._courseRepository.findDocumentCount({}, start, end),
+  this._transactionRepository.getAdminRevenue(start, end),
+  this._enrolledRepository.getTopSellingCourse(undefined, start, end),
+  this._enrolledRepository.getTopSellingCategory(),
+]);
 
-    const [mentors, learners, courseCount, revenue, topCourse, topCategory] =
-      await Promise.all([
-        await this._userRepo.findDashBoardUserCount(IRole.Mentor),
-        await this._userRepo.findDashBoardUserCount(IRole.Mentor),
-        await this._courseRepository.findDocumentCount({}),
-        await this._transactionRepository.getAdminRevenue(),
-        await this._enrolledRepository.getTopSellingCourse(),
-        await this._enrolledRepository.getTopSellingCategory(),
-      ]);
 
     return adminDashboardDTO(
       mentors,

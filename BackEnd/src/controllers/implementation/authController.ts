@@ -10,7 +10,7 @@ import { clearCookies } from "../../utils/clearCookies.util";
 import { setAccessToken, setRefreshToken } from "../../utils/cookie.util";
 import { IUserModel } from "../../models/user.model";
 import { env } from "../../config/env.config";
-import { date } from "zod";
+
 
 export class AuthController implements IAuthController {
   constructor(private _authSerive: IAuthService) {}
@@ -32,6 +32,7 @@ export class AuthController implements IAuthController {
   ): Promise<void> {
     try {
       console.log("verify email", req.body);
+      
       const token = await this._authSerive.verifyEmail(req.body);
       setAccessToken(res, token.accessToken);
       setRefreshToken(res, token.refreshToken);
@@ -120,7 +121,7 @@ export class AuthController implements IAuthController {
   async logout(req: Request, res: Response, next: NextFunction): Promise<void> {
     try {
       clearCookies(res);
-      res.status(HttpStatus.OK).json(successResponse(HttpResponse.LOGGED_OUT));
+      res.status(HttpStatus.OK).json(successResponse(HttpResponse.LOGGED_OUT,{logout:true}));
     } catch (error) {
       next(error);
     }
@@ -166,10 +167,10 @@ export class AuthController implements IAuthController {
     next: NextFunction,
   ): Promise<void> {
     try {
-      // if (!req.user) {
-      //   res.status(HttpStatus.FORBIDDEN).json(HttpResponse.INVALID_CREDNTIALS);
-      //   return;
-      // }
+      if (!req.user) {
+        res.status(HttpStatus.FORBIDDEN).json(HttpResponse.INVALID_CREDNTIALS);
+        return;
+      }
       const Data = await this._authSerive.generateToken(req.user as IUserModel);
 
       setAccessToken(res, Data.accessToken);

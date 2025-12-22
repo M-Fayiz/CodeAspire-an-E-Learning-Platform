@@ -16,11 +16,11 @@ import { useNavigate, useParams } from "react-router-dom";
 const CourseDetails = () => {
   const [activeTap, setActiveTap] = useState("overview");
   const { id } = useParams<{ id: string }>();
-  console.log('id id id :',id)
+ 
   const { user } = useAuth();
   const [course, setCourse] = useState<IFormCourseDTO | null>(null);
   const [loading, setLoading] = useState(false);
-  const [isEnrolled,setIsEnrolled]=useState(false)
+  const [enrolledId,setEnrolledId]=useState<string|null>(null)
   useEffect(() => {
     (async () => {
       setLoading(true);
@@ -29,10 +29,10 @@ const CourseDetails = () => {
         id as string,
         user?.id as string
       );
-      if (result.courseDetails) {
+      if (result) {
        
         setCourse(result.courseDetails);
-        setIsEnrolled(result.isEnrolled)
+        setEnrolledId(result.enrolledId)
         setLoading(false);
       }
     })();
@@ -64,7 +64,7 @@ const CourseDetails = () => {
               description={course?.description as string}
               imageUrl={course?.thumbnail as string}
               title={course?.title as string}
-              isEnrolled={course?.isEnrolled}
+              enrolledId={enrolledId}
               course={course as IFormCourseDTO}
             />
           )}
@@ -103,7 +103,7 @@ const CourseDetails = () => {
             <MentorProfile
               mentorId={course?.mentorId._id as string}
               courseId={course?._id as string}
-              isEnrolled={isEnrolled}
+              enrolledId={enrolledId}
             />
           )}
         </div>

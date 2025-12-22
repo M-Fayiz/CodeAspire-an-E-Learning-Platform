@@ -5,7 +5,7 @@ import {
   ILearnerModel,
   IAdminModel,
 } from "../../models/user.model";
-import { IRole, searchProps } from "../../types/user.types";
+import { IRole, mentorApprovalStatus, searchProps } from "../../types/user.types";
 import { FilterQuery, Types } from "mongoose";
 import { graphPrps } from "../../types/adminDahsboard.type";
 
@@ -46,7 +46,7 @@ export interface IUserRepo {
   ): Promise<IUserModel | IMenterModel | ILearnerModel | IAdminModel | null>;
   updateMentorStatus(
     id: Types.ObjectId,
-    status: "approved" | "rejected",
+    status: mentorApprovalStatus,
   ): Promise<IUserModel | null>;
   updateUserprofile(
     id: Types.ObjectId,
@@ -60,6 +60,8 @@ export interface IUserRepo {
   findUser(
     filter: FilterQuery<IUserModel>,
   ): Promise<IUserModel | IMenterModel | ILearnerModel | IAdminModel | null>;
-  findDashBoardUserCount(role: IRole): Promise<number>;
+  findDashBoardUserCount(role: IRole,
+  start: Date,
+  end: Date): Promise<number>;
   SignedUsers(filter: FilterQuery<IUserModel>): Promise<graphPrps[]>;
 }

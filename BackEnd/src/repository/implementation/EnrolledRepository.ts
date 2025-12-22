@@ -8,7 +8,7 @@ import {
   IEnrolledAggregation,
   IEnrollement,
 } from "../../types/enrollment.types";
-import { FilterQuery, Types, UpdateQuery } from "mongoose";
+import {  modelNames, Types, UpdateQuery } from "mongoose";
 import {
   IMentorDashboardData,
   ITopCategory,
@@ -111,11 +111,13 @@ export class EnrolledRepository
   }
   async getMentorDashboardData(
     mentorId: Types.ObjectId,
+    start?:Date,end?:Date
   ): Promise<IMentorDashboardData[]> {
     return await this.aggregate<IMentorDashboardData>([
       {
         $match: {
           mentorId: mentorId,
+          createdAt:{$gte:start,$lte:end}
         },
       },
       {
@@ -131,8 +133,14 @@ export class EnrolledRepository
       },
     ]);
   }
-  async getTopSellingCourse(mentorId?: Types.ObjectId): Promise<ITopCourse[]> {
-    const matchStage = mentorId ? { mentorId } : {};
+  async getTopSellingCourse(mentorId?: Types.ObjectId,start?:Date,end?:Date): Promise<ITopCourse[]> {
+    const matchStage = mentorId ? { mentorId ,createdAt : {
+      $gte: start,
+      $lte: end,
+    }} : {createdAt : {
+      $gte: start,
+      $lte: end,
+    }};
     return await this.aggregate<ITopCourse>([
       {
         $match: matchStage,
@@ -143,6 +151,7 @@ export class EnrolledRepository
           totalStudent: {
             $sum: 1,
           },
+          
         },
       },
       {
@@ -169,6 +178,7 @@ export class EnrolledRepository
           courseId: "$course._id",
           title: "$course.title",
           enrolledStudent: "$totalStudent",
+
         },
       },
     ]);
