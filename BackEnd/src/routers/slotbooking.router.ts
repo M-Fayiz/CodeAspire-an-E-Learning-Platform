@@ -21,8 +21,14 @@ const slotBookingService = new SlotBookingService(
 
 const slotBookingController = new SlotBookingController(slotBookingService);
 bookingROuter.put("/:bookedId", slotBookingController.addFeedBack);
-bookingROuter.put('/:bookedId/student-status',slotBookingController.updateStudentStatus )
-bookingROuter.put('/:bookedId/slot-status',slotBookingController.updateSlotStatus )
+bookingROuter.put(
+  "/:bookedId/student-status",
+  slotBookingController.updateStudentStatus,
+);
+bookingROuter.put(
+  "/:bookedId/slot-status",
+  slotBookingController.updateSlotStatus,
+);
 bookingROuter.get("/learner/:learnerId", slotBookingController.listBookedSlot);
 bookingROuter.get(
   "/mentor/:mentorId",

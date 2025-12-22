@@ -1,7 +1,8 @@
 import { graphPrps } from "../../types/adminDahsboard.type";
-import { CourseDashboardDTO, IChartTrendDTO } from "../../types/dtos.type/courseDashboard.dto.type";
-
-
+import {
+  CourseDashboardDTO,
+  IChartTrendDTO,
+} from "../../types/dtos.type/courseDashboard.dto.type";
 
 import {
   IEnrolledCoursedetailsDTO,
@@ -21,7 +22,7 @@ export interface IEnrolledService {
   updatedProgress(
     enroledId: string,
     lecture: string,
-     lastSession:string
+    lastSession: string,
   ): Promise<IProgressTrack | null>;
   addRating(enroledId: string, value: number): Promise<number>;
   getCourseEnrolledDashboardData(
@@ -43,5 +44,10 @@ export interface IEnrolledService {
     courseRevanue: graphPrps[];
     signedUsers: graphPrps[];
   }>;
-  learnerDashboardCardData(learnerId:string,filter?:string,startDate?:string,endDate?:string):Promise<learnerDashboardCardsDTO>
+  learnerDashboardCardData(
+    learnerId: string,
+    filter?: string,
+    startDate?: string,
+    endDate?: string,
+  ): Promise<learnerDashboardCardsDTO>;
 }

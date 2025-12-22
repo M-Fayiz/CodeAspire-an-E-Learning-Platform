@@ -22,7 +22,7 @@ export interface IEnrolledRepository {
     enrolledId: Types.ObjectId,
   ): Promise<IEnrolledModel | null>;
   isEnrolled(
-    userId: Types.ObjectId,
+    learnerId: Types.ObjectId,
     courseId: Types.ObjectId,
   ): Promise<IEnrolledModel | null>;
   updatedProgress(
@@ -46,6 +46,11 @@ export interface IEnrolledRepository {
   ): Promise<IMentorDashboardData[]>;
   getTopSellingCourse(mentorId?: Types.ObjectId): Promise<ITopCourse[]>;
   getTopSellingCategory(mentorId?: Types.ObjectId): Promise<ITopCategory[]>;
-  getLearnerDashboardCourseData(learnerId:Types.ObjectId):Promise<LearnerCourseCard[]>
-  updateEnrolledData(enrolledId:Types.ObjectId,data:UpdateQuery<IEnrolledModel>): Promise<IEnrolledModel|null> 
+  getLearnerDashboardCourseData(
+    learnerId: Types.ObjectId,
+  ): Promise<LearnerCourseCard[]>;
+  updateEnrolledData(
+    enrolledId: Types.ObjectId,
+    data: UpdateQuery<IEnrolledModel>,
+  ): Promise<IEnrolledModel | null>;
 }

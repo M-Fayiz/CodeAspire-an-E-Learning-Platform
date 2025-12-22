@@ -25,5 +25,7 @@ export interface ISlotBookingRepository {
     limit?: number,
     skit?: number,
   ): Promise<IPopulatedBooking[]>;
-  learnerDashboardSlotCard(learnerId:Types.ObjectId):Promise<LearnerSlotCard[]>
+  learnerDashboardSlotCard(
+    learnerId: Types.ObjectId,
+  ): Promise<LearnerSlotCard[]>;
 }

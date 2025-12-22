@@ -1,5 +1,9 @@
 import Stripe from "stripe";
-import { BookingStatus, ISlotBooking, StudenStatus } from "../../types/sessionBooking.type";
+import {
+  BookingStatus,
+  ISlotBooking,
+  StudenStatus,
+} from "../../types/sessionBooking.type";
 import {
   IBookingDTOforLearner,
   IVideoSessionDTO,
@@ -11,9 +15,7 @@ import { INotificationDTO } from "../../types/dtos.type/notification.dto.types";
 export interface ISlotBookingService {
   createBooking(bookingData: ISlotBooking): Promise<string | null>;
   handleSlotBooking(session: Stripe.Checkout.Session): Promise<void>;
-  findBookedSlot(
-    bookedId: string,
-  ): Promise<{
+  findBookedSlot(bookedId: string): Promise<{
     sesionData: IVideoSessionDTO;
     createdMentorNotify: INotificationDTO;
     createdLearnerNotify: INotificationDTO;
@@ -28,6 +30,12 @@ export interface ISlotBookingService {
     feedBack: string,
   ): Promise<{ feedback: string; bookedId: Types.ObjectId }>;
   getBookedSlots(date: Date): Promise<Types.ObjectId[]>;
-  updateStudents(bookedId:string,status:StudenStatus):Promise<{bookedId:Types.ObjectId,status:StudenStatus}>
-  updateSlotStatus(bookedId:string,status:BookingStatus):Promise<{bookedId:Types.ObjectId,status:BookingStatus}>
+  updateStudents(
+    bookedId: string,
+    status: StudenStatus,
+  ): Promise<{ bookedId: Types.ObjectId; status: StudenStatus }>;
+  updateSlotStatus(
+    bookedId: string,
+    status: BookingStatus,
+  ): Promise<{ bookedId: Types.ObjectId; status: BookingStatus }>;
 }

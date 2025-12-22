@@ -1,4 +1,4 @@
-import { Types } from "mongoose";
+import { FilterQuery, Types } from "mongoose";
 import { IOrderModel } from "../../models/order.model";
 import { IOrder } from "../../types/order.type";
 
@@ -13,4 +13,5 @@ export interface IOrderRepository {
     id: Types.ObjectId,
     data: Partial<IOrderModel>,
   ): Promise<IOrderModel | null>;
+  isOrdered(filter:FilterQuery<IOrderModel>):Promise<IOrderModel | null>;
 }

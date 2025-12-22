@@ -69,8 +69,8 @@ export const NotificationTemplates = {
     updatedAt: new Date(),
   }),
   CourseCompletionCertificate: (
-  userId: Types.ObjectId,
-  courseTitle: string
+    userId: Types.ObjectId,
+    courseTitle: string,
   ): INotification => ({
     userId,
     title: "🎉 Course Completed Successfully!",
@@ -82,8 +82,8 @@ export const NotificationTemplates = {
     updatedAt: new Date(),
   }),
   CourseCompletion: (
-  userId: Types.ObjectId,
-  courseTitle: string
+    userId: Types.ObjectId,
+    courseTitle: string,
   ): INotification => ({
     userId,
     title: "🎉 Course Completed Successfully!",
@@ -93,6 +93,5 @@ export const NotificationTemplates = {
     link: `/learner/my-certificates/${userId}`,
     createdAt: new Date(),
     updatedAt: new Date(),
-  })
-
+  }),
 };

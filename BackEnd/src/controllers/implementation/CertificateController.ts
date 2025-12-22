@@ -15,26 +15,38 @@ export class CertificateController implements ICertificateController {
     next: NextFunction,
   ): Promise<void> => {
     try {
-      const { learnerId, courseId ,programmTitle} = req.body;
+      const { learnerId, courseId, programmTitle } = req.body;
 
-      const {certificate,notification} =
-        await this._certificateService.createCertificate(learnerId, courseId,programmTitle);
-      sendNotification(notification.userId ,notification)
+      const { certificate, notification } =
+        await this._certificateService.createCertificate(
+          learnerId,
+          courseId,
+          programmTitle,
+        );
+      sendNotification(notification.userId, notification);
 
-      console.log('cer :  ',certificate)
-      res.status(HttpStatus.OK).json(successResponse(HttpResponse.OK,{certificate}));
+      console.log("cer :  ", certificate);
+      res
+        .status(HttpStatus.OK)
+        .json(successResponse(HttpResponse.OK, { certificate }));
     } catch (error) {
       next(error);
     }
-  }
-  listCertificate=async(req: Request, res: Response, next: NextFunction): Promise<void>=>{
+  };
+  listCertificate = async (
+    req: Request,
+    res: Response,
+    next: NextFunction,
+  ): Promise<void> => {
     try {
-      const {learnerId}=req.params
-      const certificate=await this._certificateService.listCertificate(learnerId)
-      res.status(HttpStatus.OK).json(successResponse(HttpResponse.OK,{certificate}));
+      const { learnerId } = req.params;
+      const certificate =
+        await this._certificateService.listCertificate(learnerId);
+      res
+        .status(HttpStatus.OK)
+        .json(successResponse(HttpResponse.OK, { certificate }));
     } catch (error) {
-      next(error)
+      next(error);
     }
-  }
-
+  };
 }

@@ -37,9 +37,9 @@ export class UserRepository
       case "learner":
         return user as unknown as ILearnerModel;
       case "admin":
-        return user as unknown as  IAdminModel;
+        return user as unknown as IAdminModel;
       default:
-        return user as unknown as  IUserModel;
+        return user as unknown as IUserModel;
     }
   }
   async updateUserPassword(

@@ -8,7 +8,7 @@ import { IMenterModel } from "../../models/user.model";
 import { INotificationDTO } from "../../types/dtos.type/notification.dto.types";
 
 export interface IUserService {
-  fetchUser(id: string): Promise<ILearnerDTO | IMentorDTO | IAdminDTO  |null>;
+  fetchUser(id: string): Promise<ILearnerDTO | IMentorDTO | IAdminDTO | null>;
   changePassword(
     id: string,
     currentPassword: string,

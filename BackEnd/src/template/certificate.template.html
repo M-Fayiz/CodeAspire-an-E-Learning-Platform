@@ -1,59 +1,59 @@
 <!doctype html>
 <html>
-<head>
-<meta charset="UTF-8" />
-<style>
-body {
-  margin: 0;
-  width: 1123px;
-  height: 794px;
-  font-family: "Georgia", serif;
-  background: url("{{BG_PATH}}") no-repeat center;
-  background-size: cover;
-  position: relative;
-}
-.student-name {
-  position: absolute;
-  top: 330px;
-  width: 100%;
-  left: 130px;
-  font-size: 50px;
-  font-weight: bold;
-}
-.program-name {
-  position: absolute;
-  top: 500px;
-  width: 100%;
-  left:130px;
-  font-size: 36px;
-}
-.certificate-id {
-  position: absolute;
-  right: 60px;
-  bottom: 50px;
-  font-size: 20px;
-}
-.issued-date {
-  position: absolute;
-  right: 60px;
-  bottom: 75px;
-  font-size: 20px;
-}
-.verify-url {
-  position: absolute;
-  left: 50%;
-  transform: translateX(-50%);
-  bottom: 40px;
-  font-size: 16px;
-  text-align: center;
-}
-</style>
-</head>
-<body>
-  <div class="student-name">{{STUDENT_NAME}}</div>
-  <div class="program-name">{{COURSE_NAME}}</div>
-  <div class="issued-date">Issued Date: {{ISSUED_DATE}}</div>
-  <div class="certificate-id">Certificate ID: {{CERT_ID}}</div>
-  <div class="verify-url">Verify at: {{VERIFY_URL}}</div>
-</body>
+  <head>
+    <meta charset="UTF-8" />
+    <style>
+      body {
+        margin: 0;
+        width: 1123px;
+        height: 794px;
+        font-family: "Georgia", serif;
+        background: url("{{BG_PATH}}") no-repeat center;
+        background-size: cover;
+        position: relative;
+      }
+      .student-name {
+        position: absolute;
+        top: 330px;
+        width: 100%;
+        left: 130px;
+        font-size: 50px;
+        font-weight: bold;
+      }
+      .program-name {
+        position: absolute;
+        top: 500px;
+        width: 100%;
+        left: 130px;
+        font-size: 36px;
+      }
+      .certificate-id {
+        position: absolute;
+        right: 60px;
+        bottom: 50px;
+        font-size: 20px;
+      }
+      .issued-date {
+        position: absolute;
+        right: 60px;
+        bottom: 75px;
+        font-size: 20px;
+      }
+      .verify-url {
+        position: absolute;
+        left: 50%;
+        transform: translateX(-50%);
+        bottom: 40px;
+        font-size: 16px;
+        text-align: center;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="student-name">{{STUDENT_NAME}}</div>
+    <div class="program-name">{{COURSE_NAME}}</div>
+    <div class="issued-date">Issued Date: {{ISSUED_DATE}}</div>
+    <div class="certificate-id">Certificate ID: {{CERT_ID}}</div>
+    <div class="verify-url">Verify at: {{VERIFY_URL}}</div>
+  </body>
 </html>

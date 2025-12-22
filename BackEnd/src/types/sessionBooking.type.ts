@@ -27,7 +27,7 @@ export interface ISlotBooking {
   startTime: Date | string;
   endTime: Date | string;
   type?: bookingType;
-  status?:BookingStatus
+  status?: BookingStatus;
   feedback?: string;
   studentStatus?: StudenStatus;
   mentorId: Types.ObjectId;

@@ -61,33 +61,33 @@ export class SlotBookingRepository
       true,
     );
   }
-  async learnerDashboardSlotCard(learnerId: Types.ObjectId): Promise<LearnerSlotCard[]> {
-    return await this.aggregate<LearnerSlotCard>([{
-      $group:{
-        _id:`$${learnerId}`,
-        totalSession:{
-          $sum:1
+  async learnerDashboardSlotCard(
+    learnerId: Types.ObjectId,
+  ): Promise<LearnerSlotCard[]> {
+    return await this.aggregate<LearnerSlotCard>([
+       {
+        $match: {
+          learnerId: learnerId,
         },
-        totalCracked:{
-          $sum:{
-            $cond:[
-              {$eq:['$studentStatus',StudenStatus.PASSED]},
-              1,
-              0
-            ]
-          }
+      },
+      {
+        $group: {
+          _id: `$learnerId`,
+          totalSession: {
+            $sum: 1,
+          },
+          totalCracked: {
+            $sum: {
+              $cond: [{ $eq: ["$studentStatus", StudenStatus.PASSED] }, 1, 0],
+            },
+          },
+          totalFailed: {
+            $sum: {
+              $cond: [{ $eq: ["$studentStatus", StudenStatus.FAILED] }, 1, 0],
+            },
+          },
         },
-        totalFailed:{
-          $sum:{
-            $cond:[
-              {$eq:['$studentStatus',StudenStatus.FAILED]},
-              1,
-              0
-            ]
-          }
-        }
-
-      }
-    }])
+      },
+    ]);
   }
 }

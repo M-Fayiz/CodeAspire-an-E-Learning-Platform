@@ -54,7 +54,7 @@ export const ChartAreaInteractive: React.FC<cahrtPrps> = ({ courseId }) => {
 
   useEffect(() => {
     (async () => {
-      const data = await EnrolledService.FilterGraph(courseId, timeRange);
+      const data = await EnrolledService.filterGraph(courseId, timeRange);
       if (data) {
         setChartData(data);
       }

@@ -4,7 +4,7 @@ import { Validate } from "../middlewares/validate";
 const authRouter = express.Router();
 import { UserRepository } from "../repository/implementation/UserRepository";
 import { AuthService } from "../services/implementation/AuthService";
-import { AuthController } from "../controllers/implementation/AuthController"; 
+import { AuthController } from "../controllers/implementation/AuthController";
 import { registerSchema } from "../utils/zod";
 import passport from "../utils/passport.util";
 import { env } from "../config/env.config";
@@ -39,24 +39,20 @@ authRouter.patch(
 );
 
 // Google Auth
-authRouter.get(
-  "/google",
-  (req, res, next) => {
-    const { role } = req.query;
+authRouter.get("/google", (req, res, next) => {
+  const { role } = req.query;
 
-    passport.authenticate("google", {
-      scope: ["profile", "email"],
-      state: JSON.stringify({ role }),
-      prompt: "select_account",
-    })(req, res, next);
-  }
-);
-
+  passport.authenticate("google", {
+    scope: ["profile", "email"],
+    state: JSON.stringify({ role }),
+    prompt: "select_account",
+  })(req, res, next);
+});
 
 authRouter.get(
   "/google/callback",
   passport.authenticate("google", {
-    session:false,
+    session: false,
     failureRedirect: `${env.CLIENT_ORGIN}/auth/login`,
   }),
   authController.googleAuthRedirection.bind(authController),

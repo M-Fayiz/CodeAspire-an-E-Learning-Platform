@@ -20,9 +20,7 @@ export class MessageRepository
   ): Promise<IMessageModel | null> {
     return await this.findByIDAndUpdate(messageId, filter);
   }
-  async getChats(
-    chatId: Types.ObjectId,
-  ): Promise<IMessageModel[] | null> {
+  async getChats(chatId: Types.ObjectId): Promise<IMessageModel[] | null> {
     const filter = {
       chatId: chatId,
     };

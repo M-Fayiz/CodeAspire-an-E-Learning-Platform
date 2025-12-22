@@ -75,7 +75,7 @@ export const env = {
     return process.env.SALT;
   },
   get REDIS_URL() {
-  return process.env.REDIS_URL;
+    return process.env.REDIS_URL;
   },
   get EARLY_JOIN_BUFFER() {
     return process.env.EARLY_JOIN_BUFFER;
@@ -89,7 +89,7 @@ export const env = {
   get REDIS_PASS_KEY() {
     return process.env.REDIS_PASS_KEY;
   },
-  get CLIENT_URL_2(){
-    return process.env.CLIENT_URL_2
-  }
+  get CLIENT_URL_2() {
+    return process.env.CLIENT_URL_2;
+  },
 };

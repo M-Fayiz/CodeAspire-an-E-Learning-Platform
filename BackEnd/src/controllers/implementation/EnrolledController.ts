@@ -15,7 +15,7 @@ export class EnrolledController implements IEnrolledController {
   ): Promise<void> => {
     try {
       const { learnerId } = req.params;
-     
+
       const enrolledCourseData =
         await this._enrolledService.getEnrolledCourses(learnerId);
       console.info("enrolled course ", { enrolledCourseData });
@@ -50,16 +50,16 @@ export class EnrolledController implements IEnrolledController {
   ): Promise<void> => {
     try {
       const { enrolledId } = req.params;
-      const { lectureId ,sessionId} = req.body;
-    
+      const { lectureId, sessionId } = req.body;
+
       const progressData = await this._enrolledService.updatedProgress(
         enrolledId,
         lectureId,
-        sessionId
+        sessionId,
       );
       res
         .status(HttpStatus.OK)
-        .json(successResponse(HttpResponse.OK,{progressData} ));
+        .json(successResponse(HttpResponse.OK, { progressData }));
     } catch (error) {
       next(error);
     }
@@ -72,15 +72,15 @@ export class EnrolledController implements IEnrolledController {
     try {
       const { enrolledId } = req.params;
       const { value } = req.body;
-  
+
       const ratingResult = await this._enrolledService.addRating(
         enrolledId,
         value,
       );
-   
+
       res
         .status(HttpStatus.OK)
-        .json(successResponse(HttpResponse.OK, {ratingResult}));
+        .json(successResponse(HttpResponse.OK, { ratingResult }));
     } catch (error) {
       next(error);
     }
@@ -179,31 +179,33 @@ export class EnrolledController implements IEnrolledController {
       const { filter } = req.query;
       const { courseRevanue, slotRevanue, signedUsers } =
         await this._enrolledService.getRevenueGraph(filter as string);
-      res
-        .status(HttpStatus.OK)
-        .json(
-          successResponse(HttpResponse.OK, {
-            courseRevanue,
-            slotRevanue,
-            signedUsers,
-          }),
-        );
+      res.status(HttpStatus.OK).json(
+        successResponse(HttpResponse.OK, {
+          courseRevanue,
+          slotRevanue,
+          signedUsers,
+        }),
+      );
     } catch (error) {
       next(error);
     }
   };
-  getLearnerDashboardData=async(req: Request, res: Response, next: NextFunction): Promise<void> =>{
+  getLearnerDashboardData = async (
+    req: Request,
+    res: Response,
+    next: NextFunction,
+  ): Promise<void> => {
     try {
-       const {learnerId}=req.params
-      const dashboardData= await this._enrolledService.learnerDashboardCardData(learnerId)
-      res.status(HttpStatus.OK)
-        .json(
-          successResponse(HttpResponse.OK, {
-            dashboardData
-          }),
-        );
+      const { learnerId } = req.params;
+      const dashboardData =
+        await this._enrolledService.learnerDashboardCardData(learnerId);
+      res.status(HttpStatus.OK).json(
+        successResponse(HttpResponse.OK, {
+          dashboardData,
+        }),
+      );
     } catch (error) {
-      next(error)
+      next(error);
     }
-  }
+  };
 }

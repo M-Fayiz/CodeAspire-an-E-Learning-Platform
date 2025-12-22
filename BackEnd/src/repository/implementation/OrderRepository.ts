@@ -1,7 +1,7 @@
 import { BaseRepository } from "../baseRepository";
 import { IOrderRepository } from "../interface/IOrderRepository";
 import { IOrderModel, OrderModel } from "../../models/order.model";
-import { Types } from "mongoose";
+import { FilterQuery, Types } from "mongoose";
 import { IOrder } from "../../types/order.type";
 
 export class OrderRepositoy
@@ -28,5 +28,8 @@ export class OrderRepositoy
     data: Partial<IOrderModel>,
   ): Promise<IOrderModel | null> {
     return await this.findByIDAndUpdate(id, data);
+  }
+  async  isOrdered(filter: FilterQuery<IOrderModel>): Promise<IOrderModel | null> {
+    return await this.findOne(filter)
   }
 }

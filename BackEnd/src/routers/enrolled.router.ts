@@ -16,15 +16,15 @@ const transactionRepository = new TransactionRepositoy();
 const enrolledRepository = new EnrolledRepository();
 const courseRepository = new CourseRepository();
 const userRepository = new UserRepository();
-const certificateRepository=new CertificateRepository()
-const slotBookingRepository=new SlotBookingRepository()
+const certificateRepository = new CertificateRepository();
+const slotBookingRepository = new SlotBookingRepository();
 const enrolledService = new EnrolledService(
   enrolledRepository,
   courseRepository,
   transactionRepository,
   userRepository,
   certificateRepository,
-  slotBookingRepository
+  slotBookingRepository,
 );
 const enrolledController = new EnrolledController(enrolledService);
 
@@ -72,8 +72,8 @@ enrolledRouter.get(
 );
 enrolledRouter.get(
   "/:learnerId/dashboard",
-  // verifyUser,
-  // authorizedRole(IRole.Learner),
+  verifyUser,
+  authorizedRole(IRole.Learner),
   enrolledController.getLearnerDashboardData,
 );
 enrolledRouter.put(
@@ -88,6 +88,5 @@ enrolledRouter.put(
   authorizedRole(IRole.Learner),
   enrolledController.addRating,
 );
-
 
 export default enrolledRouter;

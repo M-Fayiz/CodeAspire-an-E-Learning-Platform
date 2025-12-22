@@ -27,7 +27,7 @@ export interface ICourseService {
   getCourse(
     courseId: string,
     learnerId?: string,
-  ): Promise<IFormCourseDTO | null>;
+  ): Promise<{courseDetails:IFormCourseDTO,isEnrolled:boolean} >;
   getDraftedCourses(
     search: string,
     page: string,
@@ -63,5 +63,8 @@ export interface ICourseService {
   publishCourse(courseId: string): Promise<string | null>;
   fetchCourseListForSlot(mentorId: string): Promise<IListCourseSlot[] | null>;
   getCourseFormData(courseId: string): Promise<ICourseCreateForm>;
-  removeSession(courseId:string,sessionId:string): Promise<ICourseCreateForm | null>;
+  removeSession(
+    courseId: string,
+    sessionId: string,
+  ): Promise<ICourseCreateForm | null>;
 }

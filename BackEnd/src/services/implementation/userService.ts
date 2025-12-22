@@ -18,7 +18,6 @@ import {
   IAdminDTO,
   ILearnerDTO,
   IMentorDTO,
-
 } from "../../types/dtos.type/user.dto.types";
 // import logger from "../../config/logger.config";
 import { NotificationTemplates } from "../../template/notification.template";
@@ -32,7 +31,9 @@ export class UserService implements IUserService {
     private _notificationRepository: INotificationRepository,
   ) {}
 
-  async fetchUser(id: string): Promise<ILearnerDTO | IMentorDTO | IAdminDTO  |null> {
+  async fetchUser(
+    id: string,
+  ): Promise<ILearnerDTO | IMentorDTO | IAdminDTO | null> {
     const userId = parseObjectId(id);
     if (!userId) {
       throw createHttpError(HttpStatus.NOT_FOUND, HttpResponse.INVALID_ID);
@@ -41,18 +42,17 @@ export class UserService implements IUserService {
     if (!userData) {
       throw createHttpError(HttpStatus.NOT_FOUND, HttpResponse.USER_NOT_FOUND);
     }
-    switch(userData.role){
+    switch (userData.role) {
       case IRole.Admin:
-        return userData as unknown as IAdminDTO
+        return userData as unknown as IAdminDTO;
 
       case IRole.Mentor:
-        return userData as unknown as IMentorDTO
-      case IRole.Learner :
-        return userData as unknown as ILearnerDTO
-      default :
-      return null
+        return userData as unknown as IMentorDTO;
+      case IRole.Learner:
+        return userData as unknown as ILearnerDTO;
+      default:
+        return null;
     }
-   
   }
 
   async changePassword(

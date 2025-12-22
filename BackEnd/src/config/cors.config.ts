@@ -1,23 +1,18 @@
 import { env } from "./env.config";
 
-
-const allowedOrigins = [
- env.CLIENT_URL_2,
- env.CLIENT_ORGIN,
-];
+const allowedOrigins = [env.CLIENT_URL_2, env.CLIENT_ORGIN];
 
 export const corsSetUp = {
   origin: function (
     origin: string | undefined,
-    callback: (err: Error | null, allow?: boolean) => void
+    callback: (err: Error | null, allow?: boolean) => void,
   ) {
-  
     if (!origin) return callback(null, true);
 
     if (allowedOrigins.includes(origin)) {
-      callback(null, true); 
+      callback(null, true);
     } else {
-      callback(new Error("Not allowed by CORS")); 
+      callback(new Error("Not allowed by CORS"));
     }
   },
   credentials: true,

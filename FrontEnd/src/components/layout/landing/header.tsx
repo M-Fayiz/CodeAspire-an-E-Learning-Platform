@@ -17,7 +17,6 @@ const Header: React.FC = () => {
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
-  console.info("user from headerr ", user);
 
   return (
     <header
@@ -39,7 +38,7 @@ const Header: React.FC = () => {
           <nav className="hidden md:flex items-center space-x-8">
             {/* <A_tag href="#courses" label="Courses" /> */}
             <Link
-              to={"courses"}
+              to={"/courses"}
               className="text-gray-700 hover:text-orange-600 transition-colors font-medium"
             >
               Course
@@ -47,7 +46,7 @@ const Header: React.FC = () => {
             
             <A_tag href="#about" label="About" />
             {/* <A_tag href="#about" label="About"/> */}
-            
+
             {user?.role ? (
               <Link to={`/${user.role}/dashboard`}>
                 <User />

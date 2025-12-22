@@ -8,7 +8,6 @@ const redisClient: RedisClientType = createClient({
   },
 });
 
-
 redisClient.on("connect", () => {
   console.log("🛜 Redis connected");
 });

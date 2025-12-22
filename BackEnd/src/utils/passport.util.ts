@@ -9,10 +9,9 @@ import { UserRepository } from "../repository/implementation/UserRepository";
 import { Request } from "express";
 import { IRole } from "../types/user.types";
 
-
 const userRepo = new UserRepository();
 
-const clientID = env.CLIENT_ID as string; 
+const clientID = env.CLIENT_ID as string;
 const clientSecret = env.CLIENT_SECRET as string;
 const callBack = env.CALLBACK_URL as string;
 
@@ -34,8 +33,8 @@ if (clientID && clientSecret && callBack) {
       ) => {
         try {
           const state = req.query.state
-          ? JSON.parse(req.query.state as string)
-          : {};
+            ? JSON.parse(req.query.state as string)
+            : {};
           const role = (state.role as IRole) || "learner";
           const user = await userRepo.findOrCreateUser(profile, role);
 

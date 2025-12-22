@@ -3,7 +3,12 @@ import { env } from "../../config/env.config";
 import { HttpResponse } from "../../const/error-message";
 import { HttpStatus } from "../../const/http-status";
 import { ISlotBookingRepository } from "../../repository/interface/ISlotBookingRepository";
-import { BookingStatus, bookingType, ISlotBooking, StudenStatus } from "../../types/sessionBooking.type";
+import {
+  BookingStatus,
+  bookingType,
+  ISlotBooking,
+  StudenStatus,
+} from "../../types/sessionBooking.type";
 import { createHttpError } from "../../utils/http-error";
 import { timeAndDateGenerator } from "../../utils/timeAndDateGenerator";
 import { ISlotBookingService } from "../interface/ISlotBookingService";
@@ -28,16 +33,12 @@ import { NotificationTemplates } from "../../template/notification.template";
 import { INotificationDTO } from "../../types/dtos.type/notification.dto.types";
 import { stripe } from "../../config/stripe.config";
 export class SlotBookingService implements ISlotBookingService {
-
-
   constructor(
     private _slotBookingRepository: ISlotBookingRepository,
     private _slotRepository: ISlotRepository,
     private _transactionRepostiory: ITransactionRepository,
     private _notificationRepository: INotificationRepository,
-  ) {
-   
-  }
+  ) {}
   /**
    * * Creates a new slot booking for a learner.
    *
@@ -55,34 +56,30 @@ export class SlotBookingService implements ISlotBookingService {
   async createBooking(bookingData: ISlotBooking): Promise<string | null> {
     const { learnerId, courseId } = bookingData;
 
-      const { date, startTime, endTime } = timeAndDateGenerator(
+    const { date, startTime, endTime } = timeAndDateGenerator(
       bookingData.date as string,
       bookingData.startTime as string,
       bookingData.endTime as string,
     );
     const isAlreadyBooked = await this._slotBookingRepository.findSlots({
-        mentorId: bookingData.mentorId,
-        startTime: { $lt: endTime },
-        endTime: { $gt: startTime },
-      });
-      if (isAlreadyBooked) {
-        throw createHttpError(
-          HttpStatus.CONFLICT,
-          "This slot is already booked"
-        );    
-      }
+      mentorId: bookingData.mentorId,
+      startTime: { $lt: endTime },
+      endTime: { $gt: startTime },
+    });
+    if (isAlreadyBooked) {
+      throw createHttpError(HttpStatus.CONFLICT, "This slot is already booked");
+    }
 
-    console.log('booked :::',bookingData)
+    console.log("booked :::", bookingData);
     const activeBooking = await this._slotBookingRepository.findSlots({
       learnerId,
       courseId,
-      status: { $in: [BookingStatus.BOOKED,BookingStatus.PENDING] },
+      status: { $in: [BookingStatus.BOOKED, BookingStatus.PENDING] },
     });
 
     if (activeBooking) {
       throw createHttpError(HttpStatus.CONFLICT, HttpResponse.BOOKING_EXIST);
     }
-
 
     const previousBookings = await this._slotBookingRepository.findAllSlots({
       learnerId,
@@ -91,9 +88,7 @@ export class SlotBookingService implements ISlotBookingService {
 
     const isFreeBooking = previousBookings && previousBookings.length == 0;
 
-    bookingData.type = isFreeBooking ?bookingType.FREE: bookingType.PAID;
-
-  
+    bookingData.type = isFreeBooking ? bookingType.FREE : bookingType.PAID;
 
     bookingData.date = date;
     bookingData.startTime = startTime;
@@ -103,7 +98,7 @@ export class SlotBookingService implements ISlotBookingService {
       learnerId,
       startTime: { $lt: endTime },
       endTime: { $gt: startTime },
-      status: { $ne:BookingStatus.COMPLETED },
+      status: { $ne: BookingStatus.COMPLETED },
     });
 
     if (overlap) {
@@ -120,8 +115,11 @@ export class SlotBookingService implements ISlotBookingService {
       });
       return null;
     }
-    if(!stripe){
-      throw createHttpError(HttpStatus.INTERNAL_SERVER_ERROR,HttpResponse.STRIPR_NOT_AVAILABLE)
+    if (!stripe) {
+      throw createHttpError(
+        HttpStatus.INTERNAL_SERVER_ERROR,
+        HttpResponse.STRIPR_NOT_AVAILABLE,
+      );
     }
     const mentorSlot = await this._slotRepository.findSlotByFilter({
       _id: bookingData.slotId,
@@ -217,9 +215,7 @@ export class SlotBookingService implements ISlotBookingService {
     await this._transactionRepostiory.createTransaction(transactionData);
   }
 
-  async findBookedSlot(
-    bookedId: string,
-  ): Promise<{
+  async findBookedSlot(bookedId: string): Promise<{
     sesionData: IVideoSessionDTO;
     createdMentorNotify: INotificationDTO;
     createdLearnerNotify: INotificationDTO;
@@ -332,32 +328,52 @@ export class SlotBookingService implements ISlotBookingService {
     }
     return slots?.map((slot) => slot._id);
   }
-  async updateStudents(bookedId: string, status:StudenStatus): Promise<{bookedId:Types.ObjectId,status:StudenStatus}> {
-    const booked_Id=parseObjectId(bookedId)
-    if(!booked_Id){
-      throw createHttpError(HttpStatus.BAD_REQUEST,HttpResponse.INVALID_ID)
+  async updateStudents(
+    bookedId: string,
+    status: StudenStatus,
+  ): Promise<{ bookedId: Types.ObjectId; status: StudenStatus }> {
+    const booked_Id = parseObjectId(bookedId);
+    if (!booked_Id) {
+      throw createHttpError(HttpStatus.BAD_REQUEST, HttpResponse.INVALID_ID);
     }
 
-    const updatedData=await this._slotBookingRepository.updateSlotBookingData({_id:bookedId},{studentStatus:status})
-    if(!updatedData){
-      throw createHttpError(HttpStatus.BAD_REQUEST,HttpResponse.ITEM_NOT_FOUND)
+    const updatedData = await this._slotBookingRepository.updateSlotBookingData(
+      { _id: bookedId },
+      { studentStatus: status },
+    );
+    if (!updatedData) {
+      throw createHttpError(
+        HttpStatus.BAD_REQUEST,
+        HttpResponse.ITEM_NOT_FOUND,
+      );
     }
     return {
-      bookedId:updatedData?._id,
-      status:updatedData?.studentStatus as StudenStatus
-    }
-
+      bookedId: updatedData?._id,
+      status: updatedData?.studentStatus as StudenStatus,
+    };
   }
-  async updateSlotStatus(bookedId: string, status: BookingStatus): Promise<{ bookedId: Types.ObjectId; status: BookingStatus; }> {
-    const booked_Id=parseObjectId(bookedId)
-    if(!booked_Id){
-      throw createHttpError(HttpStatus.BAD_REQUEST,HttpResponse.INVALID_ID)
+  async updateSlotStatus(
+    bookedId: string,
+    status: BookingStatus,
+  ): Promise<{ bookedId: Types.ObjectId; status: BookingStatus }> {
+    const booked_Id = parseObjectId(bookedId);
+    if (!booked_Id) {
+      throw createHttpError(HttpStatus.BAD_REQUEST, HttpResponse.INVALID_ID);
     }
-    const updatedData=await this._slotBookingRepository.updateSlotBookingData({_id:booked_Id},{status:status})
+    const updatedData = await this._slotBookingRepository.updateSlotBookingData(
+      { _id: booked_Id },
+      { status: status },
+    );
 
-    if(!updatedData){
-       throw createHttpError(HttpStatus.BAD_REQUEST,HttpResponse.ITEM_NOT_FOUND)
+    if (!updatedData) {
+      throw createHttpError(
+        HttpStatus.BAD_REQUEST,
+        HttpResponse.ITEM_NOT_FOUND,
+      );
     }
-    return {bookedId:updatedData._id,status:updatedData.status as BookingStatus}
+    return {
+      bookedId: updatedData._id,
+      status: updatedData.status as BookingStatus,
+    };
   }
 }

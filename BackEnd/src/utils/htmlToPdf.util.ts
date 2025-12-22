@@ -1,7 +1,10 @@
 import puppeteer from "puppeteer";
 
-
-export async function htmlToPdf(html: string, outputPath: string,previewPath:string) {
+export async function htmlToPdf(
+  html: string,
+  outputPath: string,
+  previewPath: string,
+) {
   const browser = await puppeteer.launch({
     headless: true,
   });
@@ -13,8 +16,8 @@ export async function htmlToPdf(html: string, outputPath: string,previewPath:str
 
   await page.pdf({
     path: outputPath,
-   width: "1123px",
-  height:" 800px",
+    width: "1123px",
+    height: " 800px",
     printBackground: true,
   });
 
@@ -24,9 +27,9 @@ export async function htmlToPdf(html: string, outputPath: string,previewPath:str
       x: 0,
       y: 0,
       width: 1123,
-      height: 450, 
+      height: 450,
     },
-  })
+  });
 
   await browser.close();
 }

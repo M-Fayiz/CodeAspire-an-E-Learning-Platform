@@ -164,7 +164,7 @@ export class CourseRepository
     return await this.findByIDAndUpdate(courseId, { status: "published" });
   }
   async findCourse(courseId: Types.ObjectId): Promise<IPopulatedCourse | null> {
-    return await this.findOne<IPopulatedCourse>({_id:courseId}, [
+    return await this.findOne<IPopulatedCourse>({ _id: courseId }, [
       "categoryId",
       "subCategoryId",
       "mentorId",
@@ -181,10 +181,25 @@ export class CourseRepository
   async getCourseFormData(courseId: Types.ObjectId): Promise<ICourses | null> {
     return await this.findById(courseId);
   }
-  async removeSession(courseId: Types.ObjectId, sessionId: Types.ObjectId): Promise<ICourses | null> {
-    return await this.pullItemFromArray({_id:courseId},'sessions',sessionId)
+  async removeSession(
+    courseId: Types.ObjectId,
+    sessionId: Types.ObjectId,
+  ): Promise<ICourses | null> {
+    return await this.pullItemFromArray(
+      { _id: courseId },
+      "sessions",
+      sessionId,
+    );
   }
-  async removeLecture(courseId: Types.ObjectId, sessionId: Types.ObjectId, lectureId: Types.ObjectId): Promise<ICourses | null> {
-    return await this.pullItemFromArray({_id:courseId},`sessions[${sessionId}].lectures`,lectureId)
+  async removeLecture(
+    courseId: Types.ObjectId,
+    sessionId: Types.ObjectId,
+    lectureId: Types.ObjectId,
+  ): Promise<ICourses | null> {
+    return await this.pullItemFromArray(
+      { _id: courseId },
+      `sessions[${sessionId}].lectures`,
+      lectureId,
+    );
   }
 }

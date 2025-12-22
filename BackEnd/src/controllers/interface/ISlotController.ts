@@ -9,5 +9,4 @@ export interface ISlotController {
   ): Promise<void>;
   updateSlot(req: Request, res: Response, next: NextFunction): Promise<void>;
   getCourseSlot(req: Request, res: Response, next: NextFunction): Promise<void>;
-  
 }

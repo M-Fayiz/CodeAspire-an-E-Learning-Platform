@@ -19,10 +19,12 @@ export class CertificateRepository
   ): Promise<ICertificateModel> {
     return await this.create(certificateDatas);
   }
-  async listCertificate(learnerId: Types.ObjectId): Promise<ICertificateModel[]|null> {
-    return await this.find({learnerId:learnerId})
+  async listCertificate(
+    learnerId: Types.ObjectId,
+  ): Promise<ICertificateModel[] | null> {
+    return await this.find({ learnerId: learnerId });
   }
   async learnerTotalCertificate(learnerId: Types.ObjectId): Promise<number> {
-    return await this.countDocuments({learnerId:learnerId})
+    return await this.countDocuments({ learnerId: learnerId });
   }
 }

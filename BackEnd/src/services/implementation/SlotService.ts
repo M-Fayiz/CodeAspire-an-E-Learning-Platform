@@ -1,10 +1,7 @@
 import { Types } from "mongoose";
 import { HttpResponse } from "../../const/error-message";
 import { HttpStatus } from "../../const/http-status";
-import {
-  mentorSlotsDTO,
-  slotPopulatedMapper,
-} from "../../dtos/slot.dto";
+import { mentorSlotsDTO, slotPopulatedMapper } from "../../dtos/slot.dto";
 import { ISlotModel } from "../../models/slot.model";
 import { parseObjectId } from "../../mongoose/objectId";
 import { ICourseRepository } from "../../repository/interface/ICourseRepository";
@@ -26,40 +23,37 @@ export class SlotService implements ISlotService {
     private _courseRepositoy: ICourseRepository,
   ) {}
   private async _validateSlotOverlap(
-  mentorId: Types.ObjectId,
-  selectedDays: IMentorSlot["selectedDays"],
-) {
+    mentorId: Types.ObjectId,
+    selectedDays: IMentorSlot["selectedDays"],
+  ) {
+    const existingSlots = await this._slotRepository.getMentorSLots(mentorId);
 
-  const existingSlots = await this._slotRepository.getMentorSLots(mentorId);
+    if (!existingSlots) return;
 
-  if (!existingSlots) return;
+    for (const newDay of selectedDays) {
+      if (!newDay.active) continue;
 
-  for (const newDay of selectedDays) {
-    if (!newDay.active) continue;
+      for (const slot of existingSlots) {
+        for (const existingDay of slot.selectedDays) {
+          if (!existingDay.active) continue;
+          if (existingDay.day !== newDay.day) continue;
 
-    for (const slot of existingSlots) {
-      
-
-      for (const existingDay of slot.selectedDays) {
-        if (!existingDay.active) continue;
-        if (existingDay.day !== newDay.day) continue;
-
-        if (
-          newDay.startTime < existingDay.endTime &&
-          newDay.endTime > existingDay.startTime
-        ) {
-          throw createHttpError(
-            HttpStatus.CONFLICT,
-            HttpResponse.SLOT_EXIST_DAYS(
-              newDay.day,
-              `${existingDay.startTime} - ${existingDay.endTime}`
-            )
-          );
+          if (
+            newDay.startTime < existingDay.endTime &&
+            newDay.endTime > existingDay.startTime
+          ) {
+            throw createHttpError(
+              HttpStatus.CONFLICT,
+              HttpResponse.SLOT_EXIST_DAYS(
+                newDay.day,
+                `${existingDay.startTime} - ${existingDay.endTime}`,
+              ),
+            );
+          }
         }
       }
     }
   }
-}
 
   /**
    * check if there are any course exist in same mentor , same days , same time line, if there is not create new slot
@@ -67,7 +61,6 @@ export class SlotService implements ISlotService {
    * @returns created slot document from the DB
    */
   async createSlot(slotData: IMentorSlot): Promise<ISlotDTO> {
-    
     const isCourseSLotExist = await this._slotRepository.findSlotByFilter({
       courseId: slotData.courseId,
     });
@@ -84,14 +77,17 @@ export class SlotService implements ISlotService {
     }
 
     const createdSlot = await this._slotRepository.createSlot(slotData);
-    const updatedCourse = await this._slotRepository.getUpdateSlots(createdSlot._id,['courseId'])
-    if(!updatedCourse){
-      throw createHttpError(HttpStatus.NOT_FOUND,HttpResponse.SLOT_NOT_FOUND)
+    const updatedCourse = await this._slotRepository.getUpdateSlots(
+      createdSlot._id,
+      ["courseId"],
+    );
+    if (!updatedCourse) {
+      throw createHttpError(HttpStatus.NOT_FOUND, HttpResponse.SLOT_NOT_FOUND);
     }
     for (let days of updatedCourse.selectedDays) {
-        days.startTime = convertTo12Hour(days.startTime as string);
-        days.endTime = convertTo12Hour(days.endTime as string);
-      }
+      days.startTime = convertTo12Hour(days.startTime as string);
+      days.endTime = convertTo12Hour(days.endTime as string);
+    }
     return mentorSlotsDTO(updatedCourse);
   }
   /**
@@ -99,30 +95,38 @@ export class SlotService implements ISlotService {
    * @param mentorId
    * @returns array of mapped slot data
    */
-  async getMontorSlots(mentorId: string,page:number): Promise<{mappedSlots:ISlotDTO[],totalDocument:number}> {
+  async getMontorSlots(
+    mentorId: string,
+    page: number,
+  ): Promise<{ mappedSlots: ISlotDTO[]; totalDocument: number }> {
     const mentor_Id = parseObjectId(mentorId);
     if (!mentor_Id) {
       throw createHttpError(HttpStatus.NOT_FOUND, HttpResponse.INVALID_ID);
     }
-    let limit=5
-    let skip=(page-1)*limit
+    let limit = 5;
+    let skip = (page - 1) * limit;
 
-    const mentorSlots = await this._slotRepository.getMentorSLotsList(mentor_Id,skip,limit, [
-      "courseId",
-    ]);
+    const mentorSlots = await this._slotRepository.getMentorSLotsList(
+      mentor_Id,
+      skip,
+      limit,
+      ["courseId"],
+    );
     if (!mentorSlots) {
       throw createHttpError(HttpStatus.NOT_FOUND, HttpResponse.ITEM_NOT_FOUND);
     }
-    const totalDocument=await this._slotRepository.totalDocument({mentorId:mentor_Id})
-    
+    const totalDocument = await this._slotRepository.totalDocument({
+      mentorId: mentor_Id,
+    });
+
     for (let daySlots of mentorSlots) {
       for (let days of daySlots.selectedDays) {
         days.startTime = convertTo12Hour(days.startTime as string);
         days.endTime = convertTo12Hour(days.endTime as string);
       }
     }
-    const mappedSlots=mentorSlots?.map((slot) => mentorSlotsDTO(slot));
-    return {mappedSlots,totalDocument}
+    const mappedSlots = mentorSlots?.map((slot) => mentorSlotsDTO(slot));
+    return { mappedSlots, totalDocument };
   }
   /**
    * Updates a mentor's slot and validates whether any other slot
@@ -152,14 +156,17 @@ export class SlotService implements ISlotService {
     if (!updatedSlot) {
       throw createHttpError(HttpStatus.NOT_FOUND, HttpResponse.ITEM_NOT_FOUND);
     }
-    const updatedCourse = await this._slotRepository.getUpdateSlots(updatedSlot._id,['courseId'])
-    if(!updatedCourse){
-      throw createHttpError(HttpStatus.NOT_FOUND,HttpResponse.SLOT_NOT_FOUND)
+    const updatedCourse = await this._slotRepository.getUpdateSlots(
+      updatedSlot._id,
+      ["courseId"],
+    );
+    if (!updatedCourse) {
+      throw createHttpError(HttpStatus.NOT_FOUND, HttpResponse.SLOT_NOT_FOUND);
     }
     for (let days of updatedCourse.selectedDays) {
-        days.startTime = convertTo12Hour(days.startTime as string);
-        days.endTime = convertTo12Hour(days.endTime as string);
-      }
+      days.startTime = convertTo12Hour(days.startTime as string);
+      days.endTime = convertTo12Hour(days.endTime as string);
+    }
     return mentorSlotsDTO(updatedCourse);
   }
   /**

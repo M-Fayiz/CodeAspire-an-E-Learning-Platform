@@ -3,7 +3,6 @@ import { completionStatus, IEnrollement } from "../types/enrollment.types";
 
 import { DbModelName } from "../const/modelName";
 
-
 export interface IEnrolledModel
   extends Document<Types.ObjectId>,
     Omit<IEnrollement, "_id"> {}
@@ -37,16 +36,16 @@ const enrolledSchema = new mongoose.Schema<IEnrolledModel>(
         type: mongoose.Schema.Types.ObjectId,
         default: null,
       },
-      lastAccessedSession:{
+      lastAccessedSession: {
         type: mongoose.Schema.Types.ObjectId,
         default: null,
       },
       completionPercentage: { type: Number, default: 0 },
     },
-    courseStatus:{
+    courseStatus: {
       type: String,
-      enum:Object.values(completionStatus),
-      default:completionStatus.IN_PROGRESS
+      enum: Object.values(completionStatus),
+      default: completionStatus.IN_PROGRESS,
     },
     rating: {
       type: Number,

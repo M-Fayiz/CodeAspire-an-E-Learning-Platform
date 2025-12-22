@@ -7,27 +7,28 @@ import { HttpStatus } from "../../const/http-status";
 import { parseObjectId } from "../../mongoose/objectId";
 import { HttpResponse } from "../../const/error-message";
 import { ICourseRepository } from "../../repository/interface/ICourseRepository";
-import { IOrder } from "../../types/order.type";
 import { IEnrolledRepository } from "../../repository/interface/IEnrolledRepositoy";
 import { completionStatus, IEnrollement } from "../../types/enrollment.types";
 import logger from "../../config/logger.config";
 import { ITransactionRepository } from "../../repository/interface/ITransactionRepository";
 import { ITransaction } from "../../types/transaction.type";
 import { calculateShares } from "../../utils/calculateSplit.util";
-import {  OrderStatus, TransactionStatus, TransactionType } from "../../const/transaction";
+import {
+  OrderStatus,
+  PaymentMethod,
+  StripeConst,
+  TransactionStatus,
+  TransactionType,
+} from "../../const/transaction";
 import { stripe } from "../../config/stripe.config";
 
 export class OrderService implements IOrderService {
- 
-
   constructor(
     private _orderRepository: IOrderRepository,
     private _courseRepository: ICourseRepository,
     private _enrolledRepository: IEnrolledRepository,
     private _transactionRepository: ITransactionRepository,
-  ) {
-    
-  }
+  ) {}
 
   /**
    * Handles a course purchase event triggered by the Stripe webhook.
@@ -56,20 +57,21 @@ export class OrderService implements IOrderService {
       return;
     }
 
-    
     const order = await this._orderRepository.findOrder(order_id);
 
-  if (!order) {
-    logger.error("Order not found:", order_id);
-    return;
-  }
+    if (!order) {
+      logger.error("Order not found:", order_id);
+      return;
+    }
     if (order.status === OrderStatus.COMPLETED) {
-  logger.warn("Order already completed. Skipping:", order_id);
-  return; 
-}
+      logger.warn("Order already completed. Skipping:", order_id);
+      return;
+    }
 
-
-    await this._orderRepository.updateOrderStatus(order_id, OrderStatus.COMPLETED);
+    await this._orderRepository.updateOrderStatus(
+      order_id,
+      OrderStatus.COMPLETED,
+    );
 
     const adminShare = calculateShares(Number(amount), Number(env.ADMIN_SHARE));
     const mentorShare = calculateShares(
@@ -78,9 +80,9 @@ export class OrderService implements IOrderService {
     );
 
     const paymentIntentId =
-      typeof session.payment_intent === "string"
+      typeof session.payment_intent === 'string'
         ? session.payment_intent
-        : session.payment_intent?.id;
+        : session.payment_intent?.id 
 
     const transactionData: ITransaction = {
       paymentType: TransactionType.COURSE_PURCHASE,
@@ -89,14 +91,13 @@ export class OrderService implements IOrderService {
       userId: user_id,
       mentorId: mentore_id,
       status: TransactionStatus.SUCCESS,
-      paymentMethod: "stripe",
+      paymentMethod: PaymentMethod.STRIPE,
       gatewayTransactionId: paymentIntentId as string,
       adminShare,
       mentorShare,
       courseId: course_id,
     };
 
-    
     await this._transactionRepository.createTransaction(transactionData);
 
     const enrollData: IEnrollement = {
@@ -108,12 +109,11 @@ export class OrderService implements IOrderService {
         completedLectures: [],
         completionPercentage: 0,
         lastAccessedLecture: null,
-        lastAccessedSession:null
+        lastAccessedSession: null,
       },
-      courseStatus:completionStatus.IN_PROGRESS
+      courseStatus: completionStatus.IN_PROGRESS,
     };
 
-    
     await this._enrolledRepository.enrolleCourse(enrollData);
   }
   /**
@@ -123,102 +123,134 @@ export class OrderService implements IOrderService {
    * @returns
    */
   async paymentIntent(
-    userId: string,
-    courseId: string,
-  ): Promise<{ clientSecret: string; orderId: string; checkoutURL: string }> {
-    const course_id = parseObjectId(courseId);
-    const user_Id = parseObjectId(userId);
-    if (!course_id || !user_Id) {
-      throw createHttpError(HttpStatus.NOT_FOUND, HttpResponse.INVALID_ID);
-    }
+  userId: string,
+  courseId: string,
+): Promise<{ clientSecret: string; orderId: string; checkoutURL: string }> {
 
-    const isEnrolled = await this._enrolledRepository.isEnrolled(
-      user_Id,
-      course_id,
-    );
+  const course_id = parseObjectId(courseId);
+  const user_Id = parseObjectId(userId);
 
-    if (isEnrolled) {
-      throw createHttpError(HttpStatus.CONFLICT, HttpResponse.ORDER_EXIST);
-    }
-    const course = await this._courseRepository.findCourse(course_id);
+  if (!course_id || !user_Id) {
+    throw createHttpError(HttpStatus.NOT_FOUND, HttpResponse.INVALID_ID);
+  }
 
-    if (!course) {
-      throw createHttpError(HttpStatus.NOT_FOUND, "Course Not FOund");
-    }
-    const amount = course.price;
+  
+  const isEnrolled = await this._enrolledRepository.isEnrolled(
+    user_Id,
+    course_id,
+  );
 
-    const order: IOrder = {
+  if (isEnrolled) {
+    throw createHttpError(HttpStatus.CONFLICT, HttpResponse.ALREADY_PURCHASED);
+  }
+
+ 
+  const existingOrder = await this._orderRepository.isOrdered({
+    courseId,
+    userId,
+  });
+
+  
+  if (existingOrder?.status === OrderStatus.COMPLETED) {
+    throw createHttpError(HttpStatus.CONFLICT, HttpResponse.ALREADY_PURCHASED);
+  }
+
+  
+  const course = await this._courseRepository.findCourse(course_id);
+
+  if (!course) {
+    throw createHttpError(HttpStatus.NOT_FOUND, HttpResponse.COURSE_NOT_FOUND);
+  }
+
+  const amount = course.price;
+
+  let orderData = existingOrder;
+
+ 
+  if (!orderData) {
+    orderData = await this._orderRepository.createOrder({
       userId: user_Id,
       courseId: course_id,
       totalAmount: amount,
-      status: "pending",
-    };
+      status: OrderStatus.PENDING,
+    });
 
-    const orderData = await this._orderRepository.createOrder(order);
     if (!orderData) {
       throw createHttpError(
         HttpStatus.INTERNAL_SERVER_ERROR,
         HttpResponse.SERVER_ERROR,
       );
     }
-    const orderId = String(orderData._id);
-    const idemKey = `order_${orderData._id}`;
-if(!stripe){
-      throw createHttpError(HttpStatus.INTERNAL_SERVER_ERROR,HttpResponse.STRIPR_NOT_AVAILABLE)
-    }
-    const session = await stripe.checkout.sessions.create(
-      {
-        payment_method_types: ["card"],
-        line_items: [
-          {
-            price_data: {
-              currency: "inr",
-              product_data: {
-                name: course.title,
-                metadata: {
-                  courseId: String(course._id) as string,
-                },
-              },
-              unit_amount: course.price * 100,
-            },
-            quantity: 1,
-          },
-        ],
-        mode: "payment",
-        success_url: `${env.CLIENT_URL_2}/courses/payment-success?session_id={CHECKOUT_SESSION_ID}`,
-        client_reference_id: String(orderData._id),
-        metadata: {
-          paymentType: TransactionType.COURSE_PURCHASE,
-          orderId,
-          courseId,
-          userId,
-          amount,
-          mentorId: String(course.mentorId._id),
-          categoryId: String(course.categoryId._id ),
-        },
-      },
-      { idempotencyKey: idemKey },
-    );
-
-    await this._orderRepository.updateOrder(orderData._id, {
-      paymentIntentId: session.id,
-    });
-
-    return {
-      clientSecret: session.client_secret as string,
-      orderId: String(orderData._id),
-      checkoutURL: session.url as string,
-    };
   }
+
+  
+  if (!stripe) {
+    throw createHttpError(
+      HttpStatus.INTERNAL_SERVER_ERROR,
+      HttpResponse.STRIPR_NOT_AVAILABLE,
+    );
+  }
+
+  const idemKey = `order_${orderData._id}`;
+
+  const session = await stripe.checkout.sessions.create(
+    {
+      payment_method_types: [StripeConst.payment_method_types],
+      line_items: [
+        {
+          price_data: {
+            currency: StripeConst.CURRENCY,
+            product_data: {
+              name: course.title,
+              metadata: {
+                courseId: String(course._id),
+              },
+            },
+            unit_amount: amount * 100,
+          },
+          quantity: 1,
+        },
+      ],
+      mode: StripeConst.MODE,
+      success_url: `${env.CLIENT_URL_2}/${StripeConst.SUCCESS_URL}`,
+      client_reference_id: String(orderData._id),
+      metadata: {
+        paymentType: TransactionType.COURSE_PURCHASE,
+        orderId: String(orderData._id),
+        courseId,
+        userId,
+        amount,
+        mentorId: String(course.mentorId._id),
+        categoryId: String(course.categoryId._id),
+      },
+    },
+    { idempotencyKey: idemKey },
+  );
+
+
+  await this._orderRepository.updateOrder(orderData._id, {
+    paymentIntentId: session.id,
+  });
+
+  return {
+    clientSecret: session.client_secret as string,
+    orderId: String(orderData._id),
+    checkoutURL: session.url as string,
+  };
+}
+
   async getPaymentData(
     sessionId: string,
   ): Promise<Stripe.Response<Stripe.Checkout.Session>> {
     console.log("session Id  :", sessionId);
-    if(!stripe){
-      throw createHttpError(HttpStatus.INTERNAL_SERVER_ERROR,HttpResponse.STRIPR_NOT_AVAILABLE)
+    if (!stripe) {
+      throw createHttpError(
+        HttpStatus.INTERNAL_SERVER_ERROR,
+        HttpResponse.STRIPR_NOT_AVAILABLE,
+      );
     }
     const session = await stripe.checkout.sessions.retrieve(sessionId, {
-      expand: ["payment_intent", "invoice"],
+      expand: [StripeConst.payment_intent, StripeConst.iNVOICE],
     });
 
     return session;

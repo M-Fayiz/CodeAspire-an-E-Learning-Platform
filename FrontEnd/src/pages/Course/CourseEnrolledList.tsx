@@ -31,14 +31,10 @@ const CourseEnrolledList = () => {
     const data = await EnrolledService.getEnrolledCourse(user.id);
 
     if (data) {
-      const uniqueCourses = Array.from(
-        new Map(
-          data.map((c: any) => [c.course._id, c])
-        ).values()
-      );
+     
 
-      setEnrolledCourses(uniqueCourses);
-      setTotalPage(uniqueCourses.length);
+      setEnrolledCourses(data);
+      setTotalPage(data.length);
     }
   })();
 }, [user?.id, page]);
@@ -49,8 +45,9 @@ const CourseEnrolledList = () => {
     setPage(value)
   }
   const filteredCourses = useMemo(() => {
+    const q=search.trim().toLowerCase()
     return enrolledCourse.filter((course) =>
-      course.course.title.toLowerCase().includes(search.toLowerCase())
+      course.course.title.toLowerCase().includes(q)
     );
   }, [search,enrolledCourse]);
   return (

@@ -154,24 +154,21 @@ export abstract class BaseRepository<T extends Document> {
       .lean<T>();
   }
 
-async pullItemFromArray(
-  filter: FilterQuery<T>,
-  arrayPath: string,
-  itemId: Types.ObjectId
-): Promise<T | null> {
-  const result = await this.model.findOneAndUpdate(
-    filter,
-    {
-      $pull: {
-        [arrayPath]: { _id: itemId }
-      } as any
-    },
-    { new: true }
-  );
+  async pullItemFromArray(
+    filter: FilterQuery<T>,
+    arrayPath: string,
+    itemId: Types.ObjectId,
+  ): Promise<T | null> {
+    const result = await this.model.findOneAndUpdate(
+      filter,
+      {
+        $pull: {
+          [arrayPath]: { _id: itemId },
+        } as any,
+      },
+      { new: true },
+    );
 
-  return result ?? null;
-}
-
-
-
+    return result ?? null;
+  }
 }

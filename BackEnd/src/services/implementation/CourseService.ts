@@ -138,24 +138,47 @@ export class CourseService implements ICourseService {
     }
 
     return null;
-  }
-  async getCourse(
-    courseId: string,
-    learnerId?: string,
-  ): Promise<IFormCourseDTO | null> {
-    const id = parseObjectId(courseId);
-    const learner_id = parseObjectId(learnerId as string);
-    if (!id) {
-      throw createHttpError(HttpStatus.OK, HttpResponse.INVALID_ID);
-    }
-    const courseData = await this._courseRepository.getCourseDetails(id);
+  }async getCourse(
+  courseId: string,
+  learnerId?: string,
+): Promise<{ courseDetails: IFormCourseDTO; isEnrolled: boolean }> {
 
-    if (!courseData) {
-      throw createHttpError(HttpStatus.NOT_FOUND, HttpResponse.ITEM_NOT_FOUND);
-    }
-
-    return courseData ? formCourseDto(courseData[0]) : null;
+  const course_id = parseObjectId(courseId);
+  if (!course_id) {
+    throw createHttpError(
+      HttpStatus.BAD_REQUEST,
+      HttpResponse.INVALID_ID
+    );
   }
+
+  const learner_id = learnerId
+    ? parseObjectId(learnerId)
+    : null;
+
+  const courseData = await this._courseRepository.getCourseDetails(course_id);
+
+  if (!courseData || courseData.length === 0) {
+    throw createHttpError(
+      HttpStatus.NOT_FOUND,
+      HttpResponse.ITEM_NOT_FOUND
+    );
+  }
+
+  const isEnrolled = learner_id
+    ? Boolean(
+        await this._enrolledRepository.isEnrolled(
+          learner_id,
+          course_id
+        )
+      )
+    : false;
+
+  return {
+    courseDetails: formCourseDto(courseData[0]),
+    isEnrolled,
+  };
+}
+
 
   async getDraftedCourses(
     search: string,
@@ -200,12 +223,15 @@ export class CourseService implements ICourseService {
     if (isExist) {
       throw createHttpError(HttpStatus.CONFLICT, HttpResponse.ITEM_EXIST);
     }
-      await this._courseRepository.addSession(id, session);
-    const courseData=await this._courseRepository.findCourse(id)
-    if(!courseData){
-      throw createHttpError(HttpStatus.NOT_FOUND,HttpResponse.COURSE_NOT_FOUND)
+    await this._courseRepository.addSession(id, session);
+    const courseData = await this._courseRepository.findCourse(id);
+    if (!courseData) {
+      throw createHttpError(
+        HttpStatus.NOT_FOUND,
+        HttpResponse.COURSE_NOT_FOUND,
+      );
     }
-    return courseDTO(courseData as unknown as  IPopulatedCourse);
+    return courseDTO(courseData as unknown as IPopulatedCourse);
   }
   async addLectures(
     courseId: string,
@@ -225,12 +251,8 @@ export class CourseService implements ICourseService {
     if (isExist) {
       throw createHttpError(HttpStatus.CONFLICT, HttpResponse.ITEM_EXIST);
     }
-    await this._courseRepository.addLecture(
-      CourseId,
-      SessionId,
-      lecture,
-    );
-    const courseData=await this._courseRepository.findCourse(CourseId)
+    await this._courseRepository.addLecture(CourseId, SessionId, lecture);
+    const courseData = await this._courseRepository.findCourse(CourseId);
     return courseDTO(courseData as IPopulatedCourse);
   }
   async editLecture(
@@ -246,15 +268,18 @@ export class CourseService implements ICourseService {
       throw createHttpError(HttpStatus.BAD_REQUEST, HttpResponse.INVALID_ID);
     }
 
-     await this._courseRepository.editLecture(
+    await this._courseRepository.editLecture(
       CourseId,
       SessionId,
       LectureId,
       lecture,
     );
-    const coursedata=this._courseRepository.findCourse(CourseId)
-    if(!coursedata){
-      throw createHttpError(HttpStatus.NOT_FOUND,HttpResponse.COURSE_NOT_FOUND)
+    const coursedata = this._courseRepository.findCourse(CourseId);
+    if (!coursedata) {
+      throw createHttpError(
+        HttpStatus.NOT_FOUND,
+        HttpResponse.COURSE_NOT_FOUND,
+      );
     }
     return courseDTO(coursedata as unknown as IPopulatedCourse);
   }
@@ -267,13 +292,10 @@ export class CourseService implements ICourseService {
     if (!id) {
       throw createHttpError(HttpStatus.BAD_REQUEST, HttpResponse.INVALID_ID);
     }
-    await this._courseRepository.updateBaseInfo(
-      id,
-      baseInfo,
-    );
-    const courseData=this._courseRepository.findCourse(id)
+    await this._courseRepository.updateBaseInfo(id, baseInfo);
+    const courseData = this._courseRepository.findCourse(id);
 
-    return courseDTO(courseData as unknown as  IPopulatedCourse);
+    return courseDTO(courseData as unknown as IPopulatedCourse);
   }
   async getAdminCourse(): Promise<IFormCourseDTO[] | null> {
     const adminCoursList = await this._courseRepository.getAdminCoursList();
@@ -393,14 +415,20 @@ export class CourseService implements ICourseService {
 
     return CourseFormDataDTO(courseFormData);
   }
-  async removeSession(courseId: string, sessionId: string): Promise<ICourseCreateForm | null> {
-    const course_id=parseObjectId(courseId)
-    const session_id=parseObjectId(sessionId)
-    if(!course_id||!session_id){
-      throw createHttpError(HttpStatus.BAD_REQUEST,HttpResponse.INVALID_ID)
+  async removeSession(
+    courseId: string,
+    sessionId: string,
+  ): Promise<ICourseCreateForm | null> {
+    const course_id = parseObjectId(courseId);
+    const session_id = parseObjectId(sessionId);
+    if (!course_id || !session_id) {
+      throw createHttpError(HttpStatus.BAD_REQUEST, HttpResponse.INVALID_ID);
     }
 
-    const removedData=await this._courseRepository.removeSession(course_id,session_id)
-   return CourseFormDataDTO(removedData as ICourses)
+    const removedData = await this._courseRepository.removeSession(
+      course_id,
+      session_id,
+    );
+    return CourseFormDataDTO(removedData as ICourses);
   }
 }

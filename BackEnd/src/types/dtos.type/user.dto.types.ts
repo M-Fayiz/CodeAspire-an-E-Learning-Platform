@@ -43,7 +43,6 @@ export interface IUserDTO {
   isRequested?: boolean;
 }
 
-
 export interface IPayloadDTO {
   _id: Types.ObjectId;
   email: string;

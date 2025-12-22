@@ -134,7 +134,7 @@ function CourseLayout() {
                 totalPages={totalPage}
                 onPageChange={handlePage}
               />
-              e
+          
             </div>
           )}
         </div>

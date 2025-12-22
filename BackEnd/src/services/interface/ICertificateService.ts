@@ -5,7 +5,10 @@ export interface ICertificateService {
   createCertificate(
     learnerId: string,
     courseId: string,
-    programmTitle:string
-  ): Promise<{certificate:ICertificateModel,notification :INotificationDTO}>;
-  listCertificate(learnerId:string):Promise<ICertificateModel[]>
+    programmTitle: string,
+  ): Promise<{
+    certificate: ICertificateModel;
+    notification: INotificationDTO;
+  }>;
+  listCertificate(learnerId: string): Promise<ICertificateModel[]>;
 }

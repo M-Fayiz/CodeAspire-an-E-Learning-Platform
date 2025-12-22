@@ -92,15 +92,15 @@ export class CourseController implements ICourseController {
     try {
       const { courseId } = req.params;
       const { learnerId } = req.query;
-
-      const course = await this._courseService.getCourse(
+    
+      const {courseDetails,isEnrolled} = await this._courseService.getCourse(
         courseId,
         learnerId as string,
       );
-
+      
       res
         .status(HttpStatus.OK)
-        .json(successResponse(HttpResponse.OK, { course }));
+        .json(successResponse(HttpResponse.OK, { courseDetails,isEnrolled }));
     } catch (error) {
       next(error);
     }
@@ -112,7 +112,7 @@ export class CourseController implements ICourseController {
   ): Promise<void> => {
     try {
       const { mentorId, search, page } = req.query;
-      console.log('mentor Id : ',mentorId)
+      console.log("mentor Id : ", mentorId);
       const draftCoursList = await this._courseService.getDraftedCourses(
         search as string,
         page as string,
@@ -137,12 +137,12 @@ export class CourseController implements ICourseController {
     try {
       const { courseId } = req.params;
       const { session } = req.body;
-      
+
       const addedSessionData = await this._courseService.addSessions(
         courseId,
         session,
       );
-      console.warn('added session :',addedSessionData);
+      console.warn("added session :", addedSessionData);
       res
         .status(HttpStatus.OK)
         .json(successResponse(HttpResponse.OK, { addedSessionData }));
@@ -331,16 +331,23 @@ export class CourseController implements ICourseController {
       next(error);
     }
   };
-  removeSession=async(req: Request, res: Response, next: NextFunction): Promise<void>=> {
+  removeSession = async (
+    req: Request,
+    res: Response,
+    next: NextFunction,
+  ): Promise<void> => {
     try {
-      const {courseId,sessionId}=req.params
-      console.log(courseId,'-    -',sessionId )
-      const removedSessionData=await this._courseService.removeSession(courseId,sessionId)
+      const { courseId, sessionId } = req.params;
+      console.log(courseId, "-    -", sessionId);
+      const removedSessionData = await this._courseService.removeSession(
+        courseId,
+        sessionId,
+      );
       res
         .status(HttpStatus.OK)
         .json(successResponse(HttpResponse.OK, { removedSessionData }));
     } catch (error) {
-      next(error)
+      next(error);
     }
-  }
+  };
 }

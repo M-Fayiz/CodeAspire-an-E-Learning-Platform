@@ -35,8 +35,6 @@ export class SlotBookingController implements ISlotBookingController {
         endTime,
       };
 
-      
-
       const checkoutURL =
         await this._slotBookingService.createBooking(bookingData);
 
@@ -119,30 +117,43 @@ export class SlotBookingController implements ISlotBookingController {
       next(error);
     }
   };
-  updateStudentStatus=async(req: Request, res: Response, next: NextFunction): Promise<void>=>{
+  updateStudentStatus = async (
+    req: Request,
+    res: Response,
+    next: NextFunction,
+  ): Promise<void> => {
     try {
-      const {bookedId}=req.params
-      const {studentStatus}=req.body
-      
-      const updatedData=await this._slotBookingService.updateStudents(bookedId,studentStatus)
+      const { bookedId } = req.params;
+      const { studentStatus } = req.body;
+
+      const updatedData = await this._slotBookingService.updateStudents(
+        bookedId,
+        studentStatus,
+      );
       res
         .status(HttpStatus.OK)
         .json(successResponse(HttpResponse.OK, { updatedData }));
     } catch (error) {
-      next(error)
+      next(error);
     }
-    
-  }
-  updateSlotStatus=async(req: Request, res: Response, next: NextFunction): Promise<void> =>{
+  };
+  updateSlotStatus = async (
+    req: Request,
+    res: Response,
+    next: NextFunction,
+  ): Promise<void> => {
     try {
-      const {bookedId}=req.params
-      const {status}=req.body
-      const updateStatus=await this._slotBookingService.updateSlotStatus(bookedId,status)
+      const { bookedId } = req.params;
+      const { status } = req.body;
+      const updateStatus = await this._slotBookingService.updateSlotStatus(
+        bookedId,
+        status,
+      );
       res
         .status(HttpStatus.OK)
         .json(successResponse(HttpResponse.OK, { updateStatus }));
     } catch (error) {
-      next(error)
+      next(error);
     }
-  }
+  };
 }

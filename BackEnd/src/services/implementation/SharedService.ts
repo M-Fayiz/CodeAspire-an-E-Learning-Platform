@@ -23,8 +23,11 @@ export class SharedService implements ISharedService {
     return putObjectURl(fileName, folderName, fileType);
   }
   async generatePresignedGetUrl(fileName: string): Promise<string> {
-    if(!fileName) {
-      throw createHttpError(HttpStatus.BAD_REQUEST,HttpResponse.ITEM_NOT_FOUND)
+    if (!fileName) {
+      throw createHttpError(
+        HttpStatus.BAD_REQUEST,
+        HttpResponse.ITEM_NOT_FOUND,
+      );
     }
     const getURL = await getObjectURL(fileName);
     if (!getURL) {

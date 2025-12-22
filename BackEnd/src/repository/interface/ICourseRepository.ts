@@ -62,6 +62,13 @@ export interface ICourseRepository {
   findDocumentCount(query: FilterQuery<ICourses>): Promise<number>;
   findAllCourse(query: FilterQuery<ICourses>): Promise<ICourses[] | null>;
   getCourseFormData(courseId: Types.ObjectId): Promise<ICourses | null>;
-  removeSession(courseId: Types.ObjectId, sessionId: Types.ObjectId):Promise<ICourses | null>;
-  removeLecture(courseId: Types.ObjectId, sessionId: Types.ObjectId,lectureId:Types.ObjectId):Promise<ICourses | null>;
+  removeSession(
+    courseId: Types.ObjectId,
+    sessionId: Types.ObjectId,
+  ): Promise<ICourses | null>;
+  removeLecture(
+    courseId: Types.ObjectId,
+    sessionId: Types.ObjectId,
+    lectureId: Types.ObjectId,
+  ): Promise<ICourses | null>;
 }

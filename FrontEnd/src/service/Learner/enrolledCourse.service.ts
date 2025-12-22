@@ -99,7 +99,7 @@ export const EnrolledService = {
       throwAxiosError(error);
     }
   },
-  FilterGraph: async (courseId: string, filter: ChartFilter) => {
+  filterGraph: async (courseId: string, filter: ChartFilter) => {
     try {
       const response = await axiosInstance.get(
         API.ENROLLEMENT.GET_FILTERED_GRAPH(courseId),

@@ -9,19 +9,19 @@ import { createHttpError } from "../../utils/http-error";
 import { HttpStatus } from "../../const/http-status";
 import { HttpResponse } from "../../const/error-message";
 export class WebhookService implements IWebhookService {
- 
   constructor(
     private _orderService: IOrderService,
     private _slotBookingService: ISlotBookingService,
-  ) {
-   
-  }
+  ) {}
   async processEvent(req: Request): Promise<void> {
     const sig = req.headers["stripe-signature"];
     let event;
-      if(!stripe){
-        throw createHttpError(HttpStatus.INTERNAL_SERVER_ERROR,HttpResponse.STRIPR_NOT_AVAILABLE)
-      }
+    if (!stripe) {
+      throw createHttpError(
+        HttpStatus.INTERNAL_SERVER_ERROR,
+        HttpResponse.STRIPR_NOT_AVAILABLE,
+      );
+    }
 
     try {
       event = stripe.webhooks.constructEvent(

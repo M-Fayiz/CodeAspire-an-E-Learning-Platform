@@ -56,12 +56,11 @@ export class EnrolledService implements IEnrolledService {
     private _courseRepository: ICourseRepository,
     private _transactionRepository: ITransactionRepository,
     private _userRepository: IUserRepo,
-    private _certificateRepository:ICertificateRepository,
-    private _slotbookingRepository:ISlotBookingRepository
-    
+    private _certificateRepository: ICertificateRepository,
+    private _slotbookingRepository: ISlotBookingRepository,
   ) {}
 
-  async getEnrolledCourses(learnerId: string,): Promise<IEnrolledListDto[]> {
+  async getEnrolledCourses(learnerId: string): Promise<IEnrolledListDto[]> {
     const learner_id = parseObjectId(learnerId);
     if (!learner_id) {
       throw createHttpError(HttpStatus.NOT_FOUND, HttpResponse.INVALID_ID);
@@ -112,69 +111,64 @@ export class EnrolledService implements IEnrolledService {
     return enrolledCourseDetailDTO(enrolledData, populatedCourse);
   }
   async updatedProgress(
-  enrolledId: string,
-  lectureId: string,
-  lastSession:string
-): Promise<IProgressTrack | null> {
+    enrolledId: string,
+    lectureId: string,
+    lastSession: string,
+  ): Promise<IProgressTrack | null> {
+    const enrolledObjectId = parseObjectId(enrolledId);
+    const lectureObjectId = parseObjectId(lectureId);
+    const lastSession_id = parseObjectId(lastSession);
 
-  const enrolledObjectId = parseObjectId(enrolledId);
-  const lectureObjectId = parseObjectId(lectureId);
-  const lastSession_id=parseObjectId(lastSession)
+    if (!enrolledObjectId || !lectureObjectId) {
+      throw createHttpError(HttpStatus.BAD_REQUEST, HttpResponse.INVALID_ID);
+    }
 
-  if (!enrolledObjectId || !lectureObjectId) {
-    throw createHttpError(HttpStatus.BAD_REQUEST, HttpResponse.INVALID_ID);
-  }
-
-  // atomic add (no duplicates)
-  const updatedEnrollment =
-    await this._erolledRepository.updateEnrolledData(
+    // atomic add (no duplicates)
+    const updatedEnrollment = await this._erolledRepository.updateEnrolledData(
       enrolledObjectId,
       {
         $addToSet: { "progress.completedLectures": lectureObjectId },
-        $set: { 
-          "progress.lastAccessedLecture": lectureObjectId ,
-          "progress.lastAccessedSession": lastSession_id ,
+        $set: {
+          "progress.lastAccessedLecture": lectureObjectId,
+          "progress.lastAccessedSession": lastSession_id,
         },
-      
       },
     );
 
-  if (!updatedEnrollment) {
-    throw createHttpError(HttpStatus.NOT_FOUND, HttpResponse.ITEM_NOT_FOUND);
-  }
-  const course=await this._courseRepository.getCourse(updatedEnrollment.courseId as Types.ObjectId)
-  
-  let totalLectures=0
+    if (!updatedEnrollment) {
+      throw createHttpError(HttpStatus.NOT_FOUND, HttpResponse.ITEM_NOT_FOUND);
+    }
+    const course = await this._courseRepository.getCourse(
+      updatedEnrollment.courseId as Types.ObjectId,
+    );
 
-  for(let session of course?.sessions as ISession[]){
-    totalLectures+=session.lectures.length
-  }
- 
-  const completedCount =
-    updatedEnrollment.progress.completedLectures.length;
+    let totalLectures = 0;
 
-   const completionPercentage =
-    (completedCount / totalLectures! ) * 100;
+    for (let session of course?.sessions as ISession[]) {
+      totalLectures += session.lectures.length;
+    }
 
-  const status =
-    completionPercentage === 100
-      ? completionStatus.COMPLETED
-      : completionStatus.IN_PROGRESS;
+    const completedCount = updatedEnrollment.progress.completedLectures.length;
 
-  const finalEnrollment =
-    await this._erolledRepository.updateEnrolledData(
+    const completionPercentage = (completedCount / totalLectures!) * 100;
+
+    const status =
+      completionPercentage === 100
+        ? completionStatus.COMPLETED
+        : completionStatus.IN_PROGRESS;
+
+    const finalEnrollment = await this._erolledRepository.updateEnrolledData(
       enrolledObjectId,
       {
         $set: {
           "progress.completionPercentage": completionPercentage,
           courseStatus: status,
-          
         },
       },
     );
-   
-  return finalEnrollment?.progress ?? null;
-}
+
+    return finalEnrollment?.progress ?? null;
+  }
 
   async addRating(enroledId: string, value: number): Promise<number> {
     const enrolled_id = parseObjectId(enroledId);
@@ -185,7 +179,7 @@ export class EnrolledService implements IEnrolledService {
       enrolled_id,
       value,
     );
-   
+
     if (!updatedData?.rating) {
       throw createHttpError(
         HttpStatus.INTERNAL_SERVER_ERROR,
@@ -297,15 +291,33 @@ export class EnrolledService implements IEnrolledService {
       signedUsers,
     };
   }
-  async learnerDashboardCardData(learnerId: string, filter?: string, startDate?: string, endDate?: string): Promise<learnerDashboardCardsDTO> {
-    const learner_Id=parseObjectId(learnerId)
-    if(!learner_Id){
-      throw createHttpError(HttpStatus.BAD_REQUEST,HttpResponse.INVALID_ID)
+
+  
+  async learnerDashboardCardData(
+    learnerId: string,
+    filter?: string,
+    startDate?: string,
+    endDate?: string,
+  ): Promise<learnerDashboardCardsDTO> {
+    const learner_Id = parseObjectId(learnerId);
+    if (!learner_Id) {
+      throw createHttpError(HttpStatus.BAD_REQUEST, HttpResponse.INVALID_ID);
     }
 
+    console.log("learener :", learner_Id);
 
-    const[courseCard,certificateCount,slotCard]=await Promise.all([this._erolledRepository.getLearnerDashboardCourseData(learner_Id),this._certificateRepository.learnerTotalCertificate(learner_Id),this._slotbookingRepository.learnerDashboardSlotCard(learner_Id)]) 
-    
-    return learnerDashboardDetails(courseCard[0],slotCard[0],certificateCount)
+    const [courseCard, certificateCount, slotCard] = await Promise.all([
+      this._erolledRepository.getLearnerDashboardCourseData(learner_Id),
+      this._certificateRepository.learnerTotalCertificate(learner_Id),
+      this._slotbookingRepository.learnerDashboardSlotCard(learner_Id),
+    ]);
+    console.log('course : ',courseCard)
+    console.log('certi :',certificateCount)
+    console.log('slotCard :',slotCard)
+    return learnerDashboardDetails(
+      courseCard[0],
+      slotCard[0],
+      certificateCount,
+    );
   }
 }

@@ -1,4 +1,3 @@
-
 import {
   CourseDashboardDTO,
   IChartTrendDTO,
@@ -17,7 +16,7 @@ export function courseDashboardDTO(
     enrolledStudents,
     avgRating,
     course: {
-      _id: course._id ,
+      _id: course._id,
       title: course.title as string,
       description: course.description as string,
       price: course.price,

@@ -43,13 +43,11 @@ export const registerVideoHandlers = (
     const room = `video:${roomId}`;
 
     if (videoRooms[roomId]) {
-      
       socket.leave(room);
       videoRooms[roomId].delete(userId);
       if (videoRooms[roomId].size === 0) delete videoRooms[roomId];
     }
-   socket.to(`video:${roomId}`).emit("video:peer-left", { userId });
-
+    socket.to(`video:${roomId}`).emit("video:peer-left", { userId });
   });
 
   socket.on("disconnect", () => {

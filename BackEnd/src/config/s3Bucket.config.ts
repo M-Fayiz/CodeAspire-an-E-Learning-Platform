@@ -31,20 +31,20 @@ export async function getObjectURL(key: string) {
   return url;
 }
 
-  export async function putObjectURl(
-    filename: string,
-    folderName: string,
-    fileType: string,
-  ): Promise<{ uploadURL: string; fileURL: string }> {
-    const key = `${folderName}/${Date.now()}-${filename}`;
+export async function putObjectURl(
+  filename: string,
+  folderName: string,
+  fileType: string,
+): Promise<{ uploadURL: string; fileURL: string }> {
+  const key = `${folderName}/${Date.now()}-${filename}`;
 
-    const command = new PutObjectCommand({
-      Bucket: bucketName,
-      Key: key,
-      ContentType: fileType,
-    });
+  const command = new PutObjectCommand({
+    Bucket: bucketName,
+    Key: key,
+    ContentType: fileType,
+  });
 
-    const uploadURL = await getSignedUrl(s3Bucket, command);
-    const fileURL = key;
-    return { uploadURL, fileURL };
-  }
+  const uploadURL = await getSignedUrl(s3Bucket, command);
+  const fileURL = key;
+  return { uploadURL, fileURL };
+}

@@ -48,7 +48,7 @@ const courseService = {
           learnerId,
         },
       });
-      console.log(" response fata", response.data);
+     
       if (!response) return { updated: null, totalDocument: 0 };
 
       const updated = await Promise.all(
@@ -75,7 +75,7 @@ const courseService = {
         API.COURSE.ADD_SESSION(courseId),
         { session },
       );
-      console.log("/> </> :", response.data.addedSessionData);
+     
       return response.data.addedSessionData;
     } catch (error) {
       throwAxiosError(error);
@@ -119,7 +119,7 @@ const courseService = {
   getCourse: async (courseId: string): Promise<ICourseDTO[] | null> => {
     try {
       if (!courseId) return null;
-      console.log(courseId, "this is the course id");
+    
       const response = await axiosInstance.get(API.COURSE.GET_COURSE(courseId));
       return response.data.course;
     } catch (error) {
@@ -177,7 +177,7 @@ const courseService = {
     courseData: ICourseData,
   ): Promise<CourseForm> => {
     try {
-      console.log("this is thubnail :", courseData.thumbnail);
+  
       if (courseData.thumbnail instanceof File) {
         const uploadAndFileUrl = await sharedService.getS3BucketUploadUrl(
           courseData.thumbnail as File,
@@ -216,32 +216,40 @@ const courseService = {
     }
   },
   getCourseDetails: async (
-    courseId: string,
-    learnerId?: string,
-  ): Promise<IFormCourseDTO> => {
-    try {
-      const response = await axiosInstance.get(
-        API.COURSE.COURSE_DETAILS(courseId),
-        { params: { learnerId } },
+  courseId: string,
+  learnerId:string
+): Promise<{ courseDetails: IFormCourseDTO; isEnrolled: boolean }> => {
+  try {
+    const response = await axiosInstance.get(
+      API.COURSE.COURSE_DETAILS(courseId),{
+        params:{learnerId}
+      }
+    );
+
+    const { courseDetails, isEnrolled } = response.data;
+
+    courseDetails.thumbnail =
+      await sharedService.getPreSignedDownloadURL(
+        courseDetails.thumbnail,
       );
 
-      response.data.course.thumbnail =
-        await sharedService.getPreSignedDownloadURL(
-          response.data.course.thumbnail,
-        );
-
-      for (const session of response.data.course.sessions) {
-        for (const lecture of session.lectures) {
-          lecture.lectureContent = await sharedService.getPreSignedDownloadURL(
+    for (const session of courseDetails.sessions) {
+      for (const lecture of session.lectures) {
+        lecture.lectureContent =
+          await sharedService.getPreSignedDownloadURL(
             lecture.lectureContent,
           );
-        }
       }
-      return response.data.course;
-    } catch (error) {
-      throwAxiosError(error);
     }
-  },
+
+    console.log("data from server:", courseDetails, isEnrolled);
+
+    return { courseDetails, isEnrolled };
+  } catch (error) {
+    throwAxiosError(error);
+  }
+},
+
 
   approveCourse: async (
     coursId: string,

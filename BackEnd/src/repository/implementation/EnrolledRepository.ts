@@ -39,10 +39,10 @@ export class EnrolledRepository
     return await this.findById(enrolledId);
   }
   async isEnrolled(
-    userId: Types.ObjectId,
+    learnerId: Types.ObjectId,
     courseId: Types.ObjectId,
   ): Promise<IEnrolledModel | null> {
-    return await this.findOne({ learnerId: userId, courseId: courseId });
+    return await this.findOne({ learnerId: learnerId, courseId: courseId });
   }
   async updatedProgress(
     enrolledId: Types.ObjectId,
@@ -219,37 +219,46 @@ export class EnrolledRepository
       },
     ]);
   }
-  async getLearnerDashboardCourseData(learnerId: Types.ObjectId): Promise<LearnerCourseCard[]> {
-    const result= await this.aggregate<LearnerCourseCard>([
+  async getLearnerDashboardCourseData(
+    learnerId: Types.ObjectId,
+  ): Promise<LearnerCourseCard[]> {
+    const result = await this.aggregate<LearnerCourseCard>([
       {
-        $group:{
-          _id:`$${learnerId}`,
-          courseCount:{$sum:1},
-          completedCourse:{
-            $sum:{
-              $cond:[
-                {$eq:["$courseStatus",completionStatus.COMPLETED]},
-                1,
-                0
-              ]
-            }
-          },
-          inProgressCourse:{
-            $sum:{
-              $cond:[
-                {$eq:["$courseStatus",completionStatus.IN_PROGRESS]},
-                1,
-                0
-              ]
-            }
-          }
+        $match: {
+          learnerId: learnerId,
         },
-       
-      }
-    ])
-    return result
+      },
+      {
+        $group: {
+          _id: `$learnerId`,
+          courseCount: { $sum: 1 },
+          completedCourse: {
+            $sum: {
+              $cond: [
+                { $eq: ["$courseStatus", completionStatus.COMPLETED] },
+                1,
+                0,
+              ],
+            },
+          },
+          inProgressCourse: {
+            $sum: {
+              $cond: [
+                { $eq: ["$courseStatus", completionStatus.IN_PROGRESS] },
+                1,
+                0,
+              ],
+            },
+          },
+        },
+      },
+    ]);
+    return result;
   }
-  async updateEnrolledData(enrolledId:Types.ObjectId , data: UpdateQuery<IEnrolledModel>): Promise<IEnrolledModel|null> {
-    return await this.findByIDAndUpdate(enrolledId,data)
+  async updateEnrolledData(
+    enrolledId: Types.ObjectId,
+    data: UpdateQuery<IEnrolledModel>,
+  ): Promise<IEnrolledModel | null> {
+    return await this.findByIDAndUpdate(enrolledId, data);
   }
 }

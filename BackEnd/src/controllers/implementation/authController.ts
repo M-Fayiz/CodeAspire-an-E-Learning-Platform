@@ -31,8 +31,7 @@ export class AuthController implements IAuthController {
     next: NextFunction,
   ): Promise<void> {
     try {
-
-      console.log('verify email',req.body)
+      console.log("verify email", req.body);
       const token = await this._authSerive.verifyEmail(req.body);
       setAccessToken(res, token.accessToken);
       setRefreshToken(res, token.refreshToken);
