@@ -5,16 +5,16 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.CertificateModel = void 0;
 const mongoose_1 = __importDefault(require("mongoose"));
-const modelName_1 = require("../const/modelName");
+const modelName_const_1 = require("../const/modelName.const");
 const CertificateSchema = new mongoose_1.default.Schema({
     learnerId: {
         type: mongoose_1.default.Schema.Types.ObjectId,
-        ref: modelName_1.DbModelName.USER,
+        ref: modelName_const_1.DbModelName.USER,
         required: true,
     },
     courseId: {
         type: mongoose_1.default.Schema.Types.ObjectId,
-        ref: modelName_1.DbModelName.COURSE,
+        ref: modelName_const_1.DbModelName.COURSE,
         required: true,
     },
     programmTitle: { type: String },
@@ -23,4 +23,4 @@ const CertificateSchema = new mongoose_1.default.Schema({
     preview_image: { type: String, required: true },
     issuedDate: { type: Date, default: Date.now },
 }, { timestamps: true });
-exports.CertificateModel = mongoose_1.default.model(modelName_1.DbModelName.CERTIFICATE, CertificateSchema);
+exports.CertificateModel = mongoose_1.default.model(modelName_const_1.DbModelName.CERTIFICATE, CertificateSchema);

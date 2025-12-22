@@ -5,8 +5,8 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.CertificateService = void 0;
 const path_1 = __importDefault(require("path"));
-const error_message_1 = require("../../const/error-message");
-const http_status_1 = require("../../const/http-status");
+const error_message_const_1 = require("../../const/error-message.const");
+const http_status_const_1 = require("../../const/http-status.const");
 const objectId_1 = require("../../mongoose/objectId");
 const generateCerteficateId_util_1 = require("../../utils/generateCerteficateId.util");
 const generateCertificate_util_1 = __importDefault(require("../../utils/generateCertificate.util"));
@@ -28,14 +28,14 @@ class CertificateService {
         const course_id = (0, objectId_1.parseObjectId)(courseId);
         console.log(learner_Id, course_id);
         if (!learner_Id || !course_id) {
-            throw (0, http_error_1.createHttpError)(http_status_1.HttpStatus.BAD_REQUEST, error_message_1.HttpResponse.INVALID_ID);
+            throw (0, http_error_1.createHttpError)(http_status_const_1.HttpStatus.BAD_REQUEST, error_message_const_1.HttpResponse.INVALID_ID);
         }
         const [learner, course] = await Promise.all([
             this._userRepository.findUser({ _id: learner_Id }),
             this._courseRepository.findCourse(course_id),
         ]);
         if (!learner || !course) {
-            throw (0, http_error_1.createHttpError)(http_status_1.HttpStatus.NOT_FOUND, error_message_1.HttpResponse.ITEM_NOT_FOUND);
+            throw (0, http_error_1.createHttpError)(http_status_const_1.HttpStatus.NOT_FOUND, error_message_const_1.HttpResponse.ITEM_NOT_FOUND);
         }
         const certId = (0, generateCerteficateId_util_1.generateCertificateId)();
         const issuedDate = new Date().toLocaleDateString("en-IN");
@@ -60,24 +60,24 @@ class CertificateService {
             certificateId: certId,
             certificateUrl: s3Key,
             preview_image: previewKey,
-            issuedDate: new Date()
+            issuedDate: new Date(),
         };
         const createdCertificate = await this._certificateRepository.createCertificate(CertificateData);
         const notification = notification_template_1.NotificationTemplates.CourseCompletionCertificate(learner_Id, course.title);
         const createdNotification = await this._notificatioinRepository.createNotification(notification);
         return {
             certificate: createdCertificate,
-            notification: (0, notification_dto_1.notificationDto)(createdNotification)
+            notification: (0, notification_dto_1.notificationDto)(createdNotification),
         };
     }
     async listCertificate(learnerId) {
         const learner_id = (0, objectId_1.parseObjectId)(learnerId);
         if (!learner_id) {
-            throw (0, http_error_1.createHttpError)(http_status_1.HttpStatus.NOT_FOUND, error_message_1.HttpResponse.INVALID_ID);
+            throw (0, http_error_1.createHttpError)(http_status_const_1.HttpStatus.NOT_FOUND, error_message_const_1.HttpResponse.INVALID_ID);
         }
         const certificates = await this._certificateRepository.listCertificate(learner_id);
         if (!certificates) {
-            throw (0, http_error_1.createHttpError)(http_status_1.HttpStatus.NOT_FOUND, error_message_1.HttpResponse.ITEM_NOT_FOUND);
+            throw (0, http_error_1.createHttpError)(http_status_const_1.HttpStatus.NOT_FOUND, error_message_const_1.HttpResponse.ITEM_NOT_FOUND);
         }
         return certificates;
     }

@@ -1,8 +1,8 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.AdminService = void 0;
-const error_message_1 = require("../../const/error-message");
-const http_status_1 = require("../../const/http-status");
+const error_message_const_1 = require("../../const/error-message.const");
+const http_status_const_1 = require("../../const/http-status.const");
 const http_error_1 = require("../../utils/http-error");
 const objectId_1 = require("../../mongoose/objectId");
 const role_dto_1 = require("../../dtos/role.dto");
@@ -19,20 +19,15 @@ class AdminService {
         this._transactionRepository = _transactionRepository;
         this._enrolledRepository = _enrolledRepository;
     }
-    async fetchAllUsers(page, isActive, name, role) {
-        const limit = 3;
+    async fetchAllUsers(page, search) {
+        const limit = 4;
         const skip = (page - 1) * limit;
-        const searchQuery = {
-            name: name,
-            role: role,
-            isActive: isActive,
-        };
         const [allUsers, userCount] = await Promise.all([
-            this._userRepo.findAllUsers(limit, skip, searchQuery),
-            this._userRepo.findUserCount(searchQuery),
+            this._userRepo.findAllUsers(limit, skip, search),
+            this._userRepo.findUserCount(search),
         ]);
         if (!allUsers) {
-            throw (0, http_error_1.createHttpError)(http_status_1.HttpStatus.INTERNAL_SERVER_ERROR, error_message_1.HttpResponse.SERVER_ERROR);
+            throw (0, http_error_1.createHttpError)(http_status_const_1.HttpStatus.INTERNAL_SERVER_ERROR, error_message_const_1.HttpResponse.SERVER_ERROR);
         }
         const safeUsers = allUsers.map((user) => {
             switch (user.role) {
@@ -59,11 +54,11 @@ class AdminService {
     async blockUser(id) {
         const objectId = (0, objectId_1.parseObjectId)(id);
         if (!objectId) {
-            throw (0, http_error_1.createHttpError)(http_status_1.HttpStatus.BAD_REQUEST, error_message_1.HttpResponse.INVALID_CREDNTIALS);
+            throw (0, http_error_1.createHttpError)(http_status_const_1.HttpStatus.BAD_REQUEST, error_message_const_1.HttpResponse.INVALID_CREDNTIALS);
         }
         const updatedUser = await this._userRepo.blockUser(objectId);
         if (!updatedUser) {
-            throw (0, http_error_1.createHttpError)(http_status_1.HttpStatus.INTERNAL_SERVER_ERROR, error_message_1.HttpResponse.SERVER_ERROR);
+            throw (0, http_error_1.createHttpError)(http_status_const_1.HttpStatus.INTERNAL_SERVER_ERROR, error_message_const_1.HttpResponse.SERVER_ERROR);
         }
         const result = {
             isActive: updatedUser.isActive,
@@ -74,11 +69,11 @@ class AdminService {
     async userProfile(userId) {
         const user_Id = (0, objectId_1.parseObjectId)(userId);
         if (!user_Id) {
-            throw (0, http_error_1.createHttpError)(http_status_1.HttpStatus.BAD_REQUEST, error_message_1.HttpResponse.INVALID_CREDNTIALS);
+            throw (0, http_error_1.createHttpError)(http_status_const_1.HttpStatus.BAD_REQUEST, error_message_const_1.HttpResponse.INVALID_CREDNTIALS);
         }
         const profileData = await this._userRepo.findUserById(user_Id);
         if (!profileData) {
-            throw (0, http_error_1.createHttpError)(http_status_1.HttpStatus.NOT_FOUND, error_message_1.HttpResponse.USER_NOT_FOUND);
+            throw (0, http_error_1.createHttpError)(http_status_const_1.HttpStatus.NOT_FOUND, error_message_const_1.HttpResponse.USER_NOT_FOUND);
         }
         switch (profileData.role) {
             case user_types_1.IRole.Mentor:
@@ -102,11 +97,11 @@ class AdminService {
     async approveMentor(mentorId, status, feedback) {
         const mentor_ID = (0, objectId_1.parseObjectId)(mentorId);
         if (!mentor_ID) {
-            throw (0, http_error_1.createHttpError)(http_status_1.HttpStatus.BAD_REQUEST, error_message_1.HttpResponse.INVALID_CREDNTIALS);
+            throw (0, http_error_1.createHttpError)(http_status_const_1.HttpStatus.BAD_REQUEST, error_message_const_1.HttpResponse.INVALID_CREDNTIALS);
         }
         const approvedData = await this._userRepo.updateMentorStatus(mentor_ID, status);
         if (!approvedData) {
-            throw (0, http_error_1.createHttpError)(http_status_1.HttpStatus.NOT_FOUND, error_message_1.HttpResponse.USER_NOT_FOUND);
+            throw (0, http_error_1.createHttpError)(http_status_const_1.HttpStatus.NOT_FOUND, error_message_const_1.HttpResponse.USER_NOT_FOUND);
         }
         let notificationData;
         if (status == "approved") {
@@ -123,13 +118,13 @@ class AdminService {
     }
     async getDashboardData(filter, startDay, endDay) {
         const { start, end } = (0, dashFilterGenerator_utils_1.timeFilter)(filter, startDay, endDay);
-        const [mentors, learners, courseCount, revenue, topCourse, topCategory] = await Promise.all([
-            await this._userRepo.findDashBoardUserCount(user_types_1.IRole.Mentor),
-            await this._userRepo.findDashBoardUserCount(user_types_1.IRole.Mentor),
-            await this._courseRepository.findDocumentCount({}),
-            await this._transactionRepository.getAdminRevenue(),
-            await this._enrolledRepository.getTopSellingCourse(),
-            await this._enrolledRepository.getTopSellingCategory(),
+        const [mentors, learners, courseCount, revenue, topCourse, topCategory,] = await Promise.all([
+            this._userRepo.findDashBoardUserCount(user_types_1.IRole.Mentor, start, end),
+            this._userRepo.findDashBoardUserCount(user_types_1.IRole.Learner, start, end),
+            this._courseRepository.findDocumentCount({}, start, end),
+            this._transactionRepository.getAdminRevenue(start, end),
+            this._enrolledRepository.getTopSellingCourse(undefined, start, end),
+            this._enrolledRepository.getTopSellingCategory(),
         ]);
         return (0, adminDashboard_dto_1.adminDashboardDTO)(mentors, learners, courseCount, revenue, topCourse, topCategory);
     }

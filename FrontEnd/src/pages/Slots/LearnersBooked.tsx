@@ -49,6 +49,23 @@ export default function LearnerBookedSlots() {
     }
   };
 
+  const handleSlotCancelation=async(bookedId:string)=>{
+    try {
+      const status=await SlotBookingSercie.cancelSlot(bookedId)
+      setLearnerSlots(prev =>
+      prev.map(slot =>
+        slot._id === bookedId
+          ? { ...slot, status: status }
+          : slot
+      )
+    );
+    } catch (error) {
+      if(error instanceof Error){
+        toast.error(error.message)
+      }
+    }
+  }
+
   return (
     <div className="max-w-7xl mx-auto">
       <BookingTable
@@ -56,6 +73,7 @@ export default function LearnerBookedSlots() {
         slots={learnerSlots}
         onJoinSession={handleJoinSession}
         onViewFeedback={handleViewFeedback}
+        onCancelSlot={handleSlotCancelation}
       />
       <Dialog open={open} onOpenChange={setOPen}>
         <DialogContent className="sm:max-w-[450px]">

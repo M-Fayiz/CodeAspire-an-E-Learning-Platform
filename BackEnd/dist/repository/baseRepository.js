@@ -96,8 +96,8 @@ class BaseRepository {
     async pullItemFromArray(filter, arrayPath, itemId) {
         const result = await this.model.findOneAndUpdate(filter, {
             $pull: {
-                [arrayPath]: { _id: itemId }
-            }
+                [arrayPath]: { _id: itemId },
+            },
         }, { new: true });
         return result ?? null;
     }

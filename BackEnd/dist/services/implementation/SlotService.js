@@ -1,8 +1,8 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.SlotService = void 0;
-const error_message_1 = require("../../const/error-message");
-const http_status_1 = require("../../const/http-status");
+const error_message_const_1 = require("../../const/error-message.const");
+const http_status_const_1 = require("../../const/http-status.const");
 const slot_dto_1 = require("../../dtos/slot.dto");
 const objectId_1 = require("../../mongoose/objectId");
 const http_error_1 = require("../../utils/http-error");
@@ -28,7 +28,7 @@ class SlotService {
                         continue;
                     if (newDay.startTime < existingDay.endTime &&
                         newDay.endTime > existingDay.startTime) {
-                        throw (0, http_error_1.createHttpError)(http_status_1.HttpStatus.CONFLICT, error_message_1.HttpResponse.SLOT_EXIST_DAYS(newDay.day, `${existingDay.startTime} - ${existingDay.endTime}`));
+                        throw (0, http_error_1.createHttpError)(http_status_const_1.HttpStatus.CONFLICT, error_message_const_1.HttpResponse.SLOT_EXIST_DAYS(newDay.day, `${existingDay.startTime} - ${existingDay.endTime}`));
                     }
                 }
             }
@@ -44,16 +44,16 @@ class SlotService {
             courseId: slotData.courseId,
         });
         if (isCourseSLotExist) {
-            throw (0, http_error_1.createHttpError)(http_status_1.HttpStatus.CONFLICT, error_message_1.HttpResponse.SLOT_EXIST);
+            throw (0, http_error_1.createHttpError)(http_status_const_1.HttpStatus.CONFLICT, error_message_const_1.HttpResponse.SLOT_EXIST);
         }
         const existingSlots = await this._slotRepository.getMentorSLots(slotData.mentorId);
         if (existingSlots) {
             await this._validateSlotOverlap(slotData.mentorId, slotData.selectedDays);
         }
         const createdSlot = await this._slotRepository.createSlot(slotData);
-        const updatedCourse = await this._slotRepository.getUpdateSlots(createdSlot._id, ['courseId']);
+        const updatedCourse = await this._slotRepository.getUpdateSlots(createdSlot._id, ["courseId"]);
         if (!updatedCourse) {
-            throw (0, http_error_1.createHttpError)(http_status_1.HttpStatus.NOT_FOUND, error_message_1.HttpResponse.SLOT_NOT_FOUND);
+            throw (0, http_error_1.createHttpError)(http_status_const_1.HttpStatus.NOT_FOUND, error_message_const_1.HttpResponse.SLOT_NOT_FOUND);
         }
         for (let days of updatedCourse.selectedDays) {
             days.startTime = (0, timeManagement_util_1.convertTo12Hour)(days.startTime);
@@ -69,17 +69,17 @@ class SlotService {
     async getMontorSlots(mentorId, page) {
         const mentor_Id = (0, objectId_1.parseObjectId)(mentorId);
         if (!mentor_Id) {
-            throw (0, http_error_1.createHttpError)(http_status_1.HttpStatus.NOT_FOUND, error_message_1.HttpResponse.INVALID_ID);
+            throw (0, http_error_1.createHttpError)(http_status_const_1.HttpStatus.NOT_FOUND, error_message_const_1.HttpResponse.INVALID_ID);
         }
         let limit = 5;
         let skip = (page - 1) * limit;
-        const mentorSlots = await this._slotRepository.getMentorSLotsList(mentor_Id, skip, limit, [
-            "courseId",
-        ]);
+        const mentorSlots = await this._slotRepository.getMentorSLotsList(mentor_Id, skip, limit, ["courseId"]);
         if (!mentorSlots) {
-            throw (0, http_error_1.createHttpError)(http_status_1.HttpStatus.NOT_FOUND, error_message_1.HttpResponse.ITEM_NOT_FOUND);
+            throw (0, http_error_1.createHttpError)(http_status_const_1.HttpStatus.NOT_FOUND, error_message_const_1.HttpResponse.ITEM_NOT_FOUND);
         }
-        const totalDocument = await this._slotRepository.totalDocument({ mentorId: mentor_Id });
+        const totalDocument = await this._slotRepository.totalDocument({
+            mentorId: mentor_Id,
+        });
         for (let daySlots of mentorSlots) {
             for (let days of daySlots.selectedDays) {
                 days.startTime = (0, timeManagement_util_1.convertTo12Hour)(days.startTime);
@@ -100,7 +100,7 @@ class SlotService {
     async updateSlot(slotId, slotData) {
         const slot_Id = (0, objectId_1.parseObjectId)(slotId);
         if (!slot_Id) {
-            throw (0, http_error_1.createHttpError)(http_status_1.HttpStatus.BAD_REQUEST, error_message_1.HttpResponse.INVALID_ID);
+            throw (0, http_error_1.createHttpError)(http_status_const_1.HttpStatus.BAD_REQUEST, error_message_const_1.HttpResponse.INVALID_ID);
         }
         const existingSlots = await this._slotRepository.getMentorSLots(slotData.mentorId);
         if (existingSlots) {
@@ -108,11 +108,11 @@ class SlotService {
         }
         const updatedSlot = await this._slotRepository.updateSlot(slot_Id, slotData);
         if (!updatedSlot) {
-            throw (0, http_error_1.createHttpError)(http_status_1.HttpStatus.NOT_FOUND, error_message_1.HttpResponse.ITEM_NOT_FOUND);
+            throw (0, http_error_1.createHttpError)(http_status_const_1.HttpStatus.NOT_FOUND, error_message_const_1.HttpResponse.ITEM_NOT_FOUND);
         }
-        const updatedCourse = await this._slotRepository.getUpdateSlots(updatedSlot._id, ['courseId']);
+        const updatedCourse = await this._slotRepository.getUpdateSlots(updatedSlot._id, ["courseId"]);
         if (!updatedCourse) {
-            throw (0, http_error_1.createHttpError)(http_status_1.HttpStatus.NOT_FOUND, error_message_1.HttpResponse.SLOT_NOT_FOUND);
+            throw (0, http_error_1.createHttpError)(http_status_const_1.HttpStatus.NOT_FOUND, error_message_const_1.HttpResponse.SLOT_NOT_FOUND);
         }
         for (let days of updatedCourse.selectedDays) {
             days.startTime = (0, timeManagement_util_1.convertTo12Hour)(days.startTime);
@@ -130,11 +130,11 @@ class SlotService {
     async getCourseSlot(courseId) {
         const course_Id = (0, objectId_1.parseObjectId)(courseId);
         if (!course_Id) {
-            throw (0, http_error_1.createHttpError)(http_status_1.HttpStatus.BAD_REQUEST, error_message_1.HttpResponse.INVALID_ID);
+            throw (0, http_error_1.createHttpError)(http_status_const_1.HttpStatus.BAD_REQUEST, error_message_const_1.HttpResponse.INVALID_ID);
         }
         const slotDAta = await this._slotRepository.getCourseSlot(course_Id);
         if (!slotDAta) {
-            throw (0, http_error_1.createHttpError)(http_status_1.HttpStatus.NOT_FOUND, error_message_1.HttpResponse.ITEM_NOT_FOUND);
+            throw (0, http_error_1.createHttpError)(http_status_const_1.HttpStatus.NOT_FOUND, error_message_const_1.HttpResponse.ITEM_NOT_FOUND);
         }
         await this._slotBookingRepository.findAllSlots({
             courseId: course_Id,

@@ -1,7 +1,7 @@
 import mongoose, { Types, Document, Schema } from "mongoose";
 import { ITransaction } from "../types/transaction.type";
 import { DbModelName } from "../const/modelName.const";
-
+ 
 export interface ITransactionModel
   extends Document<Types.ObjectId>,
     Omit<ITransaction, "_id"> {}

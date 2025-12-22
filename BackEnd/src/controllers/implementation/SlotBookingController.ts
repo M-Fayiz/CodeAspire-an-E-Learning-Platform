@@ -5,6 +5,7 @@ import { ISlotBooking } from "../../types/sessionBooking.type";
 import { HttpStatus } from "../../const/http-status.const";
 import { HttpResponse } from "../../const/error-message.const";
 import { successResponse } from "../../utils/response.util";
+import { sendNotification } from "../../utils/socket.utils";
 
 export class SlotBookingController implements ISlotBookingController {
   constructor(private _slotBookingService: ISlotBookingService) {}
@@ -156,4 +157,16 @@ export class SlotBookingController implements ISlotBookingController {
       next(error);
     }
   };
+  cancelBookedSLot=async(req: Request, res: Response, next: NextFunction): Promise<void>=> {
+    try {
+      const {bookedId}=req.params
+      const {notification,status}=await this._slotBookingService.cancelSlot(bookedId)
+      sendNotification(notification.userId,notification)
+      res
+        .status(HttpStatus.OK)
+        .json(successResponse(HttpResponse.OK, { status }));
+    } catch (error) {
+      next(error)
+    }
+  }
 }

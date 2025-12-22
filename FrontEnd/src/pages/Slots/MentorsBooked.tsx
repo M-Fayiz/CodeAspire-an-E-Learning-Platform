@@ -4,7 +4,7 @@ import { useAuth } from "@/context/auth.context";
 import { BookingTable } from "@/features/slot/listing/bookingTable";
 import { SlotBookingSercie } from "@/service/Learner/slotBooking.service";
 import VideoService from "@/service/videoSession.service";
-import type { IBookingDTOforLearner } from "@/types/DTOS/slotBooking.dto.type";
+import type { IBookingDTOforLearner, slotStatus } from "@/types/DTOS/slotBooking.dto.type";
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router";
 import { toast } from "sonner";
@@ -21,6 +21,7 @@ import {
 import { Button } from "@/components/ui/button";
 import { CalendarDays } from "lucide-react";
 import CertificateService from "@/service/certificate.service";
+import type { studentStatus } from "@/types/sessionBooking.type";
 
 export default function MentorBookedSlots() {
   const { user } = useAuth();
@@ -88,7 +89,7 @@ export default function MentorBookedSlots() {
 
   const handleUpdateStatus = async (
     slotId: string,
-    status: "passed" | "failed",
+    status: studentStatus,
   ) => {
     try {
       setLoading(true);
@@ -115,7 +116,7 @@ export default function MentorBookedSlots() {
 
   const handleSessionComplete = async (
     slotId: string,
-    sessionStatus: "completed",
+    sessionStatus: slotStatus,
   ) => {
     try {
       setLoading(true);

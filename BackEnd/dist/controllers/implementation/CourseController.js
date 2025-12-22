@@ -1,9 +1,9 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.CourseController = void 0;
-const http_status_1 = require("../../const/http-status");
+const http_status_const_1 = require("../../const/http-status.const");
 const response_util_1 = require("../../utils/response.util");
-const error_message_1 = require("../../const/error-message");
+const error_message_const_1 = require("../../const/error-message.const");
 const socket_utils_1 = require("../../utils/socket.utils");
 class CourseController {
     constructor(_courseService) {
@@ -13,8 +13,8 @@ class CourseController {
                 console.log("created course :");
                 const createdCourseData = await this._courseService.createCourses(req.body.courseData);
                 res
-                    .status(http_status_1.HttpStatus.OK)
-                    .json((0, response_util_1.successResponse)(error_message_1.HttpResponse.OK, { createdCourseData }));
+                    .status(http_status_const_1.HttpStatus.OK)
+                    .json((0, response_util_1.successResponse)(error_message_const_1.HttpResponse.OK, { createdCourseData }));
             }
             catch (error) {
                 next(error);
@@ -28,8 +28,8 @@ class CourseController {
                 console.log(courseId, updatedPart, courseData);
                 const updatedCourseData = await this._courseService.updateCourseData(courseId, courseData, updatedPart);
                 res
-                    .status(http_status_1.HttpStatus.OK)
-                    .json((0, response_util_1.successResponse)(error_message_1.HttpResponse.OK, { updatedCourseData }));
+                    .status(http_status_const_1.HttpStatus.OK)
+                    .json((0, response_util_1.successResponse)(error_message_const_1.HttpResponse.OK, { updatedCourseData }));
             }
             catch (error) {
                 next(error);
@@ -40,8 +40,8 @@ class CourseController {
                 const { search, category, subcategory, level, page = 1, limit = 1, learnerId, } = req.query;
                 const { courseData, totalPage } = await this._courseService.fetchCourses(Number(page || 1), Number(limit || 6), search, category, subcategory, level, learnerId);
                 res
-                    .status(http_status_1.HttpStatus.OK)
-                    .json((0, response_util_1.successResponse)(error_message_1.HttpResponse.OK, { courseData, totalPage }));
+                    .status(http_status_const_1.HttpStatus.OK)
+                    .json((0, response_util_1.successResponse)(error_message_const_1.HttpResponse.OK, { courseData, totalPage }));
             }
             catch (error) {
                 next(error);
@@ -51,10 +51,10 @@ class CourseController {
             try {
                 const { courseId } = req.params;
                 const { learnerId } = req.query;
-                const course = await this._courseService.getCourse(courseId, learnerId);
+                const { courseDetails, enrolledId } = await this._courseService.getCourse(courseId, learnerId);
                 res
-                    .status(http_status_1.HttpStatus.OK)
-                    .json((0, response_util_1.successResponse)(error_message_1.HttpResponse.OK, { course }));
+                    .status(http_status_const_1.HttpStatus.OK)
+                    .json((0, response_util_1.successResponse)(error_message_const_1.HttpResponse.OK, { courseDetails, enrolledId }));
             }
             catch (error) {
                 next(error);
@@ -63,9 +63,9 @@ class CourseController {
         this.getMentorDraftedCourseList = async (req, res, next) => {
             try {
                 const { mentorId, search, page } = req.query;
-                console.log('mentor Id : ', mentorId);
+                console.log("mentor Id : ", mentorId);
                 const draftCoursList = await this._courseService.getDraftedCourses(search, page, mentorId);
-                res.status(http_status_1.HttpStatus.OK).json((0, response_util_1.successResponse)(error_message_1.HttpResponse.OK, {
+                res.status(http_status_const_1.HttpStatus.OK).json((0, response_util_1.successResponse)(error_message_const_1.HttpResponse.OK, {
                     courseData: draftCoursList?.courseData,
                     totalPage: draftCoursList?.totalPage,
                 }));
@@ -79,10 +79,10 @@ class CourseController {
                 const { courseId } = req.params;
                 const { session } = req.body;
                 const addedSessionData = await this._courseService.addSessions(courseId, session);
-                console.warn('added session :', addedSessionData);
+                console.warn("added session :", addedSessionData);
                 res
-                    .status(http_status_1.HttpStatus.OK)
-                    .json((0, response_util_1.successResponse)(error_message_1.HttpResponse.OK, { addedSessionData }));
+                    .status(http_status_const_1.HttpStatus.OK)
+                    .json((0, response_util_1.successResponse)(error_message_const_1.HttpResponse.OK, { addedSessionData }));
             }
             catch (error) {
                 next(error);
@@ -94,8 +94,8 @@ class CourseController {
                 const { lecture } = req.body;
                 const addedLectureData = await this._courseService.addLectures(courseId, sessionId, lecture);
                 res
-                    .status(http_status_1.HttpStatus.OK)
-                    .json((0, response_util_1.successResponse)(error_message_1.HttpResponse.OK, { addedLectureData }));
+                    .status(http_status_const_1.HttpStatus.OK)
+                    .json((0, response_util_1.successResponse)(error_message_const_1.HttpResponse.OK, { addedLectureData }));
             }
             catch (error) {
                 next(error);
@@ -107,8 +107,8 @@ class CourseController {
                 const { lecture } = req.body;
                 const updatedData = await this._courseService.editLecture(courseId, sessionId, lectureId, lecture);
                 res
-                    .status(http_status_1.HttpStatus.OK)
-                    .json((0, response_util_1.successResponse)(error_message_1.HttpResponse.OK, { updatedData }));
+                    .status(http_status_const_1.HttpStatus.OK)
+                    .json((0, response_util_1.successResponse)(error_message_const_1.HttpResponse.OK, { updatedData }));
             }
             catch (error) {
                 next(error);
@@ -120,8 +120,8 @@ class CourseController {
                 const { courseData } = req.body;
                 const updatedData = await this._courseService.updateBaseCourseInfo(courseId, courseData);
                 res
-                    .status(http_status_1.HttpStatus.OK)
-                    .json((0, response_util_1.successResponse)(error_message_1.HttpResponse.OK, { updatedData }));
+                    .status(http_status_const_1.HttpStatus.OK)
+                    .json((0, response_util_1.successResponse)(error_message_const_1.HttpResponse.OK, { updatedData }));
             }
             catch (error) {
                 next(error);
@@ -129,10 +129,11 @@ class CourseController {
         };
         this.getAdminCoursList = async (req, res, next) => {
             try {
-                const coursList = await this._courseService.getAdminCourse();
+                const { search, page } = req.query;
+                const coursList = await this._courseService.getAdminCourse(search, Number(page));
                 res
-                    .status(http_status_1.HttpStatus.OK)
-                    .json((0, response_util_1.successResponse)(error_message_1.HttpResponse.OK, { coursList }));
+                    .status(http_status_const_1.HttpStatus.OK)
+                    .json((0, response_util_1.successResponse)(error_message_const_1.HttpResponse.OK, { coursList }));
             }
             catch (error) {
                 next(error);
@@ -143,8 +144,8 @@ class CourseController {
                 const { courseId } = req.params;
                 const courseDetails = await this._courseService.getCourseDetails(courseId);
                 res
-                    .status(http_status_1.HttpStatus.OK)
-                    .json((0, response_util_1.successResponse)(error_message_1.HttpResponse.OK, { courseDetails }));
+                    .status(http_status_const_1.HttpStatus.OK)
+                    .json((0, response_util_1.successResponse)(error_message_const_1.HttpResponse.OK, { courseDetails }));
             }
             catch (error) {
                 next(error);
@@ -156,8 +157,8 @@ class CourseController {
                 const status = await this._courseService.approveCourse(courseId);
                 (0, socket_utils_1.sendNotification)(status.notifyDTO.userId, status.notifyDTO);
                 res
-                    .status(http_status_1.HttpStatus.OK)
-                    .json((0, response_util_1.successResponse)(error_message_1.HttpResponse.OK, { status: status.status }));
+                    .status(http_status_const_1.HttpStatus.OK)
+                    .json((0, response_util_1.successResponse)(error_message_const_1.HttpResponse.OK, { status: status.status }));
             }
             catch (error) {
                 next(error);
@@ -170,8 +171,8 @@ class CourseController {
                 const status = await this._courseService.rejectCourse(courseId, feedBack, email);
                 (0, socket_utils_1.sendNotification)(status.notifyDTO.userId, status.notifyDTO);
                 res
-                    .status(http_status_1.HttpStatus.OK)
-                    .json((0, response_util_1.successResponse)(error_message_1.HttpResponse.OK, { status }));
+                    .status(http_status_const_1.HttpStatus.OK)
+                    .json((0, response_util_1.successResponse)(error_message_const_1.HttpResponse.OK, { status }));
             }
             catch (error) {
                 next(error);
@@ -182,8 +183,8 @@ class CourseController {
                 const { courseId } = req.params;
                 const status = await this._courseService.publishCourse(courseId);
                 res
-                    .status(http_status_1.HttpStatus.OK)
-                    .json((0, response_util_1.successResponse)(error_message_1.HttpResponse.OK, { status }));
+                    .status(http_status_const_1.HttpStatus.OK)
+                    .json((0, response_util_1.successResponse)(error_message_const_1.HttpResponse.OK, { status }));
             }
             catch (error) {
                 next(error);
@@ -194,8 +195,8 @@ class CourseController {
                 const { mentorId } = req.params;
                 const courseList = await this._courseService.fetchCourseListForSlot(mentorId);
                 res
-                    .status(http_status_1.HttpStatus.OK)
-                    .json((0, response_util_1.successResponse)(error_message_1.HttpResponse.OK, { courseList }));
+                    .status(http_status_const_1.HttpStatus.OK)
+                    .json((0, response_util_1.successResponse)(error_message_const_1.HttpResponse.OK, { courseList }));
             }
             catch (error) {
                 next(error);
@@ -206,8 +207,8 @@ class CourseController {
                 const { courseId } = req.params;
                 const courseFormData = await this._courseService.getCourseFormData(courseId);
                 res
-                    .status(http_status_1.HttpStatus.OK)
-                    .json((0, response_util_1.successResponse)(error_message_1.HttpResponse.OK, { courseFormData }));
+                    .status(http_status_const_1.HttpStatus.OK)
+                    .json((0, response_util_1.successResponse)(error_message_const_1.HttpResponse.OK, { courseFormData }));
             }
             catch (error) {
                 next(error);
@@ -216,11 +217,23 @@ class CourseController {
         this.removeSession = async (req, res, next) => {
             try {
                 const { courseId, sessionId } = req.params;
-                console.log(courseId, '-    -', sessionId);
+                console.log(courseId, "-    -", sessionId);
                 const removedSessionData = await this._courseService.removeSession(courseId, sessionId);
                 res
-                    .status(http_status_1.HttpStatus.OK)
-                    .json((0, response_util_1.successResponse)(error_message_1.HttpResponse.OK, { removedSessionData }));
+                    .status(http_status_const_1.HttpStatus.OK)
+                    .json((0, response_util_1.successResponse)(error_message_const_1.HttpResponse.OK, { removedSessionData }));
+            }
+            catch (error) {
+                next(error);
+            }
+        };
+        this.getAdminCourseDetails = async (req, res, next) => {
+            try {
+                const { courseId } = req.params;
+                const courseDetails = await this._courseService.getAdminCourseDetails(courseId);
+                res
+                    .status(http_status_const_1.HttpStatus.OK)
+                    .json((0, response_util_1.successResponse)(error_message_const_1.HttpResponse.OK, { courseDetails }));
             }
             catch (error) {
                 next(error);

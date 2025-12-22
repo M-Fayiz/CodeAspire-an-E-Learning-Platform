@@ -36,5 +36,6 @@ bookingROuter.get(
 );
 bookingROuter.post("/create", slotBookingController.createBooking);
 bookingROuter.get("/list-slots", slotBookingController.getBookedSlots);
+bookingROuter.post("/:bookedId/cancel", slotBookingController.cancelBookedSLot);
 
 export default bookingROuter;

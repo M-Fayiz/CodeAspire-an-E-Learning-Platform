@@ -7,12 +7,13 @@ import { useAuth } from "@/context/auth.context";
 import { EnrolledService } from "@/service/Learner/enrolledCourse.service";
 import LearnerDashboardSkeleton from "@/components/skelton/LearnerDashboard";
 import { RevenueDonutChart, type PieChartProps } from "@/components/ui/PieGraph";
-export type IPaymentTypes = "Cracked" | "Failed";
+
+export type IInterviewType = "Cracked" | "Failed";
 
 const LearnerDashboard = () => {
   const {user}=useAuth()
   const [learnerDashboardData,setLearnerDashboardData]=useState<learnerDashboardCardsDTO|null>(null)
-  const [circleChart,setCircleChart]=useState<PieChartProps<IPaymentTypes>[]>([])
+  const [circleChart,setCircleChart]=useState<PieChartProps<IInterviewType>[]>([])
   useState(()=>{
     (async()=>{
       const dashData=await EnrolledService.learnerDashboardData(user!.id)

@@ -41,7 +41,7 @@ export class UserController implements IUserController {
         currentPassword,
         newPassword,
       );
-      res.status(HttpStatus.OK).json(successResponse(HttpResponse.OK));
+      res.status(HttpStatus.OK).json(successResponse(HttpResponse.OK,{changed:true}));
     } catch (error) {
       next(error);
     }

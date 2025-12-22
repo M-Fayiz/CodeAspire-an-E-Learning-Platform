@@ -90,8 +90,8 @@ class CourseRepository extends baseRepository_1.BaseRepository {
     async updateBaseInfo(courseId, baseInfo) {
         return await this.findByIDAndUpdate(courseId, baseInfo);
     }
-    async getAdminCoursList() {
-        return await this.find({ status: { $in: ["published", "rejected", "approved"] } }, ["categoryId", "subCategoryId", "mentorId"]);
+    async getAdminCoursList(search, limit, skip) {
+        return await this.findAll({ status: { $in: ["published", "rejected", "approved"] }, title: { $regex: search ?? "", $options: "i" } }, limit, skip, ["categoryId", "subCategoryId", "mentorId"]);
     }
     async getCourseDetails(courseId) {
         return await this.find({ _id: courseId }, [
@@ -126,7 +126,7 @@ class CourseRepository extends baseRepository_1.BaseRepository {
         return await this.findById(courseId);
     }
     async removeSession(courseId, sessionId) {
-        return await this.pullItemFromArray({ _id: courseId }, 'sessions', sessionId);
+        return await this.pullItemFromArray({ _id: courseId }, "sessions", sessionId);
     }
     async removeLecture(courseId, sessionId, lectureId) {
         return await this.pullItemFromArray({ _id: courseId }, `sessions[${sessionId}].lectures`, lectureId);

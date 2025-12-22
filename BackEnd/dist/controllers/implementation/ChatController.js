@@ -2,7 +2,7 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.ChatCOntroller = void 0;
 const axios_1 = require("axios");
-const error_message_1 = require("../../const/error-message");
+const error_message_const_1 = require("../../const/error-message.const");
 const response_util_1 = require("../../utils/response.util");
 class ChatCOntroller {
     constructor(_chatService) {
@@ -13,7 +13,7 @@ class ChatCOntroller {
                 const chatData = await this._chatService.getOrCreateRoom(senderId, receiverId);
                 res
                     .status(axios_1.HttpStatusCode.Ok)
-                    .json((0, response_util_1.successResponse)(error_message_1.HttpResponse.OK, { chatData }));
+                    .json((0, response_util_1.successResponse)(error_message_const_1.HttpResponse.OK, { chatData }));
             }
             catch (error) {
                 next(error);
@@ -25,7 +25,7 @@ class ChatCOntroller {
                 const ChatUser = await this._chatService.listUsers(senderId);
                 res
                     .status(axios_1.HttpStatusCode.Ok)
-                    .json((0, response_util_1.successResponse)(error_message_1.HttpResponse.OK, { ChatUser }));
+                    .json((0, response_util_1.successResponse)(error_message_const_1.HttpResponse.OK, { ChatUser }));
             }
             catch (error) {
                 next(error);
@@ -38,7 +38,7 @@ class ChatCOntroller {
                 const messages = await this._chatService.getMessages(chatId, Number(limit));
                 res
                     .status(axios_1.HttpStatusCode.Ok)
-                    .json((0, response_util_1.successResponse)(error_message_1.HttpResponse.OK, { messages }));
+                    .json((0, response_util_1.successResponse)(error_message_const_1.HttpResponse.OK, { messages }));
             }
             catch (error) {
                 next(error);

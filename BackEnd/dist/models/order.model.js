@@ -35,12 +35,12 @@ var __importStar = (this && this.__importStar) || (function () {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.OrderModel = void 0;
 const mongoose_1 = __importStar(require("mongoose"));
-const modelName_1 = require("../const/modelName");
+const modelName_const_1 = require("../const/modelName.const");
 const OrderSchema = new mongoose_1.default.Schema({
     courseId: {
         type: mongoose_1.Schema.Types.ObjectId,
         required: true,
-        ref: modelName_1.DbModelName.COURSE,
+        ref: modelName_const_1.DbModelName.COURSE,
     },
     status: {
         type: String,
@@ -54,10 +54,10 @@ const OrderSchema = new mongoose_1.default.Schema({
     userId: {
         type: mongoose_1.Schema.Types.ObjectId,
         required: true,
-        ref: modelName_1.DbModelName.USER,
+        ref: modelName_const_1.DbModelName.USER,
     },
     paymentIntentId: {
         type: String,
     },
 }, { timestamps: true });
-exports.OrderModel = mongoose_1.default.model(modelName_1.DbModelName.ORDER, OrderSchema);
+exports.OrderModel = mongoose_1.default.model(modelName_const_1.DbModelName.ORDER, OrderSchema);

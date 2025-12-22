@@ -39,7 +39,7 @@ import { IMentorDhasboardDTO } from "../../types/dtos.type/mentorDashboard.dto.t
 import { mentorDashboardDTO } from "../../dtos/mentorDashboard.dto";
 import { timeFilter } from "../../utils/dashFilterGenerator.utils";
 import { ITransactionModel } from "../../models/transaction.model";
-import { TransactionType } from "../../const/transaction.const";
+import { TransactionStatus, TransactionType } from "../../const/transaction.const";
 import { graphPrps } from "../../types/adminDahsboard.type";
 import { buildDateFilter } from "../../utils/dateBuilder";
 import { IUserRepo } from "../../repository/interface/IUserRepo";
@@ -49,6 +49,7 @@ import { ISlotBookingRepository } from "../../repository/interface/ISlotBookingR
 import { learnerDashboardCardsDTO } from "../../types/dtos.type/learnerDashboard.dto.type";
 import { learnerDashboardDetails } from "../../dtos/learnerDashnoard.dto";
 import { FilterByDate } from "../../const/filter.const";
+import { BookingStatus } from "../../types/sessionBooking.type";
 
 export class EnrolledService implements IEnrolledService {
   constructor(
@@ -263,7 +264,7 @@ export class EnrolledService implements IEnrolledService {
     const dateMatch = buildDateFilter(filter);
 
     const matchStage: FilterQuery<ITransactionModel> = {
-      ...dateMatch,
+      ...dateMatch,status:{$ne:TransactionStatus.REFUNDED}
     };
 
     if (mentorId) {
@@ -273,6 +274,7 @@ export class EnrolledService implements IEnrolledService {
       }
       matchStage.mentorId = mentor_id;
     }
+    matchStage.status={$ne:TransactionStatus.REFUNDED}
 
     const slotRevenue =
       await this._transactionRepository.getMentorRevanueONSlot({

@@ -4,7 +4,7 @@ export type slotStatus =
   | "booked"
   | "completed"
   | "Pending"
-  | "canceled"
+  | "cancelled"
   | "refunded";
 export interface IBaseBookingDTO {
   slotId: string;

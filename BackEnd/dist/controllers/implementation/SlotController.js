@@ -1,9 +1,9 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.SlotController = void 0;
-const http_status_1 = require("../../const/http-status");
+const http_status_const_1 = require("../../const/http-status.const");
 const response_util_1 = require("../../utils/response.util");
-const error_message_1 = require("../../const/error-message");
+const error_message_const_1 = require("../../const/error-message.const");
 class SlotController {
     constructor(_slotService) {
         this._slotService = _slotService;
@@ -11,8 +11,8 @@ class SlotController {
             try {
                 const createdData = await this._slotService.createSlot(req.body);
                 res
-                    .status(http_status_1.HttpStatus.OK)
-                    .json((0, response_util_1.successResponse)(error_message_1.HttpResponse.OK, { createdData }));
+                    .status(http_status_const_1.HttpStatus.OK)
+                    .json((0, response_util_1.successResponse)(error_message_const_1.HttpResponse.OK, { createdData }));
             }
             catch (error) {
                 next(error);
@@ -23,10 +23,13 @@ class SlotController {
                 const { mentorId } = req.params;
                 const { page } = req.query;
                 const mentorSlots = await this._slotService.getMontorSlots(mentorId, Number(page));
-                console.log('menter slot :', mentorSlots);
+                console.log("menter slot :", mentorSlots);
                 res
-                    .status(http_status_1.HttpStatus.OK)
-                    .json((0, response_util_1.successResponse)(error_message_1.HttpResponse.OK, { mappedSlots: mentorSlots.mappedSlots, totalPage: mentorSlots.totalDocument }));
+                    .status(http_status_const_1.HttpStatus.OK)
+                    .json((0, response_util_1.successResponse)(error_message_const_1.HttpResponse.OK, {
+                    mappedSlots: mentorSlots.mappedSlots,
+                    totalPage: mentorSlots.totalDocument,
+                }));
             }
             catch (error) {
                 next(error);
@@ -37,8 +40,8 @@ class SlotController {
                 const { slotId } = req.params;
                 const updatedSlot = await this._slotService.updateSlot(slotId, req.body);
                 res
-                    .status(http_status_1.HttpStatus.OK)
-                    .json((0, response_util_1.successResponse)(error_message_1.HttpResponse.OK, { updatedSlot }));
+                    .status(http_status_const_1.HttpStatus.OK)
+                    .json((0, response_util_1.successResponse)(error_message_const_1.HttpResponse.OK, { updatedSlot }));
             }
             catch (error) {
                 next(error);
@@ -50,8 +53,8 @@ class SlotController {
                 console.log("course id ", courseId);
                 const slotData = await this._slotService.getCourseSlot(courseId);
                 res
-                    .status(http_status_1.HttpStatus.OK)
-                    .json((0, response_util_1.successResponse)(error_message_1.HttpResponse.OK, { slotData }));
+                    .status(http_status_const_1.HttpStatus.OK)
+                    .json((0, response_util_1.successResponse)(error_message_const_1.HttpResponse.OK, { slotData }));
             }
             catch (error) {
                 next(error);

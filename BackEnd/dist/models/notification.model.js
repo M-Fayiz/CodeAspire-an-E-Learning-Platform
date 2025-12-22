@@ -35,11 +35,11 @@ var __importStar = (this && this.__importStar) || (function () {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.NotificationModel = void 0;
 const mongoose_1 = __importStar(require("mongoose"));
-const modelName_1 = require("../const/modelName");
+const modelName_const_1 = require("../const/modelName.const");
 const NotificationSchema = new mongoose_1.default.Schema({
     userId: {
         type: mongoose_1.Schema.Types.ObjectId,
-        ref: modelName_1.DbModelName.USER,
+        ref: modelName_const_1.DbModelName.USER,
         required: true,
     },
     message: {
@@ -60,4 +60,4 @@ const NotificationSchema = new mongoose_1.default.Schema({
         type: String,
     },
 }, { timestamps: true });
-exports.NotificationModel = mongoose_1.default.model(modelName_1.DbModelName.NOTIFICATION, NotificationSchema);
+exports.NotificationModel = mongoose_1.default.model(modelName_const_1.DbModelName.NOTIFICATION, NotificationSchema);

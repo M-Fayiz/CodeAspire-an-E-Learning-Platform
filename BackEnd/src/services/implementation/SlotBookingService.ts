@@ -14,8 +14,8 @@ import { timeAndDateGenerator } from "../../utils/timeAndDateGenerator";
 import { ISlotBookingService } from "../interface/ISlotBookingService";
 import { ISlotRepository } from "../../repository/interface/ISlotRepository";
 import { parseObjectId } from "../../mongoose/objectId";
-import { ITransaction, ITransactionStatus } from "../../types/transaction.type";
-import { PaymentMethod, StripeConst, TransactionType } from "../../const/transaction.const";
+import { ITransaction } from "../../types/transaction.type";
+import { PaymentMethod, StripeConst, TransactionStatus, TransactionType } from "../../const/transaction.const";
 import { calculateShares } from "../../utils/calculateSplit.util";
 import { ITransactionRepository } from "../../repository/interface/ITransactionRepository";
 import {
@@ -32,6 +32,14 @@ import { INotificationRepository } from "../../repository/interface/INotificatio
 import { NotificationTemplates } from "../../template/notification.template";
 import { INotificationDTO } from "../../types/dtos.type/notification.dto.types";
 import { stripe } from "../../config/stripe.config";
+import { getRefundPercentage } from "../../utils/refundPercentage.util";
+import { notificationDto } from "../../dtos/notification.dto";
+
+
+
+
+
+
 export class SlotBookingService implements ISlotBookingService {
   constructor(
     private _slotBookingRepository: ISlotBookingRepository,
@@ -204,7 +212,7 @@ export class SlotBookingService implements ISlotBookingService {
       amount: Number(amount),
       userId: learner_id,
       mentorId: mentor_id,
-      status: ITransactionStatus.SUCCESS,
+      status: TransactionStatus.SUCCESS,
       paymentMethod: PaymentMethod.STRIPE,
       gatewayTransactionId: paymentIntentId as string,
       adminShare,
@@ -376,5 +384,74 @@ export class SlotBookingService implements ISlotBookingService {
       bookedId: updatedData._id,
       status: updatedData.status as BookingStatus,
     };
+  }
+  async cancelSlot(bookedId: string): Promise<{status:BookingStatus,notification:INotificationDTO}> {
+    const booked_Id=parseObjectId(bookedId)
+    
+    const bookedSlot= await this._slotBookingRepository.findSlots({_id:booked_Id})
+
+    if(!bookedSlot){
+      throw createHttpError(HttpStatus.NOT_FOUND,HttpResponse.SLOT_NOT_FOUND)
+    }
+    if(bookedSlot.status!==BookingStatus.BOOKED){
+      throw createHttpError(HttpStatus.CONFLICT,HttpResponse.CAN_NOT_CANCEL)
+    }
+    const now = new Date();
+    const slotStart = new Date(bookedSlot.startTime);
+
+    if (slotStart.getTime() <= now.getTime()) {
+      throw createHttpError(HttpStatus.CONFLICT,HttpResponse.CAN_NOT_CANCEL);
+    }
+
+   const refundPercentage = getRefundPercentage(bookedSlot.startTime);
+      if (refundPercentage === 0) {
+        throw createHttpError(
+          HttpStatus.BAD_REQUEST,
+          HttpResponse.TIME_EXCEEDED
+        );
+      }
+  
+
+    let cancelledData
+    if (bookedSlot.type === bookingType.FREE) {
+        bookedSlot.status = BookingStatus.CANCELLED;
+       cancelledData= await this._slotBookingRepository.updateSlotBookingData({_id:booked_Id},{status:BookingStatus.CANCELLED})
+       if(!cancelledData){
+        throw createHttpError(HttpStatus.INTERNAL_SERVER_ERROR,HttpResponse.SERVER_ERROR)
+       }
+        const notification=NotificationTemplates.SlotCancellation(bookedSlot.learnerId,slotStart.getDate().toLocaleString())
+         const createdNotification= await this._notificationRepository.createNotification(notification)
+       return {status:cancelledData.status as unknown as BookingStatus,notification:notificationDto(createdNotification)}
+      
+    }
+    const transaction = await this._transactionRepostiory.findTransaction({slotBookingId:booked_Id,status:TransactionStatus.SUCCESS})
+    if(!transaction){
+      throw createHttpError(HttpStatus.NOT_FOUND,HttpResponse.TRANSACTION_NOT_FOUND)
+    }
+    if(!stripe){
+      throw createHttpError(HttpStatus.INTERNAL_SERVER_ERROR,HttpResponse.SERVER_ERROR)
+    }
+
+      const refundAmount = Math.floor((transaction.amount * refundPercentage) / 100);
+
+    await stripe.refunds.create({
+      payment_intent: transaction.gatewayTransactionId,
+      amount: refundAmount * 100, 
+    });
+
+
+    await this._transactionRepostiory.updateTransaction(transaction._id,{$set:{status:TransactionStatus.REFUNDED}})
+
+    let slotStatus=refundPercentage === 100? BookingStatus.REFUNDED : BookingStatus.CANCELLED;
+    
+    const updateSlot=await this._slotBookingRepository.updateSlotBookingData({_id:booked_Id},{$set:{status:slotStatus}})
+    if(!updateSlot){
+      throw createHttpError(HttpStatus.INTERNAL_SERVER_ERROR,HttpResponse.SERVER_ERROR)
+    }
+
+   const notification=NotificationTemplates.SlotCancellation(transaction.userId,slotStart.toLocaleString())
+   const createdNotification= await this._notificationRepository.createNotification(notification)
+
+    return {status:updateSlot.status as unknown as BookingStatus,notification:notificationDto(createdNotification)}
   }
 }

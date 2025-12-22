@@ -1,5 +1,5 @@
 import mongoose from "mongoose";
-import { ICourses } from "../types/courses.type";
+import { CourseStatus, ICourses } from "../types/courses.type";
 import { DbModelName } from "../const/modelName.const";
 
 const courseSchema = new mongoose.Schema<ICourses>(
@@ -65,11 +65,12 @@ const courseSchema = new mongoose.Schema<ICourses>(
         ],
       },
     ],
-    status: {
+   status: {
       type: String,
-      enum: ["inProgress", "draft", "published", "approved", "rejected"],
-      default: "draft",
+      enum: Object.values(CourseStatus),
+      default: CourseStatus.DRAFT,
     },
+
   },
   { timestamps: true },
 );

@@ -1,14 +1,15 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.AuthController = void 0;
-const http_status_1 = require("../../const/http-status");
-const error_message_1 = require("../../const/error-message");
+const http_status_const_1 = require("../../const/http-status.const");
+const error_message_const_1 = require("../../const/error-message.const");
 const response_util_1 = require("../../utils/response.util");
 const cookie_config_1 = require("../../config/cookie.config");
 const http_error_1 = require("../../utils/http-error");
 const clearCookies_util_1 = require("../../utils/clearCookies.util");
 const cookie_util_1 = require("../../utils/cookie.util");
 const env_config_1 = require("../../config/env.config");
+const auth_const_1 = require("../../const/auth.const");
 class AuthController {
     constructor(_authSerive) {
         this._authSerive = _authSerive;
@@ -17,8 +18,8 @@ class AuthController {
         try {
             const email = await this._authSerive.signUp(req.body);
             res
-                .status(http_status_1.HttpStatus.OK)
-                .json((0, response_util_1.successResponse)(error_message_1.HttpResponse.OK, { email: email }));
+                .status(http_status_const_1.HttpStatus.OK)
+                .json((0, response_util_1.successResponse)(error_message_const_1.HttpResponse.OK, { email: email }));
         }
         catch (error) {
             next(error);
@@ -26,11 +27,10 @@ class AuthController {
     }
     async verifyEmail(req, res, next) {
         try {
-            console.log('verify email', req.body);
             const token = await this._authSerive.verifyEmail(req.body);
             (0, cookie_util_1.setAccessToken)(res, token.accessToken);
             (0, cookie_util_1.setRefreshToken)(res, token.refreshToken);
-            res.status(http_status_1.HttpStatus.OK).json((0, response_util_1.successResponse)(error_message_1.HttpResponse.LOGGED_IN_SUCCESSFULLY, {
+            res.status(http_status_const_1.HttpStatus.OK).json((0, response_util_1.successResponse)(error_message_const_1.HttpResponse.LOGGED_IN_SUCCESSFULLY, {
                 token: token.accessToken,
             }));
         }
@@ -42,12 +42,12 @@ class AuthController {
         try {
             const { accessToken } = req.cookies;
             if (!accessToken) {
-                return next((0, http_error_1.createHttpError)(http_status_1.HttpStatus.UNAUTHORIZED, error_message_1.HttpResponse.ACCESS_TOKEN_EXPIRED));
+                return next((0, http_error_1.createHttpError)(http_status_const_1.HttpStatus.UNAUTHORIZED, error_message_const_1.HttpResponse.ACCESS_TOKEN_EXPIRED));
             }
             const user = await this._authSerive.authMe(accessToken);
             res
-                .status(http_status_1.HttpStatus.OK)
-                .json((0, response_util_1.successResponse)(error_message_1.HttpResponse.OK, { user: user, token: accessToken }));
+                .status(http_status_const_1.HttpStatus.OK)
+                .json((0, response_util_1.successResponse)(error_message_const_1.HttpResponse.OK, { user: user, token: accessToken }));
         }
         catch (error) {
             next(error);
@@ -57,16 +57,16 @@ class AuthController {
         try {
             const { refreshToken } = req.cookies;
             if (!refreshToken) {
-                throw (0, http_error_1.createHttpError)(http_status_1.HttpStatus.FORBIDDEN, error_message_1.HttpResponse.REFRESH_TOKEN_EXPIRED);
+                throw (0, http_error_1.createHttpError)(http_status_const_1.HttpStatus.FORBIDDEN, error_message_const_1.HttpResponse.REFRESH_TOKEN_EXPIRED);
             }
             const { newAccessToken, payload } = await this._authSerive.refreshAccessToken(refreshToken);
-            res.cookie("accessToken", newAccessToken, {
+            res.cookie(auth_const_1.AUTH_TOKEN.ACCESS_TOKEN, newAccessToken, {
                 ...cookie_config_1.options,
                 maxAge: Number(env_config_1.env.ACCESS_TOKEN_MAX_AGE_TIME) * 60 * 1000,
             });
             res
-                .status(http_status_1.HttpStatus.OK)
-                .json((0, response_util_1.successResponse)(error_message_1.HttpResponse.OK, { user: payload }));
+                .status(http_status_const_1.HttpStatus.OK)
+                .json((0, response_util_1.successResponse)(error_message_const_1.HttpResponse.OK, { user: payload }));
         }
         catch (error) {
             next(error);
@@ -78,7 +78,7 @@ class AuthController {
             const tokensAndUserData = await this._authSerive.login(email, password);
             (0, cookie_util_1.setAccessToken)(res, tokensAndUserData.accessToken);
             (0, cookie_util_1.setRefreshToken)(res, tokensAndUserData.refreshToken);
-            res.status(http_status_1.HttpStatus.OK).json((0, response_util_1.successResponse)(error_message_1.HttpResponse.LOGGED_IN_SUCCESSFULLY, {
+            res.status(http_status_const_1.HttpStatus.OK).json((0, response_util_1.successResponse)(error_message_const_1.HttpResponse.LOGGED_IN_SUCCESSFULLY, {
                 data: tokensAndUserData.MappedUser,
                 token: tokensAndUserData.accessToken,
             }));
@@ -90,7 +90,7 @@ class AuthController {
     async logout(req, res, next) {
         try {
             (0, clearCookies_util_1.clearCookies)(res);
-            res.status(http_status_1.HttpStatus.OK).json((0, response_util_1.successResponse)(error_message_1.HttpResponse.LOGGED_OUT));
+            res.status(http_status_const_1.HttpStatus.OK).json((0, response_util_1.successResponse)(error_message_const_1.HttpResponse.LOGGED_OUT, { logout: true }));
         }
         catch (error) {
             next(error);
@@ -100,8 +100,8 @@ class AuthController {
         try {
             const email = await this._authSerive.forgotPassword(req.body.email);
             res
-                .status(http_status_1.HttpStatus.OK)
-                .json((0, response_util_1.successResponse)(error_message_1.HttpResponse.OK, { email: email }));
+                .status(http_status_const_1.HttpStatus.OK)
+                .json((0, response_util_1.successResponse)(error_message_const_1.HttpResponse.OK, { email: email }));
         }
         catch (error) {
             next(error);
@@ -113,8 +113,8 @@ class AuthController {
             const { email, token, password } = req.body;
             const response = await this._authSerive.resetPassword(email, token, password);
             res
-                .status(http_status_1.HttpStatus.OK)
-                .json((0, response_util_1.successResponse)(error_message_1.HttpResponse.OK, { email: response }));
+                .status(http_status_const_1.HttpStatus.OK)
+                .json((0, response_util_1.successResponse)(error_message_const_1.HttpResponse.OK, { email: response }));
         }
         catch (error) {
             next(error);
@@ -122,10 +122,10 @@ class AuthController {
     }
     async googleAuthRedirection(req, res, next) {
         try {
-            // if (!req.user) {
-            //   res.status(HttpStatus.FORBIDDEN).json(HttpResponse.INVALID_CREDNTIALS);
-            //   return;
-            // }
+            if (!req.user) {
+                res.status(http_status_const_1.HttpStatus.FORBIDDEN).json(error_message_const_1.HttpResponse.INVALID_CREDNTIALS);
+                return;
+            }
             const Data = await this._authSerive.generateToken(req.user);
             (0, cookie_util_1.setAccessToken)(res, Data.accessToken);
             (0, cookie_util_1.setRefreshToken)(res, Data.refreshToken);

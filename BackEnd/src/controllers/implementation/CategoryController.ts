@@ -4,6 +4,7 @@ import { ICategoryService } from "../../services/interface/ICategoryService";
 import { HttpStatus } from "../../const/http-status.const";
 import { HttpResponse } from "../../const/error-message.const";
 import { successResponse } from "../../utils/response.util";
+import { ICategory } from "../../types/category.types";
 
 export class CategoryController implements ICategoryController {
   constructor(private _categoryService: ICategoryService) {}
@@ -18,7 +19,7 @@ export class CategoryController implements ICategoryController {
         req.body.title,
         req.body.parentId,
       );
-      res.status(HttpStatus.OK).json(successResponse(HttpResponse.OK, result));
+      res.status(HttpStatus.OK).json(successResponse(HttpResponse.OK, result as ICategory));
     } catch (error) {
       next(error);
     }

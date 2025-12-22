@@ -27,32 +27,31 @@ class SlotBookingRepository extends baseRepository_1.BaseRepository {
         return await this.findAll(filter, limit, skip, ["learnerId", "courseId", "mentorId"], true);
     }
     async learnerDashboardSlotCard(learnerId) {
-        return await this.aggregate([{
+        return await this.aggregate([
+            {
+                $match: {
+                    learnerId: learnerId,
+                },
+            },
+            {
                 $group: {
-                    _id: `$${learnerId}`,
+                    _id: `$learnerId`,
                     totalSession: {
-                        $sum: 1
+                        $sum: 1,
                     },
                     totalCracked: {
                         $sum: {
-                            $cond: [
-                                { $eq: ['$studentStatus', sessionBooking_type_1.StudenStatus.PASSED] },
-                                1,
-                                0
-                            ]
-                        }
+                            $cond: [{ $eq: ["$studentStatus", sessionBooking_type_1.StudenStatus.PASSED] }, 1, 0],
+                        },
                     },
                     totalFailed: {
                         $sum: {
-                            $cond: [
-                                { $eq: ['$studentStatus', sessionBooking_type_1.StudenStatus.FAILED] },
-                                1,
-                                0
-                            ]
-                        }
-                    }
-                }
-            }]);
+                            $cond: [{ $eq: ["$studentStatus", sessionBooking_type_1.StudenStatus.FAILED] }, 1, 0],
+                        },
+                    },
+                },
+            },
+        ]);
     }
 }
 exports.SlotBookingRepository = SlotBookingRepository;

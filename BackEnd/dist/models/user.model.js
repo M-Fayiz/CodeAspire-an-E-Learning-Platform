@@ -6,7 +6,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.AdminModel = exports.LearnerModel = exports.MentorModel = exports.UserModel = void 0;
 const mongoose_1 = __importDefault(require("mongoose"));
 const user_types_1 = require("../types/user.types");
-const modelName_1 = require("../const/modelName");
+const modelName_const_1 = require("../const/modelName.const");
 const option = { discriminatorKey: "role", timestamps: true };
 const BaseUserSchema = new mongoose_1.default.Schema({
     name: { type: String, required: true },
@@ -23,7 +23,7 @@ const BaseUserSchema = new mongoose_1.default.Schema({
     },
     isRequested: { type: Boolean, default: false },
 }, option);
-exports.UserModel = mongoose_1.default.model(modelName_1.DbModelName.USER, BaseUserSchema);
+exports.UserModel = mongoose_1.default.model(modelName_const_1.DbModelName.USER, BaseUserSchema);
 const MentorSchema = new mongoose_1.default.Schema({
     expertise: [String],
     bio: String,
@@ -38,7 +38,7 @@ const MentorSchema = new mongoose_1.default.Schema({
 });
 exports.MentorModel = exports.UserModel.discriminator(user_types_1.IRole.Mentor, MentorSchema);
 const LearnerSchema = new mongoose_1.default.Schema({
-    enrolledCourses: [{ type: mongoose_1.default.Schema.Types.ObjectId, ref: "Course" }],
+    enrolledCourses: [{ type: mongoose_1.default.Schema.Types.ObjectId, ref: modelName_const_1.DbModelName.COURSE }],
 });
 exports.LearnerModel = exports.UserModel.discriminator(user_types_1.IRole.Learner, LearnerSchema);
 const AdminSchema = new mongoose_1.default.Schema({

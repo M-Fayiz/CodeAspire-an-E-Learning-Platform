@@ -1,5 +1,5 @@
 import { Button } from "@/components/ui/button";
-import { Book, User, Clock, Award } from "lucide-react";
+import { Book, User, Clock, Award, X } from "lucide-react";
 import { Card, CardHeader, CardContent } from "@/components/ui/card";
 import type { IBookingDTOforLearner, slotStatus } from "@/types/DTOS/slotBooking.dto.type";
 import { MentorActionMenu } from "@/features/mentor/slots/mentorActions";
@@ -35,6 +35,7 @@ interface BookingTableProps {
     courseId: string,
     programmTitle: string,
   ) => void;
+  onCancelSlot?:(bookedId:string)=>void
 }
 
 export const BookingTable = ({
@@ -47,6 +48,7 @@ export const BookingTable = ({
   onUpdateStatus,
   onSessionComplete,
   onCertificateIssue,
+  onCancelSlot
 }: BookingTableProps) => {
   const [title, setTitle] = useState("");
   const [errors, setErrors] = useState("");
@@ -150,7 +152,7 @@ export const BookingTable = ({
                           ? "bg-green-100 text-green-800"
                           : slot.status === "booked"
                             ? "bg-blue-100 text-blue-800"
-                            : slot.status === "canceled"
+                            : slot.status === "cancelled"
                               ? "bg-red-100 text-red-700"
                               : "bg-gray-100 text-gray-600"
                       }`}
@@ -174,6 +176,17 @@ export const BookingTable = ({
                         >
                           <Clock size={14} className="mr-1" />
                           Join
+                        </Button>
+                      )}
+                      {slot.status === "booked" &&role=='learner' &&(
+                        <Button
+                          variant="outline"
+                          size="sm"
+                          onClick={() => onCancelSlot?.(slot._id)}
+                          disabled={loading}
+                        >
+                          <X size={14} className="mr-1" />
+                          Cancel
                         </Button>
                       )}
 

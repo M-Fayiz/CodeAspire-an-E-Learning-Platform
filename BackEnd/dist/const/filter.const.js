@@ -7,4 +7,5 @@ var FilterByDate;
     FilterByDate["WEEK"] = "Last Week";
     FilterByDate["MONTH"] = "Last Month";
     FilterByDate["YEAR"] = "Last Year";
+    FilterByDate["CUSTOM"] = "Custom";
 })(FilterByDate || (exports.FilterByDate = FilterByDate = {}));

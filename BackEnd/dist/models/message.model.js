@@ -35,16 +35,16 @@ var __importStar = (this && this.__importStar) || (function () {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.MessageModel = void 0;
 const mongoose_1 = __importStar(require("mongoose"));
-const modelName_1 = require("../const/modelName");
+const modelName_const_1 = require("../const/modelName.const");
 const MessageSchema = new mongoose_1.default.Schema({
     chatId: {
         type: mongoose_1.Schema.Types.ObjectId,
-        ref: modelName_1.DbModelName.CHAT,
+        ref: modelName_const_1.DbModelName.CHAT,
         required: true,
     },
     sender: {
         type: mongoose_1.Schema.Types.ObjectId,
-        ref: modelName_1.DbModelName.USER,
+        ref: modelName_const_1.DbModelName.USER,
         required: true,
     },
     content: { type: String },
@@ -61,4 +61,4 @@ const MessageSchema = new mongoose_1.default.Schema({
     },
     createdAt: { type: Date, default: Date.now },
 });
-exports.MessageModel = mongoose_1.default.model(modelName_1.DbModelName.MESSAGE, MessageSchema);
+exports.MessageModel = mongoose_1.default.model(modelName_const_1.DbModelName.MESSAGE, MessageSchema);

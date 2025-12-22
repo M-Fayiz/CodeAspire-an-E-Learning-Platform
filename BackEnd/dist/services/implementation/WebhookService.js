@@ -4,8 +4,8 @@ exports.WebhookService = void 0;
 const env_config_1 = require("../../config/env.config");
 const stripe_config_1 = require("../../config/stripe.config");
 const http_error_1 = require("../../utils/http-error");
-const http_status_1 = require("../../const/http-status");
-const error_message_1 = require("../../const/error-message");
+const http_status_const_1 = require("../../const/http-status.const");
+const error_message_const_1 = require("../../const/error-message.const");
 class WebhookService {
     constructor(_orderService, _slotBookingService) {
         this._orderService = _orderService;
@@ -15,7 +15,7 @@ class WebhookService {
         const sig = req.headers["stripe-signature"];
         let event;
         if (!stripe_config_1.stripe) {
-            throw (0, http_error_1.createHttpError)(http_status_1.HttpStatus.INTERNAL_SERVER_ERROR, error_message_1.HttpResponse.STRIPR_NOT_AVAILABLE);
+            throw (0, http_error_1.createHttpError)(http_status_const_1.HttpStatus.INTERNAL_SERVER_ERROR, error_message_const_1.HttpResponse.STRIPR_NOT_AVAILABLE);
         }
         try {
             event = stripe_config_1.stripe.webhooks.constructEvent(req.body, sig, env_config_1.env.WEB_HOOK_SECRETE_KEY);

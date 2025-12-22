@@ -35,19 +35,19 @@ var __importStar = (this && this.__importStar) || (function () {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.transactionModel = void 0;
 const mongoose_1 = __importStar(require("mongoose"));
-const modelName_1 = require("../const/modelName");
+const modelName_const_1 = require("../const/modelName.const");
 const TransactionSchema = new mongoose_1.default.Schema({
     orderId: {
         type: mongoose_1.Schema.Types.ObjectId,
-        ref: modelName_1.DbModelName.ORDER,
+        ref: modelName_const_1.DbModelName.ORDER,
     },
     slotId: {
         type: mongoose_1.Schema.Types.ObjectId,
-        ref: modelName_1.DbModelName.SLOT,
+        ref: modelName_const_1.DbModelName.SLOT,
     },
     slotBookingId: {
         type: mongoose_1.Schema.Types.ObjectId,
-        ref: modelName_1.DbModelName.SLOT_BOOKING,
+        ref: modelName_const_1.DbModelName.SLOT_BOOKING,
     },
     paymentType: {
         type: String,
@@ -65,12 +65,12 @@ const TransactionSchema = new mongoose_1.default.Schema({
     userId: {
         type: mongoose_1.Schema.Types.ObjectId,
         required: true,
-        ref: modelName_1.DbModelName.USER,
+        ref: modelName_const_1.DbModelName.USER,
     },
     mentorId: {
         type: mongoose_1.Schema.Types.ObjectId,
         required: true,
-        ref: modelName_1.DbModelName.USER,
+        ref: modelName_const_1.DbModelName.USER,
     },
     gatewayTransactionId: {
         type: String,
@@ -81,9 +81,9 @@ const TransactionSchema = new mongoose_1.default.Schema({
     courseId: {
         type: mongoose_1.Schema.Types.ObjectId,
         required: true,
-        ref: modelName_1.DbModelName.COURSE,
+        ref: modelName_const_1.DbModelName.COURSE,
     },
     adminShare: { type: Number, required: true },
     mentorShare: { type: Number, required: true },
 }, { timestamps: true });
-exports.transactionModel = mongoose_1.default.model(modelName_1.DbModelName.TRANSACTION, TransactionSchema);
+exports.transactionModel = mongoose_1.default.model(modelName_const_1.DbModelName.TRANSACTION, TransactionSchema);

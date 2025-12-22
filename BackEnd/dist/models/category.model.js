@@ -5,7 +5,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.CategoryModel = void 0;
 const mongoose_1 = __importDefault(require("mongoose"));
-const modelName_1 = require("../const/modelName");
+const modelName_const_1 = require("../const/modelName.const");
 const categorySchema = new mongoose_1.default.Schema({
     title: {
         type: String,
@@ -13,8 +13,8 @@ const categorySchema = new mongoose_1.default.Schema({
     },
     parentId: {
         type: mongoose_1.default.Schema.Types.ObjectId,
-        ref: modelName_1.DbModelName.CATEGORY,
+        ref: modelName_const_1.DbModelName.CATEGORY,
         default: null,
     },
 });
-exports.CategoryModel = mongoose_1.default.model(modelName_1.DbModelName.CATEGORY, categorySchema);
+exports.CategoryModel = mongoose_1.default.model(modelName_const_1.DbModelName.CATEGORY, categorySchema);

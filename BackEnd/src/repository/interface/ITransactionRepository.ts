@@ -1,4 +1,4 @@
-import { FilterQuery, Types } from "mongoose";
+import { FilterQuery, Types, UpdateQuery } from "mongoose";
 import { ITransaction } from "../../types/transaction.type";
 import { IRevenueAggregationResult } from "../../types/courseDashboard.type";
 import { IMentorTotalRevanue } from "../../types/mentorDashboard.types";
@@ -22,4 +22,6 @@ export interface ITransactionRepository {
     filter: FilterQuery<ITransactionModel>,
   ): Promise<graphPrps[]>;
   getAdminRevenue(start?:Date,end?:Date): Promise<SourceOfRevanye[]>;
+  findTransaction(filter:FilterQuery<ITransactionModel>):Promise<ITransactionModel|null>
+  updateTransaction(transactionId:Types.ObjectId,updateData:UpdateQuery<ITransactionModel>):Promise<ITransactionModel|null>
 }

@@ -17,8 +17,8 @@ class EnrolledRepository extends baseRepository_1.BaseRepository {
     async getEnrolledCOurseDetails(enrolledId) {
         return await this.findById(enrolledId);
     }
-    async isEnrolled(userId, courseId) {
-        return await this.findOne({ learnerId: userId, courseId: courseId });
+    async isEnrolled(learnerId, courseId) {
+        return await this.findOne({ learnerId: learnerId, courseId: courseId });
     }
     async updatedProgress(enrolledId, lecture) {
         return await this.addTOSet({ _id: enrolledId }, "progress.completedLectures", lecture);
@@ -69,11 +69,12 @@ class EnrolledRepository extends baseRepository_1.BaseRepository {
             { $sort: { "_id.day": 1 } },
         ]);
     }
-    async getMentorDashboardData(mentorId) {
+    async getMentorDashboardData(mentorId, start, end) {
         return await this.aggregate([
             {
                 $match: {
                     mentorId: mentorId,
+                    createdAt: { $gte: start, $lte: end }
                 },
             },
             {
@@ -89,8 +90,14 @@ class EnrolledRepository extends baseRepository_1.BaseRepository {
             },
         ]);
     }
-    async getTopSellingCourse(mentorId) {
-        const matchStage = mentorId ? { mentorId } : {};
+    async getTopSellingCourse(mentorId, start, end) {
+        const matchStage = mentorId ? { mentorId, createdAt: {
+                $gte: start,
+                $lte: end,
+            } } : { createdAt: {
+                $gte: start,
+                $lte: end,
+            } };
         return await this.aggregate([
             {
                 $match: matchStage,
@@ -178,29 +185,34 @@ class EnrolledRepository extends baseRepository_1.BaseRepository {
     async getLearnerDashboardCourseData(learnerId) {
         const result = await this.aggregate([
             {
+                $match: {
+                    learnerId: learnerId,
+                },
+            },
+            {
                 $group: {
-                    _id: `$${learnerId}`,
+                    _id: `$learnerId`,
                     courseCount: { $sum: 1 },
                     completedCourse: {
                         $sum: {
                             $cond: [
                                 { $eq: ["$courseStatus", enrollment_types_1.completionStatus.COMPLETED] },
                                 1,
-                                0
-                            ]
-                        }
+                                0,
+                            ],
+                        },
                     },
                     inProgressCourse: {
                         $sum: {
                             $cond: [
                                 { $eq: ["$courseStatus", enrollment_types_1.completionStatus.IN_PROGRESS] },
                                 1,
-                                0
-                            ]
-                        }
-                    }
+                                0,
+                            ],
+                        },
+                    },
                 },
-            }
+            },
         ]);
         return result;
     }

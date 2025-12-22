@@ -35,21 +35,21 @@ var __importStar = (this && this.__importStar) || (function () {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.SlotBookingModel = void 0;
 const mongoose_1 = __importStar(require("mongoose"));
-const modelName_1 = require("../const/modelName");
+const modelName_const_1 = require("../const/modelName.const");
 const SessionBookingSchema = new mongoose_1.default.Schema({
     learnerId: {
         type: mongoose_1.Schema.Types.ObjectId,
-        ref: modelName_1.DbModelName.USER,
+        ref: modelName_const_1.DbModelName.USER,
         required: true,
     },
     courseId: {
         type: mongoose_1.Schema.Types.ObjectId,
-        ref: modelName_1.DbModelName.COURSE,
+        ref: modelName_const_1.DbModelName.COURSE,
         required: true,
     },
     slotId: {
         type: mongoose_1.Schema.Types.ObjectId,
-        ref: modelName_1.DbModelName.SLOT,
+        ref: modelName_const_1.DbModelName.SLOT,
         required: true,
     },
     date: { type: Date, required: true },
@@ -69,8 +69,8 @@ const SessionBookingSchema = new mongoose_1.default.Schema({
     feedback: { type: String },
     mentorId: {
         type: mongoose_1.Schema.Types.ObjectId,
-        ref: modelName_1.DbModelName.USER,
+        ref: modelName_const_1.DbModelName.USER,
         required: true,
     },
 }, { timestamps: true });
-exports.SlotBookingModel = mongoose_1.default.model(modelName_1.DbModelName.SLOT_BOOKING, SessionBookingSchema);
+exports.SlotBookingModel = mongoose_1.default.model(modelName_const_1.DbModelName.SLOT_BOOKING, SessionBookingSchema);

@@ -96,5 +96,5 @@ exports.env = {
     },
     get CLIENT_URL_2() {
         return process.env.CLIENT_URL_2;
-    }
+    },
 };

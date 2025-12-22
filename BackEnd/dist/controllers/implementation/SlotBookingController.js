@@ -1,9 +1,10 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.SlotBookingController = void 0;
-const http_status_1 = require("../../const/http-status");
-const error_message_1 = require("../../const/error-message");
+const http_status_const_1 = require("../../const/http-status.const");
+const error_message_const_1 = require("../../const/error-message.const");
 const response_util_1 = require("../../utils/response.util");
+const socket_utils_1 = require("../../utils/socket.utils");
 class SlotBookingController {
     constructor(_slotBookingService) {
         this._slotBookingService = _slotBookingService;
@@ -21,8 +22,8 @@ class SlotBookingController {
                 };
                 const checkoutURL = await this._slotBookingService.createBooking(bookingData);
                 res
-                    .status(http_status_1.HttpStatus.OK)
-                    .json((0, response_util_1.successResponse)(error_message_1.HttpResponse.OK, { checkoutURL }));
+                    .status(http_status_const_1.HttpStatus.OK)
+                    .json((0, response_util_1.successResponse)(error_message_const_1.HttpResponse.OK, { checkoutURL }));
             }
             catch (error) {
                 next(error);
@@ -33,8 +34,8 @@ class SlotBookingController {
                 const { learnerId } = req.params;
                 const listsOfBooked = await this._slotBookingService.ListLearnerBookedSlots(learnerId);
                 res
-                    .status(http_status_1.HttpStatus.OK)
-                    .json((0, response_util_1.successResponse)(error_message_1.HttpResponse.OK, { listsOfBooked }));
+                    .status(http_status_const_1.HttpStatus.OK)
+                    .json((0, response_util_1.successResponse)(error_message_const_1.HttpResponse.OK, { listsOfBooked }));
             }
             catch (error) {
                 next(error);
@@ -43,10 +44,10 @@ class SlotBookingController {
         this.listBookedSlotOnMentor = async (req, res, next) => {
             try {
                 const { mentorId } = req.params;
-                const listsOfBooked = await this._slotBookingService.ListLearnerBookedSlots("", mentorId);
+                const listsOfBooked = await this._slotBookingService.ListLearnerBookedSlots(undefined, mentorId);
                 res
-                    .status(http_status_1.HttpStatus.OK)
-                    .json((0, response_util_1.successResponse)(error_message_1.HttpResponse.OK, { listsOfBooked }));
+                    .status(http_status_const_1.HttpStatus.OK)
+                    .json((0, response_util_1.successResponse)(error_message_const_1.HttpResponse.OK, { listsOfBooked }));
             }
             catch (error) {
                 next(error);
@@ -58,8 +59,8 @@ class SlotBookingController {
                 const { feedback } = req.body;
                 const updatedFeedback = await this._slotBookingService.addFeedback(bookedId, feedback);
                 res
-                    .status(http_status_1.HttpStatus.OK)
-                    .json((0, response_util_1.successResponse)(error_message_1.HttpResponse.OK, { updatedFeedback }));
+                    .status(http_status_const_1.HttpStatus.OK)
+                    .json((0, response_util_1.successResponse)(error_message_const_1.HttpResponse.OK, { updatedFeedback }));
             }
             catch (error) {
                 next(error);
@@ -70,8 +71,8 @@ class SlotBookingController {
                 const date = new Date();
                 const bookedSlots = await this._slotBookingService.getBookedSlots(date);
                 res
-                    .status(http_status_1.HttpStatus.OK)
-                    .json((0, response_util_1.successResponse)(error_message_1.HttpResponse.OK, { bookedSlots }));
+                    .status(http_status_const_1.HttpStatus.OK)
+                    .json((0, response_util_1.successResponse)(error_message_const_1.HttpResponse.OK, { bookedSlots }));
             }
             catch (error) {
                 next(error);
@@ -83,8 +84,8 @@ class SlotBookingController {
                 const { studentStatus } = req.body;
                 const updatedData = await this._slotBookingService.updateStudents(bookedId, studentStatus);
                 res
-                    .status(http_status_1.HttpStatus.OK)
-                    .json((0, response_util_1.successResponse)(error_message_1.HttpResponse.OK, { updatedData }));
+                    .status(http_status_const_1.HttpStatus.OK)
+                    .json((0, response_util_1.successResponse)(error_message_const_1.HttpResponse.OK, { updatedData }));
             }
             catch (error) {
                 next(error);
@@ -96,8 +97,21 @@ class SlotBookingController {
                 const { status } = req.body;
                 const updateStatus = await this._slotBookingService.updateSlotStatus(bookedId, status);
                 res
-                    .status(http_status_1.HttpStatus.OK)
-                    .json((0, response_util_1.successResponse)(error_message_1.HttpResponse.OK, { updateStatus }));
+                    .status(http_status_const_1.HttpStatus.OK)
+                    .json((0, response_util_1.successResponse)(error_message_const_1.HttpResponse.OK, { updateStatus }));
+            }
+            catch (error) {
+                next(error);
+            }
+        };
+        this.cancelBookedSLot = async (req, res, next) => {
+            try {
+                const { bookedId } = req.params;
+                const { notification, status } = await this._slotBookingService.cancelSlot(bookedId);
+                (0, socket_utils_1.sendNotification)(notification.userId, notification);
+                res
+                    .status(http_status_const_1.HttpStatus.OK)
+                    .json((0, response_util_1.successResponse)(error_message_const_1.HttpResponse.OK, { status }));
             }
             catch (error) {
                 next(error);

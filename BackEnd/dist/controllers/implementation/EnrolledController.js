@@ -1,9 +1,9 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.EnrolledController = void 0;
-const http_status_1 = require("../../const/http-status");
+const http_status_const_1 = require("../../const/http-status.const");
 const response_util_1 = require("../../utils/response.util");
-const error_message_1 = require("../../const/error-message");
+const error_message_const_1 = require("../../const/error-message.const");
 class EnrolledController {
     constructor(_enrolledService) {
         this._enrolledService = _enrolledService;
@@ -13,8 +13,8 @@ class EnrolledController {
                 const enrolledCourseData = await this._enrolledService.getEnrolledCourses(learnerId);
                 console.info("enrolled course ", { enrolledCourseData });
                 res
-                    .status(http_status_1.HttpStatus.OK)
-                    .json((0, response_util_1.successResponse)(error_message_1.HttpResponse.OK, { enrolledCourseData }));
+                    .status(http_status_const_1.HttpStatus.OK)
+                    .json((0, response_util_1.successResponse)(error_message_const_1.HttpResponse.OK, { enrolledCourseData }));
             }
             catch (error) {
                 next(error);
@@ -25,8 +25,8 @@ class EnrolledController {
                 const { enrolledId } = req.params;
                 const enrolledDetails = await this._enrolledService.getEnrolledCourseDetails(enrolledId);
                 res
-                    .status(http_status_1.HttpStatus.OK)
-                    .json((0, response_util_1.successResponse)(error_message_1.HttpResponse.OK, { enrolledDetails }));
+                    .status(http_status_const_1.HttpStatus.OK)
+                    .json((0, response_util_1.successResponse)(error_message_const_1.HttpResponse.OK, { enrolledDetails }));
             }
             catch (error) {
                 next(error);
@@ -38,8 +38,8 @@ class EnrolledController {
                 const { lectureId, sessionId } = req.body;
                 const progressData = await this._enrolledService.updatedProgress(enrolledId, lectureId, sessionId);
                 res
-                    .status(http_status_1.HttpStatus.OK)
-                    .json((0, response_util_1.successResponse)(error_message_1.HttpResponse.OK, { progressData }));
+                    .status(http_status_const_1.HttpStatus.OK)
+                    .json((0, response_util_1.successResponse)(error_message_const_1.HttpResponse.OK, { progressData }));
             }
             catch (error) {
                 next(error);
@@ -51,8 +51,8 @@ class EnrolledController {
                 const { value } = req.body;
                 const ratingResult = await this._enrolledService.addRating(enrolledId, value);
                 res
-                    .status(http_status_1.HttpStatus.OK)
-                    .json((0, response_util_1.successResponse)(error_message_1.HttpResponse.OK, { ratingResult }));
+                    .status(http_status_const_1.HttpStatus.OK)
+                    .json((0, response_util_1.successResponse)(error_message_const_1.HttpResponse.OK, { ratingResult }));
             }
             catch (error) {
                 next(error);
@@ -63,8 +63,8 @@ class EnrolledController {
                 const { courseId, mentorId } = req.params;
                 const dashboardData = await this._enrolledService.getCourseEnrolledDashboardData(courseId, mentorId);
                 res
-                    .status(http_status_1.HttpStatus.OK)
-                    .json((0, response_util_1.successResponse)(error_message_1.HttpResponse.OK, { dashboardData }));
+                    .status(http_status_const_1.HttpStatus.OK)
+                    .json((0, response_util_1.successResponse)(error_message_const_1.HttpResponse.OK, { dashboardData }));
             }
             catch (error) {
                 next(error);
@@ -76,8 +76,8 @@ class EnrolledController {
                 const { filter, startData, endDate } = req.query;
                 const chartData = await this._enrolledService.getTrendingCourseGraph(courseId, filter, startData, endDate);
                 res
-                    .status(http_status_1.HttpStatus.OK)
-                    .json((0, response_util_1.successResponse)(error_message_1.HttpResponse.OK, { chartData }));
+                    .status(http_status_const_1.HttpStatus.OK)
+                    .json((0, response_util_1.successResponse)(error_message_const_1.HttpResponse.OK, { chartData }));
             }
             catch (error) {
                 next(error);
@@ -86,11 +86,12 @@ class EnrolledController {
         this.getMentorDashboardData = async (req, res, next) => {
             try {
                 const { mentorId } = req.params;
-                const dashboardData = await this._enrolledService.getMentorDashboardData(mentorId);
-                console.info("dash board :", { dashboardData });
+                const { filter } = req.query;
+                console.log('filter :', filter);
+                const dashboardData = await this._enrolledService.getMentorDashboardData(mentorId, filter);
                 res
-                    .status(http_status_1.HttpStatus.OK)
-                    .json((0, response_util_1.successResponse)(error_message_1.HttpResponse.OK, { dashboardData }));
+                    .status(http_status_const_1.HttpStatus.OK)
+                    .json((0, response_util_1.successResponse)(error_message_const_1.HttpResponse.OK, { dashboardData }));
             }
             catch (error) {
                 next(error);
@@ -101,8 +102,8 @@ class EnrolledController {
                 const { filter, mentorId } = req.query;
                 const { courseRevanue, slotRevanue } = await this._enrolledService.getRevenueGraph(filter, mentorId);
                 res
-                    .status(http_status_1.HttpStatus.OK)
-                    .json((0, response_util_1.successResponse)(error_message_1.HttpResponse.OK, { courseRevanue, slotRevanue }));
+                    .status(http_status_const_1.HttpStatus.OK)
+                    .json((0, response_util_1.successResponse)(error_message_const_1.HttpResponse.OK, { courseRevanue, slotRevanue }));
             }
             catch (error) {
                 next(error);
@@ -112,9 +113,7 @@ class EnrolledController {
             try {
                 const { filter } = req.query;
                 const { courseRevanue, slotRevanue, signedUsers } = await this._enrolledService.getRevenueGraph(filter);
-                res
-                    .status(http_status_1.HttpStatus.OK)
-                    .json((0, response_util_1.successResponse)(error_message_1.HttpResponse.OK, {
+                res.status(http_status_const_1.HttpStatus.OK).json((0, response_util_1.successResponse)(error_message_const_1.HttpResponse.OK, {
                     courseRevanue,
                     slotRevanue,
                     signedUsers,
@@ -128,9 +127,8 @@ class EnrolledController {
             try {
                 const { learnerId } = req.params;
                 const dashboardData = await this._enrolledService.learnerDashboardCardData(learnerId);
-                res.status(http_status_1.HttpStatus.OK)
-                    .json((0, response_util_1.successResponse)(error_message_1.HttpResponse.OK, {
-                    dashboardData
+                res.status(http_status_const_1.HttpStatus.OK).json((0, response_util_1.successResponse)(error_message_const_1.HttpResponse.OK, {
+                    dashboardData,
                 }));
             }
             catch (error) {

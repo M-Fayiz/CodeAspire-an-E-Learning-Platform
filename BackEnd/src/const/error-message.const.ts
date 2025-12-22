@@ -39,5 +39,8 @@ export const HttpResponse = {
   SLOT_NOT_FOUND: "Your Slot not found",
   ORDER_ALREADY_EXIST: "Order Already Exist",
   ALREADY_PURCHASED:'You have already purchased the Course',
-  SLOT_ALREADY_BOOKED:'This Slot Already Booked'
+  SLOT_ALREADY_BOOKED:'This Slot Already Booked',
+  CAN_NOT_CANCEL:"You can not Cancel the Booked Slot",
+  TIME_EXCEEDED:'Sorry Cancellation not allowed within 12 hours',
+  TRANSACTION_NOT_FOUND:'Transaction Not Found'
 };

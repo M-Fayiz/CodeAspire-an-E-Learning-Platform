@@ -19,5 +19,8 @@ class OrderRepositoy extends baseRepository_1.BaseRepository {
     async updateOrder(id, data) {
         return await this.findByIDAndUpdate(id, data);
     }
+    async isOrdered(filter) {
+        return await this.findOne(filter);
+    }
 }
 exports.OrderRepositoy = OrderRepositoy;

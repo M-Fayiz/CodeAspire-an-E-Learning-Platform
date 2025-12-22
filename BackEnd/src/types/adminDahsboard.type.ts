@@ -1,4 +1,5 @@
-import { IPaymentTypes } from "./transaction.type";
+import { TransactionType } from "../const/transaction.const";
+
 
 export interface IAdminRevenue {
   _id: null;
@@ -10,6 +11,6 @@ export interface graphPrps {
   value: number;
 }
 export interface SourceOfRevanye {
-  _id: IPaymentTypes;
+  _id: TransactionType;
   value: number;
 }

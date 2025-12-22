@@ -5,7 +5,8 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.courseModel = void 0;
 const mongoose_1 = __importDefault(require("mongoose"));
-const modelName_1 = require("../const/modelName");
+const courses_type_1 = require("../types/courses.type");
+const modelName_const_1 = require("../const/modelName.const");
 const courseSchema = new mongoose_1.default.Schema({
     title: {
         type: String,
@@ -19,12 +20,12 @@ const courseSchema = new mongoose_1.default.Schema({
     },
     categoryId: {
         type: mongoose_1.default.Schema.Types.ObjectId,
-        ref: modelName_1.DbModelName.CATEGORY,
+        ref: modelName_const_1.DbModelName.CATEGORY,
         required: true,
     },
     subCategoryId: {
         type: mongoose_1.default.Schema.Types.ObjectId,
-        ref: modelName_1.DbModelName.CATEGORY,
+        ref: modelName_const_1.DbModelName.CATEGORY,
     },
     language: {
         type: String,
@@ -38,7 +39,7 @@ const courseSchema = new mongoose_1.default.Schema({
     },
     mentorId: {
         type: mongoose_1.default.Schema.Types.ObjectId,
-        ref: modelName_1.DbModelName.USER,
+        ref: modelName_const_1.DbModelName.USER,
     },
     isActive: {
         type: Boolean,
@@ -70,8 +71,8 @@ const courseSchema = new mongoose_1.default.Schema({
     ],
     status: {
         type: String,
-        enum: ["inProgress", "draft", "published", "approved", "rejected"],
-        default: "draft",
+        enum: Object.values(courses_type_1.CourseStatus),
+        default: courses_type_1.CourseStatus.DRAFT,
     },
 }, { timestamps: true });
-exports.courseModel = mongoose_1.default.model(modelName_1.DbModelName.COURSE, courseSchema);
+exports.courseModel = mongoose_1.default.model(modelName_const_1.DbModelName.COURSE, courseSchema);

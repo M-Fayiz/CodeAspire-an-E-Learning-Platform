@@ -1,5 +1,5 @@
 import { Types } from "mongoose";
-import { PaymentMethod, TransactionType } from "../const/transaction.const";
+import { PaymentMethod, TransactionStatus, TransactionType } from "../const/transaction.const";
 
 export interface ITransaction {
   paymentType:TransactionType;
@@ -14,7 +14,7 @@ export interface ITransaction {
   paymentMethod: PaymentMethod;
   adminShare: number;
   mentorShare: number;
-  status: ITransactionStatus
+  status: TransactionStatus
   createdAt?: Date;
   updatedAt?: Date;
 }

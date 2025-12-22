@@ -116,6 +116,7 @@ export const API = {
       `/slot-booking/${slotbookingId}/student-status`,
     UPDATE_BOOKED_SLOT_STATUS: (bookedId: string) =>
       `/slot-booking/${bookedId}/slot-status`,
+    CANCEL_BOOKED_SLOT:(bookedId:string)=>`/slot-booking/${bookedId}/cancel`
   },
   VIDEO: {
     START_VIDEO: (bookingId: string) => `/video/start/${bookingId}`,

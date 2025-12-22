@@ -1,0 +1,19 @@
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.DbModelName = void 0;
+var DbModelName;
+(function (DbModelName) {
+    DbModelName["CATEGORY"] = "Category";
+    DbModelName["CHAT"] = "Chat";
+    DbModelName["COURSE"] = "Course";
+    DbModelName["ENROLLMENT"] = "Enrollment";
+    DbModelName["NOTIFICATION"] = "Notification";
+    DbModelName["ORDER"] = "Order";
+    DbModelName["REVIEW"] = "Review";
+    DbModelName["SLOT_BOOKING"] = "SlotBooking";
+    DbModelName["SLOT"] = "Slot";
+    DbModelName["TRANSACTION"] = "Transaction";
+    DbModelName["USER"] = "User";
+    DbModelName["MESSAGE"] = "Message";
+    DbModelName["CERTIFICATE"] = "Certificate";
+})(DbModelName || (exports.DbModelName = DbModelName = {}));

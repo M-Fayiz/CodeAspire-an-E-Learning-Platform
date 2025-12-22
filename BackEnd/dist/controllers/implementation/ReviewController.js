@@ -1,8 +1,8 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.ReviewController = void 0;
-const http_status_1 = require("../../const/http-status");
-const error_message_1 = require("../../const/error-message");
+const http_status_const_1 = require("../../const/http-status.const");
+const error_message_const_1 = require("../../const/error-message.const");
 const response_util_1 = require("../../utils/response.util");
 class ReviewController {
     constructor(_reviewService) {
@@ -13,8 +13,8 @@ class ReviewController {
                 console.warn(req.body);
                 const ceratedReview = await this._reviewService.createReview(courseId, learnerId, comment, rating);
                 res
-                    .status(http_status_1.HttpStatus.OK)
-                    .json((0, response_util_1.successResponse)(error_message_1.HttpResponse.OK, { ceratedReview }));
+                    .status(http_status_const_1.HttpStatus.OK)
+                    .json((0, response_util_1.successResponse)(error_message_const_1.HttpResponse.OK, { ceratedReview }));
             }
             catch (error) {
                 next(error);
@@ -26,8 +26,8 @@ class ReviewController {
                 const courseReview = await this._reviewService.getCourseReview(courseId);
                 console.log(courseReview);
                 res
-                    .status(http_status_1.HttpStatus.OK)
-                    .json((0, response_util_1.successResponse)(error_message_1.HttpResponse.OK, { courseReview }));
+                    .status(http_status_const_1.HttpStatus.OK)
+                    .json((0, response_util_1.successResponse)(error_message_const_1.HttpResponse.OK, { courseReview }));
             }
             catch (error) {
                 next(error);

@@ -7,8 +7,8 @@ exports.CategoryService = void 0;
 const startCase_js_1 = __importDefault(require("lodash/startCase.js"));
 const objectId_1 = require("../../mongoose/objectId");
 const http_error_1 = require("../../utils/http-error");
-const http_status_1 = require("../../const/http-status");
-const error_message_1 = require("../../const/error-message");
+const http_status_const_1 = require("../../const/http-status.const");
+const error_message_const_1 = require("../../const/error-message.const");
 class CategoryService {
     constructor(_categoryRepository) {
         this._categoryRepository = _categoryRepository;
@@ -17,7 +17,7 @@ class CategoryService {
         const parentId = parent ? (0, objectId_1.parseObjectId)(parent) : null;
         const isExist = await this._categoryRepository.findCategory(title);
         if (isExist) {
-            throw (0, http_error_1.createHttpError)(http_status_1.HttpStatus.CONFLICT, error_message_1.HttpResponse.ITEM_EXIST);
+            throw (0, http_error_1.createHttpError)(http_status_const_1.HttpStatus.CONFLICT, error_message_const_1.HttpResponse.ITEM_EXIST);
         }
         title = (0, startCase_js_1.default)(title);
         return await this._categoryRepository.createCategory(title, parentId);
@@ -53,11 +53,11 @@ class CategoryService {
         title = (0, startCase_js_1.default)(title);
         const category_Id = (0, objectId_1.parseObjectId)(categoryId);
         if (!category_Id) {
-            throw (0, http_error_1.createHttpError)(http_status_1.HttpStatus.BAD_REQUEST, error_message_1.HttpResponse.INVALID_ID);
+            throw (0, http_error_1.createHttpError)(http_status_const_1.HttpStatus.BAD_REQUEST, error_message_const_1.HttpResponse.INVALID_ID);
         }
         const editedResult = await this._categoryRepository.editCategory(category_Id, title, parentId);
         if (!editedResult) {
-            throw (0, http_error_1.createHttpError)(http_status_1.HttpStatus.BAD_REQUEST, error_message_1.HttpResponse.INVALID_CREDNTIALS);
+            throw (0, http_error_1.createHttpError)(http_status_const_1.HttpStatus.BAD_REQUEST, error_message_const_1.HttpResponse.INVALID_CREDNTIALS);
         }
         return editedResult;
     }

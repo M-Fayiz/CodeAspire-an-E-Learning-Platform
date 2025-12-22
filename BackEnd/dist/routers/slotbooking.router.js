@@ -18,10 +18,11 @@ const notificationRepository = new NotificationRepository_1.NotificationReposito
 const slotBookingService = new SlotBookingService_1.SlotBookingService(slotBookingRepository, slotRepository, tansactionRepository, notificationRepository);
 const slotBookingController = new SlotBookingController_1.SlotBookingController(slotBookingService);
 bookingROuter.put("/:bookedId", slotBookingController.addFeedBack);
-bookingROuter.put('/:bookedId/student-status', slotBookingController.updateStudentStatus);
-bookingROuter.put('/:bookedId/slot-status', slotBookingController.updateSlotStatus);
+bookingROuter.put("/:bookedId/student-status", slotBookingController.updateStudentStatus);
+bookingROuter.put("/:bookedId/slot-status", slotBookingController.updateSlotStatus);
 bookingROuter.get("/learner/:learnerId", slotBookingController.listBookedSlot);
 bookingROuter.get("/mentor/:mentorId", slotBookingController.listBookedSlotOnMentor);
 bookingROuter.post("/create", slotBookingController.createBooking);
 bookingROuter.get("/list-slots", slotBookingController.getBookedSlots);
+bookingROuter.post("/:bookedId/cancel", slotBookingController.cancelBookedSLot);
 exports.default = bookingROuter;

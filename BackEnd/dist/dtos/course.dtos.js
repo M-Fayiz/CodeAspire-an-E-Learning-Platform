@@ -3,6 +3,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.courseListDTO = courseListDTO;
 exports.courseDTO = courseDTO;
 exports.formCourseDto = formCourseDto;
+exports.courseDetailsPageDTO = courseDetailsPageDTO;
 exports.listCourseForSLot = listCourseForSLot;
 exports.CourseFormDataDTO = CourseFormDataDTO;
 function courseListDTO(course, enrolledIds) {
@@ -64,6 +65,37 @@ function formCourseDto(course) {
             email: course.mentorId.email,
         },
         sessions: course.sessions ?? [],
+        status: course.status,
+        updated: course.updatedAt.toISOString(),
+    };
+}
+function courseDetailsPageDTO(course) {
+    const excludedLecture = course.sessions?.map((session) => ({
+        ...session,
+        lectures: session.lectures.map(({ lectureContent, ...rest }) => rest),
+    }));
+    return {
+        _id: course._id,
+        title: course.title || "",
+        description: course.description || "",
+        thumbnail: course.thumbnail || "",
+        category: {
+            _id: course.categoryId._id,
+            title: course.categoryId.title,
+        },
+        subCategory: {
+            _id: course.subCategoryId._id,
+            title: course.subCategoryId.title,
+        },
+        language: course.language,
+        level: course.level,
+        price: course.price,
+        mentorId: {
+            _id: course.mentorId._id,
+            name: course.mentorId.name,
+            email: course.mentorId.email,
+        },
+        sessions: excludedLecture ?? [],
         status: course.status,
         updated: course.updatedAt.toISOString(),
     };

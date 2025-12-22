@@ -1,8 +1,9 @@
+import { TransactionType } from "../../const/transaction.const";
 import { ITopCategory, ITopCourse } from "../mentorDashboard.types";
-import { IPaymentTypes } from "../transaction.type";
+
 
 interface RevanueSource {
-  name: IPaymentTypes;
+  name: TransactionType;
   value: number;
 }
 

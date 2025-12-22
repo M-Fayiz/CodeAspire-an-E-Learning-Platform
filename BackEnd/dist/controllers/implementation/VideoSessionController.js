@@ -1,8 +1,8 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.VideoSessionController = void 0;
-const http_status_1 = require("../../const/http-status");
-const error_message_1 = require("../../const/error-message");
+const http_status_const_1 = require("../../const/http-status.const");
+const error_message_const_1 = require("../../const/error-message.const");
 const response_util_1 = require("../../utils/response.util");
 class VideoSessionController {
     constructor(_slotBookingSevice) {
@@ -14,8 +14,8 @@ class VideoSessionController {
                 // sendNotification(createdMentorNotify.userId, createdMentorNotify);
                 // sendNotification(createdLearnerNotify.userId, createdLearnerNotify);
                 res
-                    .status(http_status_1.HttpStatus.OK)
-                    .json((0, response_util_1.successResponse)(error_message_1.HttpResponse.OK, { videoSessionData: sesionData }));
+                    .status(http_status_const_1.HttpStatus.OK)
+                    .json((0, response_util_1.successResponse)(error_message_const_1.HttpResponse.OK, { videoSessionData: sesionData }));
             }
             catch (error) {
                 next(error);

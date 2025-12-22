@@ -35,14 +35,14 @@ var __importStar = (this && this.__importStar) || (function () {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.ChatModel = void 0;
 const mongoose_1 = __importStar(require("mongoose"));
-const modelName_1 = require("../const/modelName");
+const modelName_const_1 = require("../const/modelName.const");
 const ChatSchema = new mongoose_1.default.Schema({
     users: [
-        { type: mongoose_1.Schema.Types.ObjectId, ref: modelName_1.DbModelName.USER, required: true },
+        { type: mongoose_1.Schema.Types.ObjectId, ref: modelName_const_1.DbModelName.USER, required: true },
     ],
     participantKey: { type: String, unique: true },
     latestMessage: { type: String },
     lastMessageTime: { type: Date },
     createdAt: { type: Date, default: Date.now },
 });
-exports.ChatModel = mongoose_1.default.model(modelName_1.DbModelName.CHAT, ChatSchema);
+exports.ChatModel = mongoose_1.default.model(modelName_const_1.DbModelName.CHAT, ChatSchema);

@@ -35,7 +35,7 @@ var __importStar = (this && this.__importStar) || (function () {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.SlotModel = void 0;
 const mongoose_1 = __importStar(require("mongoose"));
-const modelName_1 = require("../const/modelName");
+const modelName_const_1 = require("../const/modelName.const");
 const SlotDaySchema = new mongoose_1.Schema({
     startTime: { type: String },
     endTime: { type: String },
@@ -57,12 +57,12 @@ const SlotDaySchema = new mongoose_1.Schema({
 const SlotSchema = new mongoose_1.Schema({
     mentorId: {
         type: mongoose_1.Schema.Types.ObjectId,
-        ref: modelName_1.DbModelName.USER,
+        ref: modelName_const_1.DbModelName.USER,
         required: true,
     },
     courseId: {
         type: mongoose_1.Schema.Types.ObjectId,
-        ref: modelName_1.DbModelName.COURSE,
+        ref: modelName_const_1.DbModelName.COURSE,
         required: true,
     },
     selectedDays: {
@@ -73,4 +73,4 @@ const SlotSchema = new mongoose_1.Schema({
     isActive: { type: Boolean, default: true },
     pricePerSlot: { type: Number, default: 0 },
 }, { timestamps: true });
-exports.SlotModel = mongoose_1.default.model(modelName_1.DbModelName.SLOT, SlotSchema);
+exports.SlotModel = mongoose_1.default.model(modelName_const_1.DbModelName.SLOT, SlotSchema);

@@ -1,4 +1,4 @@
-import { FilterQuery, Types } from "mongoose";
+import { FilterQuery, Types, UpdateQuery } from "mongoose";
 import {
   ITransactionModel,
   transactionModel,
@@ -9,6 +9,7 @@ import { ITransactionRepository } from "../interface/ITransactionRepository";
 import { IRevenueAggregationResult } from "../../types/courseDashboard.type";
 import { IMentorTotalRevanue } from "../../types/mentorDashboard.types";
 import { graphPrps, SourceOfRevanye } from "../../types/adminDahsboard.type";
+import { TransactionStatus } from "../../const/transaction.const";
 
 export class TransactionRepositoy
   extends BaseRepository<ITransactionModel>
@@ -46,7 +47,8 @@ export class TransactionRepositoy
       {
         $match: {
           mentorId: mentorId,
-          createdAt:{$gte:start,$lte:end}
+          createdAt:{$gte:start,$lte:end},
+          status:{$ne:TransactionStatus.REFUNDED}
         },
       },
       {
@@ -61,7 +63,7 @@ export class TransactionRepositoy
   }
   async getAdminRevenue(start?:Date,end?:Date): Promise<SourceOfRevanye[]> {
     return this.aggregate<SourceOfRevanye>([
-      {$match:{createdAt:{$gte:start,$lte:end}}},
+      {$match:{createdAt:{$gte:start,$lte:end},status:{$ne:TransactionStatus.REFUNDED}}},
       {
         $group: {
           _id: "$paymentType",
@@ -115,5 +117,11 @@ export class TransactionRepositoy
       },
       { $sort: { date: 1 } },
     ]);
+  }
+  async findTransaction(filter: FilterQuery<ITransactionModel>): Promise<ITransactionModel|null> {
+    return await this.findOne(filter)
+  }
+  async updateTransaction(transactionId:Types.ObjectId, updateData: UpdateQuery<ITransactionModel>): Promise<ITransactionModel | null> {
+    return await this.findByIDAndUpdate(transactionId,updateData)
   }
 }

@@ -3,7 +3,6 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.UserRepository = void 0;
 const baseRepository_1 = require("../baseRepository");
 const user_model_1 = require("../../models/user.model");
-const searchQuery_1 = require("../../utils/searchQuery");
 class UserRepository extends baseRepository_1.BaseRepository {
     constructor() {
         super(user_model_1.UserModel);
@@ -40,21 +39,18 @@ class UserRepository extends baseRepository_1.BaseRepository {
                 email: profile.emails?.[0].value,
                 name: profile.displayName,
                 role: role,
+                isActive: true
             });
         }
         return user;
     }
     async findAllUsers(limit, skip, searchQuery) {
-        const filter = (0, searchQuery_1.buildUserFilter)(searchQuery);
-        return this.model
-            .find(filter)
-            .select("-password -googleId")
-            .skip(skip)
-            .limit(limit);
+        return this.findAll({ name: { $regex: searchQuery ?? "", $options: "i" } }, limit, skip);
     }
     async findUserCount(searchQuery) {
-        const filter = (0, searchQuery_1.buildUserFilter)(searchQuery);
-        return this.model.countDocuments(filter);
+        return this.countDocuments({
+            name: { $regex: searchQuery ?? "", $options: "i" },
+        });
     }
     async blockUser(id) {
         return this.model.findByIdAndUpdate(id, [{ $set: { isActive: { $not: "$isActive" } } }], {
@@ -80,8 +76,14 @@ class UserRepository extends baseRepository_1.BaseRepository {
     async findUser(filter) {
         return await this.findOne(filter);
     }
-    async findDashBoardUserCount(role) {
-        return await this.countDocuments({ role: role });
+    async findDashBoardUserCount(role, start, end) {
+        return await this.countDocuments({
+            role,
+            createdAt: {
+                $gte: start,
+                $lte: end,
+            },
+        });
     }
     async SignedUsers(filter) {
         return await this.aggregate([

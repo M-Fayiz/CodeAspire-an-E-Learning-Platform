@@ -1,5 +1,6 @@
 import { Types } from "mongoose";
-import { IPaymentTypes } from "./transaction.type";
+import { TransactionType } from "../const/transaction.const";
+
 
 export interface IMentorDashboardData {
   avgRating: number;
@@ -7,7 +8,7 @@ export interface IMentorDashboardData {
 }
 
 export interface IMentorTotalRevanue {
-  _id: IPaymentTypes;
+  _id: TransactionType;
   revenue: number;
 }
 export interface ITopCourse {

@@ -17,7 +17,7 @@ if (clientID && clientSecret && callBack) {
         clientSecret,
         callbackURL: callBack,
         passReqToCallback: true,
-    }, async (req, accessToken, refreshToken, profile, done) => {
+    }, async (req, _accessToken, _refreshToken, profile, done) => {
         try {
             const state = req.query.state
                 ? JSON.parse(req.query.state)
@@ -37,16 +37,4 @@ if (clientID && clientSecret && callBack) {
 else {
     console.warn("⚠️ Google OAuth disabled: missing environment variables");
 }
-// passport.serializeUser((user: any, done) => {
-//   done(null, user.id);
-// });
-// passport.deserializeUser(async (id: unknown, done) => {
-//   try {
-//     const userId = id as Types.ObjectId;
-//     const user = await userRepo.findById(userId);
-//     done(null, user);
-//   } catch (error) {
-//     done(error);
-//   }
-// });
 exports.default = passport_1.default;

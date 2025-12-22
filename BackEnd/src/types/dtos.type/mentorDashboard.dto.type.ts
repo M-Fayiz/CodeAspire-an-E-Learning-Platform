@@ -1,10 +1,13 @@
+import { TransactionType } from "../../const/transaction.const";
 import { IMentorDashboardData, ITopCourse } from "../mentorDashboard.types";
-import { IPaymentTypes } from "../transaction.type";
+
+ 
+
 
 export interface IMentorDhasboardDTO {
   summary: IMentorDashboardData;
   revanue: {
-    name: IPaymentTypes;
+    name: TransactionType;
     value: number;
   }[];
   topCourse: ITopCourse[];

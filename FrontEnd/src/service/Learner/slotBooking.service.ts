@@ -68,7 +68,7 @@ export const SlotBookingSercie = {
   },
   updateStudentStatus: async (
     slotBookingId: string,
-    studentStatus: "failed" | "passed",
+    studentStatus:studentStatus,
   ): Promise<{ bookedId: string; status: studentStatus }> => {
     try {
       const response = await axiosInstance.put(
@@ -94,4 +94,12 @@ export const SlotBookingSercie = {
       throwAxiosError(error);
     }
   },
+  cancelSlot:async(bookedId:string):Promise<slotStatus>=>{
+    try {
+      const response=await axiosInstance.post(API.SLOT_BOOK.CANCEL_BOOKED_SLOT(bookedId))
+      return response.data.status
+    } catch (error) {
+      throwAxiosError(error)
+    }
+  }
 };
