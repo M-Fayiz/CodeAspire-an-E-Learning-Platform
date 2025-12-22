@@ -2,7 +2,7 @@ import { Types } from "mongoose";
 import { getIO } from "../socket.io";
 import { INotificationDTO } from "../types/dtos.type/notification.dto.types";
 import redisClient from "../config/redis.config";
-import { redisPrefix } from "../const/redisKey";
+import { redisPrefix } from "../const/redisKey.const";
 
 export const sendNotification = async (
   userId: Types.ObjectId,

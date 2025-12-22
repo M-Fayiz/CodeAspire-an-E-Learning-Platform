@@ -1,6 +1,6 @@
 import mongoose, { Schema, Document, Types } from "mongoose";
 import { IChat } from "../types/chat.type";
-import { DbModelName } from "../const/modelName";
+import { DbModelName } from "../const/modelName.const";
 
 export interface IChatModel extends IChat, Document<Types.ObjectId> {}
 

@@ -2,6 +2,7 @@ import { Types } from "mongoose";
 import { ICourses, ILecture, ISession } from "../../types/courses.type";
 import {
   ICourseCreateForm,
+  ICourseDetailsPageDTO,
   ICourseDTO,
   ICourseListDTO,
   IFormCourseDTO,
@@ -28,7 +29,11 @@ export interface ICourseService {
   getCourse(
     courseId: string,
     learnerId?: string,
-  ): Promise<{ courseDetails: IFormCourseDTO; enrolledId: Types.ObjectId |null}>;
+  ): Promise<{ courseDetails: ICourseDetailsPageDTO; enrolledId: Types.ObjectId |null}>;
+  getAdminCourseDetails(
+    courseId: string,
+    
+  ): Promise< IFormCourseDTO>;
   getDraftedCourses(
     search: string,
     page: string,
@@ -50,7 +55,7 @@ export interface ICourseService {
     courseId: string,
     baseInfo: ICourses,
   ): Promise<ICourseDTO>;
-  getAdminCourse(): Promise<IFormCourseDTO[] | null>;
+  getAdminCourse(search:string, page:number): Promise<IFormCourseDTO[] | null>;
   getCourseDetails(courseId: string): Promise<IFormCourseDTO | null>;
   approveCourse(courseId: string): Promise<{
     status: string | null;

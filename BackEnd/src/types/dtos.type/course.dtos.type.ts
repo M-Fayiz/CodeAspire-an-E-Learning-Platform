@@ -1,8 +1,9 @@
 import { Types } from "mongoose";
-import { ISession } from "../courses.type";
+import { CourseLevel, CourseStatus, ILecture, ISession } from "../courses.type";
 import { ICategory } from "../category.types";
 import { IMenterModel } from "../../models/user.model";
 import { ICategoryModel } from "../../models/category.model";
+
 
 export interface IBaseCourse {
   _id: Types.ObjectId;
@@ -10,14 +11,14 @@ export interface IBaseCourse {
   description?: string;
   thumbnail?: string;
   language: string;
-  level: "Beginner" | "Intermediate" | "Advanced";
+  level: CourseLevel
   price: number;
 
   subCategoryId: ICategory;
   sessions?: ISession[];
   isActive?: boolean;
   isDraft?: boolean;
-  status: "inProgress" | "draft" | "published" | "approved" | "rejected";
+  status: CourseStatus
   updatedAt: Date;
 }
 
@@ -34,7 +35,7 @@ export interface ICourseListDTO {
   category: string;
   subCategory: string;
   language: string;
-  level: "Beginner" | "Intermediate" | "Advanced";
+  level:CourseLevel
   price: number;
   isEnrolled: boolean;
 }
@@ -57,7 +58,7 @@ export interface IFormCourseDTO {
     title: string;
   };
   language: string;
-  level: "Beginner" | "Intermediate" | "Advanced";
+  level: CourseLevel
   price: number;
   mentorId: {
     _id: Types.ObjectId;
@@ -66,7 +67,7 @@ export interface IFormCourseDTO {
   };
   sessions: ISession[];
   description: string;
-  status: "inProgress" | "draft" | "published" | "approved" | "rejected";
+  status:CourseStatus
   updated: string;
 }
 
@@ -80,8 +81,8 @@ export interface IBaseFormCourse {
   description: string;
   price: number;
   thumbnail: string;
-  status: "inProgress" | "draft" | "published" | "approved" | "rejected";
-  level: "Beginner" | "Intermediate" | "Advanced";
+  status:CourseStatus
+  level:CourseLevel
   language: string;
   categoryId: Types.ObjectId;
   subCategoryId: Types.ObjectId;
@@ -91,3 +92,20 @@ export interface ICourseCreateForm extends IBaseFormCourse {
   _id: Types.ObjectId;
   sessions: ISession[];
 }
+
+
+export type ILectureWithoutContent = Omit<
+  ILecture,
+  "lectureContent"
+>;
+
+export interface ISessionWithoutContent {
+  title: string;
+  lectures: ILectureWithoutContent[];
+}
+
+export interface ICourseDetailsPageDTO
+  extends Omit<IFormCourseDTO, "sessions"> {
+  sessions: ISessionWithoutContent[];
+}
+

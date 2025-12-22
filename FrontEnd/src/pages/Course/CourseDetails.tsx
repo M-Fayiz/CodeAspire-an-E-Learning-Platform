@@ -1,6 +1,6 @@
 import Taps from "@/components/common/Taps";
-import Header from "@/components/layout/landing/header";
-import BannerSkeleton from "@/components/skelton/courseDetailSkelton";
+import Header from "@/components/layout/landing/Header";
+import BannerSkeleton from "@/components/skelton/CourseDetailSkelton";
 import { TabSkeleton } from "@/components/skelton/TapSkelton";
 import { Button } from "@/components/ui/button";
 import { useAuth } from "@/context/auth.context";
@@ -8,29 +8,28 @@ import MentorProfile from "@/features/courses_list/Details/AboutMentor";
 import Banner from "@/features/courses_list/Details/Banner";
 import CourseOverview from "@/features/courses_list/Details/OverView";
 import courseService from "@/service/mentor/course.service";
-import type { IFormCourseDTO } from "@/types/DTOS/courses.dto.types";
+import type { ICourseDetailsPageDTO, IFormCourseDTO } from "@/types/DTOS/courses.dto.types";
 import { ArrowLeft, ClipboardPen, User } from "lucide-react";
 import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
+import CoursePreview from "./CourseCurriculum";
 
 const CourseDetails = () => {
   const [activeTap, setActiveTap] = useState("overview");
   const { id } = useParams<{ id: string }>();
  
   const { user } = useAuth();
-  const [course, setCourse] = useState<IFormCourseDTO | null>(null);
+  const [course, setCourse] = useState<ICourseDetailsPageDTO | null>(null);
   const [loading, setLoading] = useState(false);
   const [enrolledId,setEnrolledId]=useState<string|null>(null)
   useEffect(() => {
     (async () => {
       setLoading(true);
-     
       const result = await courseService.getCourseDetails(
         id as string,
         user?.id as string
       );
       if (result) {
-       
         setCourse(result.courseDetails);
         setEnrolledId(result.enrolledId)
         setLoading(false);
@@ -93,6 +92,15 @@ const CourseDetails = () => {
                 tap="mentor"
                 activeTap={activeTap}
               />
+              <Taps
+                label="curriculum "
+                icon={
+                  <User className="text-white-500 w-4 h-4 hidden md:block" />
+                }
+                Click={handle}
+                tap="curriculum"
+                activeTap={activeTap}
+              />
             </>
           )}
         </div>
@@ -106,6 +114,7 @@ const CourseDetails = () => {
               enrolledId={enrolledId}
             />
           )}
+          {activeTap=='curriculum'&&course?.sessions&&<CoursePreview sessions={course?.sessions}/>}
         </div>
       </div>
     </div>

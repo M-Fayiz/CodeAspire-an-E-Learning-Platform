@@ -8,9 +8,8 @@ import {
 } from "../../models/user.model";
 import { IUserRepo } from "../interface/IUserRepo";
 import { Profile } from "passport-google-oauth20";
-import { IRole, mentorApprovalStatus, searchProps } from "../../types/user.types";
+import { IRole, mentorApprovalStatus } from "../../types/user.types";
 import { FilterQuery, Types } from "mongoose";
-import { buildUserFilter } from "../../utils/searchQuery";
 import { graphPrps } from "../../types/adminDahsboard.type";
 
 export class UserRepository
@@ -75,20 +74,19 @@ export class UserRepository
   async findAllUsers(
     limit: number,
     skip: number,
-    searchQuery: searchProps,
+    searchQuery?: string,
   ): Promise<IUserModel[] | null> {
-    const filter = buildUserFilter(searchQuery);
-    return this.model
-      .find(filter)
-      .select("-password -googleId")
-      .skip(skip)
-      .limit(limit);
+    
+    return this.findAll({name: { $regex: searchQuery ?? "", $options: "i" }},limit,skip)
+
   }
 
-  async findUserCount(searchQuery: searchProps): Promise<number | 0> {
-    const filter = buildUserFilter(searchQuery);
-    return this.model.countDocuments(filter);
-  }
+async findUserCount(searchQuery?: string): Promise<number> {
+  return this.countDocuments({
+    name: { $regex: searchQuery ?? "", $options: "i" },
+  });
+}
+
   async blockUser(id: Types.ObjectId): Promise<IUserModel | null> {
     return this.model.findByIdAndUpdate(
       id,

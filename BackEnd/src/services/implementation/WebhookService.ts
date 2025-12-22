@@ -6,8 +6,8 @@ import { IOrderService } from "../interface/IOrderService";
 import { ISlotBookingService } from "../interface/ISlotBookingService";
 import { stripe } from "../../config/stripe.config";
 import { createHttpError } from "../../utils/http-error";
-import { HttpStatus } from "../../const/http-status";
-import { HttpResponse } from "../../const/error-message";
+import { HttpStatus } from "../../const/http-status.const";
+import { HttpResponse } from "../../const/error-message.const";
 export class WebhookService implements IWebhookService {
   constructor(
     private _orderService: IOrderService,

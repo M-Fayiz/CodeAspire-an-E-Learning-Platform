@@ -1,6 +1,6 @@
 import mongoose, { Schema, Document, Types } from "mongoose";
 import { IMessage } from "../types/message.type";
-import { DbModelName } from "../const/modelName";
+import { DbModelName } from "../const/modelName.const";
 
 export interface IMessageModel
   extends Document<Types.ObjectId>,

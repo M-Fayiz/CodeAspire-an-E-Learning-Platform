@@ -1,7 +1,7 @@
 import Stripe from "stripe";
 import { env } from "../../config/env.config";
-import { HttpResponse } from "../../const/error-message";
-import { HttpStatus } from "../../const/http-status";
+import { HttpResponse } from "../../const/error-message.const";
+import { HttpStatus } from "../../const/http-status.const";
 import { ISlotBookingRepository } from "../../repository/interface/ISlotBookingRepository";
 import {
   BookingStatus,
@@ -14,8 +14,8 @@ import { timeAndDateGenerator } from "../../utils/timeAndDateGenerator";
 import { ISlotBookingService } from "../interface/ISlotBookingService";
 import { ISlotRepository } from "../../repository/interface/ISlotRepository";
 import { parseObjectId } from "../../mongoose/objectId";
-import { ITransaction } from "../../types/transaction.type";
-import { TransactionType } from "../../const/transaction";
+import { ITransaction, ITransactionStatus } from "../../types/transaction.type";
+import { PaymentMethod, StripeConst, TransactionType } from "../../const/transaction.const";
 import { calculateShares } from "../../utils/calculateSplit.util";
 import { ITransactionRepository } from "../../repository/interface/ITransactionRepository";
 import {
@@ -67,10 +67,10 @@ export class SlotBookingService implements ISlotBookingService {
       endTime: { $gt: startTime },
     });
     if (isAlreadyBooked) {
-      throw createHttpError(HttpStatus.CONFLICT, "This slot is already booked");
+      throw createHttpError(HttpStatus.CONFLICT, HttpResponse.SLOT_ALREADY_BOOKED);
     }
 
-    console.log("booked :::", bookingData);
+  
     const activeBooking = await this._slotBookingRepository.findSlots({
       learnerId,
       courseId,
@@ -133,12 +133,12 @@ export class SlotBookingService implements ISlotBookingService {
     const createdPaidSlot =
       await this._slotBookingRepository.createBooking(bookingData);
     const session = await stripe.checkout.sessions.create({
-      payment_method_types: ["card"],
-      mode: "payment",
+      payment_method_types: [StripeConst.payment_method_types],
+      mode: StripeConst.MODE,
       line_items: [
         {
           price_data: {
-            currency: "inr",
+            currency:StripeConst.CURRENCY,
             product_data: {
               name: `Mentor Review Session`,
             },
@@ -186,7 +186,7 @@ export class SlotBookingService implements ISlotBookingService {
     }
     await this._slotBookingRepository.updateSlotBookingData(
       { _id: bookingId },
-      { status: "booked" },
+      { status: BookingStatus.BOOKED },
     );
     const adminShare = calculateShares(Number(amount), Number(env.ADMIN_SHARE));
     const mentorShare = calculateShares(
@@ -204,8 +204,8 @@ export class SlotBookingService implements ISlotBookingService {
       amount: Number(amount),
       userId: learner_id,
       mentorId: mentor_id,
-      status: "success",
-      paymentMethod: "stripe",
+      status: ITransactionStatus.SUCCESS,
+      paymentMethod: PaymentMethod.STRIPE,
       gatewayTransactionId: paymentIntentId as string,
       adminShare,
       mentorShare,
@@ -281,18 +281,19 @@ export class SlotBookingService implements ISlotBookingService {
       throw createHttpError(HttpStatus.BAD_REQUEST, HttpResponse.INVALID_ID);
     }
     let query: FilterQuery<ISlotBookingModel> = {};
-
+    
     if (learnerId) {
       query.learnerId = learnerId;
     } else {
       query.mentorId = mentorId;
     }
+  
     const bookedListss = await this._slotBookingRepository.listbookedSlots(
       query,
       limit,
       skip,
     );
-
+   
     return bookedListss.map((slot) => ListBookedSlotOfLearner(slot));
   }
   async addFeedback(

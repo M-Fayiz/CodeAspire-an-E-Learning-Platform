@@ -1,4 +1,4 @@
-import { ChatEvents } from "../../const/socketEvents";
+import { ChatEvents } from "../../const/socketEvents.const";
 
 export interface ChatListenEvents {
   [ChatEvents.JOIN]: (payload: { roomId: string }) => void;

@@ -18,7 +18,7 @@ export const LoginComponent: React.FC<AuthComponentProps> = ({
   ) => {
     const { name, value } = e.target;
     setFormData((prv) => ({ ...prv, [name]: value }));
-    console.log(formData);
+   
   };
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
@@ -48,12 +48,12 @@ export const LoginComponent: React.FC<AuthComponentProps> = ({
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-orange-100 via-white to-gray-100 flex items-center justify-center px-6 py-10 relative overflow-hidden">
-      {/* Subtle floating gradient blob */}
+     
       <div className="absolute top-[-100px] left-[-100px] w-[400px] h-[400px] bg-orange-300 opacity-30 blur-3xl rounded-full"></div>
       <div className="absolute bottom-[-100px] right-[-100px] w-[400px] h-[400px] bg-yellow-200 opacity-40 blur-3xl rounded-full"></div>
 
       <div className="flex flex-col lg:flex-row w-full max-w-6xl items-center justify-between">
-        {/* Left side: brand + quote */}
+        
         <div className="lg:w-1/2 text-center lg:text-left space-y-8 z-10 px-4">
           <div className="flex items-center justify-center lg:justify-start space-x-3">
             <div className="w-14 h-14 bg-gradient-to-br from-orange-500 to-orange-600 rounded-lg flex items-center justify-center shadow-lg">
@@ -83,9 +83,9 @@ export const LoginComponent: React.FC<AuthComponentProps> = ({
           </h2>
         </div>
 
-        {/* Right side: floating glass form */}
+       
         <div className="lg:w-1/2 w-full max-w-md bg-white/40 backdrop-blur-2xl rounded-[2rem] shadow-xl p-10 border border-white/30 z-10 hover:shadow-2xl transition duration-500 ease-in-out transform hover:scale-[1.02]">
-          {/* Header */}
+         
           <div className="text-center mb-8">
             <div className="flex justify-center mb-4">
               <div className="bg-gradient-to-r from-orange-500 to-orange-600 p-3 rounded-2xl shadow-md">
@@ -98,7 +98,7 @@ export const LoginComponent: React.FC<AuthComponentProps> = ({
             </p>
           </div>
 
-          {/* Google Login */}
+       
           <button
             type="button"
             onClick={() => onGoogleAuth("learner")}

@@ -1,6 +1,6 @@
 import mongoose from "mongoose";
 import { ICourses } from "../types/courses.type";
-import { DbModelName } from "../const/modelName";
+import { DbModelName } from "../const/modelName.const";
 
 const courseSchema = new mongoose.Schema<ICourses>(
   {

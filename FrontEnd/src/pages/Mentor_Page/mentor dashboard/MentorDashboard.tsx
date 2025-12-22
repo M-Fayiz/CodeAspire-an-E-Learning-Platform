@@ -12,7 +12,7 @@ import StatCard from "./DashboardCard";
 import MentorDashboardSkeleton from "@/components/shared/Dashboard";
 import { useNavigate } from "react-router";
 import { FilterByDate } from "@/constants/filter.const";
-import RevenueChart, { type graphPrps } from "@/features/dashboard/graph";
+import RevenueChart, { type graphPrps } from "@/features/dashboard/Graph";
 import { RevenueDonutChart } from "@/components/ui/PieGraph";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 

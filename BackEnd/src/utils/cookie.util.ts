@@ -1,7 +1,8 @@
 import { Response } from "express";
+import { AUTH_TOKEN } from "../const/auth.const";
 
 export const setAccessToken = (res: Response, token: string) => {
-  res.cookie("accessToken", token, {
+  res.cookie(AUTH_TOKEN.ACCESS_TOKEN, token, {
     httpOnly: true,
     secure: false,
     sameSite:
@@ -15,7 +16,7 @@ export const setAccessToken = (res: Response, token: string) => {
 };
 
 export const setRefreshToken = (res: Response, token: string) => {
-  res.cookie("refreshToken", token, {
+  res.cookie(AUTH_TOKEN.REFRESH_TOKEN, token, {
     httpOnly: true,
     secure: false,
     sameSite:

@@ -1,6 +1,6 @@
 import mongoose, { Document, Types } from "mongoose";
 import { ICategory } from "../types/category.types";
-import { DbModelName } from "../const/modelName";
+import { DbModelName } from "../const/modelName.const";
 
 export interface ICategoryModel extends ICategory, Document {
   _id: Types.ObjectId;

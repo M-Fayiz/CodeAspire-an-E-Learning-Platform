@@ -1,6 +1,6 @@
 import Taps from "@/components/common/Taps";
 import { Spinner } from "@/components/templates/Spinner";
-import HeroSection from "@/features/admin/Course/HeroSection";
+import HeroSection from "@/features/admin/course/HeroSection";
 import courseService from "@/service/mentor/course.service";
 import type { IFormCourseDTO } from "@/types/DTOS/courses.dto.types";
 import { ClipboardPen, PlayCircle } from "lucide-react";
@@ -12,25 +12,25 @@ import {
   AccordionItem,
   AccordionTrigger,
 } from "@/components/ui/accordion";
-import AdminCourseActions from "@/features/admin/Course/AdminAction";
+import AdminCourseActions from "@/features/admin/course/AdminAction";
 import { toast } from "sonner";
 import MentorProfile from "@/features/courses_list/Details/AboutMentor";
 
 function AdminCourseDetails() {
-  const { id } = useParams();
+  const { courseId } = useParams();
   const [course, setCourses] = useState<IFormCourseDTO | null>(null);
   const [videoUrl, setVideoUrl] = useState({ url: "", title: "" });
   const [activeTab, setActiveTab] = useState("Curriculum");
 
   useEffect(() => {
     async function fetchCourse() {
-      const coursedata = await courseService.getCourseDetails(id as string);
+      const coursedata = await courseService.getCourseDetaildForAdmin(courseId as string);
       if (coursedata) {
         setCourses(coursedata);
       }
     }
     fetchCourse();
-  }, [id]);
+  }, [courseId]);
   if (!course) {
     return <Spinner fullScreen variant="theme" />;
   }
@@ -201,6 +201,7 @@ function AdminCourseDetails() {
             <MentorProfile
               courseId={course._id}
               mentorId={course?.mentorId._id as string}
+              enrolledId={null}
             />
           )}
         </div>

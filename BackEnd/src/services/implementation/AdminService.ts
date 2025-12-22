@@ -1,5 +1,5 @@
-import { HttpResponse } from "../../const/error-message";
-import { HttpStatus } from "../../const/http-status";
+import { HttpResponse } from "../../const/error-message.const";
+import { HttpStatus } from "../../const/http-status.const";
 import { ILearnerModel, IMenterModel } from "../../models/user.model";
 import { IUserRepo } from "../../repository/interface/IUserRepo";
 import { createHttpError } from "../../utils/http-error";
@@ -36,22 +36,16 @@ export class AdminService implements IAdminService {
 
   async fetchAllUsers(
     page: number,
-    isActive: boolean | "",
-    name: string,
-    role: IRole,
+    search:string
   ): Promise<UserFetchResponse> {
-    const limit = 3;
+    const limit = 4;
     const skip = (page - 1) * limit;
 
-    const searchQuery = {
-      name: name,
-      role: role,
-      isActive: isActive,
-    };
+   
 
     const [allUsers, userCount] = await Promise.all([
-      this._userRepo.findAllUsers(limit, skip, searchQuery),
-      this._userRepo.findUserCount(searchQuery),
+      this._userRepo.findAllUsers(limit, skip, search),
+      this._userRepo.findUserCount(search),
     ]);
     if (!allUsers) {
       throw createHttpError(

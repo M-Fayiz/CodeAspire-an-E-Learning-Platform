@@ -1,8 +1,8 @@
 import { Request, Response, NextFunction } from "express";
 import { ICertificateController } from "../interface/ICertificateController";
-import { HttpStatus } from "../../const/http-status";
+import { HttpStatus } from "../../const/http-status.const";
 import { successResponse } from "../../utils/response.util";
-import { HttpResponse } from "../../const/error-message";
+import { HttpResponse } from "../../const/error-message.const";
 import { ICertificateService } from "../../services/interface/ICertificateService";
 import { sendNotification } from "../../utils/socket.utils";
 

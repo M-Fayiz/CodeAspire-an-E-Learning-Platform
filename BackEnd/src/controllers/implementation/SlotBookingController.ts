@@ -2,8 +2,8 @@ import { Request, Response, NextFunction } from "express";
 import { ISlotBookingService } from "../../services/interface/ISlotBookingService";
 import { ISlotBookingController } from "../interface/ISlotBookingController";
 import { ISlotBooking } from "../../types/sessionBooking.type";
-import { HttpStatus } from "../../const/http-status";
-import { HttpResponse } from "../../const/error-message";
+import { HttpStatus } from "../../const/http-status.const";
+import { HttpResponse } from "../../const/error-message.const";
 import { successResponse } from "../../utils/response.util";
 
 export class SlotBookingController implements ISlotBookingController {
@@ -70,9 +70,9 @@ export class SlotBookingController implements ISlotBookingController {
   ): Promise<void> => {
     try {
       const { mentorId } = req.params;
-
+     
       const listsOfBooked =
-        await this._slotBookingService.ListLearnerBookedSlots("", mentorId);
+        await this._slotBookingService.ListLearnerBookedSlots(undefined, mentorId);
 
       res
         .status(HttpStatus.OK)

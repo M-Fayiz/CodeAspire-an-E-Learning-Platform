@@ -1,6 +1,6 @@
 import path from "path";
-import { HttpResponse } from "../../const/error-message";
-import { HttpStatus } from "../../const/http-status";
+import { HttpResponse } from "../../const/error-message.const";
+import { HttpStatus } from "../../const/http-status.const";
 import { ICertificateModel } from "../../models/certificate.model";
 import { parseObjectId } from "../../mongoose/objectId";
 import { ICertificateRepository } from "../../repository/interface/ICertificateRepository";

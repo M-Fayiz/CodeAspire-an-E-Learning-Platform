@@ -6,9 +6,9 @@ import {
   IMenterModel,
 } from "../../models/user.model";
 import { createHttpError } from "../../utils/http-error";
-import { HttpStatus } from "../../const/http-status";
-import { HttpResponse } from "../../const/error-message";
-import { IAdmin, ILearner, IRole } from "../../types/user.types";
+import { HttpStatus } from "../../const/http-status.const";
+import { HttpResponse } from "../../const/error-message.const";
+import { IAdmin, ILearner, IRole, mentorApprovalStatus } from "../../types/user.types";
 import { parseObjectId } from "../../mongoose/objectId";
 import { comparePassword, hashPassword } from "../../utils/bcrypt.util";
 
@@ -186,7 +186,7 @@ export class UserService implements IUserService {
     }
     const updateMentorData = await this._mentorRepository.updateMentorProfile(
       mentor_Id,
-      { ...mentorData, ApprovalStatus: "requested" } as IMenterModel,
+      { ...mentorData, ApprovalStatus: mentorApprovalStatus.REQUESTED } as IMenterModel,
     );
     if (!updateMentorData) {
       throw createHttpError(

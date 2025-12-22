@@ -1,7 +1,7 @@
 import { Request, Response, NextFunction } from "express";
 import { IWebhookController } from "../interface/IWebhookController";
 import { IWebhookService } from "../../services/interface/IWebhookService";
-import { HttpStatus } from "../../const/http-status";
+import { HttpStatus } from "../../const/http-status.const";
 
 export class WebhookController implements IWebhookController {
   constructor(private _webhookService: IWebhookService) {}

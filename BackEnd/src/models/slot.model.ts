@@ -1,6 +1,6 @@
 import mongoose, { Schema, Document, Types } from "mongoose";
 import { IBaseSlot } from "../types/slot.type";
-import { DbModelName } from "../const/modelName";
+import { DbModelName } from "../const/modelName.const";
 
 export interface ISlotModel extends IBaseSlot, Document {
   _id: Types.ObjectId;

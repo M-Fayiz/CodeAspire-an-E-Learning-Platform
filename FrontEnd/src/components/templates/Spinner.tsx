@@ -1,5 +1,5 @@
 import React from "react";
-import { Bug, Code2, Terminal } from "lucide-react";
+
 
 type SpinnerSize = "small" | "medium" | "large" | "xlarge";
 type SpinnerVariant = "theme" | "white" | "tech";
@@ -47,39 +47,22 @@ export const Spinner: React.FC<SpinnerProps> = ({
     </div>
   );
 
-  // Full screen wrapper
+
   if (fullScreen) {
     return (
-      <div className="fixed inset-0 z-50 flex items-center justify-center backdrop-blur-sm bg-black/20">
-        <div className="text-center">
-          <div className="mb-4">
-            {React.cloneElement(spinnerElement, {
-              size: "large",
-              className: "mx-auto",
-            })}
-          </div>
-          <div className="text-white font-medium">Loading...</div>
-        </div>
-        <div
-          className="fixed top-20 left-20 opacity-50 animate-bounce"
-          style={{ animationDelay: "0s" }}
-        >
-          <Bug size={24} className="text-purple-600" />
-        </div>
-        <div
-          className="fixed top-40 right-32 opacity-50 animate-bounce"
-          style={{ animationDelay: "1s" }}
-        >
-          <Code2 size={32} className="text-blue-600" />
-        </div>
-        <div
-          className="fixed bottom-32 left-32 opacity-50 animate-bounce"
-          style={{ animationDelay: "2s" }}
-        >
-          <Terminal size={28} className="text-pink-600" />
-        </div>
-      </div>
-    );
+  <div className="fixed inset-0 z-50 flex items-center justify-center bg-white/70 backdrop-blur-sm">
+    <div className="flex flex-col items-center gap-4">
+
+      <div className="w-12 h-12 rounded-full border-4 border-gray-200 border-t-orange-500 animate-spin" />
+
+    
+      <p className="text-sm text-gray-600 font-medium">
+        Loading, please wait...
+      </p>
+    </div>
+  </div>
+);
+
   }
 
   return spinnerElement;

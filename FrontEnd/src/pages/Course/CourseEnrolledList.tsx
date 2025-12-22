@@ -2,7 +2,7 @@ import ManagementLayout from "@/components/layout/ManagementLayout";
 import CourseCardSkeleton from "@/components/ui/cartSkelton";
 import PaginationRounded from "@/components/ui/Pagination";
 import { useAuth } from "@/context/auth.context";
-import EnrolledCourseCart from "@/features/courses_list/Enrolled Course/enrolledCart";
+import EnrolledCourseCart from "@/features/courses_list/Enrolled Course/EnrolledCart";
 import useDebounce from "@/hooks/useDebounce";
 import { useSearchPagination } from "@/hooks/useSearchQuery";
 import { EnrolledService } from "@/service/Learner/enrolledCourse.service";

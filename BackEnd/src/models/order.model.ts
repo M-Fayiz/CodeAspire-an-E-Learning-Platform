@@ -1,6 +1,6 @@
 import mongoose, { Types, Document, Schema } from "mongoose";
 import { IOrder } from "../types/order.type";
-import { DbModelName } from "../const/modelName";
+import { DbModelName } from "../const/modelName.const";
 
 export interface IOrderModel
   extends Document<Types.ObjectId>,

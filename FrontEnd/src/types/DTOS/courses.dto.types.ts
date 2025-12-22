@@ -128,11 +128,28 @@ export interface IFormCourseDTO {
   
 }
 
+
+
 export interface COurseDetaildWIthEnrolledData extends IFormCourseDTO{
   isEnrolled:boolean
   enrolledId:string
 }
 
+
+export type ILectureWithoutContent = Omit<
+  ILecture,
+  "lectureContent"
+>;
+
+export interface ISessionWithoutContent {
+  title: string;
+  lectures: ILectureWithoutContent[];
+}
+
+export interface ICourseDetailsPageDTO
+  extends Omit<IFormCourseDTO, "sessions"> {
+  sessions: ISessionWithoutContent[];
+}
 
 
 

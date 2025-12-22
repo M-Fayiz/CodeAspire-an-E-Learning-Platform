@@ -1,8 +1,8 @@
 import { Request, Response, NextFunction } from "express";
 import { ICategoryController } from "../interface/ICategoryController";
 import { ICategoryService } from "../../services/interface/ICategoryService";
-import { HttpStatus } from "../../const/http-status";
-import { HttpResponse } from "../../const/error-message";
+import { HttpStatus } from "../../const/http-status.const";
+import { HttpResponse } from "../../const/error-message.const";
 import { successResponse } from "../../utils/response.util";
 
 export class CategoryController implements ICategoryController {

@@ -16,12 +16,12 @@ interface fetchedUsers {
 export const adminService = {
   fetchAllUsers: async (
     page: number,
-    searchQuery: string,
+    search: string,
   ): Promise<fetchedUsers> => {
-    // const queryData = searchFromParser(searchQuery);
+   
     try {
       const response = await axiosInstance.get(API.ADMIN.FETCH_ALL_USERS, {
-        params: { page, searchQuery },
+        params: { page, search },
       });
       console.log(response?.data);
 
@@ -75,7 +75,7 @@ export const adminService = {
         status,
         feedback,
       });
-      console.log(response.data);
+    
       return response.data;
     } catch (error) {
       throwAxiosError(error);

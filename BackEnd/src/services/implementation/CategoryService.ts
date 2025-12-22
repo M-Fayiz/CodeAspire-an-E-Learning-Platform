@@ -4,8 +4,8 @@ import { ICategoryRepository } from "../../repository/interface/ICategoryReposit
 import { ICategoryService } from "../interface/ICategoryService";
 import { ICategory } from "../../types/category.types";
 import { createHttpError } from "../../utils/http-error";
-import { HttpStatus } from "../../const/http-status";
-import { HttpResponse } from "../../const/error-message";
+import { HttpStatus } from "../../const/http-status.const";
+import { HttpResponse } from "../../const/error-message.const";
 import { ICaregoryTreeDTO } from "../../types/dtos.type/category.dto.types";
 
 export class CategoryService implements ICategoryService {

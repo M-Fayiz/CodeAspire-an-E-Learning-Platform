@@ -10,7 +10,7 @@ import PaginationRounded from "@/components/ui/Pagination";
 import courseService from "@/service/mentor/course.service";
 import CourseCardSkeleton from "@/components/ui/cartSkelton";
 import { useAuth } from "@/context/auth.context";
-import Header from "@/components/layout/landing/header";
+import Header from "@/components/layout/landing/Header";
 
 function CourseLayout() {
   const [courses, setCourses] = useState<ICourseData[]>([]);

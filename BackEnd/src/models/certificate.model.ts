@@ -1,6 +1,6 @@
 import mongoose, { Document, Types } from "mongoose";
 import { ICertificate } from "../types/certificate.type";
-import { DbModelName } from "../const/modelName";
+import { DbModelName } from "../const/modelName.const";
 
 export interface ICertificateModel
   extends Document<Types.ObjectId>,

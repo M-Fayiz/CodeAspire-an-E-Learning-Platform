@@ -1,9 +1,9 @@
 import { Request, Response, NextFunction } from "express";
 import { ISharedController } from "../interface/ISharedController";
 import { ISharedService } from "../../services/interface/ISharedService";
-import { HttpStatus } from "../../const/http-status";
+import { HttpStatus } from "../../const/http-status.const";
 import { successResponse } from "../../utils/response.util";
-import { HttpResponse } from "../../const/error-message";
+import { HttpResponse } from "../../const/error-message.const";
 
 export class SharedController implements ISharedController {
   constructor(private _sharedService: ISharedService) {}

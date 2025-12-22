@@ -1,4 +1,5 @@
 // src/context/socket.context.tsx
+import { AUTH_TOKEN } from "@/constants/authToken.const";
 import { SocketEvents } from "@/constants/socketEvents";
 import React, {
   createContext,
@@ -36,7 +37,7 @@ export const SocketProvider: React.FC<SocketProviderProps> = ({
       reconnectionAttempts: 5,
       reconnectionDelay: 1000,
       auth: {
-        token: localStorage.getItem("accessToken"),
+        token: localStorage.getItem(AUTH_TOKEN.ACCESS_TOKEN),
       },
     });
 

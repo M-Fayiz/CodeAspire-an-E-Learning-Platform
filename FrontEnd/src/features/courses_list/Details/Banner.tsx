@@ -46,7 +46,7 @@ const Banner: React.FC<BannerProps> = ({
       }
     }
   };
-  console.log('is Enrolled :',enrolledId)
+ 
   return (
     <div className="relative w-full py-5 px-6 md:px-16 lg:px-24">
       {course && <Badge label={course.level} type="info" />}
@@ -77,9 +77,9 @@ const Banner: React.FC<BannerProps> = ({
                   >
                     Enroll Now
                   </button>
-                  <button className="border border-white  text-white md:border-orange-500  md:text-orange-500  hover:bg-orange-50 font-semibold px-6 py-3 rounded-lg transition">
+                  {/* <button className="border border-white  text-white md:border-orange-500  md:text-orange-500  hover:bg-orange-50 font-semibold px-6 py-3 rounded-lg transition">
                     See Curriculum
-                  </button>
+                  </button> */}
                 </div>
               )}
             </>

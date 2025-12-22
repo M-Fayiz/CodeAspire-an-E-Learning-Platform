@@ -41,6 +41,7 @@ export const SlotBookingSercie = {
     mentorId: string,
   ): Promise<IBookingDTOforMentors[]> => {
     try {
+      console.log('mentor ID :',mentorId)
       const response = await axiosInstance.get(
         API.SLOT_BOOK.ListeMentorBooking(mentorId),
       );

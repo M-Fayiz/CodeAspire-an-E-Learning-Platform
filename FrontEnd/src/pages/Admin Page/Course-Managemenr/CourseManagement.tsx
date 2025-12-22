@@ -1,11 +1,12 @@
 import ManagementLayout from "@/components/layout/ManagementLayout";
 import PaginationRounded from "@/components/ui/Pagination";
-import SearchBar from "@/components/ui/searchBar";
+import useDebounce from "@/hooks/useDebounce";
+import { useSearchPagination } from "@/hooks/useSearchQuery";
 import courseService from "@/service/mentor/course.service";
 import type { IFormCourseDTO } from "@/types/DTOS/courses.dto.types";
-import { BookOpen, Calendar, Eye, User } from "lucide-react";
+import { BookOpen, Calendar, Eye, Search, User } from "lucide-react";
 import { useEffect, useState } from "react";
-import { Link, useSearchParams } from "react-router";
+import { Link } from "react-router";
 
 export interface QueryProps {
   page: number;
@@ -14,34 +15,29 @@ export interface QueryProps {
 }
 function CourseManagement() {
   const [courses, setCourse] = useState<IFormCourseDTO[]>([]);
-  const [totalPage, setTotalPage] = useState(1);
-  const [searchParams, setSearchParams] = useSearchParams();
-  const currentPage = Number(searchParams.get("page")) || 1;
-  const SearchQuery = searchParams.get("search") || "";
+   const { search, page, setSearch, setPage } = useSearchPagination()
+   const [searchInput, setSearchInput] = useState(search);
+    const [totalPage, setTotalPage] = useState(1);
+     const debouncedSearch = useDebounce(searchInput, 200);
+        useEffect(() => {
+        setSearch(debouncedSearch);
+      }, [debouncedSearch]);
+    
   useEffect(() => {
     (async () => {
-      const data = await courseService.getAdminCourList();
+      const data = await courseService.getAdminCourList(search,page);
 
       if (data) {
         setCourse(data);
         setTotalPage(1);
       }
     })();
-  }, []);
+  }, [search,page]);
 
-  const onSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setSearchParams({
-      page: "1",
-      search: e.target.value,
-    });
-  };
+
 
   const handlePageChange = (_e: React.ChangeEvent<unknown>, page: number) => {
- 
-    setSearchParams({
-      page: String(page),
-      search: SearchQuery,
-    });
+      setPage(page)
   };
 
   return (
@@ -49,12 +45,17 @@ function CourseManagement() {
       title="Course Management"
       description="Review and Manage Courses"
     >
-      <SearchBar
-        placeHolder="Courses"
-        name="title"
-        onChange={onSearchChange}
-        searchQuery={SearchQuery}
+       <div className="relative mb-6 bg-white p-3 rounded-lg shadow-sm">
+      <Search className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400 w-5 h-5" />
+      <input
+        type="text"
+        value={searchInput}
+        onChange={(e) => setSearchInput(e.target.value)}
+        placeholder="Search users"
+        className="w-full pl-11 pr-4 py-2.5 text-sm border border-gray-300 rounded-md
+        focus:outline-none focus:ring-2 focus:ring-black focus:border-transparent"
       />
+    </div>
       {courses.length > 0 ? (
         courses.map((course) => (
           <div
@@ -72,8 +73,6 @@ function CourseManagement() {
                       <h3 className="text-lg font-semibold text-gray-900">
                         {course.title}
                       </h3>
-                      {/* {getStatusBadge(course.status)}
-                          {getLevelBadge(course.level)} */}
                     </div>
 
                     <p className="text-gray-600 text-sm mb-3 line-clamp-2">
@@ -127,37 +126,7 @@ function CourseManagement() {
                   View
                 </Link>
 
-                {/* {course.status === 'pending' && (
-                      <>
-                        <button
-                          onClick={() => handleAction('approve', course.id)}
-                          disabled={processingIds.has(course.id)}
-                          className="flex items-center justify-center gap-2 px-3 py-2 text-sm font-medium text-white bg-green-600 border border-transparent rounded-md hover:bg-green-700 focus:ring-2 focus:ring-green-500 disabled:opacity-50"
-                        >
-                          <CheckCircle className="w-4 h-4" />
-                          Approve
-                        </button>
-                        <button
-                          onClick={() => handleAction('reject', course.id)}
-                          disabled={processingIds.has(course.id)}
-                          className="flex items-center justify-center gap-2 px-3 py-2 text-sm font-medium text-white bg-red-600 border border-transparent rounded-md hover:bg-red-700 focus:ring-2 focus:ring-red-500 disabled:opacity-50"
-                        >
-                          <XCircle className="w-4 h-4" />
-                          Reject
-                        </button>
-                      </>
-                    )} */}
-
-                {/* {course.status === 'approved' && (
-                      <button
-                        onClick={() => handleAction('verify', course.id)}
-                        disabled={processingIds.has(course.id)}
-                        className="flex items-center justify-center gap-2 px-3 py-2 text-sm font-medium text-white bg-blue-600 border border-transparent rounded-md hover:bg-blue-700 focus:ring-2 focus:ring-blue-500 disabled:opacity-50"
-                      >
-                        <CheckCircle className="w-4 h-4" />
-                        Verify
-                      </button>
-                    )} */}
+          
               </div>
             </div>
           </div>
@@ -175,7 +144,7 @@ function CourseManagement() {
       )}
       {courses.length > 0 && (
         <PaginationRounded
-          currentPage={currentPage}
+          currentPage={page}
           totalPages={totalPage}
           onPageChange={handlePageChange}
         />

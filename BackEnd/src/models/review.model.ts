@@ -1,6 +1,6 @@
 import mongoose, { Document, Types } from "mongoose";
 import { IReview } from "../types/review.type";
-import { DbModelName } from "../const/modelName";
+import { DbModelName } from "../const/modelName.const";
 
 export interface IReviewModel extends IReview, Document {
   _id: Types.ObjectId;

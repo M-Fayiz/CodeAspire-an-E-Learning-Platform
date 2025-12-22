@@ -3,9 +3,9 @@ import { Server as HttpServer } from "http";
 import { env } from "../config/env.config";
 import { verifyAccesToken } from "../utils/jwt-token.util";
 import redisClient from "../config/redis.config";
-import { redisPrefix } from "../const/redisKey";
-import { HttpResponse } from "../const/error-message";
-import { SocketEvents } from "../const/socketEvents";
+import { redisPrefix } from "../const/redisKey.const";
+import { HttpResponse } from "../const/error-message.const";
+import { SocketEvents } from "../const/socketEvents.const";
 import { registerChatHandler } from "./chat.socket";
 import { registerVideoHandlers } from "./video.socket";
 

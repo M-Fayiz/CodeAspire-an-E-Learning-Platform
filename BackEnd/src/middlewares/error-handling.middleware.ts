@@ -1,6 +1,6 @@
 import { NextFunction, Request, Response } from "express";
-import { HttpResponse } from "../const/error-message";
-import { HttpStatus } from "../const/http-status";
+import { HttpResponse } from "../const/error-message.const";
+import { HttpStatus } from "../const/http-status.const";
 import { HttpError } from "../utils/http-error";
 import logger from "../config/logger.config";
 

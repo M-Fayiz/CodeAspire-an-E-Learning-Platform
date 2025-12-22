@@ -54,6 +54,7 @@ export const API = {
     PUBLISH_COURSE: (courseId: string) => `/courses/publish/${courseId}`,
     ADMIN_COURSE_LIST: "/courses/admin-courses",
     COURSE_DETAILS: (courseId: string) => `/courses/${courseId}`,
+    COURSE_DETAILS_ADMIN: (courseId: string) => `/courses/${courseId}/admin`,
     APPROVE_CURSE: (courseId: string) => `/courses/admin/approve/${courseId}`,
     REJECT_COURSE: (courseId: string) => `/courses/admin/reject/${courseId}`,
     LIST_COURSE_FOR_SLOT: (mentorId: string) => `/courses/mentor/${mentorId}`,

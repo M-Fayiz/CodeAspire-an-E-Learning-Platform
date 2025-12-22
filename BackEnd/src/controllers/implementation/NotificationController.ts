@@ -1,5 +1,5 @@
-import { HttpResponse } from "../../const/error-message";
-import { HttpStatus } from "../../const/http-status";
+import { HttpResponse } from "../../const/error-message.const";
+import { HttpStatus } from "../../const/http-status.const";
 import { INotificationService } from "../../services/interface/INotificationService";
 import { successResponse } from "../../utils/response.util";
 import { INotificationController } from "../interface/INotificationController";

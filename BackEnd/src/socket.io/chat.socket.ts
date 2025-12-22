@@ -7,13 +7,13 @@ import {
   ChatListenEvents,
 } from "../types/socket.type/chatSocket.type";
 import { SocketData } from "../types/socket.type/globalSocket.type";
-import { HttpResponse } from "../const/error-message";
+import { HttpResponse } from "../const/error-message.const";
 import { ChatRepository } from "../repository/implementation/ChatRepository";
 import { MessageRepository } from "../repository/implementation/MessageRespository";
 import { parseObjectId } from "../mongoose/objectId";
 import { createHttpError } from "../utils/http-error";
-import { HttpStatus } from "../const/http-status";
-import { ChatEvents } from "../const/socketEvents";
+import { HttpStatus } from "../const/http-status.const";
+import { ChatEvents } from "../const/socketEvents.const";
 
 const chatRepository = new ChatRepository();
 const messageRepository = new MessageRepository();

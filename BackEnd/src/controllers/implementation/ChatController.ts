@@ -2,7 +2,7 @@ import { Request, Response, NextFunction } from "express";
 import { IChatController } from "../interface/IChatController";
 import { IChatService } from "../../services/interface/IChatService";
 import { HttpStatusCode } from "axios";
-import { HttpResponse } from "../../const/error-message";
+import { HttpResponse } from "../../const/error-message.const";
 import { successResponse } from "../../utils/response.util";
 
 export class ChatCOntroller implements IChatController {

@@ -1,7 +1,7 @@
 import { ISharedService } from "../interface/ISharedService";
 import { getObjectURL, putObjectURl } from "../../config/s3Bucket.config";
-import { HttpStatus } from "../../const/http-status";
-import { HttpResponse } from "../../const/error-message";
+import { HttpStatus } from "../../const/http-status.const";
+import { HttpResponse } from "../../const/error-message.const";
 import { createHttpError } from "../../utils/http-error";
 
 export class SharedService implements ISharedService {

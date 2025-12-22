@@ -1,6 +1,6 @@
 import { Types } from "mongoose";
-import { HttpResponse } from "../../const/error-message";
-import { HttpStatus } from "../../const/http-status";
+import { HttpResponse } from "../../const/error-message.const";
+import { HttpStatus } from "../../const/http-status.const";
 import { notificationDto } from "../../dtos/notification.dto";
 import { parseObjectId } from "../../mongoose/objectId";
 import { INotificationRepository } from "../../repository/interface/INotificationRepository";

@@ -3,6 +3,8 @@ import { API } from "@/constants/api.constant";
 import type {
   CourseForm,
  
+  ICourseDetailsPageDTO,
+ 
   ICourseDTO,
   IFormCourseDTO,
   ILecture,
@@ -139,7 +141,7 @@ const courseService = {
           params: { mentorId: userId, search, page },
         },
       );
-      console.log(response.data);
+     
       return response.data;
     } catch (error) {
       throwAxiosError(error);
@@ -200,9 +202,11 @@ const courseService = {
       throwAxiosError(error);
     }
   },
-  getAdminCourList: async (): Promise<IFormCourseDTO[]> => {
+  getAdminCourList: async (search:string,page:number): Promise<IFormCourseDTO[]> => {
     try {
-      const response = await axiosInstance.get(API.COURSE.ADMIN_COURSE_LIST);
+      const response = await axiosInstance.get(API.COURSE.ADMIN_COURSE_LIST,{
+        params:{search,page}
+      });
       await Promise.all(
         response.data.coursList.map(async (course: IFormCourseDTO) => {
           course.thumbnail = await sharedService.getPreSignedDownloadURL(
@@ -219,7 +223,7 @@ const courseService = {
   getCourseDetails: async (
   courseId: string,
   learnerId:string
-): Promise<{ courseDetails: IFormCourseDTO; enrolledId: string|null }> => {
+): Promise<{ courseDetails: ICourseDetailsPageDTO; enrolledId: string|null }> => {
   try {
     const response = await axiosInstance.get(
       API.COURSE.COURSE_DETAILS(courseId),{
@@ -233,25 +237,39 @@ const courseService = {
       await sharedService.getPreSignedDownloadURL(
         courseDetails.thumbnail,
       );
-
-    for (const session of courseDetails.sessions) {
-      for (const lecture of session.lectures) {
-        lecture.lectureContent =
-          await sharedService.getPreSignedDownloadURL(
-            lecture.lectureContent,
-          );
-      }
-    }
-
-   
-
     return { courseDetails, enrolledId };
   } catch (error) {
     throwAxiosError(error);
   }
 },
+ getCourseDetaildForAdmin:async(courseId: string):Promise<IFormCourseDTO>=>{
+  try {
+    const response = await axiosInstance.get(
+      API.COURSE.COURSE_DETAILS_ADMIN(courseId));
+      const { courseDetails } = response.data;
 
+    courseDetails.thumbnail =
+      await sharedService.getPreSignedDownloadURL(
+        courseDetails.thumbnail,
+      );
 
+    for (const session of courseDetails.sessions) {
+      for (const lecture of session.lectures) {
+        if(lecture.lectureContent){
+          lecture.lectureContent =
+            await sharedService.getPreSignedDownloadURL(
+              lecture.lectureContent,
+            );
+
+        }
+      }
+    }
+    
+      return courseDetails
+  } catch (error) {
+    throwAxiosError(error)
+  }
+ },
   approveCourse: async (
     coursId: string,
   ): Promise<

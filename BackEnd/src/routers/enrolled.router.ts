@@ -10,7 +10,7 @@ import { authorizedRole } from "../middlewares/authorisation.middleware";
 import { TransactionRepositoy } from "../repository/implementation/TransactionRepository";
 import { IRole } from "../types/user.types";
 import { UserRepository } from "../repository/implementation/UserRepository";
-import { CertificateRepository } from "../repository/implementation/ICertificateRepository";
+import { CertificateRepository } from "../repository/implementation/CertificateRepository";
 import { SlotBookingRepository } from "../repository/implementation/SlotBookingRepositoy";
 const transactionRepository = new TransactionRepositoy();
 const enrolledRepository = new EnrolledRepository();

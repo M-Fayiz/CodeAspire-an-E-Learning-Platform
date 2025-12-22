@@ -36,7 +36,7 @@ export const Protected_Router: React.FC<ProtectedProps> = ({
   }
 
   if (requiredRole && requiredRole.length > 0) {
-    console.log("resqured role", requiredRole);
+  
 
     const hasRole = requiredRole.find((role) => user.role == role);
 

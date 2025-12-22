@@ -6,6 +6,7 @@ import type { UserRole } from "../types/auth.types";
 import { throwAxiosError } from "@/utility/throwErrot";
 import { sharedService } from "./shared.service";
 import { HttpStatusCode } from "@/constants/statusCode";
+import { AUTH_TOKEN } from "@/constants/authToken.const";
 
 export const AuthService = {
   signUp: async (
@@ -33,7 +34,7 @@ export const AuthService = {
       });
  
       if (response.data.token) {
-        localStorage.setItem("accessToken", response.data.token);
+        localStorage.setItem(AUTH_TOKEN.ACCESS_TOKEN, response.data.token);
       }
 
       return response.data.message;
@@ -58,7 +59,7 @@ export const AuthService = {
         }
       }
       if (response.data.token) {
-        localStorage.setItem("accessToken", response.data.token);
+        localStorage.setItem(AUTH_TOKEN.ACCESS_TOKEN, response.data.token);
       }
       return response.data?.user;
     } catch (error) {
@@ -93,7 +94,7 @@ export const AuthService = {
     try {
       const response = await axiosInstance.post(API.Auth.LOGIN_URL, data);
       if (response.data.token) {
-        localStorage.setItem("accessToken", response.data.token);
+        localStorage.setItem(AUTH_TOKEN.ACCESS_TOKEN, response.data.token);
       }
       return response?.data;
     } catch (error) {
@@ -108,7 +109,7 @@ export const AuthService = {
         { withCredentials: true },
       );
       if (response.status === HttpStatusCode.OK) {
-        localStorage.removeItem("accessToken");
+        localStorage.removeItem(AUTH_TOKEN.ACCESS_TOKEN);
       }
       if (response.status == HttpStatusCode.OK) return true;
     } catch (error) {

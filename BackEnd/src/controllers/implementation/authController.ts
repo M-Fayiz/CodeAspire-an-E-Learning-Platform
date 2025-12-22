@@ -1,8 +1,8 @@
 import { Response, Request, NextFunction } from "express";
 import { IAuthController } from "../interface/IAuthController";
 import { IAuthService } from "../../services/interface/IAuthService";
-import { HttpStatus } from "../../const/http-status";
-import { HttpResponse } from "../../const/error-message";
+import { HttpStatus } from "../../const/http-status.const";
+import { HttpResponse } from "../../const/error-message.const";
 import { successResponse } from "../../utils/response.util";
 import { options } from "../../config/cookie.config";
 import { createHttpError } from "../../utils/http-error";
@@ -10,6 +10,7 @@ import { clearCookies } from "../../utils/clearCookies.util";
 import { setAccessToken, setRefreshToken } from "../../utils/cookie.util";
 import { IUserModel } from "../../models/user.model";
 import { env } from "../../config/env.config";
+import { AUTH_TOKEN } from "../../const/auth.const";
 
 
 export class AuthController implements IAuthController {
@@ -31,7 +32,7 @@ export class AuthController implements IAuthController {
     next: NextFunction,
   ): Promise<void> {
     try {
-      console.log("verify email", req.body);
+      
       
       const token = await this._authSerive.verifyEmail(req.body);
       setAccessToken(res, token.accessToken);
@@ -87,7 +88,7 @@ export class AuthController implements IAuthController {
 
       const { newAccessToken, payload } =
         await this._authSerive.refreshAccessToken(refreshToken);
-      res.cookie("accessToken", newAccessToken, {
+      res.cookie(AUTH_TOKEN.ACCESS_TOKEN, newAccessToken, {
         ...options,
         maxAge: Number(env.ACCESS_TOKEN_MAX_AGE_TIME) * 60 * 1000,
       });

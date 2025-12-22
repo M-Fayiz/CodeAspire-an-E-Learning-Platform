@@ -1,7 +1,7 @@
 
 import mongoose, { Document, Types } from "mongoose";
 import { IUser, IAdmin, ILearner, IMentor, IRole, mentorApprovalStatus } from "../types/user.types";
-import { DbModelName } from "../const/modelName";
+import { DbModelName } from "../const/modelName.const";
 
 const option = { discriminatorKey: "role", timestamps: true };
 

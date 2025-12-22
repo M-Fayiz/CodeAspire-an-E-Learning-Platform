@@ -5,7 +5,7 @@ import Landing from "@/pages/Landing page/Landing";
 // Auth Components
 import LoginPage from "../pages/Auth Page/LoginPage";
 import SignupPage from "../pages/Auth Page/SignupPage";
-import VerifyEmail from "../components/auth-components/verifyEmail";
+import VerifyEmail from "../components/auth-components/VerifyEmail";
 import ForgotPassword from "../components/auth-components/ForgotPassword";
 import ResetPassword from "../components/auth-components/ResetPassword";
 import NotFound from "../pages/not-found/Not-Found";
@@ -21,9 +21,9 @@ import CategoryManagement from "@/pages/Admin Page/category";
 import CourseCreation from "@/pages/Mentor_Page/course_creation/Index";
 import CourseLayout from "@/pages/Course/CourseList";
 import CourseFormProvider from "@/context/courseForm.context";
-import CourseManagement from "@/pages/Admin Page/Course-Managemenr/CourseManagement";
+import CourseManagement from "@/pages/Admin Page/course-managemenr/CourseManagement";
 import MYCourses from "@/pages/Mentor_Page/course_creation/MyCourses";
-import AdminCourseDetails from "@/pages/Admin Page/Course-Managemenr/AdminCourseDetails";
+import AdminCourseDetails from "@/pages/Admin Page/course-managemenr/AdminCourseDetails";
 import CourseDetails from "@/pages/Course/CourseDetails";
 import PaymentSuccess from "@/pages/Payment page/PaymentSuccess";
 import CourseEnrolledList from "@/pages/Course/CourseEnrolledList";
@@ -135,7 +135,7 @@ export const router = createBrowserRouter([
       },
       { path: "category", element: <CategoryManagement /> },
       { path: "courses", element: <CourseManagement /> },
-      { path: "courses/:id", element: <AdminCourseDetails /> },
+      { path: "courses/:courseId", element: <AdminCourseDetails /> },
       { path: "chats", element: <ChatPage /> },
     ],
   },

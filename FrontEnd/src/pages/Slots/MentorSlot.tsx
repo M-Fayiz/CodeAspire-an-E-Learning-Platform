@@ -75,6 +75,7 @@ const SlotBooking: React.FC = () => {
   return (
     <div className="flex flex-col items-center p-6 bg-gray-50 min-h-screen text-gray-900">
       <Card className="w-full max-w-5xl shadow-md border border-gray-200 bg-white rounded-2xl overflow-hidden">
+
         {mentorProfile && <MentorSlotProfile mentor={mentorProfile} />}
 
         <div className="p-6 bg-gray-50 rounded-2xl shadow-inner">
@@ -82,7 +83,17 @@ const SlotBooking: React.FC = () => {
             <CalendarDays className="text-orange-500" size={20} /> Available
             Slots (Next 7 Days)
           </h3>
-
+            {upcomingDays.length<1&&(
+                        <div className="flex flex-col items-center justify-center py-16 text-center">
+            <CalendarDays size={48} className="text-gray-300 mb-4" />
+            <h3 className="text-lg font-semibold text-gray-700">
+              Slots not available
+            </h3>
+            <p className="text-sm text-gray-500 mt-1">
+              This mentor has not opened any slots for the next 7 days.
+            </p>
+  </div>
+            )}
           <div className="flex flex-col gap-6">
             {upcomingDays.map((dayObj, index) => {
               const daySlot = slotData?.selectedDays.find(

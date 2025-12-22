@@ -1,9 +1,9 @@
 import { Request, Response, NextFunction } from "express";
 import { IUserService } from "../../services/interface/IUserService";
 import { IUserController } from "../interface/IUserController";
-import { HttpStatus } from "../../const/http-status";
+import { HttpStatus } from "../../const/http-status.const";
 import { successResponse } from "../../utils/response.util";
-import { HttpResponse } from "../../const/error-message";
+import { HttpResponse } from "../../const/error-message.const";
 
 import { sendNotification } from "../../utils/socket.utils";
 

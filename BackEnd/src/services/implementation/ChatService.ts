@@ -1,6 +1,6 @@
 import { Types, FilterQuery } from "mongoose";
-import { HttpResponse } from "../../const/error-message";
-import { HttpStatus } from "../../const/http-status";
+import { HttpResponse } from "../../const/error-message.const";
+import { HttpStatus } from "../../const/http-status.const";
 import { chatDto, chatListDTO } from "../../dtos/chat.dto";
 import { MessageDto } from "../../dtos/messaage.dto";
 

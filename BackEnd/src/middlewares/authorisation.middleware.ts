@@ -1,7 +1,7 @@
 import { NextFunction, Request, Response } from "express";
 import { createHttpError } from "../utils/http-error";
-import { HttpStatus } from "../const/http-status";
-import { HttpResponse } from "../const/error-message";
+import { HttpStatus } from "../const/http-status.const";
+import { HttpResponse } from "../const/error-message.const";
 import { IAnyUser, IRole } from "../types/user.types";
 
 export function authorizedRole(...allowedRole: IRole[]) {

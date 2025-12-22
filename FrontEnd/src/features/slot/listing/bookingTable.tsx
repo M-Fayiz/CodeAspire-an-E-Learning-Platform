@@ -1,7 +1,7 @@
 import { Button } from "@/components/ui/button";
 import { Book, User, Clock, Award } from "lucide-react";
 import { Card, CardHeader, CardContent } from "@/components/ui/card";
-import type { IBookingDTOforLearner } from "@/types/DTOS/slotBooking.dto.type";
+import type { IBookingDTOforLearner, slotStatus } from "@/types/DTOS/slotBooking.dto.type";
 import { MentorActionMenu } from "@/features/mentor/slots/mentorActions";
 import {
   Dialog,
@@ -14,6 +14,7 @@ import {
 } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { useState } from "react";
+import type { studentStatus } from "@/types/sessionBooking.type";
 
 interface BookingTableProps {
   role: "learner" | "mentor";
@@ -26,9 +27,9 @@ interface BookingTableProps {
   onAddFeedback?: (slotId: string, feedback: string) => void;
   onUpdateStatus?: (
     slot: IBookingDTOforLearner,
-    status: "passed" | "failed",
+    status: studentStatus,
   ) => void;
-  onSessionComplete?: (slotId: string, status: "completed") => void;
+  onSessionComplete?: (slotId: string, status: slotStatus) => void;
   onCertificateIssue?: (
     learnerId: string,
     courseId: string,
@@ -86,7 +87,7 @@ export const BookingTable = ({
   return (
     <Card className="bg-white border border-gray-200 shadow-sm">
       <CardContent className="p-4">
-        {/* ===================== DESKTOP TABLE ===================== */}
+       
         <div className="hidden md:block overflow-x-auto">
           <table className="w-full text-sm border-collapse">
             <thead className="bg-gray-100 text-gray-700">
@@ -252,7 +253,7 @@ export const BookingTable = ({
           </table>
         </div>
 
-        {/* ===================== MOBILE CARD VIEW ===================== */}
+     
         <div className="md:hidden space-y-4">
           {slots.map((slot) => (
             <div

@@ -1,7 +1,7 @@
 import { Router } from "express";
 const certificateRouter = Router();
 
-import { CertificateRepository } from "../repository/implementation/ICertificateRepository";
+import { CertificateRepository } from "../repository/implementation/CertificateRepository";
 import { CourseRepository } from "../repository/implementation/CourseRepository";
 import { UserRepository } from "../repository/implementation/UserRepository";
 import { CertificateController } from "../controllers/implementation/CertificateController";

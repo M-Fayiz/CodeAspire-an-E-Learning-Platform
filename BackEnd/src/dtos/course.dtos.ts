@@ -8,7 +8,9 @@ import {
   IFormCourseDTO,
   IListCourseSlot,
   ICourseCreateForm,
+  ICourseDetailsPageDTO,
 } from "../types/dtos.type/course.dtos.type";
+
 
 
 export function courseListDTO(
@@ -86,6 +88,41 @@ export function formCourseDto(course: IPopulatedCourse): IFormCourseDTO {
     updated: course.updatedAt.toISOString(),
   };
 }
+
+
+export function courseDetailsPageDTO(course: IPopulatedCourse):ICourseDetailsPageDTO{
+ const excludedLecture = course.sessions?.map((session) => ({
+  ...session,
+  lectures: session.lectures.map(({ lectureContent, ...rest }) => rest),
+}));
+
+  return{
+    _id: course._id,
+    title: course.title || "",
+    description: course.description || "",
+    thumbnail: course.thumbnail || "",
+    category: {
+      _id: course.categoryId._id,
+      title: course.categoryId.title,
+    },
+    subCategory: {
+      _id: course.subCategoryId._id,
+      title: course.subCategoryId.title,
+    },
+    language: course.language,
+    level: course.level,
+    price: course.price,
+    mentorId: {
+      _id: course.mentorId._id,
+      name: course.mentorId.name,
+      email: course.mentorId.email,
+    },
+    sessions: excludedLecture ?? [],
+    status: course.status,
+    updated: course.updatedAt.toISOString(),
+  }
+}
+
 
 export function listCourseForSLot(course: ICourses): IListCourseSlot {
   return {

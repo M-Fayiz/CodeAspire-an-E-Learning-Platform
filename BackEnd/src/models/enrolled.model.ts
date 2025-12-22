@@ -1,7 +1,7 @@
 import mongoose, { Types, Document } from "mongoose";
 import { completionStatus, IEnrollement } from "../types/enrollment.types";
 
-import { DbModelName } from "../const/modelName";
+import { DbModelName } from "../const/modelName.const";
 
 export interface IEnrolledModel
   extends Document<Types.ObjectId>,

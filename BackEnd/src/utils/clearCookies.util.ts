@@ -1,4 +1,5 @@
 import { Response } from "express";
+import { AUTH_TOKEN } from "../const/auth.const";
 
 export const clearCookies = (res: Response) => {
   const options = {
@@ -12,6 +13,6 @@ export const clearCookies = (res: Response) => {
     path: "/",
   };
 
-  res.clearCookie("accessToken", options);
-  res.clearCookie("refreshToken", options);
+  res.clearCookie(AUTH_TOKEN.ACCESS_TOKEN, options);
+  res.clearCookie(AUTH_TOKEN.REFRESH_TOKEN, options);
 };

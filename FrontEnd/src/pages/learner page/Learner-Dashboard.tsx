@@ -5,7 +5,7 @@ import { useState } from "react";
 import type { learnerDashboardCardsDTO } from "@/types/DTOS/learnerDashboard.type";
 import { useAuth } from "@/context/auth.context";
 import { EnrolledService } from "@/service/Learner/enrolledCourse.service";
-import LearnerDashboardSkeleton from "@/components/skelton/learnerDashboard";
+import LearnerDashboardSkeleton from "@/components/skelton/LearnerDashboard";
 import { RevenueDonutChart, type PieChartProps } from "@/components/ui/PieGraph";
 export type IPaymentTypes = "Cracked" | "Failed";
 

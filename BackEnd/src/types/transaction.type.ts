@@ -1,7 +1,8 @@
 import { Types } from "mongoose";
+import { PaymentMethod, TransactionType } from "../const/transaction.const";
 
 export interface ITransaction {
-  paymentType: "COURSE_PURCHASE" | "SLOT_BOOKING";
+  paymentType:TransactionType;
   orderId?: Types.ObjectId;
   slotBookingId?: Types.ObjectId;
   slotId?: Types.ObjectId;
@@ -10,14 +11,17 @@ export interface ITransaction {
   courseId: Types.ObjectId;
   gatewayTransactionId: string;
   amount: number;
-  paymentMethod: "stripe" | "wallet";
+  paymentMethod: PaymentMethod;
   adminShare: number;
   mentorShare: number;
-  status: "success" | "failed" | "refunded";
+  status: ITransactionStatus
   createdAt?: Date;
   updatedAt?: Date;
 }
-export enum IPaymentTypes {
-  COURSE = "COURSE_PURCHASE",
-  SLOTS = "SLOT_BOOKING",
+
+
+export enum ITransactionStatus{
+  SUCCESS='success',
+  FAILED='failed',
+  REFUNDED='refunded',
 }

@@ -1,8 +1,8 @@
 import { Request, Response, NextFunction } from "express";
 import { IOrderController } from "../interface/IOrderController";
 import { IOrderService } from "../../services/interface/IOrderService";
-import { HttpStatus } from "../../const/http-status";
-import { HttpResponse } from "../../const/error-message";
+import { HttpStatus } from "../../const/http-status.const";
+import { HttpResponse } from "../../const/error-message.const";
 import { successResponse } from "../../utils/response.util";
 
 export class OrderController implements IOrderController {

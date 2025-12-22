@@ -1,8 +1,8 @@
 import { Request, Response, NextFunction } from "express";
 import { IEnrolledController } from "../interface/IEnrolledController";
-import { HttpStatus } from "../../const/http-status";
+import { HttpStatus } from "../../const/http-status.const";
 import { successResponse } from "../../utils/response.util";
-import { HttpResponse } from "../../const/error-message";
+import { HttpResponse } from "../../const/error-message.const";
 import { IEnrolledService } from "../../services/interface/IEnrolledService";
 import { FilterByDate } from "../../const/filter.const";
 

@@ -1,9 +1,9 @@
 import { Request, Response, NextFunction } from "express";
 import { IAdminController } from "../interface/IAdminController";
 import { IAdminService } from "../../services/interface/IAdminService";
-import { HttpStatus } from "../../const/http-status";
+import { HttpStatus } from "../../const/http-status.const";
 import { successResponse } from "../../utils/response.util";
-import { HttpResponse } from "../../const/error-message";
+import { HttpResponse } from "../../const/error-message.const";
 import { sendNotification } from "../../utils/socket.utils";
 import { FilterByDate } from "../../const/filter.const";
 
@@ -16,18 +16,13 @@ export class AdminController implements IAdminController {
     next: NextFunction,
   ): Promise<void> => {
     try {
-      const page = Number(req.query.page) || 1;
-      const name = (req.query.name as string) || "";
-      const role = (req.query.role as string) || "";
-      const rawIsActive = (req.query.isActive as string) || "";
-      const isActive: boolean | "" =
-        rawIsActive === "true" ? true : rawIsActive === "false" ? false : "";
+      const {page,search}=req.query
+     
+      
 
       const allUsers = await this._adminService.fetchAllUsers(
         Number(page),
-        isActive,
-        name,
-        role,
+        search as string
       );
       res.status(HttpStatus.OK).json(
         successResponse(HttpResponse.OK, {

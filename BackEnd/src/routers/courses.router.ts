@@ -31,6 +31,7 @@ courseRouter.post("/", courseController.addCourse);
 courseRouter.get("/my-courses", courseController.getMentorDraftedCourseList);
 courseRouter.get("/admin-courses", courseController.getAdminCoursList);
 courseRouter.get("/:courseId", courseController.getCourse);
+courseRouter.get("/:courseId/admin", courseController.getAdminCourseDetails);
 courseRouter.get("/admin/:courseId", courseController.getCourseDetails);
 courseRouter.get("/mentor/:mentorId", courseController.getCourseListSlot);
 courseRouter.get("/form/:courseId", courseController.getCourseFormData);

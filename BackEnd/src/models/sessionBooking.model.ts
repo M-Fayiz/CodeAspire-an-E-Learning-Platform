@@ -1,6 +1,6 @@
 import mongoose, { Types, Schema, Document } from "mongoose";
 import { ISlotBooking } from "../types/sessionBooking.type";
-import { DbModelName } from "../const/modelName";
+import { DbModelName } from "../const/modelName.const";
 
 export interface ISlotBookingModel extends ISlotBooking, Document {
   _id: Types.ObjectId;

@@ -1,8 +1,8 @@
 import { Request, Response, NextFunction } from "express";
 import { IReviewController } from "../interface/IReviewController";
 import { IReviewSevice } from "../../services/interface/IReviewService";
-import { HttpStatus } from "../../const/http-status";
-import { HttpResponse } from "../../const/error-message";
+import { HttpStatus } from "../../const/http-status.const";
+import { HttpResponse } from "../../const/error-message.const";
 import { successResponse } from "../../utils/response.util";
 
 export class ReviewController implements IReviewController {

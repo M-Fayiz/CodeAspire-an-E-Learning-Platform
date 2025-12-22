@@ -1,9 +1,9 @@
 import { Request, Response, NextFunction } from "express";
 import { ICourseService } from "../../services/interface/ICourseService";
 import { ICourseController } from "../interface/ICourseController";
-import { HttpStatus } from "../../const/http-status";
+import { HttpStatus } from "../../const/http-status.const";
 import { successResponse } from "../../utils/response.util";
-import { HttpResponse } from "../../const/error-message";
+import { HttpResponse } from "../../const/error-message.const";
 import { updatePart } from "../../types/courses.type";
 
 import { sendNotification } from "../../utils/socket.utils";
@@ -219,7 +219,8 @@ export class CourseController implements ICourseController {
     next: NextFunction,
   ): Promise<void> => {
     try {
-      const coursList = await this._courseService.getAdminCourse();
+      const {search,page}=req.query
+      const coursList = await this._courseService.getAdminCourse(search as string,Number(page));
       res
         .status(HttpStatus.OK)
         .json(successResponse(HttpResponse.OK, { coursList }));
@@ -350,4 +351,15 @@ export class CourseController implements ICourseController {
       next(error);
     }
   };
+   getAdminCourseDetails=async(req: Request, res: Response, next: NextFunction): Promise<void>=> {
+    try {
+      const {courseId}=req.params
+      const courseDetails=await this._courseService.getAdminCourseDetails(courseId)
+      res
+        .status(HttpStatus.OK)
+        .json(successResponse(HttpResponse.OK, { courseDetails }));
+    } catch (error) {
+      next(error)
+    }
+  }
 }

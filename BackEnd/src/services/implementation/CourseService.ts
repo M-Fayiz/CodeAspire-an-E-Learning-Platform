@@ -11,8 +11,10 @@ import {
   IFormCourseDTO,
   IListCourseSlot,
   ICourseCreateForm,
+  ICourseDetailsPageDTO,
 } from "../../types/dtos.type/course.dtos.type";
 import {
+  courseDetailsPageDTO,
   courseDTO,
   CourseFormDataDTO,
   courseListDTO,
@@ -20,8 +22,8 @@ import {
   listCourseForSLot,
 } from "../../dtos/course.dtos";
 import { createHttpError } from "../../utils/http-error";
-import { HttpStatus } from "../../const/http-status";
-import { HttpResponse } from "../../const/error-message";
+import { HttpStatus } from "../../const/http-status.const";
+import { HttpResponse } from "../../const/error-message.const";
 import { sendMail } from "../../utils/send-mail.util";
 import { FilterQuery, Types } from "mongoose";
 import { IEnrolledRepository } from "../../repository/interface/IEnrolledRepositoy";
@@ -143,7 +145,7 @@ export class CourseService implements ICourseService {
   async getCourse(
   courseId: string,
   learnerId?: string,
-): Promise<{ courseDetails: IFormCourseDTO; enrolledId: Types.ObjectId |null}> {
+): Promise<{ courseDetails: ICourseDetailsPageDTO; enrolledId: Types.ObjectId |null}> {
 
   const course_id = parseObjectId(courseId);
   if (!course_id) {
@@ -178,7 +180,7 @@ if (learner_id) {
   }
 }
   return {
-    courseDetails: formCourseDto(courseData[0]),
+    courseDetails: courseDetailsPageDTO(courseData[0]),
     enrolledId: isEnrolled,
   };
 }
@@ -301,8 +303,10 @@ if (learner_id) {
 
     return courseDTO(courseData as unknown as IPopulatedCourse);
   }
-  async getAdminCourse(): Promise<IFormCourseDTO[] | null> {
-    const adminCoursList = await this._courseRepository.getAdminCoursList();
+  async getAdminCourse(search:string, page:number): Promise<IFormCourseDTO[] | null> {
+    const limit =4
+    const skip =(page-1)*limit
+    const adminCoursList = await this._courseRepository.getAdminCoursList(search,limit,skip);
     console.log(adminCoursList);
     return adminCoursList
       ? adminCoursList.map((course) =>
@@ -435,4 +439,25 @@ if (learner_id) {
     );
     return CourseFormDataDTO(removedData as ICourses);
   }
+  async getAdminCourseDetails(courseId: string): Promise<IFormCourseDTO> {
+     const course_id = parseObjectId(courseId);
+  if (!course_id) {
+    throw createHttpError(
+      HttpStatus.BAD_REQUEST,
+      HttpResponse.INVALID_ID
+    );
+  }
+
+  
+  const courseData = await this._courseRepository.getCourseDetails(course_id);
+
+  if (!courseData || courseData.length === 0) {
+    throw createHttpError(
+      HttpStatus.NOT_FOUND,
+      HttpResponse.ITEM_NOT_FOUND
+    );
+  }
+   return formCourseDto(courseData[0])
+  }
+
 }

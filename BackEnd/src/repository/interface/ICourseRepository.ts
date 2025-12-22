@@ -51,7 +51,7 @@ export interface ICourseRepository {
     lectureId: Types.ObjectId,
     lecture: ILecture,
   ): Promise<ICourses | null>;
-  getAdminCoursList(): Promise<IPopulatedCourse[] | null>;
+  getAdminCoursList(search:string,limit:number,skip:number): Promise<IPopulatedCourse[] | null>;
   getCourseDetails(
     courseId: Types.ObjectId,
   ): Promise<IPopulatedCourse[] | null>;

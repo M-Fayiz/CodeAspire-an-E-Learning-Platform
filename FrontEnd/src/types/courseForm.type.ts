@@ -1,4 +1,4 @@
-import type { CourseLevel } from "./DTOS/courses.dto.types";
+import type { CourseLevel, ISession } from "./DTOS/courses.dto.types";
 
 export interface ICourseData {
   _id?: string;

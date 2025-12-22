@@ -1,6 +1,6 @@
 import { Types } from "mongoose";
-import { HttpResponse } from "../../const/error-message";
-import { HttpStatus } from "../../const/http-status";
+import { HttpResponse } from "../../const/error-message.const";
+import { HttpStatus } from "../../const/http-status.const";
 import { mentorSlotsDTO, slotPopulatedMapper } from "../../dtos/slot.dto";
 import { ISlotModel } from "../../models/slot.model";
 import { parseObjectId } from "../../mongoose/objectId";

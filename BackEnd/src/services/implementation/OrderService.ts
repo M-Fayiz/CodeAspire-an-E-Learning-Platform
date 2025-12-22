@@ -3,9 +3,9 @@ import { IOrderService } from "../interface/IOrderService";
 import Stripe from "stripe";
 import { env } from "../../config/env.config";
 import { createHttpError } from "../../utils/http-error";
-import { HttpStatus } from "../../const/http-status";
+import { HttpStatus } from "../../const/http-status.const";
 import { parseObjectId } from "../../mongoose/objectId";
-import { HttpResponse } from "../../const/error-message";
+import { HttpResponse } from "../../const/error-message.const";
 import { ICourseRepository } from "../../repository/interface/ICourseRepository";
 import { IEnrolledRepository } from "../../repository/interface/IEnrolledRepositoy";
 import { completionStatus, IEnrollement } from "../../types/enrollment.types";
@@ -19,7 +19,7 @@ import {
   StripeConst,
   TransactionStatus,
   TransactionType,
-} from "../../const/transaction";
+} from "../../const/transaction.const";
 import { stripe } from "../../config/stripe.config";
 
 export class OrderService implements IOrderService {

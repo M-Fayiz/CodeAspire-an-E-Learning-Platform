@@ -1,6 +1,6 @@
 import { FilterQuery, Types } from "mongoose";
-import { HttpResponse } from "../../const/error-message";
-import { HttpStatus } from "../../const/http-status";
+import { HttpResponse } from "../../const/error-message.const";
+import { HttpStatus } from "../../const/http-status.const";
 import { parseObjectId } from "../../mongoose/objectId";
 import { ICourseRepository } from "../../repository/interface/ICourseRepository";
 import { IEnrolledRepository } from "../../repository/interface/IEnrolledRepositoy";
@@ -39,7 +39,7 @@ import { IMentorDhasboardDTO } from "../../types/dtos.type/mentorDashboard.dto.t
 import { mentorDashboardDTO } from "../../dtos/mentorDashboard.dto";
 import { timeFilter } from "../../utils/dashFilterGenerator.utils";
 import { ITransactionModel } from "../../models/transaction.model";
-import { TransactionType } from "../../const/transaction";
+import { TransactionType } from "../../const/transaction.const";
 import { graphPrps } from "../../types/adminDahsboard.type";
 import { buildDateFilter } from "../../utils/dateBuilder";
 import { IUserRepo } from "../../repository/interface/IUserRepo";

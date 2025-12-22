@@ -1,9 +1,9 @@
 import { Request, Response, NextFunction } from "express";
 import { ISlotService } from "../../services/interface/ISlotService";
 import { ISlotController } from "../interface/ISlotController";
-import { HttpStatus } from "../../const/http-status";
+import { HttpStatus } from "../../const/http-status.const";
 import { successResponse } from "../../utils/response.util";
-import { HttpResponse } from "../../const/error-message";
+import { HttpResponse } from "../../const/error-message.const";
 
 export class SlotController implements ISlotController {
   constructor(private _slotService: ISlotService) {}

@@ -5,7 +5,7 @@ import {
   ILearnerModel,
   IAdminModel,
 } from "../../models/user.model";
-import { IRole, mentorApprovalStatus, searchProps } from "../../types/user.types";
+import { IRole, mentorApprovalStatus } from "../../types/user.types";
 import { FilterQuery, Types } from "mongoose";
 import { graphPrps } from "../../types/adminDahsboard.type";
 
@@ -25,11 +25,11 @@ export interface IUserRepo {
   findAllUsers(
     limit: number,
     skip: number,
-    searchQuery?: searchProps,
+    searchQuery?: string,
   ): Promise<
     IUserModel[] | IMenterModel[] | ILearnerModel[] | IAdminModel[] | null
   >;
-  findUserCount(searchQuery?: searchProps): Promise<number | 0>;
+  findUserCount(searchQuery?: string): Promise<number | 0>;
   blockUser(
     id: Types.ObjectId,
   ): Promise<IUserModel | IMenterModel | ILearnerModel | IAdminModel | null>;

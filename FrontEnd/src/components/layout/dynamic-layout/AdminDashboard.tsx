@@ -9,8 +9,8 @@ import { adminService } from "@/service/admin/admin.service";
 import { EnrolledService } from "@/service/Learner/enrolledCourse.service";
 import { FilterByDate } from "@/constants/filter.const";
 import type { IAdminDashboardDTO } from "@/types/DTOS/adminDashboard.type";
-import type { graphPrps } from "@/features/dashboard/graph";
-import RevenueChart from "@/features/dashboard/graph";
+import type { graphPrps } from "@/features/dashboard/Graph";
+import RevenueChart from "@/features/dashboard/Graph";
 
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 import { RevenueDonutChart } from "@/components/ui/PieGraph";
