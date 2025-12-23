@@ -31,7 +31,7 @@ export interface ISearchQuery {
   search?: string;
   category?: string;
   subCategory?: string;
-  level?: CourseLevel;
+  level?: string;
   page?: number;
   limit?: number;
 }

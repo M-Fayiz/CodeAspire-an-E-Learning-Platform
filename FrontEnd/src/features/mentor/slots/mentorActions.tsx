@@ -19,13 +19,15 @@ import {
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { MoreHorizontal } from "lucide-react";
+import type { studentStatus } from "@/types/sessionBooking.type";
+import type { slotStatus } from "@/types/DTOS/slotBooking.dto.type";
 
 interface MentorActionMenuProps {
   slot: any;
   onViewFeedback: (slot: any) => void;
   onSaveFeedback: (slotId: string, feedback: string) => void;
-  onStudentStatusUpdate: (slotId: string, status: "passed" | "failed") => void;
-  onSessionComplete: (slotId: string, sessionStatus: "completed") => void;
+  onStudentStatusUpdate: (slotId: string, status: studentStatus) => void;
+  onSessionComplete: (slotId: string, sessionStatus:slotStatus ) => void;
 }
 
 export const MentorActionMenu: React.FC<MentorActionMenuProps> = ({

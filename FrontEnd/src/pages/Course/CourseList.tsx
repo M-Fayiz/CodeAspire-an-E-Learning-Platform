@@ -1,6 +1,6 @@
 import { Link, useSearchParams } from "react-router";
 import CourseCard from "../../features/courses_list/List/CourseCard";
-import type { ICourseData, ISearchQuery } from "@/types/DTOS/courses.dto.types";
+import type {  ISearchQuery } from "@/types/DTOS/courses.dto.types";
 import { useEffect, useState } from "react";
 
 import SearchHeader from "../../features/courses_list/List/CourseSearchBar";
@@ -11,6 +11,7 @@ import courseService from "@/service/mentor/course.service";
 import CourseCardSkeleton from "@/components/ui/cartSkelton";
 import { useAuth } from "@/context/auth.context";
 import Header from "@/components/layout/landing/Header";
+import type { ICourseData } from "@/types/courseForm.type";
 
 function CourseLayout() {
   const [courses, setCourses] = useState<ICourseData[]>([]);
@@ -22,7 +23,7 @@ function CourseLayout() {
     ? Number(searchParams.get("page"))
     : 1;
   const filterCategory = searchParams.get("category") || "";
-  const filterSubcategory = searchParams.get("subCategory") || "";
+  // const filterSubcategory = searchParams.get("subCategory") || "";
   const filterLevel = searchParams.get("level") || "";
   const { user } = useAuth();
   useEffect(() => {
@@ -31,7 +32,6 @@ function CourseLayout() {
       const query: ISearchQuery = {
         search: searchQuery.trim(),
         category: filterCategory,
-        subcategory: filterSubcategory,
         level: filterLevel,
         page: currentPage,
         limit: searchParams.get("limit")
