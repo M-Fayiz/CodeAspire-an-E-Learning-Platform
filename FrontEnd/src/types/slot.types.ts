@@ -1,4 +1,6 @@
-import type { ICourseData } from "./DTOS/courses.dto.types";
+
+
+import type { ICourseData } from "./courseForm.type";
 
 export type Days =
   | "Monday"

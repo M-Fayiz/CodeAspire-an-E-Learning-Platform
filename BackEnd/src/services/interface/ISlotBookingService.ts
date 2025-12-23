@@ -11,7 +11,6 @@ import {
 import { Types } from "mongoose";
 
 import { INotificationDTO } from "../../types/dtos.type/notification.dto.types";
-import { ISlotBookingModel } from "../../models/sessionBooking.model";
 
 export interface ISlotBookingService {
   createBooking(bookingData: ISlotBooking): Promise<string | null>;

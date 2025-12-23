@@ -49,7 +49,6 @@ import { ISlotBookingRepository } from "../../repository/interface/ISlotBookingR
 import { learnerDashboardCardsDTO } from "../../types/dtos.type/learnerDashboard.dto.type";
 import { learnerDashboardDetails } from "../../dtos/learnerDashnoard.dto";
 import { FilterByDate } from "../../const/filter.const";
-import { BookingStatus } from "../../types/sessionBooking.type";
 
 export class EnrolledService implements IEnrolledService {
   constructor(

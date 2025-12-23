@@ -1,7 +1,7 @@
 import StatsCard from "@/features/learner-dahboard/StateCard";
 import CourseStatusList from "@/features/learner-dahboard/CourseStatus";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import type { learnerDashboardCardsDTO } from "@/types/DTOS/learnerDashboard.type";
 import { useAuth } from "@/context/auth.context";
 import { EnrolledService } from "@/service/Learner/enrolledCourse.service";
@@ -14,7 +14,7 @@ const LearnerDashboard = () => {
   const {user}=useAuth()
   const [learnerDashboardData,setLearnerDashboardData]=useState<learnerDashboardCardsDTO|null>(null)
   const [circleChart,setCircleChart]=useState<PieChartProps<IInterviewType>[]>([])
-  useState(()=>{
+  useEffect(()=>{
     (async()=>{
       const dashData=await EnrolledService.learnerDashboardData(user!.id)
       if(dashData){
@@ -22,7 +22,7 @@ const LearnerDashboard = () => {
         setCircleChart([{name:'Cracked',value:dashData.slotData.totalCracked},{name:'Failed',value:dashData.slotData.totalFailed}])
       }
     })()
-  },[])
+  },[user])
 
   if(!learnerDashboardData){
     return <LearnerDashboardSkeleton/>
