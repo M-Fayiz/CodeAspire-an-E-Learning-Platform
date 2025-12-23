@@ -3,8 +3,8 @@ import { createBrowserRouter, Navigate, Outlet } from "react-router";
 import Landing from "@/pages/Landing page/Landing";
 
 // Auth Components
-import LoginPage from "../pages/auth-page/LoginPage";
-import SignupPage from "../pages/auth-page/SignupPage";
+import LoginPage from "@/pages/Auth Page/LoginPage"; 
+import SignupPage from "../pages/Auth Page/SignupPage";
 import VerifyEmail from "@/components/auth-components/VerifyEmail"; 
 import ForgotPassword from "../components/auth-components/ForgotPassword";
 import ResetPassword from "../components/auth-components/ResetPassword";
