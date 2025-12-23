@@ -7,6 +7,7 @@ import { useAuth } from "@/context/auth.context";
 import { EnrolledService } from "@/service/Learner/enrolledCourse.service";
 
 import { RevenueDonutChart, type PieChartProps } from "@/components/ui/PieGraph";
+import LearnerDashboardSkeleton from "@/components/skelton/LearnerDashboardSkelton";
 
 export type IInterviewType = "Cracked" | "Failed";
 
