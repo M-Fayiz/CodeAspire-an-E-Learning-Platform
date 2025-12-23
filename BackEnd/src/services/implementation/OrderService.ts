@@ -242,7 +242,7 @@ export class OrderService implements IOrderService {
   async getPaymentData(
     sessionId: string,
   ): Promise<Stripe.Response<Stripe.Checkout.Session>> {
-    console.log("session Id  :", sessionId);
+  
     if (!stripe) {
       throw createHttpError(
         HttpStatus.INTERNAL_SERVER_ERROR,

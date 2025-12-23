@@ -25,30 +25,20 @@ function HeroSection({ courses }: HeroSectionProps) {
           </p>
 
           <div className="flex flex-wrap items-center gap-6 mb-6">
-            {/* <div className="flex items-center gap-2">
-              <div className="flex items-center">{renderStars(rating)}</div>
-              <span className="font-semibold text-gray-900">{rating}</span>
-              <span className="text-gray-600">
-                ({totalRatings.toLocaleString()} ratings)
-              </span>
-            </div> */}
-
+           
             <div className="flex items-center gap-2 text-gray-600">
               <Users className="w-4 h-4" />
-              {/* <span>{totalStudents.toLocaleString()} students</span> */}
+             
             </div>
           </div>
 
-          {/* Course Meta */}
+         
           <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 text-sm text-gray-600 mb-6">
             <div>
               <span className="font-medium text-gray-900">Level:</span>
               <div>{courses.level}</div>
             </div>
-            {/* <div> */}
-            {/* <span className="font-medium text-gray-900">Duration:</span> */}
-            {/* <div>{totalDuration}</div> */}
-            {/* </div> */}
+            
             <div>
               <span className="font-medium text-gray-900">sessions:</span>
               <div>{courses.sessions.length}</div>
@@ -75,25 +65,7 @@ function HeroSection({ courses }: HeroSectionProps) {
           </div>
 
           <div className="flex items-center gap-4">
-            {/* {price !== undefined && (
-                <div className="flex items-center gap-2">
-                  <span className="text-3xl font-bold text-gray-900">
-                    ${price}
-                  </span>
-                  {originalPrice && (
-                    <span className="text-lg text-gray-500 line-through">
-                      ${originalPrice}
-                    </span>
-                    {}
-                  )} */}
-            {/* </div> */}
-
-            {/* <button
-                onClick={onEnroll}
-                className="bg-blue-600 hover:bg-blue-700 text-white px-8 py-3 rounded-lg font-medium transition-colors"
-              >
-                Enroll Now
-              </button> */}
+           
           </div>
         </div>
 

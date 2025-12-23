@@ -1,6 +1,6 @@
 import Taps from "@/components/common/Taps";
 import { Spinner } from "@/components/templates/Spinner";
-import HeroSection from "@/features/admin/course/HeroSection";
+import HeroSection from "@/features/admin/course/AdminHeroSection";
 import courseService from "@/service/mentor/course.service";
 import type { IFormCourseDTO } from "@/types/DTOS/courses.dto.types";
 import { ClipboardPen, PlayCircle } from "lucide-react";
@@ -12,9 +12,10 @@ import {
   AccordionItem,
   AccordionTrigger,
 } from "@/components/ui/accordion";
-import AdminCourseActions from "@/features/admin/course/AdminAction";
+
 import { toast } from "sonner";
 import MentorProfile from "@/features/courses_list/Details/AboutMentor";
+import AdminCourseActions from "@/features/admin/course/AdminAction";
 
 function AdminCourseDetails() {
   const { courseId } = useParams();
