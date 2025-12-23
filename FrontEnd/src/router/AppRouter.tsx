@@ -3,8 +3,8 @@ import { createBrowserRouter, Navigate, Outlet } from "react-router";
 import Landing from "@/pages/Landing page/Landing";
 
 // Auth Components
-import LoginPage from "../pages/Auth Page/LoginPage";
-import SignupPage from "../pages/Auth Page/SignupPage";
+import LoginPage from "../pages/auth-page/LoginPage";
+import SignupPage from "../pages/auth-page/SignupPage";
 import VerifyEmail from "@/components/auth-components/VerifyEmail"; 
 import ForgotPassword from "../components/auth-components/ForgotPassword";
 import ResetPassword from "../components/auth-components/ResetPassword";
@@ -19,15 +19,15 @@ import AdminUserProfile from "../pages/Admin Page/user-management/UserProfile";
 import MentorDataForm from "../components/auth-components/MentorInformation";
 import CategoryManagement from "@/pages/Admin Page/category";
 import CourseCreation from "@/pages/Mentor_Page/course_creation/Index";
-import CourseLayout from "@/pages/Course/CourseList";
+import CourseLayout from "@/pages/course-page/CourseList";
 import CourseFormProvider from "@/context/courseForm.context";
 import CourseManagement from "@/pages/Admin Page/course-managemenr/CourseManagement"; 
 import MYCourses from "@/pages/Mentor_Page/course_creation/MyCourses";
 import AdminCourseDetails from "@/pages/Admin Page/course-managemenr/AdminCourseDetails"; 
-import CourseDetails from "@/pages/Course/CourseDetails";
+import CourseDetails from "@/pages/course-page/CourseDetails";
 import PaymentSuccess from "@/pages/Payment page/PaymentSuccess";
-import CourseEnrolledList from "@/pages/Course/CourseEnrolledList";
-import EnrolledCourseDetails from "@/pages/Course/EnrolledDetails";
+import CourseEnrolledList from "@/pages/course-page/CourseEnrolledList";
+import EnrolledCourseDetails from "@/pages/course-page/EnrolledDetails";
 import CourseDashboard from "@/pages/Mentor_Page/course_creation/CourseDashboard";
 import MentorDashboard from "@/pages/Mentor_Page/mentor dashboard/MentorDashboard";
 import ChatPage from "@/pages/chat page/ChatPage";
@@ -39,6 +39,7 @@ import LearnerBookedSlots from "@/pages/Slots/LearnersBooked";
 import MentorBookedSlots from "@/pages/Slots/MentorsBooked";
 import CertificatesList from "@/pages/certificate page/ListCertificatePage";
 import LearnerDashboard from "@/pages/learner page/Learner-Dashboard";
+
 
 function Form_Courses_Provider() {
   return (
