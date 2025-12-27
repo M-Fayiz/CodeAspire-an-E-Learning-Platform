@@ -1,8 +1,8 @@
 import type { AxiosError } from "axios";
 import { axiosInstance } from "../axios/createInstance";
-import type { IDecodedUserType, ILogin, ISignUp } from "../types/auth.types";
+import type { IDecodedUserType, ILogin, ISignUp, UserRoleType } from "../types/auth.types";
 import { API } from "../constants/api.constant";
-import type { UserRole } from "../types/auth.types";
+
 import { throwAxiosError } from "@/utility/throwErrot";
 import { sharedService } from "./shared.service";
 import { HttpStatusCode } from "@/constants/statusCode";
@@ -116,7 +116,7 @@ export const AuthService = {
       throwAxiosError(error);
     }
   },
-  googleAuth: async (role: UserRole): Promise<void> => {
+  googleAuth: async (role: UserRoleType): Promise<void> => {
     console.log("role ,", role);
     try {
       // window.location.href = `${import.meta.env.VITE_BASE_URL}/auth/google?role:${role}`;

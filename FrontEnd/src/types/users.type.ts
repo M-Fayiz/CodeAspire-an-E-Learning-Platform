@@ -1,11 +1,11 @@
-import type { UserRole } from "./auth.types";
+import type {  UserRoleType } from "./auth.types";
 
 export interface IUserType {
   id: string;
   name: string;
   email: string;
   phone: string;
-  role: UserRole;
+  role: UserRoleType;
   profilePicture?: string;
   bio?: string;
   isActive: boolean;
@@ -38,19 +38,19 @@ export interface BaseUser {
   profilePicture?: string;
   phone?: string;
   bio?: string;
-  role: UserRole
+  role: UserRoleType
 }
 
 export interface AdminUser extends BaseUser {
-  role: "admin";
+  role: UserRoleType;
 }
 
 export interface LearnerUser extends BaseUser {
-  role: "learner";
+  role:UserRoleType;
 }
 
 export interface MentorUser extends BaseUser {
-  role: "mentor";
+  role: UserRoleType;
   rating: number;
   expertise: string[];
   ApprovalStatus: mentorApprovalStatus;

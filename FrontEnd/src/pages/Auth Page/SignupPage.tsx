@@ -1,5 +1,5 @@
 import SignupComponent from "../../components/auth-components/SignUp";
-import type { ISignUp, UserRole } from "../../types/auth.types";
+import type { ISignUp, UserRoleType } from "../../types/auth.types";
 import { AuthService } from "../../service/auth.service";
 import SuccessModal from "../../components/templates/SuccessModal";
 import { useState } from "react";
@@ -32,7 +32,7 @@ const SignupPage: React.FC = () => {
     }
   };
 
-  const handleGoogleAuth = async (role: UserRole) => {
+  const handleGoogleAuth = async (role: UserRoleType) => {
     try {
       await AuthService.googleAuth(role);
     } catch (error) {

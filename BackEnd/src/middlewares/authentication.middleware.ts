@@ -4,7 +4,7 @@ import { createHttpError } from "../utils/http-error";
 import { HttpStatus } from "../const/http-status.const";
 import { HttpResponse } from "../const/error-message.const";
 import { verifyAccesToken } from "../utils/jwt-token.util";
-
+import jwt from "jsonwebtoken";
 export async function verifyUser(
   req: Request,
   res: Response,
@@ -30,7 +30,27 @@ export async function verifyUser(
     }
     req.user = user;
     next();
-  } catch (error) {
+  } catch (error:unknown) {
+   if (error instanceof jwt.TokenExpiredError) {
+    return next(
+      createHttpError(
+        HttpStatus.UNAUTHORIZED,
+        HttpResponse.ACCESS_TOKEN_EXPIRED
+      )
+    );
+  }
+
+  if (error instanceof jwt.JsonWebTokenError) {
+    return next(
+      createHttpError(
+        HttpStatus.UNAUTHORIZED,
+        HttpResponse.UNAUTHORIZED
+      )
+    );
+  }
+
+
     next(error);
+  
   }
 }

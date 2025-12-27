@@ -6,8 +6,7 @@ import {
   
   Home,
   MessageSquare,
-  Settings,
-  
+
   Users,
   CalendarDays,
   
@@ -35,7 +34,7 @@ const navigationConfig = {
       { icon: Book, label: "Course Management", path: "/admin/courses" },
       { icon: Layers, label: "Category Management", path: "/admin/category" },
       { icon: MessageSquare, label: "Messages", path: "/admin/chats" },
-      { icon: Settings, label: "System Settings", path: "/admin/settings" },
+     
     ],
     secondary: [
     ],

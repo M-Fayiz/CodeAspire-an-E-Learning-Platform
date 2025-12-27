@@ -91,9 +91,17 @@ const Header: React.FC = () => {
                 About
               </a>
              
-              <button className="text-left text-gray-700 hover:text-orange-600 transition-colors font-medium">
-                Login
-              </button>
+             {user?.role ? (
+              <Link to={`/${user.role}/dashboard`}>
+                <User />
+              </Link>
+            ) : (
+              <Link to="/auth/login">
+                <button className="text-gray-700 hover:text-orange-600 transition-colors font-medium">
+                  Login
+                </button>
+              </Link>
+            )}
             </nav>
           </div>
         )}

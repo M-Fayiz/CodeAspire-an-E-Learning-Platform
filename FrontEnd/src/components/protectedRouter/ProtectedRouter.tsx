@@ -2,7 +2,7 @@ import { useEffect, type ReactNode } from "react";
 import { useLocation, useNavigate } from "react-router";
 import { Navigate } from "react-router-dom";
 import { useAuth } from "../../context/auth.context";
-import type { UserRole } from "../../types/auth.types";
+import type {  UserRoleType } from "../../types/auth.types";
 
 import { SocketProvider } from "@/context/socket.context";
 import { Spinner } from "../templates/Spinner";
@@ -10,7 +10,7 @@ import { Spinner } from "../templates/Spinner";
 interface ProtectedProps {
   children: ReactNode;
   fallback?: string;
-  requiredRole?: UserRole[];
+  requiredRole?: UserRoleType[];
 }
 
 export const Protected_Router: React.FC<ProtectedProps> = ({

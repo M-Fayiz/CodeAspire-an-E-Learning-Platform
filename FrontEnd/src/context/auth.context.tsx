@@ -27,7 +27,7 @@ const AuthContext = createContext<AuthContextProps>({
   signup:async()=>{
     throw new Error('Signup not completed')
   },
-  status:'checking'
+  status:AuthStatus.CHECKING
 });
 
 interface AuthContext {
@@ -41,6 +41,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
 
   const bootstrapAuth = async () => {
     try {
+       await AuthService.refreshToken(); 
       const user = await AuthService.authME();
       setUser(user);
       setStatus(AuthStatus.AUTHENTICATED);

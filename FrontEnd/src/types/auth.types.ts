@@ -7,16 +7,21 @@ export interface ILogin {
 export interface ISignUp extends ILogin {
   name?: string;
   phone?: string;
-  role?: UserRole
+  role?: UserRoleType
   confirmPassword?: string;
 }
-export type UserRole = "learner" | "mentor" | "admin";
+export const UserRole={
+  LEARNER:'learner',
+  MENTOR:'mentor',
+  ADMIN:'admin'
+}
+export type UserRoleType = (typeof UserRole)[keyof typeof UserRole]
 
 export interface IDecodedUserType {
   id: string;
   name?: string;
   email: string;
-  role: UserRole;
+  role: UserRoleType;
   profile?: string;
   ApprovalStatus?:mentorApprovalStatus
   isRequested?: boolean;
@@ -24,7 +29,7 @@ export interface IDecodedUserType {
 
 export interface AuthComponentProps {
   onSubmit: (data: ISignUp) => void;
-  onGoogleAuth: (role: UserRole) => void;
+  onGoogleAuth: (role: UserRoleType) => void;
 }
 
 export  const AuthStatus ={

@@ -1,6 +1,6 @@
 // import  SignupComponent  from '../../components/auth-components/SignUp';
 import { LoginComponent } from "../../components/auth-components/Login";
-import type { ISignUp, UserRole } from "../../types/auth.types";
+import type { ISignUp, UserRoleType } from "../../types/auth.types";
 import { AuthService } from "../../service/auth.service";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
@@ -28,7 +28,7 @@ const LoginPage: React.FC = () => {
   };
   
 
-  const handleGoogleAuth = async (role: UserRole) => {
+  const handleGoogleAuth = async (role: UserRoleType) => {
     try {
       await AuthService.googleAuth(role);
     } catch (error) {

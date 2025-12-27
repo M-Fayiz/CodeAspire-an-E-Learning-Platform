@@ -17,7 +17,7 @@ const createInstance = (): AxiosInstance => {
       const isAuthEndpoint =
         originalRequest?.url?.includes("/auth/me") ||
         originalRequest?.url?.includes("/auth/refresh-token");
-
+      console.log('isAuthEndpoin :',isAuthEndpoint)
     
       if (status === 401 && !originalRequest._retry && !isAuthEndpoint) {
         originalRequest._retry = true;
