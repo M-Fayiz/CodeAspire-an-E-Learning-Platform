@@ -1,7 +1,7 @@
 import { useCourseFormContext } from "@/context/courseForm.context";
 import type { CourseDashboardDTO } from "@/types/DTOS/courseDashboard.dto.type";
 
-import { Eye, Star, TrendingUp, Users } from "lucide-react";
+import { Eye, } from "lucide-react";
 import type React from "react";
 
 import { useNavigate } from "react-router";
@@ -32,32 +32,9 @@ const DashBoardHeader: React.FC<courseDashboardProps> = ({ courseData }) => {
               </span>
             </div>
             <p className="text-gray-600 mb-4">
-              {/* Last updated {courseData.lastUpdated} */}
             </p>
 
-            <div className="flex flex-wrap items-center gap-6 text-sm text-gray-500">
-              <div className="flex items-center gap-2">
-                <Users className="w-4 h-4" />
-                <span className="font-semibold text-gray-900">
-                  {courseData.enrolledStudents}
-                </span>
-                <span>total students</span>
-              </div>
-              <div className="flex items-center gap-2">
-                <Star className="w-4 h-4 fill-yellow-400 text-yellow-400" />
-                <span className="font-semibold text-gray-900">
-                  {courseData.avgRating}
-                </span>
-                {/* <span>({courseData.totalReviews} reviews)</span> */}
-              </div>
-              <div className="flex items-center gap-2">
-                <TrendingUp className="w-4 h-4" />
-                <span className="font-semibold text-gray-900">
-                  ${courseData.revenue.mentor}
-                </span>
-                <span>revenue</span>
-              </div>
-            </div>
+            
           </div>
 
           <div className="flex gap-3">
@@ -68,10 +45,7 @@ const DashBoardHeader: React.FC<courseDashboardProps> = ({ courseData }) => {
               <Eye className="w-4 h-4" />
               Preview Course & edit Course
             </button>
-            {/* <button className="flex items-center gap-2 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors">
-              <Edit3 className="w-4 h-4" />
-              Edit Course
-            </button> */}
+           
           </div>
         </div>
       </div>

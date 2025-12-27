@@ -27,6 +27,7 @@ export const OrderService = {
       const response = await axiosInstance.get(
         API.PAYMENT.GET_PAYMENT_DATA(sessionId),
       );
+      console.log(response.data)
       return response.data.paymentdata;
     } catch (error) {
       throwAxiosError(error);

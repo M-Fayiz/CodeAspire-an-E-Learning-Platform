@@ -27,7 +27,6 @@ export const SocketProvider: React.FC<SocketProviderProps> = ({
   children,
 }) => {
   const [socket, setSocket] = useState<Socket | null>(null);
-
   useEffect(() => {
     if (!userId) return;
     const newSocket = io(import.meta.env.VITE_BASE_URL, {

@@ -60,6 +60,15 @@ const Banner: React.FC<BannerProps> = ({
             {description}
            
           </p>
+                <div>
+            <p className="text-3xl font-bold text-gray-900">
+              ₹{}
+            </p>
+            <p className="text-sm text-gray-500">
+              One-time payment • Lifetime access
+            </p>
+          </div>
+
           {user?.role == "learner" && (
             <>
               {enrolledId ? (

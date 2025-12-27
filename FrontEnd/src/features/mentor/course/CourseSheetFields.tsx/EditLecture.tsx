@@ -170,7 +170,7 @@ export function EditLecture({
       </div>
       <Button
         onClick={saveLecture}
-        className={`bg-blue-600 hover:bg-blue-500 ${spin && "disabled"}`}
+        className={`bg-black hover:bg-black ${spin && "disabled"}`}
       >
         {spin && <Spinner />}Submit
       </Button>

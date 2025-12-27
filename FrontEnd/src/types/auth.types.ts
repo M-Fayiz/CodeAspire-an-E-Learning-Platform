@@ -1,3 +1,5 @@
+import type { mentorApprovalStatus } from "./users.type";
+
 export interface ILogin {
   email: string;
   password: string;
@@ -5,7 +7,7 @@ export interface ILogin {
 export interface ISignUp extends ILogin {
   name?: string;
   phone?: string;
-  role?: "learner" | "mentor" | "admin";
+  role?: UserRole
   confirmPassword?: string;
 }
 export type UserRole = "learner" | "mentor" | "admin";
@@ -16,7 +18,7 @@ export interface IDecodedUserType {
   email: string;
   role: UserRole;
   profile?: string;
-  ApprovalStatus?: "pending" | "approved" | "rejected" | "requested";
+  ApprovalStatus?:mentorApprovalStatus
   isRequested?: boolean;
 }
 
@@ -24,3 +26,12 @@ export interface AuthComponentProps {
   onSubmit: (data: ISignUp) => void;
   onGoogleAuth: (role: UserRole) => void;
 }
+
+export  const AuthStatus ={
+  CHECKING: "checking",
+  AUTHENTICATED: "authenticated",
+  GUEST: "guest",
+  BLOCKED: "blocked"
+} as const
+export type AuthStatusType =
+  (typeof AuthStatus)[keyof typeof AuthStatus];

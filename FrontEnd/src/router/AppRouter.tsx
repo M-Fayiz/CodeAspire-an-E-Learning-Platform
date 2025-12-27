@@ -1,4 +1,5 @@
-import { createBrowserRouter, Navigate, Outlet } from "react-router";
+import { createBrowserRouter, Navigate, Outlet } from "react-router-dom";
+
 
 import Landing from "@/pages/Landing page/Landing";
 
@@ -106,15 +107,34 @@ export const router = createBrowserRouter([
       { path: "slot-management", element: <SlotManagement /> },
       { path: "booked-slot-list", element: <MentorBookedSlots /> },
       { path: "video-session/:bookingId", element: <VideoRoom /> },
-      {
-        path: "courses",
-        element: <Form_Courses_Provider />,
-        children: [
-          { path: "my-courses", element: <MYCourses /> },
-          { path: "create", element: <CourseCreation /> },
-          { path: "dashboard/:id", element: <CourseDashboard /> },
-        ],
-      },
+        {
+  path: "courses",
+  element: <Form_Courses_Provider />,
+  handle: { breadcrumb: "My Courses" },
+  children: [
+    {
+      index: true,
+      element: <MYCourses />,
+      handle: { breadcrumb: "Course List" },
+    },
+    {
+      path: "my-courses",
+      element: <MYCourses />,
+      handle: { breadcrumb: "Course List" },
+    },
+    {
+      path: "create",
+      element: <CourseCreation />,
+      handle: { breadcrumb: "Create Course" },
+    },
+    {
+      path: "dashboard/:id",
+      element: <CourseDashboard />,
+      handle: { breadcrumb: "Course Dashboard" },
+    },
+  ],
+}
+
     ],
   },
   // ADMIN ROUTES

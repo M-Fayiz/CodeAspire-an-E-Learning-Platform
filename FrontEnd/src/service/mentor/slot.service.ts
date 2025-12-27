@@ -33,6 +33,7 @@ export const SlotService = {
   getMentorSlotList: async (query: {
     mentorId: string;
     page: number;
+    search?:string
   }): Promise<{ mappedSlots: ISlotDTO[]; totalPage: number }> => {
     try {
       const response = await axiosInstance.get(

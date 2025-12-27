@@ -26,7 +26,7 @@ const BasicCourseInformation: React.FC<BaseCaourseProps> = ({ handleTap }) => {
   const [selectedCategory, setSelectedCategory] = useState("");
   const [zodError, setErrors] = useState<{ [key: string]: string }>({});
   const [image, setImage] = useState("");
-  const [spin] = useState(false);
+  const [spin,setSpin] = useState(false);
   const {
     courseId,
     formData,
@@ -99,7 +99,7 @@ const BasicCourseInformation: React.FC<BaseCaourseProps> = ({ handleTap }) => {
         setErrors(fieldErrors);
         return;
       }
-
+      setSpin(true)
       if (formData._id) {
         const updatedData = await courseService.updateBaseInformation(
           courseId,
@@ -110,7 +110,7 @@ const BasicCourseInformation: React.FC<BaseCaourseProps> = ({ handleTap }) => {
         );
         if (updatedData) {
           setCourseId(updatedData._id as string);
-
+          setSpin(false)
           handleTap("curriculum");
           toast.success("Base Information Updated Successfully");
         }
@@ -121,14 +121,14 @@ const BasicCourseInformation: React.FC<BaseCaourseProps> = ({ handleTap }) => {
         ...courseData.data,
         mentorId: user!.id,
       });
-      console.log("saved Data  :: ", savedCourseData);
+     
       if (savedCourseData._id) {
         setCourseId(savedCourseData._id);
         setIsDraftReady(true);
         hydrateFromDB(savedCourseData);
-
+        setSpin(false)
         handleTap("curriculum");
-        console.log("this is form data ::", formData);
+       
       }
     } catch (error) {
       if (error instanceof Error) {
@@ -222,11 +222,11 @@ const BasicCourseInformation: React.FC<BaseCaourseProps> = ({ handleTap }) => {
               <p className="text-red-400 text-sm">{zodError.level}</p>
             </div>
           </div>
-          <div className="border-2 border-dashed border-gray-400 rounded-2xl flex flex-col items-center justify-center    hover:border-blue-500 transition cursor-pointer bg-gray-50">
+          <div className="border-2 border-dashed border-gray-400 rounded-2xl flex flex-col items-center justify-center    hover:border-gray-500 transition cursor-pointer bg-gray-50">
             <div className="col-span-1 md:col-span-2">
-              <div className=" border-gray-400 rounded-2xl flex flex-col items-center justify-center p-3   hover:border-blue-500 transition cursor-pointer bg-gray-50">
-                <div className="mb-1 flex items-center justify-center w-12 h-12 rounded-full bg-blue-100">
-                  <FileUp className="text-blue-500 w-8 h-8" />
+              <div className=" border-gray-400 rounded-2xl flex flex-col items-center justify-center p-3   hover:border-gray-500 transition cursor-pointer bg-gray-50">
+                <div className="mb-1 flex items-center justify-center w-12 h-12 rounded-full bg-gray-100">
+                  <FileUp className="text-gray-500 w-8 h-8" />
                 </div>
 
                 <p className="text-gray-700 font-medium mb-2">
@@ -246,8 +246,8 @@ const BasicCourseInformation: React.FC<BaseCaourseProps> = ({ handleTap }) => {
                           file:mr-4 file:py-2 file:px-4 
                           file:rounded-lg file:border-0 
                           file:text-sm file:font-semibold 
-                          file:bg-blue-100 file:text-blue-600 
-                          hover:file:bg-blue-200"
+                          file:bg-gray-100 file:text-gray-600 
+                          hover:file:bg-gray-200"
                 />
 
                 {zodError?.thumbnail && (
@@ -272,7 +272,7 @@ const BasicCourseInformation: React.FC<BaseCaourseProps> = ({ handleTap }) => {
         <div className="flex items-center justify-between mt-12 pt-6 border-t border-gray-200">
           <button
             type="submit"
-            className="w-full sm:w-auto px-8 py-3 text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 rounded-md shadow-sm transition-colors"
+            className="w-full flex gap-2 sm:w-auto px-8 py-3 text-sm font-medium text-white bg-black hover:bg-gray-700 rounded-md shadow-sm transition-colors"
           >
             {spin && <Spinner />}
             Save as Draft & Next

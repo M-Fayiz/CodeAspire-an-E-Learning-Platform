@@ -28,6 +28,8 @@ export type mentorApprovalStatus =
   | "approved"
   | "rejected"
   | "requested";
+
+
 export interface BaseUser {
   _id: string;
   name: string;
@@ -36,7 +38,7 @@ export interface BaseUser {
   profilePicture?: string;
   phone?: string;
   bio?: string;
-  role: "admin" | "mentor" | "learner";
+  role: UserRole
 }
 
 export interface AdminUser extends BaseUser {

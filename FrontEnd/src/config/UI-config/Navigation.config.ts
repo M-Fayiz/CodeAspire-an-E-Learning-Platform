@@ -76,7 +76,7 @@ const navigationConfig = {
   mentor: {
     primary: [
       { icon: Home, label: "Dashboard", path: "/mentor/dashboard" },
-      { icon: Book, label: "My Courses", path: "/mentor/courses/my-courses" },
+      { icon: Book, label: "My Courses", path: "/mentor/courses" },
       
       {
         icon: CalendarDays,

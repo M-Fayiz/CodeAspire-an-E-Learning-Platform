@@ -107,13 +107,13 @@ const ChatPage = () => {
     if (!socket) return;
 
     const handleOnline = (userId: string) => {
-      if (user!.id == userId) {
+      if (selectedChat?.userId == userId) {
         setIsOnline(true);
       }
     };
 
     const handleOffline = (userId: string) => {
-      if (user!.id == userId) {
+      if (selectedChat?.userId == userId) {
         setIsOnline(false);
       }
     };
@@ -125,7 +125,24 @@ const ChatPage = () => {
       socket.off(SocketEvents.USER_ONLINE, handleOnline);
       socket.off(SocketEvents.USER_OFFLINE, handleOffline);
     };
-  }, [socket]);
+  }, [socket,selectedChat?.userId]);
+  useEffect(() => {
+  if (!socket || !selectedChat) return;
+
+  socket.emit("presence:check", selectedChat.userId);
+
+  const handler = (data: { userId: string; online: boolean }) => {
+    if (data.userId === selectedChat.userId) {
+      setIsOnline(data.online);
+    }
+  };
+
+  socket.on("presence:status", handler);
+
+  return () => {
+    socket.off("presence:status", handler);
+  };
+}, [socket, selectedChat?.userId]);
 
   return (
     <div className="flex  h-full bg-gray-50">

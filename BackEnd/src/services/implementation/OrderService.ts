@@ -212,6 +212,9 @@ export class OrderService implements IOrderService {
         },
       ],
       mode: StripeConst.MODE,
+       invoice_creation: {
+      enabled: true,
+    },
       success_url: `${env.CLIENT_URL_2}/${StripeConst.SUCCESS_URL}`,
       client_reference_id: String(orderData._id),
       metadata: {
@@ -226,6 +229,7 @@ export class OrderService implements IOrderService {
     },
     { idempotencyKey: idemKey },
   );
+  console.log('ss ',session)
 
 
   await this._orderRepository.updateOrder(orderData._id, {

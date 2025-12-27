@@ -39,7 +39,7 @@ export class OrderController implements IOrderController {
       const paymentdata = await this._orderService.getPaymentData(id);
       res
         .status(HttpStatus.OK)
-        .json(successResponse(HttpResponse.OK, [paymentdata]));
+        .json(successResponse(HttpResponse.OK, {paymentdata}));
     } catch (error) {
       next(error);
     }

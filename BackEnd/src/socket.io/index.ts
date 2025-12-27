@@ -26,7 +26,7 @@ export const intitializeSocket = (server: HttpServer) => {
   io.use((socket: CustomSocket, next) => {
     const token = socket.handshake.auth?.token;
     if (!token) return next(new Error(HttpResponse.UNAUTHORIZED));
-
+    console.log('token :',token)
     try {
       const user = verifyAccesToken(token);
 
@@ -39,23 +39,47 @@ export const intitializeSocket = (server: HttpServer) => {
 
   io.on(SocketEvents.CONNECT, async (socket: CustomSocket) => {
     const userId = socket.data.userId;
+    console.log('userId :',userId)
+     if (!userId) {
+      console.error("Socket connected without userId");
+      socket.disconnect(true);
+      return;
+    }
 
     socket.join(`user:${userId}`);
 
-    await redisClient.hSet(redisPrefix.ONLINE_USERS, userId, socket.id);
-    io.emit(SocketEvents.USER_ONLINE, userId);
+
+      const key = `online:${userId}`;
+
+        const before = await redisClient.sCard(key);
+        await redisClient.sAdd(key, socket.id);
+        const after = await redisClient.sCard(key);
+
+      
+        if (before === 0 && after === 1) {
+          io.emit(SocketEvents.USER_ONLINE, userId);
+        }
+
+    socket.on("presence:check", async (targetUserId: string) => {
+      const exists = await redisClient.exists(`online:${targetUserId}`);
+      socket.emit("presence:status", {
+        userId: targetUserId,
+        online: exists === 1,
+      });
+    });
 
     registerChatHandler(io, socket);
     registerVideoHandlers(io, socket);
 
     socket.on(SocketEvents.DISCONNECT, async () => {
-      await redisClient.hDel(
-        redisPrefix.OFFLINE_USERS ?? redisPrefix.ONLINE_USERS,
-        userId,
-      );
-      await redisClient.hDel(redisPrefix.ONLINE_USERS, userId);
+       await redisClient.sRem(key, socket.id);
+    const remaining = await redisClient.sCard(key);
+
+  
+    if (remaining === 0) {
+      await redisClient.del(key);
       io.emit(SocketEvents.USER_OFFLINE, userId);
-      console.log("user disconnected", userId);
+    }
     });
   });
 

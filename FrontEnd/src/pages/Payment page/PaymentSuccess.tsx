@@ -1,133 +1,158 @@
 import { useEffect, useState } from "react";
-import { CheckCircle, Download, Calendar, Mail } from "lucide-react";
-import { Link } from "react-router";
+import {
+  CheckCircle,
+  FileText,
+  ExternalLink,
+  ArrowRight,
+} from "lucide-react";
+import { Link } from "react-router-dom";
 import { OrderService } from "@/service/order.service";
 
 const PaymentSuccess = () => {
   const query = new URLSearchParams(window.location.search);
   const sessionId = query.get("session_id");
-  const [txnData, setTxnData] = useState<{
+
+  const [data, setData] = useState<{
     amount: number;
-    invoice: string;
-    txnId: string;
+    currency: string;
+    paymentStatus: string;
+    paymentIntentId: string;
+    invoiceId?: string;
+    invoiceUrl?: string;
+    invoicePdf?: string;
+    paymentType: "COURSE" | "SLOT";
+    createdAt: number;
   } | null>(null);
 
   useEffect(() => {
+    if (!sessionId) return;
+
     (async () => {
-      const data = await OrderService.getOrderDetails(sessionId as string);
-      if (data) {
-        setTxnData({
-          amount: data.amount_total / 100,
-          invoice: data.invoice?.hosted_invoice_url,
-          txnId: data.payment_intent?.id,
-        });
-      }
+      const session = await OrderService.getOrderDetails(sessionId);
+
+      if (!session) return;
+
+      setData({
+        amount: session.amount_total / 100,
+        currency: session.currency,
+        paymentStatus: session.payment_status,
+        paymentIntentId: session.payment_intent?.id,
+        invoiceId: session.invoice?.id,
+        invoiceUrl: session.invoice?.hosted_invoice_url,
+        invoicePdf: session.invoice?.invoice_pdf,
+        paymentType:
+          session.metadata?.paymentType === "SLOT_BOOKING"
+            ? "SLOT"
+            : "COURSE",
+        createdAt: session.created,
+      });
     })();
   }, [sessionId]);
 
+  if (!data) return null;
+
+  const redirectPath =
+    data.paymentType === "COURSE"
+      ? "/learner/enrolled-courses"
+      : "/learner/slots";
+
+  const redirectLabel =
+    data.paymentType === "COURSE"
+      ? "View Enrolled Courses"
+      : "View My Slots";
+
   return (
-    <div className="min-h-screen bg-gray-50 flex items-center justify-center p-4">
-      <div className="max-w-2xl w-full">
-        <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-8 text-center mb-6">
-          <div className="flex justify-center mb-4">
-            <CheckCircle className="w-16 h-16 text-green-500" />
-          </div>
-          <h1 className="text-3xl font-bold text-gray-900 mb-2">
-            Payment Successful!
-          </h1>
-          <p className="text-lg text-gray-600 mb-4">
-            Thank you for your purchase. You now have access to your course.
-          </p>
-          {txnData && (
-            <div className="inline-flex items-center bg-green-50 text-green-800 px-4 py-2 rounded-full text-sm font-medium">
-              Transaction ID: {txnData.txnId}
-            </div>
+    <div className="min-h-screen bg-gray-50 flex items-center justify-center px-4">
+      <div className="w-full max-w-md bg-white rounded-2xl border border-gray-200 shadow-sm p-6">
+
+        {/* Icon */}
+        <div className="flex justify-center mb-4">
+          <CheckCircle className="text-orange-500" size={56} />
+        </div>
+
+        <h1 className="text-xl font-semibold text-gray-900 text-center">
+          Payment Successful
+        </h1>
+        <p className="text-sm text-gray-500 text-center mt-1">
+          Your payment has been completed successfully
+        </p>
+
+        <div className="border-t border-gray-200 my-5" />
+
+        {/* Payment details */}
+        <div className="space-y-3 text-sm">
+          <Row label="Amount Paid">
+            ₹{data.amount} {data.currency.toUpperCase()}
+          </Row>
+
+          <Row label="Payment Status">
+            <span className="capitalize">{data.paymentStatus}</span>
+          </Row>
+
+          <Row label="Transaction ID">{data.paymentIntentId}</Row>
+
+          {data.invoiceId && (
+            <Row label="Invoice ID">{data.invoiceId}</Row>
           )}
+
+          <Row label="Date">
+            {new Date(data.createdAt * 1000).toLocaleString()}
+          </Row>
         </div>
 
-        <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6 mb-6">
-          <h2 className="text-xl font-semibold text-gray-900 mb-4">
-            Course Details
-          </h2>
-        </div>
+        {/* Invoice actions */}
+        {(data.invoiceUrl || data.invoicePdf) && (
+          <div className="mt-4 flex flex-col gap-2">
+            {data.invoiceUrl && (
+              <a
+                href={data.invoiceUrl}
+                target="_blank"
+                rel="noreferrer"
+                className="flex items-center justify-center gap-2 text-orange-600 hover:text-orange-700 text-sm font-medium"
+              >
+                <ExternalLink size={16} />
+                View Invoice
+              </a>
+            )}
 
-        <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6 mb-6">
-          <h2 className="text-xl font-semibold text-gray-900 mb-4">
-            Purchase Summary
-          </h2>
-          <div className="space-y-3">
-            <div className="flex justify-between">
-              <span className="text-gray-600">Course Price:</span>
-              {txnData && (
-                <span className="font-medium">
-                  ${txnData.amount.toFixed(2)}
-                </span>
-              )}
-            </div>
-            <div className="flex justify-between">
-              <span className="text-gray-600">Tax:</span>
-              <span className="font-medium">$0.00</span>
-            </div>
-            <hr className="border-gray-200" />
-            <div className="flex justify-between text-lg font-semibold">
-              <span>Total Paid:</span>
-              {txnData && (
-                <span className="font-medium">
-                  ${txnData.amount.toFixed(2)}
-                </span>
-              )}
-            </div>
+            {data.invoicePdf && (
+              <a
+                href={data.invoicePdf}
+                target="_blank"
+                rel="noreferrer"
+                className="flex items-center justify-center gap-2 text-orange-600 hover:text-orange-700 text-sm font-medium"
+              >
+                <FileText size={16} />
+                Download Invoice (PDF)
+              </a>
+            )}
           </div>
-        </div>
+        )}
 
-        <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6 mb-6">
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-            <Link
-              to={"/learner/enrolled-courses"}
-              className="flex items-center justify-center gap-2 bg-blue-600 hover:bg-blue-700 text-white font-medium py-3 px-4 rounded-lg transition-colors"
-            >
-              <Calendar className="w-5 h-5" />
-              Start Learning
-            </Link>
-            <a
-              href={txnData?.invoice}
-              className="flex items-center justify-center gap-2 border border-gray-300 hover:bg-gray-50 text-gray-700 font-medium py-3 px-4 rounded-lg transition-colors"
-            >
-              <Download className="w-5 h-5" />
-              Download Receipt
-            </a>
-          </div>
-        </div>
-
-        <div className="bg-blue-50 rounded-lg border border-blue-200 p-6">
-          <h3 className="font-semibold text-blue-900 mb-3">What's Next?</h3>
-          <ul className="space-y-2 text-blue-800">
-            <li className="flex items-start gap-2">
-              <Mail className="w-4 h-4 mt-0.5 flex-shrink-0" />
-              <span>Check your email for course access instructions</span>
-            </li>
-            <li className="flex items-start gap-2">
-              <CheckCircle className="w-4 h-4 mt-0.5 flex-shrink-0" />
-              <span>Your course is now available in your dashboard</span>
-            </li>
-            <li className="flex items-start gap-2">
-              <Download className="w-4 h-4 mt-0.5 flex-shrink-0" />
-              <span>Download course materials and resources</span>
-            </li>
-          </ul>
-        </div>
-
-        <div className="text-center mt-8">
-          <p className="text-gray-500 text-sm">
-            Need help?{" "}
-            <a href="#" className="text-blue-600 hover:underline">
-              Contact Support
-            </a>
-          </p>
-        </div>
+        {/* Navigation */}
+        <Link
+          to={redirectPath}
+          className="mt-6 flex items-center justify-center gap-2 bg-orange-500 hover:bg-orange-600 text-white py-2 rounded-xl font-medium transition"
+        >
+          {redirectLabel}
+          <ArrowRight size={18} />
+        </Link>
       </div>
     </div>
   );
 };
 
 export default PaymentSuccess;
+
+const Row = ({
+  label,
+  children,
+}: {
+  label: string;
+  children: React.ReactNode;
+}) => (
+  <div className="flex justify-between text-gray-700">
+    <span className="text-gray-500">{label}</span>
+    <span className="font-medium text-right">{children}</span>
+  </div>
+);

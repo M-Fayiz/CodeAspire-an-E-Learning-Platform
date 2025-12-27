@@ -4,6 +4,7 @@ import navigationConfig from "../../../config/UI-config/Navigation.config";
 import { Link } from "react-router-dom";
 import type { NavigationItem } from "../../../config/UI-config/Navigation.config";
 import { useLocation } from "react-router";
+import { NavLink } from "react-router-dom";
 
 interface ISidebarProps {
   user: IDecodedUserType;
@@ -19,42 +20,41 @@ interface NavItemProps {
 const Sidebar: React.FC<ISidebarProps> = ({ user, isOpen, onClose }) => {
   const navigation = navigationConfig[user.role];
   const location = useLocation();
-  const isActive = (path: string) => location.pathname == path;
+  const isActive = (path: string) =>
+  location.pathname === path ||
+  location.pathname.startsWith(path + "/");
+
   const NavItem: React.FC<NavItemProps> = ({ item, isSecondary = false }) => (
-    <Link
-      to={item.path}
-      key={item.path}
-      className={`flex items-center px-3 py-2 rounded-lg text-sm font-medium transition-colors relative ${
-        isActive(item.path)
+  <NavLink
+    to={item.path}
+    end={false}
+    className={({ isActive }) =>
+      `flex items-center px-3 py-2 rounded-lg text-sm font-medium transition-colors ${
+        isActive
           ? "bg-black text-white"
           : isSecondary
             ? "text-gray-600 hover:text-gray-900 hover:bg-gray-50"
             : "text-gray-700 hover:text-gray-900 hover:bg-gray-100"
-      }`}
-    >
-      <item.icon
-        className={`w-5 h-5 mr-3 ${isActive(item.path) ? "text-white" : ""}`}
-      />
-      <span className="flex-1">{item.label}</span>
-      {item.badge && (
-        <span
-          className={`ml-2 px-2 py-1 text-xs rounded-full ${
-            isActive(item.path)
-              ? "bg-black-500 text-white"
-              : "bg-red-500 text-white"
-          }`}
-        >
-          {item.badge}
-        </span>
-      )}
-    </Link>
-  );
+      }`
+    }
+  >
+    <item.icon className="w-5 h-5 mr-3" />
+    <span className="flex-1">{item.label}</span>
+
+    {item.badge && (
+      <span className="ml-2 px-2 py-1 text-xs rounded-full bg-red-500 text-white">
+        {item.badge}
+      </span>
+    )}
+  </NavLink>
+);
+
 
   return (
     <>
       {isOpen && (
         <div
-          className="fixed inset-0 bg-black bg-opacity-50 z-40 lg:hidden"
+          className="fixed inset-0  bg-opacity-50 z-40 lg:hidden"
           onClick={onClose}
         />
       )}

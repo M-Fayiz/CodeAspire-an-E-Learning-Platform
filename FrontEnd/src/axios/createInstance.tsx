@@ -9,37 +9,34 @@ const createInstance = (): AxiosInstance => {
   });
 
   instance.interceptors.response.use(
-    // Success
-    (response) => {
-      return response;
-    },
-    // Error
+    (response) => response,
     async (error: AxiosError) => {
       const status = error.response?.status;
-      const url = error.config?.url;
-      const errorMessage = (error.response?.data as any).error;
-      console.log("type of the error", typeof error.response?.data);
-      console.warn(
-        `⚠️ Interceptor caught error STATUS:❌ ${status} | ERROR MESSAGE :⭕ ${errorMessage} | on URL :🔗 ${url}`,
-      );
-
       const originalRequest = error.config as any;
 
-      if (error.response?.status == 401 && !originalRequest._retry) {
-        originalRequest._retry = true;
+      const isAuthEndpoint =
+        originalRequest?.url?.includes("/auth/me") ||
+        originalRequest?.url?.includes("/auth/refresh-token");
 
-        const refreshed = await AuthService.refreshToken();
-        if (refreshed) {
+    
+      if (status === 401 && !originalRequest._retry && !isAuthEndpoint) {
+        originalRequest._retry = true;
+        try {
+          await AuthService.refreshToken();
           return instance(originalRequest);
-        } else {
-          window.dispatchEvent(new Event("force-logout"));
+        } catch {
+         
         }
       }
-      if (status == 403 && errorMessage == "User blocked") {
-        window.dispatchEvent(new Event("force-logout"));
-      }
-      return Promise.reject(error);
-    },
+
+   
+      return Promise.reject({
+        status,
+        message:
+          (error.response?.data as any)?.error ||
+          "Request failed",
+      });
+    }
   );
 
   return instance;

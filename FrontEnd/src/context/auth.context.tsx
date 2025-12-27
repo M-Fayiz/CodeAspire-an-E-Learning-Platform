@@ -5,86 +5,83 @@ import {
   useState,
   type ReactNode,
 } from "react";
-import type { IDecodedUserType } from "../types/auth.types";
+import {  AuthStatus, type AuthStatusType, type IDecodedUserType, type ISignUp } from "../types/auth.types";
 import { AuthService } from "../service/auth.service";
-import { toast } from "sonner";
+
 
 interface User extends IDecodedUserType {}
 
 interface AuthContextProps {
   user: User | null;
-  loading: boolean;
-  checkAuth: () => Promise<void>;
-  setUser: (user: User | null) => void;
+  status: AuthStatusType;
+  login: (data: ISignUp) => Promise<void>;
+  signup: (data: ISignUp) => Promise<{ status: number; message: string; email: string }>;
   logout: () => Promise<void>;
 }
 
+
 const AuthContext = createContext<AuthContextProps>({
   user: null,
-  loading: false,
-  checkAuth: async () => {},
-  setUser: () => {},
+  login:async()=>{},
   logout: async () => {},
+  signup:async()=>{
+    throw new Error('Signup not completed')
+  },
+  status:'checking'
 });
 
 interface AuthContext {
   children: ReactNode;
 }
 
-export const AuthProvider = ({ children }: AuthContext) => {
+export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const [user, setUser] = useState<User | null>(null);
-  const [loading, setLoading] = useState<boolean>(true);
+  const [status, setStatus] = useState<AuthStatusType>(AuthStatus.CHECKING);
+
+
+  const bootstrapAuth = async () => {
+    try {
+      const user = await AuthService.authME();
+      setUser(user);
+      setStatus(AuthStatus.AUTHENTICATED);
+    } catch (error: any) {
+      if (error?.status === 401) {
+        setUser(null);
+        setStatus(AuthStatus.GUEST);
+      } else if (error?.status === 403) {
+        setUser(null);
+        setStatus(AuthStatus.BLOCKED);
+      } else {
+        setUser(null);
+        setStatus(AuthStatus.GUEST);
+      }
+    }
+  };
 
   useEffect(() => {
-    checkAuth();
-
-    const handleLogout = () => {
-      logout();
-    };
-
-    window.addEventListener("force-logout", handleLogout);
-    return () => {
-      window.removeEventListener("force-logout", handleLogout);
-    };
+    bootstrapAuth(); 
   }, []);
 
-  const checkAuth = async () => {
-    setLoading(true);
-
-    try {
-      const result = await AuthService.authME();
-      if (result) {
-        setUser(result);
-        setLoading(false);
-      }
-    } catch (error) {
-      if (error instanceof Error) {
-        toast.error(error.message);
-      }
-      setUser(null);
-    } finally {
-      setLoading(false);
-    }
+  const login = async (data: ISignUp) => {
+    await AuthService.login(data);
+    await bootstrapAuth(); 
   };
 
-  const logout = async (): Promise<void> => {
-    setLoading(true);
-    try {
-      const res = await AuthService.logOut();
-      if (res) {
-        setUser(null);
-        setLoading(false);
-      }
-    } catch (error) {
-      setLoading(false);
-      console.error("Logout error:", error);
-      setUser(null);
-    } finally {
-      setLoading(false);
-    }
+  const signup = async (data: ISignUp) => {
+  const result = await AuthService.signUp(data);
+  await bootstrapAuth();
+  return result;
+};
+
+
+  const logout = async () => {
+    await AuthService.logOut();
+    setUser(null);
+    setStatus("guest");
   };
+
   return (
-    <AuthContext.Provider value={{ user, setUser, loading, checkAuth, logout }}>
+    <AuthContext.Provider value={{ user, status, login, signup, logout }}>
       {children}
     </AuthContext.Provider>
   );

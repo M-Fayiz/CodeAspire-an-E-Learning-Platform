@@ -1,11 +1,11 @@
 import ManagementLayout from "@/components/layout/ManagementLayout";
 import SlotBookingForm from "@/features/mentor/slots/SlotForm";
-import { Plus } from "lucide-react";
+import { Plus, Search } from "lucide-react";
 import {
   Dialog,
   DialogClose,
   DialogContent,
-  DialogDescription,
+
   DialogFooter,
   DialogHeader,
   DialogTitle,
@@ -22,6 +22,7 @@ import SlotList from "@/features/mentor/slots/SlotTable";
 import { toast } from "sonner";
 import type { ISlotDTO } from "@/types/DTOS/slot.dto";
 import PaginationRounded from "@/components/ui/Pagination";
+import { useSearchPagination } from "@/hooks/useSearchQuery";
 
 const SlotManagement = () => {
   const [formData, setFormData] = useState<IMentorSlot>({
@@ -41,11 +42,12 @@ const SlotManagement = () => {
     pricePerSlot: 0,
   });
   const [totalPage, setTotalPage] = useState(1);
-  const [page, setPage] = useState(1);
+
   const [formError, setFormError] = useState<Record<string, string>>({});
   const { user } = useAuth();
   const [slot, setSlots] = useState<ISlotDTO[]>([]);
-
+  const {page,search,setPage,setSearch}=useSearchPagination()
+  
   const [isOpen, setIsOpen] = useState(false);
 
   useEffect(() => {
@@ -57,6 +59,7 @@ const SlotManagement = () => {
         page,
       });
       if (data) setSlots(data.mappedSlots);
+
       setTotalPage(data.totalPage);
     })();
   }, [user?.id]);
@@ -176,52 +179,96 @@ const SlotManagement = () => {
 
   return (
     <>
-      <ManagementLayout description="mange your slot " title="slot management">
-        <div className="flex flex-col gap-2.5">
-          <div>
-            <Dialog open={isOpen} onOpenChange={setIsOpen}>
-              <DialogTrigger asChild>
-                <Button onClick={() => resetForm()} variant="outline">
-                  <Plus />
-                  Create Slot
-                </Button>
-              </DialogTrigger>
+      <ManagementLayout
+  description="Manage your slot"
+  title="Slot management"
+>
+  <div className="flex flex-col gap-4">
+    {/* 🔹 Top Action Bar */}
+    <div className="flex items-center justify-between">
+      <Dialog open={isOpen} onOpenChange={setIsOpen}>
+        <DialogTrigger asChild>
+          <Button onClick={() => resetForm()} variant="outline">
+            <Plus className="mr-2 h-4 w-4" />
+            Create Slot
+          </Button>
+        </DialogTrigger>
 
-              <DialogContent className="!max-w-[90vw] !w-[70vw] md:!max-w-[1200px] overflow-y-auto max-h-[90vh]">
-                <DialogHeader>
-                  <DialogTitle>Create New Slot</DialogTitle>
-                  <DialogDescription></DialogDescription>
-                </DialogHeader>
+        <DialogContent className="!max-w-[90vw] !w-[70vw] md:!max-w-[1200px] overflow-y-auto max-h-[90vh]">
+          <DialogHeader>
+            <DialogTitle>Create New Slot</DialogTitle>
+          </DialogHeader>
 
-                <form onSubmit={submitSlotForm}>
-                  <div className="grid gap-4">
-                    <SlotBookingForm
-                      formData={formData}
-                      setFormData={setFormData}
-                      formError={formError}
-                    />
-                  </div>
+          <form onSubmit={submitSlotForm}>
+            <div className="grid gap-4">
+              <SlotBookingForm
+                formData={formData}
+                setFormData={setFormData}
+                formError={formError}
+              />
+            </div>
 
-                  <DialogFooter className="mt-4">
-                    <DialogClose asChild>
-                      <Button variant="outline">Cancel</Button>
-                    </DialogClose>
-                    <Button type="submit">
-                      {formData._id ? "Update Slot" : "Create Slot"}
-                    </Button>
-                  </DialogFooter>
-                </form>
-              </DialogContent>
-            </Dialog>
-          </div>
-          <div>{slot && <SlotList slots={slot} onEdit={onEdit} />}</div>
-        </div>
-        <PaginationRounded
-          currentPage={page}
-          totalPages={totalPage}
-          onPageChange={(_, value) => setPage(value)}
-        />
-      </ManagementLayout>
+            <DialogFooter className="mt-4">
+              <DialogClose asChild>
+                <Button variant="outline">Cancel</Button>
+              </DialogClose>
+              <Button type="submit">
+                {formData._id ? "Update Slot" : "Create Slot"}
+              </Button>
+            </DialogFooter>
+          </form>
+        </DialogContent>
+      </Dialog>
+
+      
+      <div className="flex items-center gap-3">
+  {/* 🔹 Day Filter */}
+  <select
+    // value={filters.day ?? ""}
+    // onChange={(e) =>
+      // setFilter("day", e.target.value || undefined)
+    // }
+    className="h-10 rounded-md border bg-white px-3 text-sm outline-none"
+  >
+    <option value="">All Days</option>
+    <option value="Monday">Monday</option>
+    <option value="Tuesday">Tuesday</option>
+    <option value="Wednesday">Wednesday</option>
+    <option value="Thursday">Thursday</option>
+    <option value="Friday">Friday</option>
+    <option value="Saturday">Saturday</option>
+    <option value="Sunday">Sunday</option>
+  </select>
+
+  {/* 🔹 Search */}
+  <div className="flex items-center gap-2 rounded-md border bg-white px-3 py-2 shadow-sm">
+    <Search className="h-4 w-4 text-gray-500" />
+    <input
+      type="text"
+      value={search}
+      onChange={(e) => setSearch(e.target.value)}
+      placeholder="Search slots..."
+      className="w-64 text-sm outline-none"
+    />
+  </div>
+</div>
+
+    </div>
+
+    
+    <div>
+      {slot && <SlotList slots={slot} onEdit={onEdit} />}
+    </div>
+  </div>
+
+ 
+  <PaginationRounded
+    currentPage={page}
+    totalPages={totalPage}
+    onPageChange={(_, value) => setPage(value)}
+  />
+</ManagementLayout>
+
     </>
   );
 };
