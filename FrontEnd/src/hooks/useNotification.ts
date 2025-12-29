@@ -3,6 +3,7 @@ import type { INotificationDTO } from "@/types/DTOS/notification.dto";
 import { NotificationService } from "@/service/notification.service";
 import { useSocket } from "@/context/socket.context";
 import { toast } from "sonner";
+import { ApiError } from "@/utility/apiError.util";
 
 export function useNotifications(userId: string) {
   const [notifications, setNotifications] = useState<INotificationDTO[]>([]);
@@ -24,7 +25,7 @@ export function useNotifications(userId: string) {
           setCount(sorted.filter((n) => !n.isRead).length);
         }
       } catch (err) {
-        if (err instanceof Error) {
+        if (err instanceof ApiError) {
           toast.error(err.message);
         }
       } finally {

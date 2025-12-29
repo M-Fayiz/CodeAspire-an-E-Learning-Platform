@@ -1,11 +1,12 @@
 import { Lock } from "lucide-react";
 import { useState } from "react";
 import { Input } from "../ui/Inputs";
-import { validatePassword } from "../../schema/validateForm";
+import { validatePassword } from "../../schema/auth.schema";
 import UserService from "../../service/user.service";
 import { Spinner } from "../templates/Spinner";
 import type { TapsComp } from "../../pages/Profile Page/Profile";
 import { toast } from "sonner";
+import { ApiError } from "@/utility/apiError.util";
 
 interface PasswordChangeData {
   currentPassword: string;
@@ -68,7 +69,7 @@ export const PasswordChangeForm: React.FC<passWordsProps> = ({
         setIsLoading(false);
       }
     } catch (error) {
-      if (error instanceof Error) {
+      if (error instanceof ApiError) {
         toast.error(error.message);
         setIsLoading(false);
       }

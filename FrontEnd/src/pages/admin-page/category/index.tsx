@@ -17,6 +17,7 @@ import {
 } from "@/components/ui/sheet";
 import type { ICategoryEdit, ICategory } from "@/types/category.types";
 import { toast } from "sonner";
+import { ApiError } from "@/utility/apiError.util";
 
 const CategoryManagement = () => {
   const [fetchedData, setFetchedData] = useState<ICategory[]>([]);
@@ -44,7 +45,7 @@ const CategoryManagement = () => {
         setSheetOpen(false);
       }
     } catch (error) {
-      if (error instanceof Error) {
+      if (error instanceof ApiError) {
         toast.error(error.message);
       }
     }
@@ -60,7 +61,7 @@ const CategoryManagement = () => {
         setToFetch((prv) => !prv);
       }
     } catch (error) {
-      if (error instanceof Error) {
+      if (error instanceof ApiError) {
         toast.error(error.message);
       }
     }

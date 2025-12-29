@@ -3,6 +3,7 @@ export interface IBaseChatDTO {
   participantKey: string;
   latestMessage: string | null;
   createdAt?: Date | string;
+  updatedAt?:Date|string
 }
 
 export interface IChatDTO extends IBaseChatDTO {

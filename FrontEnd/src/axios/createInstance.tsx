@@ -24,8 +24,13 @@ const createInstance = (): AxiosInstance => {
         try {
           await AuthService.refreshToken();
           return instance(originalRequest);
-        } catch {}
+        } catch {
+          window.dispatchEvent(new Event("force-logout"));
+        }
       }
+       if (status === 403) {
+          window.dispatchEvent(new Event("force-logout"));
+        }
 
       return Promise.reject({
         status,

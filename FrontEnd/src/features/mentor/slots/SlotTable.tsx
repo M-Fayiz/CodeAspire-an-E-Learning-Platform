@@ -1,9 +1,9 @@
 import React from "react";
 
 import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Card, CardContent } from "@/components/ui/card";
 // import { Switch } from "@/components/ui/switch";
-import { Pencil, Clock } from "lucide-react";
+import { Pencil } from "lucide-react";
 import type { ISlotDTO } from "@/types/DTOS/slot.dto";
 
 interface SlotListProps {

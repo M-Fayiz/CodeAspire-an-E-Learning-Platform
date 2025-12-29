@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { LogIn, Mail, Lock, Code } from "lucide-react";
 import type { AuthComponentProps, ILogin } from "../../types/auth.types";
 import { Input } from "../ui/Inputs";
-import { loginSchema } from "../../schema/validateForm";
+import { loginSchema } from "../../schema/auth.schema";
 import { Link } from "react-router-dom";
 
 export const LoginComponent: React.FC<AuthComponentProps> = ({

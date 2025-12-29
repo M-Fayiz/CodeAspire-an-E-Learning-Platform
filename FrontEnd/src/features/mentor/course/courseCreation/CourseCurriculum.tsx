@@ -52,6 +52,7 @@ import { Spinner } from "@/components/ui/shadcn-io/spinner";
 import { Notebook } from "lucide-react";
 import { AddLecture } from "../CourseSheetFields.tsx/AddLecture";
 import { EditLecture } from "../CourseSheetFields.tsx/EditLecture";
+import { ApiError } from "@/utility/apiError.util";
 
 interface CurriculumProps {
   courseId?: string;
@@ -102,7 +103,7 @@ const CourseCurriculum: React.FC<CurriculumProps> = () => {
         setSessionSpin(false);
       }
     } catch (error) {
-      if (error instanceof Error) {
+      if (error instanceof ApiError) {
         setSessionSpin(false);
         toast.error(error.message);
       }

@@ -5,6 +5,7 @@ import { Spinner } from "../templates/Spinner";
 import { useAuth } from "../../context/auth.context";
 import NotFound from "../../pages/not-found/Not-Found";
 import { toast } from "sonner";
+import { ApiError } from "@/utility/apiError.util";
 
 function VerifyEmail() {
   const [params] = useSearchParams();
@@ -31,14 +32,14 @@ function VerifyEmail() {
           navigate("/");
         }, 3000);
       } catch (err) {
-        if (err instanceof Error) toast.error(err.message);
+        if (err instanceof ApiError) toast.error(err.message);
         // navigate('*')
         setError("Verification failed. Try again .");
       }
     }
 
     verify();
-  }, [token, email, navigate, checkAuth]);
+  }, [token, email, navigate]);
 
   if (error) return <NotFound error={error} />;
   return <Spinner fullScreen size="large" variant="theme" />;

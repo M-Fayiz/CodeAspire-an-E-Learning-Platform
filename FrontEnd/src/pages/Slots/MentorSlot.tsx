@@ -16,6 +16,7 @@ import { SlotBookingSercie } from "@/service/Learner/slotBooking.service";
 import type { IMentorDTO } from "@/types/DTOS/user.dto";
 import type { ISlotPopulatedDTO } from "@/types/DTOS/slot.dto";
 import type { ISessionBooking } from "@/types/sessionBooking.type";
+import { ApiError } from "@/utility/apiError.util";
 
 const SlotBooking: React.FC = () => {
   const [mentorProfile, setMentorProfile] = useState<IMentorDTO | null>(null);
@@ -68,7 +69,7 @@ const SlotBooking: React.FC = () => {
       toast.success("Slot booked successfully!");
       if (checkoutURL) window.location.href = checkoutURL;
     } catch (error) {
-      if (error instanceof Error) toast.error(error.message);
+      if (error instanceof ApiError) toast.error(error.message);
     }
   };
 

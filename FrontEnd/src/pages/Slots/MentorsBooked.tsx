@@ -29,6 +29,7 @@ import PaginationRounded from "@/components/ui/Pagination";
 import { useSearchPagination } from "@/hooks/useSearchQuery";
 import { DateFilter } from "@/components/common/DateFilter";
 import type { DateRange } from "react-day-picker";
+import { ApiError } from "@/utility/apiError.util";
 
 export default function MentorBookedSlots() {
   const { user } = useAuth();
@@ -70,7 +71,7 @@ export default function MentorBookedSlots() {
         navigate(`/mentor/video-session/${result.roomId}`);
       }
     } catch (error) {
-      if (error instanceof Error) toast.error(error.message);
+      if (error instanceof ApiError) toast.error(error.message);
     }
   };
 

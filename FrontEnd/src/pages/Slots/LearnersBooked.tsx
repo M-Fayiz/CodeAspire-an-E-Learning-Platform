@@ -17,6 +17,7 @@ import { Button } from "@/components/ui/button";
 import { useNavigate } from "react-router";
 import VideoService from "@/service/videoSession.service";
 import { toast } from "sonner";
+import { ApiError } from "@/utility/apiError.util";
 
 export default function LearnerBookedSlots() {
   const [learnerSlots, setLearnerSlots] = useState<IBookingDTOforLearner[]>([]);
@@ -43,7 +44,7 @@ export default function LearnerBookedSlots() {
         navigate(`/learner/video-session/${restult.roomId}`);
       }
     } catch (error) {
-      if (error instanceof Error) {
+      if (error instanceof ApiError) {
         toast.error(error.message);
       }
     }
@@ -58,7 +59,7 @@ export default function LearnerBookedSlots() {
         ),
       );
     } catch (error) {
-      if (error instanceof Error) {
+      if (error instanceof ApiError) {
         toast.error(error.message);
       }
     }

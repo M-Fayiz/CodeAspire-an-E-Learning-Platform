@@ -20,12 +20,8 @@ export const AuthService = {
     try {
       const response = await axiosInstance.post(API.Auth.SIGNUP_URL, data);
       return response.data;
-    } catch (error: unknown) {
-      const err = error as AxiosError<{ error: string }>;
-      const errorMessage =
-        err.response?.data?.error || "Registration Failed, Please try again ";
-
-      throw new Error(errorMessage);
+    } catch (error) {
+      throwAxiosError(error);
     }
   },
   verifyEmail: async (

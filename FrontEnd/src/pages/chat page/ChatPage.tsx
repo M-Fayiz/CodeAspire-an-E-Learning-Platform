@@ -49,53 +49,48 @@ const ChatPage = () => {
     if (!socket) return;
 
     const handleNewMessage = (msg: IMessageDto & { roomId: string }) => {
-      setMessages((prev) => {
-        if (selectedChat && msg.roomId === selectedChat._id) {
-          return [...prev, msg];
-        }
-        return prev;
-      });
+  setMessages((prev) => {
+    if (selectedChat && msg.roomId === selectedChat._id) {
+      return [...prev, msg];
+    }
+    return prev;
+  });
 
-      setChats((prv) =>
-        prv.map((room) =>
-          room._id == msg.roomId
-            ? {
-                ...room,
-                unread:
-                  msg.roomId === selectedChat!._id
-                    ? room.unread
-                    : room.unread + 1,
-              }
-            : room,
-        ),
-      );
+  setChats((prevChats) => {
+    const index = prevChats.findIndex(
+      (chat) => chat._id === msg.roomId,
+    );
 
-      setChats((prev) => {
-        const index = prev.findIndex((c) => c._id === msg.roomId);
-        if (index === -1) return prev;
+    if (index === -1) return prevChats;
 
-        const oldChat = prev[index];
+    const chat = prevChats[index];
 
-        let preview = msg.content || "Message";
-        if (msg.type === "image") preview = "📷 Image";
-        else if (msg.type === "video") preview = "🎥 Video";
-        else if (msg.type === "audio") preview = "🎵 Audio";
-        else if (msg.type === "pdf" || msg.type?.startsWith("application"))
-          preview = "📎 File";
+    // message preview
+    let preview = msg.content || "Message";
+    if (msg.type === "image") preview = "📷 Image";
+    else if (msg.type === "video") preview = "🎥 Video";
+    else if (msg.type === "audio") preview = "🎵 Audio";
+    else if (msg.type === "pdf" || msg.type?.startsWith("application"))
+      preview = "📎 File";
 
-        const updatedChat = {
-          ...oldChat,
-          latestMessage: preview,
-          lastMessageTime: msg.createdAt,
-        };
-
-        const copy = [...prev];
-        copy.splice(index, 1);
-        copy.unshift(updatedChat);
-
-        return copy;
-      });
+    const updatedChat = {
+      ...chat,
+      latestMessage: preview,
+      lastMessageTime: msg.createdAt,
+      unread:
+        selectedChat && msg.roomId === selectedChat._id
+          ? 0
+          : (chat.unread ?? 0) + 1,
     };
+
+    const newChats = [...prevChats];
+    newChats.splice(index, 1);     
+    newChats.unshift(updatedChat); 
+
+    return newChats;
+  });
+};
+
 
     socket.on(ChatEvents.NEW_MESSAGE, handleNewMessage);
 

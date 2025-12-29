@@ -49,7 +49,7 @@ const MentorProfile: React.FC<MentorProps> = ({
         navigate(`/${user?.role}/chats`);
       }
     } catch (error) {
-      if (error instanceof Error) {
+      if (error instanceof ApiError) {
         toast.error(error.message);
       }
     }

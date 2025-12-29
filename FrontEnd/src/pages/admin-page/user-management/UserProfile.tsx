@@ -29,6 +29,7 @@ import type { IUserType } from "../../../types/users.type";
 import { toast } from "sonner";
 import { useParams } from "react-router";
 import { Input } from "@/components/ui/Inputs";
+import { ApiError } from "@/utility/apiError.util";
 
 const AdminUserProfile: React.FC = () => {
   const { userId } = useParams();
@@ -60,7 +61,7 @@ const AdminUserProfile: React.FC = () => {
         }
       }
     } catch (error) {
-      if (error instanceof Error) {
+      if (error instanceof ApiError) {
         toast.error(error.message);
       }
     }
@@ -101,7 +102,7 @@ const AdminUserProfile: React.FC = () => {
         }
       }
     } catch (error) {
-      if (error instanceof Error) {
+      if (error instanceof ApiError) {
         toast.error(error.message);
       }
     }

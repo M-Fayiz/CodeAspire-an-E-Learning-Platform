@@ -109,7 +109,7 @@ const MentorDataForm = () => {
       );
       if (result) setWaithingCard(true);
     } catch (error) {
-      if (error instanceof Error) {
+      if (error instanceof ApiError) {
         toast.error(error.message);
       }
     }

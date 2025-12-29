@@ -30,6 +30,7 @@ import type { ISlotDTO } from "@/types/DTOS/slot.dto";
 import PaginationRounded from "@/components/ui/Pagination";
 import { useSearchPagination } from "@/hooks/useSearchQuery";
 import useDebounce from "@/hooks/useDebounce";
+import { ApiError } from "@/utility/apiError.util";
 
 const SlotManagement = () => {
   const [formData, setFormData] = useState<IMentorSlot>({
@@ -154,7 +155,7 @@ const SlotManagement = () => {
 
       setFormError({});
     } catch (error) {
-      if (error instanceof Error) toast.error(error.message);
+      if (error instanceof ApiError) toast.error(error.message);
     }
   };
 

@@ -1,4 +1,4 @@
-import { FilterQuery, Types, UpdateQuery } from "mongoose";
+import { Types, UpdateQuery } from "mongoose";
 import { IEnrolledModel } from "../../models/enrolled.model";
 import {
   chartAggregation,

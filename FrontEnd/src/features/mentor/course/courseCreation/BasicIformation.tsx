@@ -17,6 +17,7 @@ import { courseFormSchema } from "@/schema/courseForm.schema";
 import courseService from "@/service/mentor/course.service";
 import { useAuth } from "@/context/auth.context";
 import type { ICategory } from "@/types/category.types";
+import { ApiError } from "@/utility/apiError.util";
 interface BaseCaourseProps {
   handleTap: (tap: "basic" | "curriculum" | "publish") => void;
 }
@@ -130,7 +131,7 @@ const BasicCourseInformation: React.FC<BaseCaourseProps> = ({ handleTap }) => {
         handleTap("curriculum");
       }
     } catch (error) {
-      if (error instanceof Error) {
+      if (error instanceof ApiError) {
         toast.error(error.message);
       }
     }

@@ -17,6 +17,7 @@ export function chatDto(data: IChatModel): IChatDTO {
 }
 
 export function chatListDTO(data: IChatPopulated): IChatListDTO {
+
   return {
     _id: data._id,
     latestMessage: data.latestMessage,

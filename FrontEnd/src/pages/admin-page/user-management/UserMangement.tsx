@@ -9,6 +9,7 @@ import useDebounce from "@/hooks/useDebounce";
 import { toast } from "sonner";
 import { useSearchPagination } from "@/hooks/useSearchQuery";
 import { Search } from "lucide-react";
+import { ApiError } from "@/utility/apiError.util";
 
 const UserManagement: React.FC = () => {
   const [users, setUsers] = useState<IUserType[]>([]);
@@ -28,7 +29,7 @@ const UserManagement: React.FC = () => {
         setUsers(userData.users);
         setTotalPage(userData.totalPage);
       } catch (error) {
-        if (error instanceof Error) {
+        if (error instanceof ApiError) {
           toast.error(error.message);
         }
       }
@@ -52,7 +53,7 @@ const UserManagement: React.FC = () => {
         ),
       );
     } catch (error) {
-      if (error instanceof Error) {
+      if (error instanceof ApiError) {
         toast.error(error.message);
       }
     }

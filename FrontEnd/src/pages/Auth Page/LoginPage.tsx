@@ -8,6 +8,7 @@ import { useNavigate } from "react-router-dom";
 import { Spinner } from "../../components/templates/Spinner";
 import { useAuth } from "../../context/auth.context";
 import { toast } from "sonner";
+import { ApiError } from "@/utility/apiError.util";
 
 const LoginPage: React.FC = () => {
   const [isLoading, setLoading] = useState(false);
@@ -20,8 +21,11 @@ const LoginPage: React.FC = () => {
       setLoading(true);
       await login(data);
       navigate("/", { replace: true });
-    } catch (error: any) {
-      toast.error(error.message);
+    } catch (error) {
+      if(error instanceof ApiError){
+
+        toast.error(error.message);
+      }
     } finally {
       setLoading(false);
     }

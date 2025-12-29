@@ -110,20 +110,7 @@ const Header: React.FC<IHeaderProbs> = ({
                   <User className="w-4 h-4 mr-3" />
                   My Profile
                 </Link>
-                <a
-                  href="#"
-                  className="flex items-center px-4 py-2 text-sm text-gray-700 hover:bg-gray-50"
-                >
-                  <Settings className="w-4 h-4 mr-3" />
-                  Account Settings
-                </a>
-                <a
-                  href="#"
-                  className="flex items-center px-4 py-2 text-sm text-gray-700 hover:bg-gray-50"
-                >
-                  <HelpCircle className="w-4 h-4 mr-3" />
-                  Help & Support
-                </a>
+                
               </div>
               <div className="border-t border-gray-200 py-2">
                 <button

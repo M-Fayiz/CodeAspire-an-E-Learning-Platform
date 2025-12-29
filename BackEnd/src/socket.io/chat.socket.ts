@@ -51,13 +51,14 @@ export const registerChatHandler = (
 
   socket.on(ChatEvents.SEND, async (payload, ack) => {
     try {
+      console.log('[ayload ',payload)
       const { roomId, content, type = "text", mediaUrl } = payload;
       if (!roomId || (!content && type == "text")) {
         return ack?.({ error: "Invalid payload" });
       }
 
       const chat = await chatService.findChat(roomId);
-
+      console.log('chat :',chat)
       if (!chat || !chat.users.map(String).includes(userId)) {
         return ack?.({ error: "Not a Participant" });
       }
@@ -77,6 +78,7 @@ export const registerChatHandler = (
         status: "sent",
         mediaUrl,
       });
+      console.log('saved message : :',messageData)
       let previewMessage = "";
 
       if (type === "text") {

@@ -13,6 +13,7 @@ import { lectureSchema } from "@/schema/courseForm.schema";
 import courseService from "@/service/mentor/course.service";
 import { sharedService } from "@/service/shared.service";
 import type { ILecture, ISession } from "@/types/DTOS/courses.dto.types";
+import { ApiError } from "@/utility/apiError.util";
 import { useEffect, useState } from "react";
 import { toast } from "sonner";
 
@@ -106,7 +107,7 @@ export function EditLecture({
         closeSheet();
       }
     } catch (error) {
-      if (error instanceof Error) {
+      if (error instanceof ApiError) {
         toast.error(error.message);
         setSpin(false);
       }

@@ -12,6 +12,7 @@ import { Button } from "../ui/button";
 import UserService from "@/service/user.service";
 import { useAuth } from "@/context/auth.context";
 import { toast } from "sonner";
+import { ApiError } from "@/utility/apiError.util";
 
 interface MentorInfoProps {
   MentorData: MentorUser;
@@ -52,7 +53,7 @@ const AdditionalInformation: React.FC<MentorInfoProps> = ({ MentorData }) => {
         toast.success("profile updated successfully");
       }
     } catch (error) {
-      if (error instanceof Error) {
+      if (error instanceof ApiError) {
         toast.error(error.message);
       }
     }

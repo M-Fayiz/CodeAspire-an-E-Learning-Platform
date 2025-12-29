@@ -7,13 +7,14 @@ import { ProfileTabs } from "../../components/profile/ProfileUI/Profile-Taps";
 export type TapsComp = "profile" | "security" | "additional";
 import RoleBadge from "../../components/profile/ProfileUI/RoleBadge";
 import UserService from "../../service/user.service";
-import { validateFiles } from "../../schema/validateForm";
+import { validateFiles } from "../../schema/auth.schema";
 import { Input } from "@/components/ui/Inputs";
 import type { AnyUser, MentorUser } from "@/types/users.type";
 import AdditionalInformation from "@/components/profile/AdditionalInfo";
 import { sharedService } from "@/service/shared.service";
 import { useParams } from "react-router";
 import { toast } from "sonner";
+import { ApiError } from "@/utility/apiError.util";
 
 const ProfileManagement: React.FC = () => {
   const [updatedFields, setUpdatedFields] = useState<Partial<AnyUser>>({});
@@ -40,7 +41,6 @@ const ProfileManagement: React.FC = () => {
   };
   const { id } = useParams();
 
-  console.log(id);
   useEffect(() => {
     async function fetchUserData() {
       if (!user?.id) return;
@@ -57,7 +57,7 @@ const ProfileManagement: React.FC = () => {
           setOriginalProfile(result);
         }
       } catch (error) {
-        if (error instanceof Error) toast.error(error.message);
+        if (error instanceof ApiError) toast.error(error.message);
       }
     }
     fetchUserData();
@@ -66,14 +66,14 @@ const ProfileManagement: React.FC = () => {
   const handleSave = async (e: React.FormEvent<HTMLFormElement>) => {
     setIsEditing(false);
     e.preventDefault();
-
+    
     try {
       const result = await UserService.updateProfile(user!.id, updatedFields);
       if (result) {
         toast.success("Profile updated Successfully");
       }
     } catch (error) {
-      if (error instanceof Error) {
+      if (error instanceof ApiError) {
         toast.error(error.message);
       }
     }
@@ -124,7 +124,7 @@ const ProfileManagement: React.FC = () => {
       }
       console.log(profile);
     } catch (error) {
-      if (error instanceof Error) {
+      if (error instanceof ApiError) {
         toast.error(error.message);
       }
     }
@@ -282,7 +282,7 @@ const ProfileManagement: React.FC = () => {
                   className={`flex items-center gap-2 px-4 py-2 rounded-lg transition-colors text-white ${
                     Object.values(errors).some((msg) => msg)
                       ? "bg-gray-400 cursor-not-allowed"
-                      : "bg-green-600 hover:bg-green-700"
+                      : "bg-gray-900 hover:bg-gray-800"
                   }`}
                 >
                   <Save className="w-4 h-4" />

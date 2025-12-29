@@ -14,6 +14,7 @@ import courseService from "@/service/mentor/course.service";
 import type { ILecture } from "@/types/DTOS/courses.dto.types";
 import { useEffect, useState } from "react";
 import toast from "react-hot-toast";
+import { ApiError } from "@/utility/apiError.util";
 
 interface AddLectureProps {
   closeSheet: () => void;
@@ -88,7 +89,7 @@ export function AddLecture({
         closeSheet();
       }
     } catch (error) {
-      if (error instanceof Error) {
+      if (error instanceof ApiError) {
         toast.error(error.message);
         setSpin(false);
       }

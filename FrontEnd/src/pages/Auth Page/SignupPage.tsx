@@ -6,6 +6,7 @@ import { useState } from "react";
 
 import { toast } from "sonner";
 import { useAuth } from "@/context/auth.context";
+import { ApiError } from "@/utility/apiError.util";
 
 const SignupPage: React.FC = () => {
   const [showModal, setShowModal] = useState(false);
@@ -21,8 +22,12 @@ const SignupPage: React.FC = () => {
       const result = await signup(data);
       setShowModal(true);
       setModalEmail(result.email);
-    } catch (error: any) {
-      toast.error(error.message);
+    } catch (error) {
+      console.log(error)
+      if(error  instanceof ApiError){
+
+        toast.error(error.message);
+      }
     }
   };
 
@@ -30,7 +35,7 @@ const SignupPage: React.FC = () => {
     try {
       await AuthService.googleAuth(role);
     } catch (error) {
-      if (error instanceof Error) {
+      if (error instanceof ApiError) {
         toast.error(error.message);
       }
     }

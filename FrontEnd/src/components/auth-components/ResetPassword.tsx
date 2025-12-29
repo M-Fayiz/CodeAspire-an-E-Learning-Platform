@@ -7,12 +7,13 @@ import {
   AlertCircle,
   Shield,
 } from "lucide-react";
-import { checkPasswordStrength } from "../../schema/validateForm";
+import { checkPasswordStrength } from "../../schema/auth.schema";
 import { useSearchParams } from "react-router";
 import { useNavigate } from "react-router-dom";
 import { AuthService } from "../../service/auth.service";
 import { Spinner } from "../templates/Spinner";
 import { toast } from "sonner";
+import { ApiError } from "@/utility/apiError.util";
 
 const ResetPassword = () => {
   const [formData, setFormData] = useState({
@@ -89,7 +90,7 @@ const ResetPassword = () => {
         }, 3000);
       }
     } catch (error) {
-      if (error instanceof Error) {
+      if (error instanceof ApiError) {
         toast.error(error.message);
       }
     }

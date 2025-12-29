@@ -4,6 +4,7 @@ import { Link } from "react-router-dom";
 import { AuthService } from "../../service/auth.service";
 import SuccessModal from "../templates/SuccessModal";
 import { toast } from "sonner";
+import { ApiError } from "@/utility/apiError.util";
 
 const ForgotPassword = () => {
   const [email, setEmail] = useState("");
@@ -42,7 +43,7 @@ const ForgotPassword = () => {
       setIsLoading(false);
     } catch (error) {
       setIsLoading(false);
-      if (error instanceof Error) {
+      if (error instanceof ApiError) {
         error.message += " ,Please Register";
         toast.error(error.message);
       }

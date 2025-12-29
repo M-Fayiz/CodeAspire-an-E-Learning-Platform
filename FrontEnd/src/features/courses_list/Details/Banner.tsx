@@ -13,6 +13,7 @@ import { Link } from "react-router";
 import { Badge } from "@/components/ui/shadcn-io/ThemeBadge";
 import { StarRating } from "@/pages/course-page/Rating";
 import { Users2 } from "lucide-react";
+import { ApiError } from "@/utility/apiError.util";
 
 interface BannerProps {
   courseId: string;
@@ -49,7 +50,7 @@ const Banner: React.FC<BannerProps> = ({
         window.location.href = result.checkoutURL;
       }
     } catch (error) {
-      if (error instanceof Error) {
+      if (error instanceof ApiError) {
         toast.error(error.message);
       }
     }
