@@ -1,6 +1,5 @@
 import type { ICourseData } from "@/types/courseForm.type";
 
-
 interface CourseCardProps {
   course: ICourseData;
 }
@@ -23,7 +22,7 @@ const CourseCard: React.FC<CourseCardProps> = ({ course }) => {
         </div> */}
         <div className="absolute bottom-3 left-3">
           {course.isEnrolled && (
-            <span className="bg-blue-200 text-blue-600 px-2 py-1 rounded text-xs font-medium">
+            <span className="bg-orange-200 text-orange-600 px-2 py-1 rounded text-xs font-medium">
               {/* {course.category} */}
             </span>
           )}
@@ -31,7 +30,7 @@ const CourseCard: React.FC<CourseCardProps> = ({ course }) => {
       </div>
 
       <div className="p-4">
-        <h3 className="font-semibold text-gray-900 mb-2 line-clamp-2 group-hover:text-blue-600 transition-colors">
+        <h3 className="font-semibold text-gray-900 mb-2 line-clamp-2 group-hover:text-orange-600 transition-colors">
           {course.title}
         </h3>
         {/* <p className="text-sm text-gray-600 mb-3">{course.mentorId}</p> */}

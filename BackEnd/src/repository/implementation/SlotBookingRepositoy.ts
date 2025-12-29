@@ -65,7 +65,7 @@ export class SlotBookingRepository
     learnerId: Types.ObjectId,
   ): Promise<LearnerSlotCard[]> {
     return await this.aggregate<LearnerSlotCard>([
-       {
+      {
         $match: {
           learnerId: learnerId,
         },

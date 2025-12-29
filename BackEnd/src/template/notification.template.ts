@@ -94,10 +94,7 @@ export const NotificationTemplates = {
     createdAt: new Date(),
     updatedAt: new Date(),
   }),
-  SlotCancellation: (
-    userId: Types.ObjectId,
-    date: string,
-  ): INotification => ({
+  SlotCancellation: (userId: Types.ObjectId, date: string): INotification => ({
     userId,
     title: "Slot Cancelled Successfully",
     message: `Your mentor slot Booked on "${date}" has been cancelled successfully. Any eligible refund will be processed according to the cancellation policy.`,
@@ -106,6 +103,5 @@ export const NotificationTemplates = {
     link: `/learner/my-slots`,
     createdAt: new Date(),
     updatedAt: new Date(),
-  })
-
+  }),
 };

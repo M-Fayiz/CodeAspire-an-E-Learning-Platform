@@ -69,7 +69,7 @@ export const EnrolledService = {
         API.ENROLLEMENT.UPDATE_PROGRESS(enrolledId),
         { lectureId, sessionId },
       );
-      
+
       return response.data.progressData;
     } catch (error) {
       throwAxiosError(error);
@@ -117,14 +117,14 @@ export const EnrolledService = {
   },
   getMentorDashboardData: async (
     mentorId: string,
-    filter:string
+    filter: string,
   ): Promise<IMentorDhasboardDTO> => {
-   
     try {
       const response = await axiosInstance.get(
-        API.ENROLLEMENT.GET_MENTOR_DASH_DATA(mentorId),{
-          params:{filter}
-        }
+        API.ENROLLEMENT.GET_MENTOR_DASH_DATA(mentorId),
+        {
+          params: { filter },
+        },
       );
       return response.data.dashboardData;
     } catch (error) {
@@ -139,7 +139,7 @@ export const EnrolledService = {
           params: { filter, mentorId },
         },
       );
- 
+
       return response.data;
     } catch (error) {
       throwAxiosError(error);
@@ -159,12 +159,16 @@ export const EnrolledService = {
       throwAxiosError(error);
     }
   },
-  learnerDashboardData:async(learnerId:string):Promise<learnerDashboardCardsDTO>=>{
+  learnerDashboardData: async (
+    learnerId: string,
+  ): Promise<learnerDashboardCardsDTO> => {
     try {
-      const response=await axiosInstance.get(API.LEARNER.LEARNER_DASHBOARD(learnerId))
-      return response.data.dashboardData
+      const response = await axiosInstance.get(
+        API.LEARNER.LEARNER_DASHBOARD(learnerId),
+      );
+      return response.data.dashboardData;
     } catch (error) {
-      throwAxiosError(error)
+      throwAxiosError(error);
     }
-  }
+  },
 };

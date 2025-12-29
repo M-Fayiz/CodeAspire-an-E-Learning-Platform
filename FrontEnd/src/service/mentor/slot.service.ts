@@ -30,16 +30,17 @@ export const SlotService = {
    * @param mentorId s
    * @returns an array of IMentorSlot
    */
-  getMentorSlotList: async (query: {
-    mentorId: string;
-    page: number;
-    search?:string
-  }): Promise<{ mappedSlots: ISlotDTO[]; totalPage: number }> => {
+  getMentorSlotList: async (
+    mentorId: string,
+    page: number,
+    search: string,
+    filter: string,
+  ): Promise<{ mappedSlots: ISlotDTO[]; totalPage: number }> => {
     try {
       const response = await axiosInstance.get(
-        API.SLOTS.GET_MENTOR_SLOTS(query.mentorId),
+        API.SLOTS.GET_MENTOR_SLOTS(mentorId),
         {
-          params: { page: query.page },
+          params: { page, search, filter },
         },
       );
       return response.data;

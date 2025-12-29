@@ -2,7 +2,7 @@ export type PaymentSuccessType = "COURSE" | "SLOT";
 
 export interface PaymentSuccessData {
   paymentType: PaymentSuccessType;
-  amount: number; 
+  amount: number;
   invoiceId?: string;
   invoiceUrl?: string;
   paymentIntentId: string;

@@ -1,12 +1,11 @@
 import { createBrowserRouter, Navigate, Outlet } from "react-router-dom";
 
-
 import Landing from "@/pages/Landing page/Landing";
 
 // Auth Components
-import LoginPage from "@/pages/Auth Page/LoginPage"; 
+import LoginPage from "@/pages/Auth Page/LoginPage";
 import SignupPage from "../pages/Auth Page/SignupPage";
-import VerifyEmail from "@/components/auth-components/VerifyEmail"; 
+import VerifyEmail from "@/components/auth-components/VerifyEmail";
 import ForgotPassword from "../components/auth-components/ForgotPassword";
 import ResetPassword from "../components/auth-components/ResetPassword";
 import NotFound from "../pages/not-found/Not-Found";
@@ -22,9 +21,9 @@ import CategoryManagement from "@/pages/admin-page/category";
 import CourseCreation from "@/pages/Mentor_Page/course_creation/Index";
 import CourseLayout from "@/pages/course-page/CourseList";
 import CourseFormProvider from "@/context/courseForm.context";
-import CourseManagement from "@/pages/admin-page/course-management/CourseManagement"; 
+import CourseManagement from "@/pages/admin-page/course-management/CourseManagement";
 import MYCourses from "@/pages/Mentor_Page/course_creation/MyCourses";
-import AdminCourseDetails from "@/pages/admin-page/course-management/AdminCourseDetails"; 
+import AdminCourseDetails from "@/pages/admin-page/course-management/AdminCourseDetails";
 import CourseDetails from "@/pages/course-page/CourseDetails";
 import PaymentSuccess from "@/pages/Payment page/PaymentSuccess";
 import CourseEnrolledList from "@/pages/course-page/CourseEnrolledList";
@@ -40,7 +39,6 @@ import LearnerBookedSlots from "@/pages/Slots/LearnersBooked";
 import MentorBookedSlots from "@/pages/Slots/MentorsBooked";
 import CertificatesList from "@/pages/certificate page/ListCertificatePage";
 import LearnerDashboard from "@/pages/learner page/Learner-Dashboard";
-
 
 function Form_Courses_Provider() {
   return (
@@ -82,7 +80,10 @@ export const router = createBrowserRouter([
       { path: "profile/:id", element: <ProfileManagement /> },
       { path: "courses", element: <CourseLayout /> },
       { path: "enrolled-courses", element: <CourseEnrolledList /> },
-      { path: "enrolled-courses/:enrolledId", element: <EnrolledCourseDetails /> },
+      {
+        path: "enrolled-courses/:enrolledId",
+        element: <EnrolledCourseDetails />,
+      },
       { path: "chats", element: <ChatPage /> },
       { path: "slot-booking/:courseId", element: <SlotBooking /> },
       { path: "booked-slots", element: <LearnerBookedSlots /> },
@@ -107,34 +108,33 @@ export const router = createBrowserRouter([
       { path: "slot-management", element: <SlotManagement /> },
       { path: "booked-slot-list", element: <MentorBookedSlots /> },
       { path: "video-session/:bookingId", element: <VideoRoom /> },
-        {
-  path: "courses",
-  element: <Form_Courses_Provider />,
-  handle: { breadcrumb: "My Courses" },
-  children: [
-    {
-      index: true,
-      element: <MYCourses />,
-      handle: { breadcrumb: "Course List" },
-    },
-    {
-      path: "my-courses",
-      element: <MYCourses />,
-      handle: { breadcrumb: "Course List" },
-    },
-    {
-      path: "create",
-      element: <CourseCreation />,
-      handle: { breadcrumb: "Create Course" },
-    },
-    {
-      path: "dashboard/:id",
-      element: <CourseDashboard />,
-      handle: { breadcrumb: "Course Dashboard" },
-    },
-  ],
-}
-
+      {
+        path: "courses",
+        element: <Form_Courses_Provider />,
+        handle: { breadcrumb: "My Courses" },
+        children: [
+          {
+            index: true,
+            element: <MYCourses />,
+            handle: { breadcrumb: "Course List" },
+          },
+          {
+            path: "my-courses",
+            element: <MYCourses />,
+            handle: { breadcrumb: "Course List" },
+          },
+          {
+            path: "create",
+            element: <CourseCreation />,
+            handle: { breadcrumb: "Create Course" },
+          },
+          {
+            path: "dashboard/:id",
+            element: <CourseDashboard />,
+            handle: { breadcrumb: "Course Dashboard" },
+          },
+        ],
+      },
     ],
   },
   // ADMIN ROUTES
@@ -179,7 +179,7 @@ export const router = createBrowserRouter([
     element: <Outlet />,
     children: [
       { index: true, element: <CourseLayout /> },
-      { path: ":id", element: <CourseDetails /> },
+      { path: ":courseId", element: <CourseDetails /> },
       { path: "payment-success", element: <PaymentSuccess /> },
     ],
   },

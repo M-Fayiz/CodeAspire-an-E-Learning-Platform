@@ -7,6 +7,7 @@ import {
   IEnrollement,
 } from "../../types/enrollment.types";
 import {
+  CourseDetailsRating,
   IMentorDashboardData,
   ITopCategory,
   ITopCourse,
@@ -43,10 +44,14 @@ export interface IEnrolledRepository {
   ): Promise<chartAggregation[]>;
   getMentorDashboardData(
     mentorId: Types.ObjectId,
-    start:Date,
-    end:Date
+    start: Date,
+    end: Date,
   ): Promise<IMentorDashboardData[]>;
-  getTopSellingCourse(mentorId?: Types.ObjectId,start?:Date,end?:Date): Promise<ITopCourse[]>;
+  getTopSellingCourse(
+    mentorId?: Types.ObjectId,
+    start?: Date,
+    end?: Date,
+  ): Promise<ITopCourse[]>;
   getTopSellingCategory(mentorId?: Types.ObjectId): Promise<ITopCategory[]>;
   getLearnerDashboardCourseData(
     learnerId: Types.ObjectId,
@@ -55,4 +60,5 @@ export interface IEnrolledRepository {
     enrolledId: Types.ObjectId,
     data: UpdateQuery<IEnrolledModel>,
   ): Promise<IEnrolledModel | null>;
+  avgCourseRating(courseId: Types.ObjectId): Promise<CourseDetailsRating[]>;
 }

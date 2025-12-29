@@ -11,7 +11,7 @@ import { toast } from "sonner";
 
 const LoginPage: React.FC = () => {
   const [isLoading, setLoading] = useState(false);
-  
+
   const navigate = useNavigate();
 
   const { login } = useAuth();
@@ -26,7 +26,6 @@ const LoginPage: React.FC = () => {
       setLoading(false);
     }
   };
-  
 
   const handleGoogleAuth = async (role: UserRoleType) => {
     try {

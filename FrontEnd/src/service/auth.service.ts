@@ -1,6 +1,11 @@
 import type { AxiosError } from "axios";
 import { axiosInstance } from "../axios/createInstance";
-import type { IDecodedUserType, ILogin, ISignUp, UserRoleType } from "../types/auth.types";
+import type {
+  IDecodedUserType,
+  ILogin,
+  ISignUp,
+  UserRoleType,
+} from "../types/auth.types";
 import { API } from "../constants/api.constant";
 
 import { throwAxiosError } from "@/utility/throwErrot";
@@ -32,7 +37,7 @@ export const AuthService = {
         token,
         email,
       });
- 
+
       if (response.data.token) {
         localStorage.setItem(AUTH_TOKEN.ACCESS_TOKEN, response.data.token);
       }

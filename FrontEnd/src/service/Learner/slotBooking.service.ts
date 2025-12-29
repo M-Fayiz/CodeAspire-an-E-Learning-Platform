@@ -41,7 +41,7 @@ export const SlotBookingSercie = {
     mentorId: string,
   ): Promise<IBookingDTOforMentors[]> => {
     try {
-      console.log('mentor ID :',mentorId)
+      console.log("mentor ID :", mentorId);
       const response = await axiosInstance.get(
         API.SLOT_BOOK.ListeMentorBooking(mentorId),
       );
@@ -68,7 +68,7 @@ export const SlotBookingSercie = {
   },
   updateStudentStatus: async (
     slotBookingId: string,
-    studentStatus:studentStatus,
+    studentStatus: studentStatus,
   ): Promise<{ bookedId: string; status: studentStatus }> => {
     try {
       const response = await axiosInstance.put(
@@ -94,12 +94,14 @@ export const SlotBookingSercie = {
       throwAxiosError(error);
     }
   },
-  cancelSlot:async(bookedId:string):Promise<slotStatus>=>{
+  cancelSlot: async (bookedId: string): Promise<slotStatus> => {
     try {
-      const response=await axiosInstance.post(API.SLOT_BOOK.CANCEL_BOOKED_SLOT(bookedId))
-      return response.data.status
+      const response = await axiosInstance.post(
+        API.SLOT_BOOK.CANCEL_BOOKED_SLOT(bookedId),
+      );
+      return response.data.status;
     } catch (error) {
-      throwAxiosError(error)
+      throwAxiosError(error);
     }
-  }
+  },
 };

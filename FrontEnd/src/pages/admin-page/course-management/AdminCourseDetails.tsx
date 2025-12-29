@@ -25,7 +25,9 @@ function AdminCourseDetails() {
 
   useEffect(() => {
     async function fetchCourse() {
-      const coursedata = await courseService.getCourseDetaildForAdmin(courseId as string);
+      const coursedata = await courseService.getCourseDetaildForAdmin(
+        courseId as string,
+      );
       if (coursedata) {
         setCourses(coursedata);
       }

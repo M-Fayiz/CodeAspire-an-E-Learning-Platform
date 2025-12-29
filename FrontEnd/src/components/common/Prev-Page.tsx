@@ -8,7 +8,7 @@ interface BackToState {
   };
 }
 
- const BackTo = ({
+const BackTo = ({
   fallbackPath = "/my-courses",
   fallbackLabel = "My Courses",
 }: {
@@ -34,5 +34,4 @@ interface BackToState {
   );
 };
 
-
-export default BackTo
+export default BackTo;

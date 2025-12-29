@@ -6,15 +6,12 @@ import { mentorApprovalStatus } from "../../types/user.types";
 import { UserFetchResponse } from "../implementation/AdminService";
 
 export interface IAdminService {
-  fetchAllUsers(
-    page: number,
-    search:string
-  ): Promise<UserFetchResponse>;
+  fetchAllUsers(page: number, search: string): Promise<UserFetchResponse>;
   blockUser(id: string): Promise<{ isActive: boolean; id: string }>;
   userProfile(userId: string): Promise<ILearnerDTO | IMentorDTO | null>;
   approveMentor(
     id: string,
-    status:mentorApprovalStatus,
+    status: mentorApprovalStatus,
     feedback?: string,
   ): Promise<{
     status: mentorApprovalStatus;

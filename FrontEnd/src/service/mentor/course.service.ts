@@ -2,9 +2,8 @@ import { axiosInstance } from "@/axios/createInstance";
 import { API } from "@/constants/api.constant";
 import type {
   CourseForm,
- 
+  CourseStatus,
   ICourseDetailsPageDTO,
- 
   ICourseDTO,
   IFormCourseDTO,
   ILecture,
@@ -16,6 +15,7 @@ import { sharedService } from "../shared.service";
 import { S3BucketUtil } from "@/utility/S3Bucket.util";
 import { throwAxiosError } from "@/utility/throwErrot";
 import type { ICourseData } from "@/types/courseForm.type";
+import type { IReviewDTO } from "@/types/DTOS/review.dto.type";
 
 const courseService = {
   createCourse: async (courseData: ICourseData): Promise<CourseForm> => {
@@ -51,7 +51,7 @@ const courseService = {
           learnerId,
         },
       });
-     
+
       if (!response) return { updated: null, totalDocument: 0 };
 
       const updated = await Promise.all(
@@ -78,7 +78,7 @@ const courseService = {
         API.COURSE.ADD_SESSION(courseId),
         { session },
       );
-     
+
       return response.data.addedSessionData;
     } catch (error) {
       throwAxiosError(error);
@@ -122,7 +122,7 @@ const courseService = {
   getCourse: async (courseId: string): Promise<ICourseDTO[] | null> => {
     try {
       if (!courseId) return null;
-    
+
       const response = await axiosInstance.get(API.COURSE.GET_COURSE(courseId));
       return response.data.course;
     } catch (error) {
@@ -141,7 +141,7 @@ const courseService = {
           params: { mentorId: userId, search, page },
         },
       );
-     
+
       return response.data;
     } catch (error) {
       throwAxiosError(error);
@@ -180,7 +180,6 @@ const courseService = {
     courseData: ICourseData,
   ): Promise<CourseForm> => {
     try {
-  
       if (courseData.thumbnail instanceof File) {
         const uploadAndFileUrl = await sharedService.getS3BucketUploadUrl(
           courseData.thumbnail as File,
@@ -202,10 +201,13 @@ const courseService = {
       throwAxiosError(error);
     }
   },
-  getAdminCourList: async (search:string,page:number): Promise<IFormCourseDTO[]> => {
+  getAdminCourList: async (
+    search: string,
+    page: number,
+  ): Promise<IFormCourseDTO[]> => {
     try {
-      const response = await axiosInstance.get(API.COURSE.ADMIN_COURSE_LIST,{
-        params:{search,page}
+      const response = await axiosInstance.get(API.COURSE.ADMIN_COURSE_LIST, {
+        params: { search, page },
       });
       await Promise.all(
         response.data.coursList.map(async (course: IFormCourseDTO) => {
@@ -221,60 +223,79 @@ const courseService = {
     }
   },
   getCourseDetails: async (
-  courseId: string,
-  learnerId:string
-): Promise<{ courseDetails: ICourseDetailsPageDTO; enrolledId: string|null }> => {
-  try {
-    const response = await axiosInstance.get(
-      API.COURSE.COURSE_DETAILS(courseId),{
-        params:{learnerId}
-      }
-    );
-
-    const { courseDetails, enrolledId } = response.data;
-
-    courseDetails.thumbnail =
-      await sharedService.getPreSignedDownloadURL(
-        courseDetails.thumbnail,
+    courseId: string,
+    learnerId: string,
+  ): Promise<{
+    courseDetails: ICourseDetailsPageDTO;
+    enrolledId: string | null;
+  }> => {
+    try {
+      const response = await axiosInstance.get(
+        API.COURSE.COURSE_DETAILS(courseId),
+        {
+          params: { learnerId },
+        },
       );
-    return { courseDetails, enrolledId };
-  } catch (error) {
-    throwAxiosError(error);
-  }
-},
- getCourseDetaildForAdmin:async(courseId: string):Promise<IFormCourseDTO>=>{
-  try {
-    const response = await axiosInstance.get(
-      API.COURSE.COURSE_DETAILS_ADMIN(courseId));
+
+      const { courseDetails, enrolledId } = response.data;
+
+      const resolvedCourseDetails = {
+        ...courseDetails,
+        thumbnail: await sharedService.getPreSignedDownloadURL(
+          courseDetails.thumbnail,
+        ),
+        courseReviews: await Promise.all(
+          courseDetails.courseReviews.map(async (review: IReviewDTO) => ({
+            ...review,
+            learner: {
+              ...review.learner,
+              profilePicture: review.learner.profilePicture
+                ? await sharedService.getPreSignedDownloadURL(
+                    review.learner.profilePicture,
+                  )
+                : review.learner.profilePicture,
+            },
+          })),
+        ),
+      };
+
+      return { courseDetails: resolvedCourseDetails, enrolledId };
+    } catch (error) {
+      throwAxiosError(error);
+    }
+  },
+  getCourseDetaildForAdmin: async (
+    courseId: string,
+  ): Promise<IFormCourseDTO> => {
+    try {
+      const response = await axiosInstance.get(
+        API.COURSE.COURSE_DETAILS_ADMIN(courseId),
+      );
       const { courseDetails } = response.data;
 
-    courseDetails.thumbnail =
-      await sharedService.getPreSignedDownloadURL(
+      courseDetails.thumbnail = await sharedService.getPreSignedDownloadURL(
         courseDetails.thumbnail,
       );
 
-    for (const session of courseDetails.sessions) {
-      for (const lecture of session.lectures) {
-        if(lecture.lectureContent){
-          lecture.lectureContent =
-            await sharedService.getPreSignedDownloadURL(
-              lecture.lectureContent,
-            );
-
+      for (const session of courseDetails.sessions) {
+        for (const lecture of session.lectures) {
+          if (lecture.lectureContent) {
+            lecture.lectureContent =
+              await sharedService.getPreSignedDownloadURL(
+                lecture.lectureContent,
+              );
+          }
         }
       }
+
+      return courseDetails;
+    } catch (error) {
+      throwAxiosError(error);
     }
-    
-      return courseDetails
-  } catch (error) {
-    throwAxiosError(error)
-  }
- },
+  },
   approveCourse: async (
     coursId: string,
-  ): Promise<
-    "inProgress" | "draft" | "published" | "approved" | "rejected"
-  > => {
+  ): Promise<CourseStatus > => {
     try {
       const response = await axiosInstance.patch(
         API.COURSE.APPROVE_CURSE(coursId),
@@ -288,9 +309,7 @@ const courseService = {
     coursId: string,
     feedBack: string,
     mentorEmail: string,
-  ): Promise<
-    "inProgress" | "draft" | "published" | "approved" | "rejected"
-  > => {
+  ): Promise< CourseStatus > => {
     try {
       const response = await axiosInstance.patch(
         API.COURSE.REJECT_COURSE(coursId),

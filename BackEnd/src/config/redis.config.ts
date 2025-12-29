@@ -4,12 +4,11 @@ import { env } from "./env.config";
 const redisClient: RedisClientType = createClient({
   url: env.REDIS_URL,
   socket: {
-  reconnectStrategy: (retries) => {
-    console.log(`Redis reconnect attempt ${retries}`);
-    return Math.min(retries * 100, 3000);
-  }
-}
-
+    reconnectStrategy: (retries) => {
+      console.log(`Redis reconnect attempt ${retries}`);
+      return Math.min(retries * 100, 3000);
+    },
+  },
 });
 
 redisClient.on("connect", () => {

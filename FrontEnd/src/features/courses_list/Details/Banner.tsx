@@ -11,16 +11,20 @@ import { useAuth } from "@/context/auth.context";
 import { toast } from "sonner";
 import { Link } from "react-router";
 import { Badge } from "@/components/ui/shadcn-io/ThemeBadge";
-import type { IEnrolledCoursedetailsDTO } from "@/types/DTOS/enrollements.dto.type";
-import type { IFormCourseDTO } from "@/types/DTOS/courses.dto.types";
+import { StarRating } from "@/pages/course-page/Rating";
+import { Users2 } from "lucide-react";
 
 interface BannerProps {
   courseId: string;
   title: string;
   description: string;
   imageUrl: string;
-  course: IEnrolledCoursedetailsDTO | IFormCourseDTO;
-  enrolledId:string|null
+  price?: number;
+  enrolledId: string | null;
+  level: string;
+  rating?: number;
+  totalStudent?: number;
+  onEnrolledPage: boolean;
 }
 
 const Banner: React.FC<BannerProps> = ({
@@ -28,8 +32,12 @@ const Banner: React.FC<BannerProps> = ({
   description,
   imageUrl,
   courseId,
-  course,
-  enrolledId
+  level,
+  enrolledId,
+  price,
+  rating,
+  totalStudent,
+  onEnrolledPage,
 }) => {
   const { user } = useAuth();
 
@@ -46,53 +54,63 @@ const Banner: React.FC<BannerProps> = ({
       }
     }
   };
- 
+
   return (
     <div className="relative w-full py-5 px-6 md:px-16 lg:px-24">
-      {course && <Badge label={course.level} type="info" />}
+      {level && <Badge label={level} type="info" />}
 
       <div className="flex flex-col md:flex-row justify-between items-center relative gap-10">
         <div className="relative flex-1 p-5">
           <h1 className="text-4xl md:text-6xl font-bold text-gray-800 mb-6 leading-snug">
             {title}
           </h1>
-          <p className="text-lg text-gray-600 mb-6">
-            {description}
-           
-          </p>
-                <div>
-            <p className="text-3xl font-bold text-gray-900">
-              ₹{}
-            </p>
-            <p className="text-sm text-gray-500">
-              One-time payment • Lifetime access
-            </p>
-          </div>
+          <p className="text-lg text-gray-600 mb-6">{description}</p>
+          {!onEnrolledPage && (
+            <div>
+              <div>
+                <p className="text-3xl font-bold text-gray-900">₹{price}</p>
+                <p className="text-sm text-gray-500">
+                  One-time payment • Lifetime access
+                </p>
+              </div>
 
-          {user?.role == "learner" && (
-            <>
-              {enrolledId ? (
-                <Link
-                  to={`/learner/enrolled-courses/${enrolledId}`}
-                  className="bg-orange-500 hover:bg-orange-600 text-white font-semibold px-6 py-3 rounded-lg shadow-md transition"
-                >
-                  Continue learning
-                </Link>
-              ) : (
-                <div className="flex gap-2">
-                  <button
-                    onClick={handlePaymentPage}
-                    className="bg-orange-500  hover:bg-orange-600 text-white font-semibold px-6 py-3 rounded-lg shadow-md transition"
-                  >
-                    Enroll Now
-                  </button>
-                  {/* <button className="border border-white  text-white md:border-orange-500  md:text-orange-500  hover:bg-orange-50 font-semibold px-6 py-3 rounded-lg transition">
-                    See Curriculum
-                  </button> */}
+              <div className="flex gap-4 pt-5">
+                <StarRating rating={rating as number} />
+                <div className="flex gap-3">
+                  <Users2 size={20} className="text-gray-500  " />
+                  {totalStudent}
                 </div>
-              )}
-            </>
+              </div>
+            </div>
           )}
+
+          <div className="mt-5">
+            {user?.role == "learner" && (
+              <>
+                {user?.role === "learner" && (
+                  <>
+                    {enrolledId ? (
+                      !onEnrolledPage && (
+                        <Link
+                          to={`/learner/enrolled-courses/${enrolledId}`}
+                          className="bg-orange-500 hover:bg-orange-600 text-white font-semibold px-6 py-3 rounded-lg shadow-md transition"
+                        >
+                          Continue Learning
+                        </Link>
+                      )
+                    ) : (
+                      <button
+                        onClick={handlePaymentPage}
+                        className="bg-orange-500 hover:bg-orange-600 text-white font-semibold px-6 py-3 rounded-lg shadow-md transition"
+                      >
+                        Enroll Now
+                      </button>
+                    )}
+                  </>
+                )}
+              </>
+            )}
+          </div>
         </div>
 
         <div className="relative flex-1 max-w-md">

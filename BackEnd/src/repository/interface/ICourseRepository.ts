@@ -51,7 +51,11 @@ export interface ICourseRepository {
     lectureId: Types.ObjectId,
     lecture: ILecture,
   ): Promise<ICourses | null>;
-  getAdminCoursList(search:string,limit:number,skip:number): Promise<IPopulatedCourse[] | null>;
+  getAdminCoursList(
+    search: string,
+    limit: number,
+    skip: number,
+  ): Promise<IPopulatedCourse[] | null>;
   getCourseDetails(
     courseId: Types.ObjectId,
   ): Promise<IPopulatedCourse[] | null>;
@@ -59,7 +63,11 @@ export interface ICourseRepository {
   rejectCourse(courseId: Types.ObjectId): Promise<ICourses | null>;
   publishCourse(courseId: Types.ObjectId): Promise<ICourses | null>;
   findCourse(courseId: Types.ObjectId): Promise<IPopulatedCourse | null>;
-  findDocumentCount(query: FilterQuery<ICourses>,start?:Date,end?:Date): Promise<number>;
+  findDocumentCount(
+    query: FilterQuery<ICourses>,
+    start?: Date,
+    end?: Date,
+  ): Promise<number>;
   findAllCourse(query: FilterQuery<ICourses>): Promise<ICourses[] | null>;
   getCourseFormData(courseId: Types.ObjectId): Promise<ICourses | null>;
   removeSession(

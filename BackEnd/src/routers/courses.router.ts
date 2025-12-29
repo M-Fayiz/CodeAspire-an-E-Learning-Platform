@@ -8,16 +8,19 @@ import { CategoryRepository } from "../repository/implementation/CategoryReposit
 import { EnrolledRepository } from "../repository/implementation/EnrolledRepository";
 import { IRole } from "../types/user.types";
 import { NotificationRepository } from "../repository/implementation/NotificationRepository";
+import { ReviewRepository } from "../repository/implementation/ReviewRepository";
 
 const courseRepository = new CourseRepository();
 const categoryRepository = new CategoryRepository();
 const enrolledRepositoy = new EnrolledRepository();
 const notificationRepository = new NotificationRepository();
+const reviewRepository = new ReviewRepository();
 const courseService = new CourseService(
   courseRepository,
   categoryRepository,
   enrolledRepositoy,
   notificationRepository,
+  reviewRepository,
 );
 const courseController = new CourseController(courseService);
 

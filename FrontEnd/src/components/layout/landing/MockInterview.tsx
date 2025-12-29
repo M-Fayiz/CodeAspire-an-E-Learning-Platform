@@ -66,11 +66,15 @@ const MockInterviewSection: React.FC = () => {
                 <div className="grid grid-cols-2 gap-4">
                   <div className="bg-white/10 rounded-lg p-3 text-center">
                     <div className="text-2xl font-bold">45:32</div>
-                    <div className="text-sm text-orange-200">Time Remaining</div>
+                    <div className="text-sm text-orange-200">
+                      Time Remaining
+                    </div>
                   </div>
                   <div className="bg-white/10 rounded-lg p-3 text-center">
                     <div className="text-2xl font-bold">3/5</div>
-                    <div className="text-sm text-orange-200">Questions Done</div>
+                    <div className="text-sm text-orange-200">
+                      Questions Done
+                    </div>
                   </div>
                 </div>
               </div>

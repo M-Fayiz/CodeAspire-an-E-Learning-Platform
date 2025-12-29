@@ -12,7 +12,6 @@ import { IUserModel } from "../../models/user.model";
 import { env } from "../../config/env.config";
 import { AUTH_TOKEN } from "../../const/auth.const";
 
-
 export class AuthController implements IAuthController {
   constructor(private _authSerive: IAuthService) {}
 
@@ -32,8 +31,6 @@ export class AuthController implements IAuthController {
     next: NextFunction,
   ): Promise<void> {
     try {
-      
-      
       const token = await this._authSerive.verifyEmail(req.body);
       setAccessToken(res, token.accessToken);
       setRefreshToken(res, token.refreshToken);
@@ -90,7 +87,7 @@ export class AuthController implements IAuthController {
         await this._authSerive.refreshAccessToken(refreshToken);
       res.cookie(AUTH_TOKEN.ACCESS_TOKEN, newAccessToken, {
         ...options,
-        maxAge: Number(env.ACCESS_TOKEN_MAX_AGE_TIME) * 60 * 1000,
+        maxAge: Number(env.ACCESS_TOKEN_MAX_AGE) * 60 * 1000,
       });
       res
         .status(HttpStatus.OK)
@@ -122,7 +119,9 @@ export class AuthController implements IAuthController {
   async logout(req: Request, res: Response, next: NextFunction): Promise<void> {
     try {
       clearCookies(res);
-      res.status(HttpStatus.OK).json(successResponse(HttpResponse.LOGGED_OUT,{logout:true}));
+      res
+        .status(HttpStatus.OK)
+        .json(successResponse(HttpResponse.LOGGED_OUT, { logout: true }));
     } catch (error) {
       next(error);
     }

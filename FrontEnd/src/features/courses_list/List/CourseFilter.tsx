@@ -92,7 +92,7 @@ const FilterSidebar: React.FC<FiltersProps> = ({
   return (
     <div className="bg-white p-6 rounded-lg shadow-sm">
       <div className="flex items-center space-x-2 mb-6">
-        <Filter className="w-5 h-5 text-blue-600" />
+        <Filter className="w-5 h-5 text-orange-600" />
         <h2 className="text-lg font-semibold text-gray-900">Filters</h2>
       </div>
 
@@ -102,7 +102,7 @@ const FilterSidebar: React.FC<FiltersProps> = ({
             category.map((cat) => (
               <label
                 key={cat._id}
-                className="flex items-center space-x-2 cursor-pointer hover:text-blue-600"
+                className="flex items-center space-x-2 cursor-pointer hover:text-orange-600"
               >
                 <input
                   type="checkbox"
@@ -110,7 +110,7 @@ const FilterSidebar: React.FC<FiltersProps> = ({
                   onChange={(e) =>
                     handleSelectedCategory(cat._id, e.target.checked)
                   }
-                  className="rounded border-gray-300 text-blue-600 focus:ring-blue-500"
+                  className="rounded border-gray-300 text-orange-600 focus:ring-orange-500"
                 />
                 <span className="text-sm text-gray-700">{cat.title}</span>
                 {/* <span className="text-xs text-gray-500 ml-auto">
@@ -126,13 +126,13 @@ const FilterSidebar: React.FC<FiltersProps> = ({
           {["Beginner", "Intermediate", "Advanced"].map((level) => (
             <label
               key={level}
-              className="flex items-center space-x-2 cursor-pointer hover:text-blue-600"
+              className="flex items-center space-x-2 cursor-pointer hover:text-orange-600"
             >
               <input
                 type="checkbox"
                 checked={levels.includes(level)}
                 onChange={(e) => handleSelectedLevel(level, e.target.checked)}
-                className="text-blue-600 focus:ring-blue-500"
+                className="text-orange-600 focus:ring-orange-500"
               />
               <span className="text-sm text-gray-700">{level}</span>
             </label>
@@ -158,14 +158,14 @@ const FilterSidebar: React.FC<FiltersProps> = ({
             <label className="flex items-center space-x-2 cursor-pointer">
               <input
                 type="checkbox"
-                className="rounded border-gray-300 text-blue-600 focus:ring-blue-500"
+                className="rounded border-gray-300 text-orange-600 focus:ring-orange-500"
               />
               <span className="text-sm text-gray-700">Free</span>
             </label>
             <label className="flex items-center space-x-2 cursor-pointer">
               <input
                 type="checkbox"
-                className="rounded border-gray-300 text-blue-600 focus:ring-blue-500"
+                className="rounded border-gray-300 text-orange-600 focus:ring-orange-500"
               />
               <span className="text-sm text-gray-700">Paid</span>
             </label>

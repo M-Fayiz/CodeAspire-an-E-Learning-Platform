@@ -27,7 +27,7 @@ interface MentorActionMenuProps {
   onViewFeedback: (slot: any) => void;
   onSaveFeedback: (slotId: string, feedback: string) => void;
   onStudentStatusUpdate: (slotId: string, status: studentStatus) => void;
-  onSessionComplete: (slotId: string, sessionStatus:slotStatus ) => void;
+  onSessionComplete: (slotId: string, sessionStatus: slotStatus) => void;
 }
 
 export const MentorActionMenu: React.FC<MentorActionMenuProps> = ({

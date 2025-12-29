@@ -19,7 +19,9 @@ export class CategoryController implements ICategoryController {
         req.body.title,
         req.body.parentId,
       );
-      res.status(HttpStatus.OK).json(successResponse(HttpResponse.OK, result as ICategory));
+      res
+        .status(HttpStatus.OK)
+        .json(successResponse(HttpResponse.OK, result as ICategory));
     } catch (error) {
       next(error);
     }

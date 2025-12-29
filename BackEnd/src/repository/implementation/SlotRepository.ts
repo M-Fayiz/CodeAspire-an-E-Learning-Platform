@@ -1,4 +1,4 @@
-import { FilterQuery, Types } from "mongoose";
+import { FilterQuery, PipelineStage, Types } from "mongoose";
 import { ISlotModel, SlotModel } from "../../models/slot.model";
 import { BaseRepository } from "../baseRepository";
 import { ISlotRepository } from "../interface/ISlotRepository";
@@ -49,12 +49,9 @@ export class SlotRepository
     return await this.countDocuments(filter);
   }
   async getMentorSLotsList(
-    mentorId: Types.ObjectId,
-    skip: number,
-    limit: number,
-    populate?: string[],
+    query: PipelineStage[],
   ): Promise<mentorUnPopulatedSlots[] | null> {
-    return await this.findAll({ mentorId: mentorId }, limit, skip, populate);
+    return await this.aggregate(query);
   }
   async getUpdateSlots(
     slotId: Types.ObjectId,

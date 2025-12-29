@@ -17,7 +17,6 @@ const Header: React.FC = () => {
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
-
   return (
     <header
       className={`fixed w-full z-50 transition-all duration-300 ${
@@ -43,7 +42,7 @@ const Header: React.FC = () => {
             >
               Course
             </Link>
-            
+
             <A_tag href="#about" label="About" />
             {/* <A_tag href="#about" label="About"/> */}
 
@@ -83,25 +82,25 @@ const Header: React.FC = () => {
               >
                 Courses
               </Link>
-             
+
               <a
                 href="#about"
                 className="text-gray-700 hover:text-orange-600 transition-colors font-medium"
               >
                 About
               </a>
-             
-             {user?.role ? (
-              <Link to={`/${user.role}/dashboard`}>
-                <User />
-              </Link>
-            ) : (
-              <Link to="/auth/login">
-                <button className="text-gray-700 hover:text-orange-600 transition-colors font-medium">
-                  Login
-                </button>
-              </Link>
-            )}
+
+              {user?.role ? (
+                <Link to={`/${user.role}/dashboard`}>
+                  <User />
+                </Link>
+              ) : (
+                <Link to="/auth/login">
+                  <button className="text-gray-700 hover:text-orange-600 transition-colors font-medium">
+                    Login
+                  </button>
+                </Link>
+              )}
             </nav>
           </div>
         )}

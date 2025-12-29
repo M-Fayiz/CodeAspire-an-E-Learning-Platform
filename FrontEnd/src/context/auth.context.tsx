@@ -5,9 +5,13 @@ import {
   useState,
   type ReactNode,
 } from "react";
-import {  AuthStatus, type AuthStatusType, type IDecodedUserType, type ISignUp } from "../types/auth.types";
+import {
+  AuthStatus,
+  type AuthStatusType,
+  type IDecodedUserType,
+  type ISignUp,
+} from "../types/auth.types";
 import { AuthService } from "../service/auth.service";
-
 
 interface User extends IDecodedUserType {}
 
@@ -15,19 +19,20 @@ interface AuthContextProps {
   user: User | null;
   status: AuthStatusType;
   login: (data: ISignUp) => Promise<void>;
-  signup: (data: ISignUp) => Promise<{ status: number; message: string; email: string }>;
+  signup: (
+    data: ISignUp,
+  ) => Promise<{ status: number; message: string; email: string }>;
   logout: () => Promise<void>;
 }
 
-
 const AuthContext = createContext<AuthContextProps>({
   user: null,
-  login:async()=>{},
+  login: async () => {},
   logout: async () => {},
-  signup:async()=>{
-    throw new Error('Signup not completed')
+  signup: async () => {
+    throw new Error("Signup not completed");
   },
-  status:AuthStatus.CHECKING
+  status: AuthStatus.CHECKING,
 });
 
 interface AuthContext {
@@ -38,10 +43,9 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const [user, setUser] = useState<User | null>(null);
   const [status, setStatus] = useState<AuthStatusType>(AuthStatus.CHECKING);
 
-
   const bootstrapAuth = async () => {
     try {
-       await AuthService.refreshToken(); 
+      await AuthService.refreshToken();
       const user = await AuthService.authME();
       setUser(user);
       setStatus(AuthStatus.AUTHENTICATED);
@@ -60,20 +64,19 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   };
 
   useEffect(() => {
-    bootstrapAuth(); 
+    bootstrapAuth();
   }, []);
 
   const login = async (data: ISignUp) => {
     await AuthService.login(data);
-    await bootstrapAuth(); 
+    await bootstrapAuth();
   };
 
   const signup = async (data: ISignUp) => {
-  const result = await AuthService.signUp(data);
-  await bootstrapAuth();
-  return result;
-};
-
+    const result = await AuthService.signUp(data);
+    await bootstrapAuth();
+    return result;
+  };
 
   const logout = async () => {
     await AuthService.logOut();

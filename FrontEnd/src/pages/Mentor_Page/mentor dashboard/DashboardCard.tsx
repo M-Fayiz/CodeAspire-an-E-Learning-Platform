@@ -6,7 +6,6 @@ interface statCardProps {
   Icon: ReactNode;
   title: string;
   value: number;
- 
 }
 
 const StatCard: React.FC<statCardProps> = ({ Icon, title, value }) => (
@@ -14,7 +13,7 @@ const StatCard: React.FC<statCardProps> = ({ Icon, title, value }) => (
     <div className="flex items-start justify-between">
       <div className="flex items-center gap-3">
         <div className={` p-3 rounded-lg`}>{Icon}</div>
-        
+
         <div>
           <p className="text-gray-500 text-sm">{title}</p>
           <p className="text-2xl font-bold text-gray-900 mt-1">
@@ -24,7 +23,6 @@ const StatCard: React.FC<statCardProps> = ({ Icon, title, value }) => (
       </div>
       <div className="flex items-center gap-1 text-green-500">
         <TrendingUp className="w-4 h-4" />
-       
       </div>
     </div>
   </div>

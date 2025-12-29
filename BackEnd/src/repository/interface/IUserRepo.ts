@@ -60,8 +60,6 @@ export interface IUserRepo {
   findUser(
     filter: FilterQuery<IUserModel>,
   ): Promise<IUserModel | IMenterModel | ILearnerModel | IAdminModel | null>;
-  findDashBoardUserCount(role: IRole,
-  start: Date,
-  end: Date): Promise<number>;
+  findDashBoardUserCount(role: IRole, start: Date, end: Date): Promise<number>;
   SignedUsers(filter: FilterQuery<IUserModel>): Promise<graphPrps[]>;
 }

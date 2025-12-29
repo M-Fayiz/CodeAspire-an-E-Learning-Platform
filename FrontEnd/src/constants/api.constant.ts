@@ -116,7 +116,8 @@ export const API = {
       `/slot-booking/${slotbookingId}/student-status`,
     UPDATE_BOOKED_SLOT_STATUS: (bookedId: string) =>
       `/slot-booking/${bookedId}/slot-status`,
-    CANCEL_BOOKED_SLOT:(bookedId:string)=>`/slot-booking/${bookedId}/cancel`
+    CANCEL_BOOKED_SLOT: (bookedId: string) =>
+      `/slot-booking/${bookedId}/cancel`,
   },
   VIDEO: {
     START_VIDEO: (bookingId: string) => `/video/start/${bookingId}`,
@@ -126,7 +127,8 @@ export const API = {
     list_Certificate: (learnerId: string) =>
       `/certificate/my-certificate/${learnerId}`,
   },
-  LEARNER:{
-    LEARNER_DASHBOARD:(learnerId:string)=>`/enrollements/${learnerId}/dashboard`
-  }
+  LEARNER: {
+    LEARNER_DASHBOARD: (learnerId: string) =>
+      `/enrollements/${learnerId}/dashboard`,
+  },
 };

@@ -6,27 +6,36 @@ import type { learnerDashboardCardsDTO } from "@/types/DTOS/learnerDashboard.typ
 import { useAuth } from "@/context/auth.context";
 import { EnrolledService } from "@/service/Learner/enrolledCourse.service";
 
-import { RevenueDonutChart, type PieChartProps } from "@/components/ui/PieGraph";
+import {
+  RevenueDonutChart,
+  type PieChartProps,
+} from "@/components/ui/PieGraph";
 import LearnerDashboardSkeleton from "@/components/skelton/LearnerDashboardSkelton";
 
 export type IInterviewType = "Cracked" | "Failed";
 
 const LearnerDashboard = () => {
-  const {user}=useAuth()
-  const [learnerDashboardData,setLearnerDashboardData]=useState<learnerDashboardCardsDTO|null>(null)
-  const [circleChart,setCircleChart]=useState<PieChartProps<IInterviewType>[]>([])
-  useEffect(()=>{
-    (async()=>{
-      const dashData=await EnrolledService.learnerDashboardData(user!.id)
-      if(dashData){
-        setLearnerDashboardData(dashData)
-        setCircleChart([{name:'Cracked',value:dashData.slotData.totalCracked},{name:'Failed',value:dashData.slotData.totalFailed}])
+  const { user } = useAuth();
+  const [learnerDashboardData, setLearnerDashboardData] =
+    useState<learnerDashboardCardsDTO | null>(null);
+  const [circleChart, setCircleChart] = useState<
+    PieChartProps<IInterviewType>[]
+  >([]);
+  useEffect(() => {
+    (async () => {
+      const dashData = await EnrolledService.learnerDashboardData(user!.id);
+      if (dashData) {
+        setLearnerDashboardData(dashData);
+        setCircleChart([
+          { name: "Cracked", value: dashData.slotData.totalCracked },
+          { name: "Failed", value: dashData.slotData.totalFailed },
+        ]);
       }
-    })()
-  },[user])
+    })();
+  }, [user]);
 
-  if(!learnerDashboardData){
-    return <LearnerDashboardSkeleton/>
+  if (!learnerDashboardData) {
+    return <LearnerDashboardSkeleton />;
   }
   return (
     <div className="space-y-6">
@@ -38,27 +47,44 @@ const LearnerDashboard = () => {
         </p>
       </div>
 
-     
       <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-        <StatsCard title="Purchased Courses" value={learnerDashboardData?.courseData.courseCount as number} />
-        <StatsCard title="Completed Courses" value={learnerDashboardData?.courseData.completedCourse as number} />
-        <StatsCard title="In Progress" value={learnerDashboardData?.courseData.inProgressCourse as number} />
-        <StatsCard title="Certificates Earned" value={learnerDashboardData?.TotalCertificate as number} />
+        <StatsCard
+          title="Purchased Courses"
+          value={learnerDashboardData?.courseData.courseCount as number}
+        />
+        <StatsCard
+          title="Completed Courses"
+          value={learnerDashboardData?.courseData.completedCourse as number}
+        />
+        <StatsCard
+          title="In Progress"
+          value={learnerDashboardData?.courseData.inProgressCourse as number}
+        />
+        <StatsCard
+          title="Certificates Earned"
+          value={learnerDashboardData?.TotalCertificate as number}
+        />
       </div>
 
-    
       <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-        <StatsCard title="Interviews Attended" value={learnerDashboardData?.slotData.totalSession as number} />
-        <StatsCard title="Cracked Interviews" value={learnerDashboardData?.slotData.totalCracked as number} />
-        <StatsCard title="Failed Interviews" value={learnerDashboardData?.slotData.totalFailed as number} />
+        <StatsCard
+          title="Interviews Attended"
+          value={learnerDashboardData?.slotData.totalSession as number}
+        />
+        <StatsCard
+          title="Cracked Interviews"
+          value={learnerDashboardData?.slotData.totalCracked as number}
+        />
+        <StatsCard
+          title="Failed Interviews"
+          value={learnerDashboardData?.slotData.totalFailed as number}
+        />
         {/* <StatsCard title="Success Rate" value="66%" /> */}
       </div>
 
-      
       <CourseStatusList />
 
-      
-      <RevenueDonutChart  Options={circleChart}  />
+      <RevenueDonutChart Options={circleChart} />
     </div>
   );
 };

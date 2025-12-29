@@ -125,24 +125,24 @@ const ChatPage = () => {
       socket.off(SocketEvents.USER_ONLINE, handleOnline);
       socket.off(SocketEvents.USER_OFFLINE, handleOffline);
     };
-  }, [socket,selectedChat?.userId]);
+  }, [socket, selectedChat?.userId]);
   useEffect(() => {
-  if (!socket || !selectedChat) return;
+    if (!socket || !selectedChat) return;
 
-  socket.emit("presence:check", selectedChat.userId);
+    socket.emit("presence:check", selectedChat.userId);
 
-  const handler = (data: { userId: string; online: boolean }) => {
-    if (data.userId === selectedChat.userId) {
-      setIsOnline(data.online);
-    }
-  };
+    const handler = (data: { userId: string; online: boolean }) => {
+      if (data.userId === selectedChat.userId) {
+        setIsOnline(data.online);
+      }
+    };
 
-  socket.on("presence:status", handler);
+    socket.on("presence:status", handler);
 
-  return () => {
-    socket.off("presence:status", handler);
-  };
-}, [socket, selectedChat?.userId]);
+    return () => {
+      socket.off("presence:status", handler);
+    };
+  }, [socket, selectedChat?.userId]);
 
   return (
     <div className="flex  h-full bg-gray-50">

@@ -26,7 +26,6 @@ const COLORS = ["#111827", "#D1D5DB"];
 const InterviewCharts = () => {
   return (
     <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-   
       <Card className="bg-white border border-gray-200">
         <CardContent className="p-5">
           <h3 className="text-lg font-semibold mb-4">Interview Success Rate</h3>

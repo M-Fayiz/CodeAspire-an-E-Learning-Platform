@@ -13,5 +13,5 @@ export interface IOrderRepository {
     id: Types.ObjectId,
     data: Partial<IOrderModel>,
   ): Promise<IOrderModel | null>;
-  isOrdered(filter:FilterQuery<IOrderModel>):Promise<IOrderModel | null>;
+  isOrdered(filter: FilterQuery<IOrderModel>): Promise<IOrderModel | null>;
 }

@@ -57,7 +57,6 @@ export class AuthService implements IAuthService {
   async verifyEmail(
     data: IAuth,
   ): Promise<{ accessToken: string; refreshToken: string }> {
-    
     const key = `${redisPrefix.VERIFY_EMAIL}:${data.token}`;
     const result = await redisClient.get(key);
 

@@ -3,13 +3,10 @@ import {
   Layers,
   Book,
   BookOpen,
-  
   Home,
   MessageSquare,
-
   Users,
   CalendarDays,
-  
 } from "lucide-react";
 import React from "react";
 
@@ -34,10 +31,8 @@ const navigationConfig = {
       { icon: Book, label: "Course Management", path: "/admin/courses" },
       { icon: Layers, label: "Category Management", path: "/admin/category" },
       { icon: MessageSquare, label: "Messages", path: "/admin/chats" },
-     
     ],
-    secondary: [
-    ],
+    secondary: [],
   },
   learner: {
     primary: [
@@ -52,31 +47,27 @@ const navigationConfig = {
         label: "My Courses",
         path: "/learner/enrolled-courses",
       },
-     
+
       {
         icon: Award,
         label: "Certificates",
         path: "/learner/my-certificate",
-     
       },
       {
         icon: MessageSquare,
         label: "Messages",
         path: "/learner/chats",
-      
       },
 
       { icon: CalendarDays, label: "Slots", path: "/learner/booked-slots" },
     ],
-    secondary: [
-     
-    ],
+    secondary: [],
   },
   mentor: {
     primary: [
       { icon: Home, label: "Dashboard", path: "/mentor/dashboard" },
       { icon: Book, label: "My Courses", path: "/mentor/courses" },
-      
+
       {
         icon: CalendarDays,
         label: "Slots Management",
@@ -87,17 +78,14 @@ const navigationConfig = {
         label: "Booked Slots",
         path: "/mentor/booked-slot-list",
       },
-  
+
       {
         icon: MessageSquare,
         label: "Messages",
         path: "/mentor/chats",
-       
       },
-
     ],
-    secondary: [
-    ],
+    secondary: [],
   },
 };
 

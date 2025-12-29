@@ -92,15 +92,15 @@ export class CourseController implements ICourseController {
     try {
       const { courseId } = req.params;
       const { learnerId } = req.query;
-    
-      const {courseDetails,enrolledId} = await this._courseService.getCourse(
+
+      const { courseDetails, enrolledId } = await this._courseService.getCourse(
         courseId,
         learnerId as string,
       );
-      
+
       res
         .status(HttpStatus.OK)
-        .json(successResponse(HttpResponse.OK, { courseDetails,enrolledId }));
+        .json(successResponse(HttpResponse.OK, { courseDetails, enrolledId }));
     } catch (error) {
       next(error);
     }
@@ -219,8 +219,11 @@ export class CourseController implements ICourseController {
     next: NextFunction,
   ): Promise<void> => {
     try {
-      const {search,page}=req.query
-      const coursList = await this._courseService.getAdminCourse(search as string,Number(page));
+      const { search, page } = req.query;
+      const coursList = await this._courseService.getAdminCourse(
+        search as string,
+        Number(page),
+      );
       res
         .status(HttpStatus.OK)
         .json(successResponse(HttpResponse.OK, { coursList }));
@@ -351,15 +354,20 @@ export class CourseController implements ICourseController {
       next(error);
     }
   };
-   getAdminCourseDetails=async(req: Request, res: Response, next: NextFunction): Promise<void>=> {
+  getAdminCourseDetails = async (
+    req: Request,
+    res: Response,
+    next: NextFunction,
+  ): Promise<void> => {
     try {
-      const {courseId}=req.params
-      const courseDetails=await this._courseService.getAdminCourseDetails(courseId)
+      const { courseId } = req.params;
+      const courseDetails =
+        await this._courseService.getAdminCourseDetails(courseId);
       res
         .status(HttpStatus.OK)
         .json(successResponse(HttpResponse.OK, { courseDetails }));
     } catch (error) {
-      next(error)
+      next(error);
     }
-  }
+  };
 }

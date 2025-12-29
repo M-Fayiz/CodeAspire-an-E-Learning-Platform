@@ -4,18 +4,13 @@ import { AuthService } from "../../service/auth.service";
 import SuccessModal from "../../components/templates/SuccessModal";
 import { useState } from "react";
 
-
 import { toast } from "sonner";
 import { useAuth } from "@/context/auth.context";
-
 
 const SignupPage: React.FC = () => {
   const [showModal, setShowModal] = useState(false);
   const [modalEmail, setModalEmail] = useState("");
   const { signup } = useAuth();
-
-
-
 
   const closeModal = () => {
     setShowModal(false);
@@ -26,7 +21,6 @@ const SignupPage: React.FC = () => {
       const result = await signup(data);
       setShowModal(true);
       setModalEmail(result.email);
-  
     } catch (error: any) {
       toast.error(error.message);
     }

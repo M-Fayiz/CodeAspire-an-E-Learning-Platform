@@ -4,11 +4,9 @@ export function timeFilter(
   startDay?: string,
   endDay?: string,
 ): { start: Date; end: Date } {
-
   let start: Date;
   let end: Date = new Date();
 
-  
   end.setHours(23, 59, 59, 999);
 
   switch (filter) {
@@ -32,16 +30,17 @@ export function timeFilter(
       break;
     }
     case FilterByDate.YEAR: {
-  start = new Date();
-  start.setMonth(start.getMonth() - 12);
-  start.setHours(0, 0, 0, 0);
-  break;
-}
-
+      start = new Date();
+      start.setMonth(start.getMonth() - 12);
+      start.setHours(0, 0, 0, 0);
+      break;
+    }
 
     case FilterByDate.CUSTOM: {
       if (!startDay || !endDay) {
-        throw new Error("Start date and end date are required for custom filter");
+        throw new Error(
+          "Start date and end date are required for custom filter",
+        );
       }
 
       start = new Date(startDay);
@@ -64,4 +63,3 @@ export function timeFilter(
 
   return { start, end };
 }
-

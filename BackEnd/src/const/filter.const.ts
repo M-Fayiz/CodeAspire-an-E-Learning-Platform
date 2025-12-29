@@ -3,5 +3,5 @@ export enum FilterByDate {
   WEEK = "Last Week",
   MONTH = "Last Month",
   YEAR = "Last Year",
-  CUSTOM='Custom'
+  CUSTOM = "Custom",
 }

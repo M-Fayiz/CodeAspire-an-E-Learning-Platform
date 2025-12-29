@@ -80,9 +80,9 @@ export class OrderService implements IOrderService {
     );
 
     const paymentIntentId =
-      typeof session.payment_intent === 'string'
+      typeof session.payment_intent === "string"
         ? session.payment_intent
-        : session.payment_intent?.id 
+        : session.payment_intent?.id;
 
     const transactionData: ITransaction = {
       paymentType: TransactionType.COURSE_PURCHASE,
@@ -123,130 +123,130 @@ export class OrderService implements IOrderService {
    * @returns
    */
   async paymentIntent(
-  userId: string,
-  courseId: string,
-): Promise<{ clientSecret: string; orderId: string; checkoutURL: string }> {
+    userId: string,
+    courseId: string,
+  ): Promise<{ clientSecret: string; orderId: string; checkoutURL: string }> {
+    const course_id = parseObjectId(courseId);
+    const user_Id = parseObjectId(userId);
 
-  const course_id = parseObjectId(courseId);
-  const user_Id = parseObjectId(userId);
+    if (!course_id || !user_Id) {
+      throw createHttpError(HttpStatus.NOT_FOUND, HttpResponse.INVALID_ID);
+    }
 
-  if (!course_id || !user_Id) {
-    throw createHttpError(HttpStatus.NOT_FOUND, HttpResponse.INVALID_ID);
-  }
+    const isEnrolled = await this._enrolledRepository.isEnrolled(
+      user_Id,
+      course_id,
+    );
 
-  
-  const isEnrolled = await this._enrolledRepository.isEnrolled(
-    user_Id,
-    course_id,
-  );
-
-  if (isEnrolled) {
-    throw createHttpError(HttpStatus.CONFLICT, HttpResponse.ALREADY_PURCHASED);
-  }
-
- 
-  const existingOrder = await this._orderRepository.isOrdered({
-    courseId,
-    userId,
-  });
-
-  
-  if (existingOrder?.status === OrderStatus.COMPLETED) {
-    throw createHttpError(HttpStatus.CONFLICT, HttpResponse.ALREADY_PURCHASED);
-  }
-
-  
-  const course = await this._courseRepository.findCourse(course_id);
-
-  if (!course) {
-    throw createHttpError(HttpStatus.NOT_FOUND, HttpResponse.COURSE_NOT_FOUND);
-  }
-
-  const amount = course.price;
-
-  let orderData = existingOrder;
-
- 
-  if (!orderData) {
-    orderData = await this._orderRepository.createOrder({
-      userId: user_Id,
-      courseId: course_id,
-      totalAmount: amount,
-      status: OrderStatus.PENDING,
-    });
-
-    if (!orderData) {
+    if (isEnrolled) {
       throw createHttpError(
-        HttpStatus.INTERNAL_SERVER_ERROR,
-        HttpResponse.SERVER_ERROR,
+        HttpStatus.CONFLICT,
+        HttpResponse.ALREADY_PURCHASED,
       );
     }
-  }
 
-  
-  if (!stripe) {
-    throw createHttpError(
-      HttpStatus.INTERNAL_SERVER_ERROR,
-      HttpResponse.STRIPR_NOT_AVAILABLE,
-    );
-  }
+    const existingOrder = await this._orderRepository.isOrdered({
+      courseId,
+      userId,
+    });
 
-  const idemKey = `order_${orderData._id}`;
+    if (existingOrder?.status === OrderStatus.COMPLETED) {
+      throw createHttpError(
+        HttpStatus.CONFLICT,
+        HttpResponse.ALREADY_PURCHASED,
+      );
+    }
 
-  const session = await stripe.checkout.sessions.create(
-    {
-      payment_method_types: [StripeConst.payment_method_types],
-      line_items: [
-        {
-          price_data: {
-            currency: StripeConst.CURRENCY,
-            product_data: {
-              name: course.title,
-              metadata: {
-                courseId: String(course._id),
+    const course = await this._courseRepository.findCourse(course_id);
+
+    if (!course) {
+      throw createHttpError(
+        HttpStatus.NOT_FOUND,
+        HttpResponse.COURSE_NOT_FOUND,
+      );
+    }
+
+    const amount = course.price;
+
+    let orderData = existingOrder;
+
+    if (!orderData) {
+      orderData = await this._orderRepository.createOrder({
+        userId: user_Id,
+        courseId: course_id,
+        totalAmount: amount,
+        status: OrderStatus.PENDING,
+      });
+
+      if (!orderData) {
+        throw createHttpError(
+          HttpStatus.INTERNAL_SERVER_ERROR,
+          HttpResponse.SERVER_ERROR,
+        );
+      }
+    }
+
+    if (!stripe) {
+      throw createHttpError(
+        HttpStatus.INTERNAL_SERVER_ERROR,
+        HttpResponse.STRIPR_NOT_AVAILABLE,
+      );
+    }
+
+    const idemKey = `order_${orderData._id}`;
+
+    const session = await stripe.checkout.sessions.create(
+      {
+        payment_method_types: [StripeConst.payment_method_types],
+        line_items: [
+          {
+            price_data: {
+              currency: StripeConst.CURRENCY,
+              product_data: {
+                name: course.title,
+                metadata: {
+                  courseId: String(course._id),
+                },
               },
+              unit_amount: amount * 100,
             },
-            unit_amount: amount * 100,
+            quantity: 1,
           },
-          quantity: 1,
+        ],
+        mode: StripeConst.MODE,
+        invoice_creation: {
+          enabled: true,
         },
-      ],
-      mode: StripeConst.MODE,
-       invoice_creation: {
-      enabled: true,
-    },
-      success_url: `${env.CLIENT_URL_2}/${StripeConst.SUCCESS_URL}`,
-      client_reference_id: String(orderData._id),
-      metadata: {
-        paymentType: TransactionType.COURSE_PURCHASE,
-        orderId: String(orderData._id),
-        courseId,
-        userId,
-        amount,
-        mentorId: String(course.mentorId._id),
-        categoryId: String(course.categoryId._id),
+        success_url: `${env.CLIENT_URL_2}/${StripeConst.SUCCESS_URL}`,
+        client_reference_id: String(orderData._id),
+        metadata: {
+          paymentType: TransactionType.COURSE_PURCHASE,
+          orderId: String(orderData._id),
+          courseId,
+          userId,
+          amount,
+          mentorId: String(course.mentorId._id),
+          categoryId: String(course.categoryId._id),
+        },
       },
-    },
-    { idempotencyKey: idemKey },
-  );
-  console.log('ss ',session)
+      { idempotencyKey: idemKey },
+    );
+    console.log("ss ", session);
 
+    await this._orderRepository.updateOrder(orderData._id, {
+      paymentIntentId: session.id,
+    });
 
-  await this._orderRepository.updateOrder(orderData._id, {
-    paymentIntentId: session.id,
-  });
-
-  return {
-    clientSecret: session.client_secret as string,
-    orderId: String(orderData._id),
-    checkoutURL: session.url as string,
-  };
-}
+    return {
+      clientSecret: session.client_secret as string,
+      orderId: String(orderData._id),
+      checkoutURL: session.url as string,
+    };
+  }
 
   async getPaymentData(
     sessionId: string,
   ): Promise<Stripe.Response<Stripe.Checkout.Session>> {
-  
     if (!stripe) {
       throw createHttpError(
         HttpStatus.INTERNAL_SERVER_ERROR,

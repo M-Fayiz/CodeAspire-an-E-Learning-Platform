@@ -37,7 +37,7 @@ export class ReviewController implements IReviewController {
     try {
       const { courseId } = req.params;
       const courseReview = await this._reviewService.getCourseReview(courseId);
-      console.log(courseReview);
+
       res
         .status(HttpStatus.OK)
         .json(successResponse(HttpResponse.OK, { courseReview }));

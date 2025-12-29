@@ -121,7 +121,7 @@ export const PasswordChangeForm: React.FC<passWordsProps> = ({
           <button
             type="submit"
             disabled={isLoading}
-            className="flex items-center justify-center gap-2 flex-1 bg-blue-600 text-white py-2 px-4 rounded-lg hover:bg-blue-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+            className="flex items-center justify-center gap-2 flex-1 bg-black text-white py-2 px-4 rounded-lg hover:bg-gray-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
           >
             {isLoading && <Spinner variant="white" size="small" />}
             <span>{isLoading ? "Updating..." : "Update Password"}</span>

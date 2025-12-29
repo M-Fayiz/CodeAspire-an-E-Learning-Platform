@@ -71,9 +71,12 @@ export class SlotBookingController implements ISlotBookingController {
   ): Promise<void> => {
     try {
       const { mentorId } = req.params;
-     
+
       const listsOfBooked =
-        await this._slotBookingService.ListLearnerBookedSlots(undefined, mentorId);
+        await this._slotBookingService.ListLearnerBookedSlots(
+          undefined,
+          mentorId,
+        );
 
       res
         .status(HttpStatus.OK)
@@ -157,16 +160,21 @@ export class SlotBookingController implements ISlotBookingController {
       next(error);
     }
   };
-  cancelBookedSLot=async(req: Request, res: Response, next: NextFunction): Promise<void>=> {
+  cancelBookedSLot = async (
+    req: Request,
+    res: Response,
+    next: NextFunction,
+  ): Promise<void> => {
     try {
-      const {bookedId}=req.params
-      const {notification,status}=await this._slotBookingService.cancelSlot(bookedId)
-      sendNotification(notification.userId,notification)
+      const { bookedId } = req.params;
+      const { notification, status } =
+        await this._slotBookingService.cancelSlot(bookedId);
+      sendNotification(notification.userId, notification);
       res
         .status(HttpStatus.OK)
         .json(successResponse(HttpResponse.OK, { status }));
     } catch (error) {
-      next(error)
+      next(error);
     }
-  }
+  };
 }

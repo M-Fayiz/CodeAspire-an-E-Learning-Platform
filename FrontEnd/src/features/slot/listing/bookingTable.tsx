@@ -1,7 +1,10 @@
 import { Button } from "@/components/ui/button";
 import { Book, User, Clock, Award, X } from "lucide-react";
 import { Card, CardHeader, CardContent } from "@/components/ui/card";
-import type { IBookingDTOforLearner, slotStatus } from "@/types/DTOS/slotBooking.dto.type";
+import type {
+  IBookingDTOforLearner,
+  slotStatus,
+} from "@/types/DTOS/slotBooking.dto.type";
 import { MentorActionMenu } from "@/features/mentor/slots/mentorActions";
 import {
   Dialog,
@@ -25,17 +28,14 @@ interface BookingTableProps {
   onViewFeedback?: (slot: IBookingDTOforLearner) => void;
 
   onAddFeedback?: (slotId: string, feedback: string) => void;
-  onUpdateStatus?: (
-    slot: IBookingDTOforLearner,
-    status: studentStatus,
-  ) => void;
+  onUpdateStatus?: (slot: IBookingDTOforLearner, status: studentStatus) => void;
   onSessionComplete?: (slotId: string, status: slotStatus) => void;
   onCertificateIssue?: (
     learnerId: string,
     courseId: string,
     programmTitle: string,
   ) => void;
-  onCancelSlot?:(bookedId:string)=>void
+  onCancelSlot?: (bookedId: string) => void;
 }
 
 export const BookingTable = ({
@@ -48,7 +48,7 @@ export const BookingTable = ({
   onUpdateStatus,
   onSessionComplete,
   onCertificateIssue,
-  onCancelSlot
+  onCancelSlot,
 }: BookingTableProps) => {
   const [title, setTitle] = useState("");
   const [errors, setErrors] = useState("");
@@ -89,7 +89,6 @@ export const BookingTable = ({
   return (
     <Card className="bg-white border border-gray-200 shadow-sm">
       <CardContent className="p-4">
-       
         <div className="hidden md:block overflow-x-auto">
           <table className="w-full text-sm border-collapse">
             <thead className="bg-gray-100 text-gray-700">
@@ -178,7 +177,7 @@ export const BookingTable = ({
                           Join
                         </Button>
                       )}
-                      {slot.status === "booked" &&role=='learner' &&(
+                      {slot.status === "booked" && role == "learner" && (
                         <Button
                           variant="outline"
                           size="sm"
@@ -266,7 +265,6 @@ export const BookingTable = ({
           </table>
         </div>
 
-     
         <div className="md:hidden space-y-4">
           {slots.map((slot) => (
             <div

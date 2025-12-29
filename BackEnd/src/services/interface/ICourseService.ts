@@ -29,11 +29,11 @@ export interface ICourseService {
   getCourse(
     courseId: string,
     learnerId?: string,
-  ): Promise<{ courseDetails: ICourseDetailsPageDTO; enrolledId: Types.ObjectId |null}>;
-  getAdminCourseDetails(
-    courseId: string,
-    
-  ): Promise< IFormCourseDTO>;
+  ): Promise<{
+    courseDetails: ICourseDetailsPageDTO;
+    enrolledId: Types.ObjectId | null;
+  }>;
+  getAdminCourseDetails(courseId: string): Promise<IFormCourseDTO>;
   getDraftedCourses(
     search: string,
     page: string,
@@ -55,7 +55,10 @@ export interface ICourseService {
     courseId: string,
     baseInfo: ICourses,
   ): Promise<ICourseDTO>;
-  getAdminCourse(search:string, page:number): Promise<IFormCourseDTO[] | null>;
+  getAdminCourse(
+    search: string,
+    page: number,
+  ): Promise<IFormCourseDTO[] | null>;
   getCourseDetails(courseId: string): Promise<IFormCourseDTO | null>;
   approveCourse(courseId: string): Promise<{
     status: string | null;

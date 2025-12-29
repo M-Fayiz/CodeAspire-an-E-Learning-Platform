@@ -8,8 +8,9 @@ import {
   IEnrolledAggregation,
   IEnrollement,
 } from "../../types/enrollment.types";
-import {  modelNames, Types, UpdateQuery } from "mongoose";
+import { modelNames, Types, UpdateQuery } from "mongoose";
 import {
+  CourseDetailsRating,
   IMentorDashboardData,
   ITopCategory,
   ITopCourse,
@@ -111,13 +112,14 @@ export class EnrolledRepository
   }
   async getMentorDashboardData(
     mentorId: Types.ObjectId,
-    start?:Date,end?:Date
+    start?: Date,
+    end?: Date,
   ): Promise<IMentorDashboardData[]> {
     return await this.aggregate<IMentorDashboardData>([
       {
         $match: {
           mentorId: mentorId,
-          createdAt:{$gte:start,$lte:end}
+          createdAt: { $gte: start, $lte: end },
         },
       },
       {
@@ -133,14 +135,25 @@ export class EnrolledRepository
       },
     ]);
   }
-  async getTopSellingCourse(mentorId?: Types.ObjectId,start?:Date,end?:Date): Promise<ITopCourse[]> {
-    const matchStage = mentorId ? { mentorId ,createdAt : {
-      $gte: start,
-      $lte: end,
-    }} : {createdAt : {
-      $gte: start,
-      $lte: end,
-    }};
+  async getTopSellingCourse(
+    mentorId?: Types.ObjectId,
+    start?: Date,
+    end?: Date,
+  ): Promise<ITopCourse[]> {
+    const matchStage = mentorId
+      ? {
+          mentorId,
+          createdAt: {
+            $gte: start,
+            $lte: end,
+          },
+        }
+      : {
+          createdAt: {
+            $gte: start,
+            $lte: end,
+          },
+        };
     return await this.aggregate<ITopCourse>([
       {
         $match: matchStage,
@@ -151,7 +164,6 @@ export class EnrolledRepository
           totalStudent: {
             $sum: 1,
           },
-          
         },
       },
       {
@@ -178,7 +190,6 @@ export class EnrolledRepository
           courseId: "$course._id",
           title: "$course.title",
           enrolledStudent: "$totalStudent",
-
         },
       },
     ]);
@@ -270,5 +281,27 @@ export class EnrolledRepository
     data: UpdateQuery<IEnrolledModel>,
   ): Promise<IEnrolledModel | null> {
     return await this.findByIDAndUpdate(enrolledId, data);
+  }
+  async avgCourseRating(
+    courseId: Types.ObjectId,
+  ): Promise<CourseDetailsRating[]> {
+    return await this.aggregate<CourseDetailsRating>([
+      {
+        $match: {
+          courseId,
+        },
+      },
+      {
+        $group: {
+          _id: null,
+          avgRating: {
+            $avg: "$rating",
+          },
+          totalStudents: {
+            $sum: 1,
+          },
+        },
+      },
+    ]);
   }
 }

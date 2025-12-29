@@ -1,8 +1,12 @@
 import { Types } from "mongoose";
-import { PaymentMethod, TransactionStatus, TransactionType } from "../const/transaction.const";
+import {
+  PaymentMethod,
+  TransactionStatus,
+  TransactionType,
+} from "../const/transaction.const";
 
 export interface ITransaction {
-  paymentType:TransactionType;
+  paymentType: TransactionType;
   orderId?: Types.ObjectId;
   slotBookingId?: Types.ObjectId;
   slotId?: Types.ObjectId;
@@ -14,14 +18,13 @@ export interface ITransaction {
   paymentMethod: PaymentMethod;
   adminShare: number;
   mentorShare: number;
-  status: TransactionStatus
+  status: TransactionStatus;
   createdAt?: Date;
   updatedAt?: Date;
 }
 
-
-export enum ITransactionStatus{
-  SUCCESS='success',
-  FAILED='failed',
-  REFUNDED='refunded',
+export enum ITransactionStatus {
+  SUCCESS = "success",
+  FAILED = "failed",
+  REFUNDED = "refunded",
 }

@@ -1,7 +1,6 @@
 import { Types } from "mongoose";
 import { TransactionType } from "../const/transaction.const";
 
-
 export interface IMentorDashboardData {
   avgRating: number;
   totalStudents: number;
@@ -15,10 +14,12 @@ export interface ITopCourse {
   courseId: Types.ObjectId;
   title: string;
   enrolledStudent: number;
-  revanue:number
+  revanue: number;
 }
 export interface ITopCategory {
   categoryId: Types.ObjectId;
   title: string;
   enrolledStudent: number;
 }
+
+export interface CourseDetailsRating extends IMentorDashboardData {}

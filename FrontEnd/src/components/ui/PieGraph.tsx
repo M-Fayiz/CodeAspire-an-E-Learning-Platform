@@ -12,7 +12,6 @@ export interface PieChartProps<T extends string = string> {
 export const RevenueDonutChart: React.FC<{ Options: PieChartProps[] }> = ({
   Options,
 }) => {
- 
   return (
     <Card className="w-full max-w-md bg-white">
       <CardHeader>

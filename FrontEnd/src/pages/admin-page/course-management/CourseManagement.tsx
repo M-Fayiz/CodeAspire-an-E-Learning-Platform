@@ -15,29 +15,27 @@ export interface QueryProps {
 }
 function CourseManagement() {
   const [courses, setCourse] = useState<IFormCourseDTO[]>([]);
-   const { search, page, setSearch, setPage } = useSearchPagination()
-   const [searchInput, setSearchInput] = useState(search);
-    const [totalPage, setTotalPage] = useState(1);
-     const debouncedSearch = useDebounce(searchInput, 200);
-        useEffect(() => {
-        setSearch(debouncedSearch);
-      }, [debouncedSearch]);
-    
+  const { search, page, setSearch, setPage } = useSearchPagination();
+  const [searchInput, setSearchInput] = useState(search);
+  const [totalPage, setTotalPage] = useState(1);
+  const debouncedSearch = useDebounce(searchInput, 200);
+  useEffect(() => {
+    setSearch(debouncedSearch);
+  }, [debouncedSearch]);
+
   useEffect(() => {
     (async () => {
-      const data = await courseService.getAdminCourList(search,page);
+      const data = await courseService.getAdminCourList(search, page);
 
       if (data) {
         setCourse(data);
         setTotalPage(1);
       }
     })();
-  }, [search,page]);
-
-
+  }, [search, page]);
 
   const handlePageChange = (_e: React.ChangeEvent<unknown>, page: number) => {
-      setPage(page)
+    setPage(page);
   };
 
   return (
@@ -45,17 +43,17 @@ function CourseManagement() {
       title="Course Management"
       description="Review and Manage Courses"
     >
-       <div className="relative mb-6 bg-white p-3 rounded-lg shadow-sm">
-      <Search className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400 w-5 h-5" />
-      <input
-        type="text"
-        value={searchInput}
-        onChange={(e) => setSearchInput(e.target.value)}
-        placeholder="Search users"
-        className="w-full pl-11 pr-4 py-2.5 text-sm border border-gray-300 rounded-md
+      <div className="relative mb-6 bg-white p-3 rounded-lg shadow-sm">
+        <Search className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400 w-5 h-5" />
+        <input
+          type="text"
+          value={searchInput}
+          onChange={(e) => setSearchInput(e.target.value)}
+          placeholder="Search users"
+          className="w-full pl-11 pr-4 py-2.5 text-sm border border-gray-300 rounded-md
         focus:outline-none focus:ring-2 focus:ring-black focus:border-transparent"
-      />
-    </div>
+        />
+      </div>
       {courses.length > 0 ? (
         courses.map((course) => (
           <div
@@ -125,8 +123,6 @@ function CourseManagement() {
                   <Eye className="w-4 h-4" />
                   View
                 </Link>
-
-          
               </div>
             </div>
           </div>

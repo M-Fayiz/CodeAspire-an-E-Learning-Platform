@@ -1,7 +1,6 @@
 import { TransactionType } from "../../const/transaction.const";
 import { ITopCategory, ITopCourse } from "../mentorDashboard.types";
 
-
 interface RevanueSource {
   name: TransactionType;
   value: number;

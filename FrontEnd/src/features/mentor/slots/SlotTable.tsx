@@ -25,12 +25,6 @@ const SlotList: React.FC<SlotListProps> = ({ slots, onEdit }) => {
 
   return (
     <Card className="bg-white border border-gray-200 text-black shadow-sm">
-      <CardHeader className="pb-2">
-        <CardTitle className="text-xl font-semibold flex items-center gap-2 text-gray-800">
-          <Clock size={20} className="text-gray-600" /> Mentor Slots
-        </CardTitle>
-      </CardHeader>
-
       <CardContent>
         <div className="overflow-x-auto">
           <table className="w-full text-sm border-collapse">

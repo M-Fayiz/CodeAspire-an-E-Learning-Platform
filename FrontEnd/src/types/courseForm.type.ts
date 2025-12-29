@@ -1,6 +1,5 @@
 import type { CourseLevel, ISession } from "./DTOS/courses.dto.types";
 
-
 export interface ICourseData {
   _id?: string;
   title: string;
@@ -9,7 +8,7 @@ export interface ICourseData {
   categoryId: string;
   subCategoryId?: string;
   language: string;
-  level:CourseLevel
+  level: CourseLevel;
   price: number;
   mentorId: string;
   sessions?: ISession[];

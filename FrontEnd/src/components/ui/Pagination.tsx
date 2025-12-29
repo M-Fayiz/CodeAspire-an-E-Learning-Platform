@@ -13,7 +13,6 @@ const PaginationRounded: React.FC<Props> = ({
   currentPage,
   onPageChange,
 }) => {
-
   return (
     <Stack spacing={2} mt={4}>
       <Pagination

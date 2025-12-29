@@ -1,4 +1,4 @@
-import { Types } from "mongoose";
+import { PipelineStage, Types } from "mongoose";
 import { HttpResponse } from "../../const/error-message.const";
 import { HttpStatus } from "../../const/http-status.const";
 import { mentorSlotsDTO, slotPopulatedMapper } from "../../dtos/slot.dto";
@@ -15,6 +15,7 @@ import { IMentorSlot } from "../../types/slot.type";
 import { createHttpError } from "../../utils/http-error";
 import { convertTo12Hour } from "../../utils/timeManagement.util";
 import { ISlotService } from "../interface/ISlotService";
+import { DbModelName } from "../../const/modelName.const";
 
 export class SlotService implements ISlotService {
   constructor(
@@ -98,6 +99,8 @@ export class SlotService implements ISlotService {
   async getMontorSlots(
     mentorId: string,
     page: number,
+    search: string,
+    filter: string,
   ): Promise<{ mappedSlots: ISlotDTO[]; totalDocument: number }> {
     const mentor_Id = parseObjectId(mentorId);
     if (!mentor_Id) {
@@ -106,12 +109,55 @@ export class SlotService implements ISlotService {
     let limit = 5;
     let skip = (page - 1) * limit;
 
-    const mentorSlots = await this._slotRepository.getMentorSLotsList(
-      mentor_Id,
-      skip,
-      limit,
-      ["courseId"],
+    const pipeline: PipelineStage[] = [
+      {
+        $match: {
+          mentorId: mentor_Id,
+          isActive: true,
+        },
+      },
+    ];
+
+    if (filter) {
+      pipeline.push({
+        $match: {
+          selectedDays: {
+            $elemMatch: {
+              day: filter,
+              active: true,
+            },
+          },
+        },
+      });
+    }
+
+    pipeline.push(
+      {
+        $lookup: {
+          from: "courses",
+          localField: "courseId",
+          foreignField: "_id",
+          as: "course",
+        },
+      },
+      { $unwind: "$course" },
     );
+
+    if (search) {
+      pipeline.push({
+        $match: {
+          "course.title": {
+            $regex: search,
+            $options: "i",
+          },
+        },
+      });
+    }
+
+    pipeline.push({ $skip: skip }, { $limit: limit });
+
+    const mentorSlots = await this._slotRepository.getMentorSLotsList(pipeline);
+
     if (!mentorSlots) {
       throw createHttpError(HttpStatus.NOT_FOUND, HttpResponse.ITEM_NOT_FOUND);
     }

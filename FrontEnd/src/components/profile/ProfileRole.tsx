@@ -18,7 +18,7 @@ export const RoleSpecificFields: React.FC<{
                 {profile.enrolledCourses.map((course, index) => (
                   <span
                     key={index}
-                    className="bg-blue-100 text-blue-800 px-2 py-1 rounded text-sm"
+                    className="bg-gray-100 text-gray-800 px-2 py-1 rounded text-sm"
                   >
                     {course}
                   </span>

@@ -1,4 +1,4 @@
-import { FilterQuery, Types } from "mongoose";
+import { FilterQuery, PipelineStage, Types } from "mongoose";
 import { ISlotModel } from "../../models/slot.model";
 
 import {
@@ -9,10 +9,7 @@ import {
 export interface ISlotRepository {
   createSlot(slotData: Partial<ISlotModel>): Promise<ISlotModel>;
   getMentorSLotsList(
-    mentorId: Types.ObjectId,
-    skip: number,
-    limit: number,
-    populate?: string[],
+    query: PipelineStage[],
   ): Promise<mentorUnPopulatedSlots[] | null>;
   getMentorSLots(
     mentorId: Types.ObjectId,

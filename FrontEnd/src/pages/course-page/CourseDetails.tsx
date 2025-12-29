@@ -8,50 +8,51 @@ import MentorProfile from "@/features/courses_list/Details/AboutMentor";
 import Banner from "@/features/courses_list/Details/Banner";
 import CourseOverview from "@/features/courses_list/Details/OverView";
 import courseService from "@/service/mentor/course.service";
-import type { ICourseDetailsPageDTO, IFormCourseDTO } from "@/types/DTOS/courses.dto.types";
+import type { ICourseDetailsPageDTO } from "@/types/DTOS/courses.dto.types";
 import { ArrowLeft, ClipboardPen, User } from "lucide-react";
 import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import CoursePreview from "./CourseCurriculum";
+import { ReviewCard } from "./Review";
 
 const CourseDetails = () => {
   const [activeTap, setActiveTap] = useState("overview");
-  const { id } = useParams<{ id: string }>();
- 
+  const { courseId } = useParams<{ courseId: string }>();
+
   const { user } = useAuth();
   const [course, setCourse] = useState<ICourseDetailsPageDTO | null>(null);
   const [loading, setLoading] = useState(false);
-  const [enrolledId,setEnrolledId]=useState<string|null>(null)
+  const [enrolledId, setEnrolledId] = useState<string | null>(null);
   useEffect(() => {
     (async () => {
       setLoading(true);
       const result = await courseService.getCourseDetails(
-        id as string,
-        user?.id as string
+        courseId as string,
+        user?.id as string,
       );
       if (result) {
         setCourse(result.courseDetails);
-        setEnrolledId(result.enrolledId)
+        setEnrolledId(result.enrolledId);
         setLoading(false);
       }
     })();
-  }, [id]);
+  }, [courseId]);
 
   const handle = (tap: string) => setActiveTap(tap);
-  const navigate=useNavigate()
+  const navigate = useNavigate();
   return (
     <div>
       <Header />
       <div className="relative top-14 col-span-3 ">
-     <Button
-        variant="ghost"
-        onClick={() => navigate(-1)}
-        className="flex items-center gap-2 bg-gray-100 text-gray-500 
+        <Button
+          variant="ghost"
+          onClick={() => navigate(-1)}
+          className="flex items-center gap-2 bg-gray-100 text-gray-500 
                   hover:bg-gray-200 hover:text-orange-500"
-      >
-  <ArrowLeft size={20} />
-  <span className="text-lg text-grey-500 font-medium">Back</span>
-</Button>
+        >
+          <ArrowLeft size={20} />
+          <span className="text-lg text-grey-500 font-medium">Back</span>
+        </Button>
 
         <div className="absolute -top-25 right-25 w-80 h-150 bg-orange-400  rounded-2xl rotate-12 "></div>
         <div className="bg-white p-2 md:p-5">
@@ -64,7 +65,11 @@ const CourseDetails = () => {
               imageUrl={course?.thumbnail as string}
               title={course?.title as string}
               enrolledId={enrolledId}
-              course={course as IFormCourseDTO}
+              level={course?.level as string}
+              price={course?.price as number}
+              rating={course?.avgRating as number}
+              totalStudent={course?.enrolledStd as number}
+              onEnrolledPage={false}
             />
           )}
         </div>
@@ -83,15 +88,17 @@ const CourseDetails = () => {
                 tap="overview"
                 activeTap={activeTap}
               />
-              <Taps
-                label="mentor"
-                icon={
-                  <User className="text-white-500 w-4 h-4 hidden md:block" />
-                }
-                Click={handle}
-                tap="mentor"
-                activeTap={activeTap}
-              />
+              {user?.role !== "mentor" && (
+                <Taps
+                  label="mentor"
+                  icon={
+                    <User className="text-white-500 w-4 h-4 hidden md:block" />
+                  }
+                  Click={handle}
+                  tap="mentor"
+                  activeTap={activeTap}
+                />
+              )}
               <Taps
                 label="curriculum "
                 icon={
@@ -101,11 +108,20 @@ const CourseDetails = () => {
                 tap="curriculum"
                 activeTap={activeTap}
               />
+              <Taps
+                label="reviews "
+                icon={
+                  <User className="text-white-500 w-4 h-4 hidden md:block" />
+                }
+                Click={handle}
+                tap="reviews"
+                activeTap={activeTap}
+              />
             </>
           )}
         </div>
 
-        <div className="p-2 md:p-5">
+        <div className="py-20 md:p-5">
           {activeTap === "overview" && <CourseOverview />}
           {activeTap === "mentor" && (
             <MentorProfile
@@ -114,7 +130,22 @@ const CourseDetails = () => {
               enrolledId={enrolledId}
             />
           )}
-          {activeTap=='curriculum'&&course?.sessions&&<CoursePreview sessions={course?.sessions}/>}
+          {activeTap == "curriculum" && course?.sessions && (
+            <CoursePreview sessions={course?.sessions} />
+          )}
+          {activeTap == "reviews" && (
+            <div className="space-y-4">
+              <h3 className="text-xl font-semibold text-gray-800">
+                Student Reviews
+              </h3>
+
+              <div className="py-8 grid gap-4 md:grid-cols-2">
+                {course?.courseReviews.map((review) => (
+                  <ReviewCard key={review._id} review={review} />
+                ))}
+              </div>
+            </div>
+          )}
         </div>
       </div>
     </div>

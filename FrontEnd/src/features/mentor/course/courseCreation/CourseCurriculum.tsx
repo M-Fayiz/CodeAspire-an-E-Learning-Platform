@@ -22,7 +22,7 @@ import {
   DialogHeader,
   DialogTitle,
   DialogTrigger,
-} from "@/components/ui/dialog"
+} from "@/components/ui/dialog";
 import {
   Sheet,
   SheetContent,
@@ -132,12 +132,13 @@ const CourseCurriculum: React.FC<CurriculumProps> = () => {
       setFormData((prv) => ({ ...prv, sessions: deleteSession.sessions }));
     }
   };
-  const handleRemoveLecture = async (
-    sessionId: string,
-    lectureId: string,
-  ) => {
-    const updatedLecture=await courseService.removeLecture(formData._id as string,sessionId,lectureId)
-    console.log(updatedLecture)
+  const handleRemoveLecture = async (sessionId: string, lectureId: string) => {
+    const updatedLecture = await courseService.removeLecture(
+      formData._id as string,
+      sessionId,
+      lectureId,
+    );
+    console.log(updatedLecture);
   };
   return (
     <div className="bg-white min-h-screen">
@@ -209,47 +210,44 @@ const CourseCurriculum: React.FC<CurriculumProps> = () => {
                     </AlertDialogContent>
                   </AlertDialog>
 
-                  
-                 
-<Dialog>
-  <DialogTrigger asChild>
-    <Button
-      type="button"
-      size="sm"
-      variant="outline"
-      className="text-gray-700"
-    >
-      <Edit size={14} />
-    </Button>
-  </DialogTrigger>
+                  <Dialog>
+                    <DialogTrigger asChild>
+                      <Button
+                        type="button"
+                        size="sm"
+                        variant="outline"
+                        className="text-gray-700"
+                      >
+                        <Edit size={14} />
+                      </Button>
+                    </DialogTrigger>
 
-  <DialogContent className="sm:max-w-[420px]">
-    <DialogHeader>
-      <DialogTitle>Edit Session</DialogTitle>
-      <DialogDescription>
-        Update the Session title and save your changes.
-      </DialogDescription>
-    </DialogHeader>
+                    <DialogContent className="sm:max-w-[420px]">
+                      <DialogHeader>
+                        <DialogTitle>Edit Session</DialogTitle>
+                        <DialogDescription>
+                          Update the Session title and save your changes.
+                        </DialogDescription>
+                      </DialogHeader>
 
-    {/* Form */}
-    <div className="space-y-4 py-2">
-      <div className="space-y-1">
-        
-        <input
-          placeholder="Enter new value"
-          className="focus-visible:ring-1  border-2 p-2 rounded-lg"
-        />
-      </div>
-    </div>
+                      {/* Form */}
+                      <div className="space-y-4 py-2">
+                        <div className="space-y-1">
+                          <input
+                            placeholder="Enter new value"
+                            className="focus-visible:ring-1  border-2 p-2 rounded-lg"
+                          />
+                        </div>
+                      </div>
 
-    <DialogFooter className="gap-2">
-      <Button variant="outline">Cancel</Button>
-      <Button className="bg-orange-500 hover:bg-orange-600">
-        Save Changes
-      </Button>
-    </DialogFooter>
-  </DialogContent>
-</Dialog>
+                      <DialogFooter className="gap-2">
+                        <Button variant="outline">Cancel</Button>
+                        <Button className="bg-orange-500 hover:bg-orange-600">
+                          Save Changes
+                        </Button>
+                      </DialogFooter>
+                    </DialogContent>
+                  </Dialog>
                 </div>
               </div>
 
@@ -330,7 +328,7 @@ const CourseCurriculum: React.FC<CurriculumProps> = () => {
           <p className="text-sm text-gray-500 italic">No sessions added yet.</p>
         )}
       </div>
-  {/* Add Session */}
+      {/* Add Session */}
       <div className="px-6 pb-6">
         <Accordion
           type="single"
@@ -364,7 +362,7 @@ const CourseCurriculum: React.FC<CurriculumProps> = () => {
           </AccordionItem>
         </Accordion>
       </div>
-        
+
       <Sheet open={!!sheet} onOpenChange={(open) => !open && setSheet(null)}>
         <SheetContent className="bg-white border-l shadow-xl">
           <SheetHeader>

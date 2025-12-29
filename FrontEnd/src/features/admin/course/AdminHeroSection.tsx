@@ -25,20 +25,17 @@ function HeroSection({ courses }: HeroSectionProps) {
           </p>
 
           <div className="flex flex-wrap items-center gap-6 mb-6">
-           
             <div className="flex items-center gap-2 text-gray-600">
               <Users className="w-4 h-4" />
-             
             </div>
           </div>
 
-         
           <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 text-sm text-gray-600 mb-6">
             <div>
               <span className="font-medium text-gray-900">Level:</span>
               <div>{courses.level}</div>
             </div>
-            
+
             <div>
               <span className="font-medium text-gray-900">sessions:</span>
               <div>{courses.sessions.length}</div>
@@ -64,9 +61,7 @@ function HeroSection({ courses }: HeroSectionProps) {
             </div>
           </div>
 
-          <div className="flex items-center gap-4">
-           
-          </div>
+          <div className="flex items-center gap-4"></div>
         </div>
 
         {/* Hero Image */}

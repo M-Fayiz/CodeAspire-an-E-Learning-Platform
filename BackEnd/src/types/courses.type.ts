@@ -1,7 +1,6 @@
 import { Document, Types } from "mongoose";
 import { IMenterModel } from "../models/user.model";
 
-
 export enum LectureType {
   VIDEO = "video",
   PDF = "pdf",
@@ -34,12 +33,10 @@ export interface ILecture {
   lectureContent: string;
 }
 
-
 export interface ISession {
   title: string;
   lectures: ILecture[];
 }
-
 
 export interface ICourses extends Document {
   id?: string;
@@ -49,13 +46,13 @@ export interface ICourses extends Document {
   categoryId: Types.ObjectId;
   subCategoryId: Types.ObjectId;
   language: string;
-  level:CourseLevel
+  level: CourseLevel;
   price: number;
   mentorId: Types.ObjectId | IMenterModel;
   sessions?: ISession[];
   isActive?: boolean;
   isDraft?: boolean;
-  status: CourseStatus
+  status: CourseStatus;
   updatedAt: Date;
 }
 
@@ -79,10 +76,10 @@ export interface populatedCours {
     parentId: boolean | string;
   };
   language: string;
-  level: CourseLevel
+  level: CourseLevel;
   price: number;
   mentorId: string;
   sessions: ISession[];
   updatedAt: string;
-  status: CourseStatus
+  status: CourseStatus;
 }

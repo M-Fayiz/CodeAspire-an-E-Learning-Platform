@@ -26,7 +26,7 @@ const BasicCourseInformation: React.FC<BaseCaourseProps> = ({ handleTap }) => {
   const [selectedCategory, setSelectedCategory] = useState("");
   const [zodError, setErrors] = useState<{ [key: string]: string }>({});
   const [image, setImage] = useState("");
-  const [spin,setSpin] = useState(false);
+  const [spin, setSpin] = useState(false);
   const {
     courseId,
     formData,
@@ -99,7 +99,7 @@ const BasicCourseInformation: React.FC<BaseCaourseProps> = ({ handleTap }) => {
         setErrors(fieldErrors);
         return;
       }
-      setSpin(true)
+      setSpin(true);
       if (formData._id) {
         const updatedData = await courseService.updateBaseInformation(
           courseId,
@@ -110,7 +110,7 @@ const BasicCourseInformation: React.FC<BaseCaourseProps> = ({ handleTap }) => {
         );
         if (updatedData) {
           setCourseId(updatedData._id as string);
-          setSpin(false)
+          setSpin(false);
           handleTap("curriculum");
           toast.success("Base Information Updated Successfully");
         }
@@ -121,14 +121,13 @@ const BasicCourseInformation: React.FC<BaseCaourseProps> = ({ handleTap }) => {
         ...courseData.data,
         mentorId: user!.id,
       });
-     
+
       if (savedCourseData._id) {
         setCourseId(savedCourseData._id);
         setIsDraftReady(true);
         hydrateFromDB(savedCourseData);
-        setSpin(false)
+        setSpin(false);
         handleTap("curriculum");
-       
       }
     } catch (error) {
       if (error instanceof Error) {

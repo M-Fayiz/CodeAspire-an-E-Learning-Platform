@@ -11,45 +11,39 @@ import { Search } from "lucide-react";
 import { useEffect, useMemo, useState } from "react";
 import { Link } from "react-router-dom";
 
-
 const CourseEnrolledList = () => {
   const { user } = useAuth();
   const [enrolledCourse, setEnrolledCourses] = useState<IEnrolledListDto[]>([]);
-  const [totalPage,setTotalPage]=useState(1)
-    const { search, page, setSearch, setPage } =
-    useSearchPagination()
-    const [searchInput, setSearchInput] = useState(search);
+  const [totalPage, setTotalPage] = useState(1);
+  const { search, page, setSearch, setPage } = useSearchPagination();
+  const [searchInput, setSearchInput] = useState(search);
   const debouncedSearch = useDebounce(searchInput, 200);
-    useEffect(() => {
+  useEffect(() => {
     setSearch(debouncedSearch);
   }, [debouncedSearch]);
 
   useEffect(() => {
-  if (!user?.id) return;
+    if (!user?.id) return;
 
-  (async () => {
-    const data = await EnrolledService.getEnrolledCourse(user.id);
+    (async () => {
+      const data = await EnrolledService.getEnrolledCourse(user.id);
 
-    if (data) {
-     
+      if (data) {
+        setEnrolledCourses(data);
+        setTotalPage(data.length);
+      }
+    })();
+  }, [user?.id, page]);
 
-      setEnrolledCourses(data);
-      setTotalPage(data.length);
-    }
-  })();
-}, [user?.id, page]);
-
-
-  const handlePage=(_e:React.ChangeEvent<unknown>,value:number)=>{
-    
-    setPage(value)
-  }
+  const handlePage = (_e: React.ChangeEvent<unknown>, value: number) => {
+    setPage(value);
+  };
   const filteredCourses = useMemo(() => {
-    const q=search.trim().toLowerCase()
+    const q = search.trim().toLowerCase();
     return enrolledCourse.filter((course) =>
-      course.course.title.toLowerCase().includes(q)
+      course.course.title.toLowerCase().includes(q),
     );
-  }, [search,enrolledCourse]);
+  }, [search, enrolledCourse]);
   return (
     <>
       <ManagementLayout
@@ -57,17 +51,17 @@ const CourseEnrolledList = () => {
         title="Enrolled Course"
       >
         <div className="mb-3 bg-white p-3">
-      <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 w-5 h-5" />
-      <input
-        type="text"
-        value={searchInput}
-        onChange={(e)=>setSearchInput(e.target.value)}
-        placeholder="search course"
-        className="w-full pl-10 pr-3 py-2.5 text-sm border border-gray-300 rounded-sm 
+          <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 w-5 h-5" />
+          <input
+            type="text"
+            value={searchInput}
+            onChange={(e) => setSearchInput(e.target.value)}
+            placeholder="search course"
+            className="w-full pl-10 pr-3 py-2.5 text-sm border border-gray-300 rounded-sm 
         focus:outline-none focus:ring-2 focus:ring-black 
         focus:border-transparent transition"
-      />
-    </div>
+          />
+        </div>
         {enrolledCourse && enrolledCourse.length > 0 ? (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             {filteredCourses.map((course, ind) => (
@@ -84,7 +78,11 @@ const CourseEnrolledList = () => {
             <p>Please purchase a course and start your tech journey here</p>
           </div>
         )}
-        <PaginationRounded currentPage={page} onPageChange={handlePage} totalPages={totalPage}/>
+        <PaginationRounded
+          currentPage={page}
+          onPageChange={handlePage}
+          totalPages={totalPage}
+        />
       </ManagementLayout>
     </>
   );

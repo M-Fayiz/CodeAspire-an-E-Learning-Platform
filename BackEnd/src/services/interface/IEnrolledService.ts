@@ -13,7 +13,7 @@ import { learnerDashboardCardsDTO } from "../../types/dtos.type/learnerDashboard
 
 import { IMentorDhasboardDTO } from "../../types/dtos.type/mentorDashboard.dto.type";
 
-import {  IProgressTrack } from "../../types/enrollment.types";
+import { IProgressTrack } from "../../types/enrollment.types";
 
 export interface IEnrolledService {
   getEnrolledCourses(learnerId: string): Promise<IEnrolledListDto[]>;
@@ -36,7 +36,10 @@ export interface IEnrolledService {
     startDate?: string,
     endDate?: string,
   ): Promise<IChartTrendDTO[]>;
-  getMentorDashboardData(mentorId: string,filter:FilterByDate): Promise<IMentorDhasboardDTO>;
+  getMentorDashboardData(
+    mentorId: string,
+    filter: FilterByDate,
+  ): Promise<IMentorDhasboardDTO>;
   getRevenueGraph(
     filter: string,
     mentorId?: string,

@@ -23,7 +23,7 @@ export interface ISlotPopulatedDTO extends IBaseSlot {
 export interface mentorUnPopulatedSlots extends IBaseSlot {
   _id: Types.ObjectId;
   mentorId: Types.ObjectId;
-  courseId: ICourses;
+  course: ICourses;
 }
 
 export interface mentorPopulatedSlots extends IBaseSlot {

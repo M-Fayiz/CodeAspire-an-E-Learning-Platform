@@ -1,3 +1,4 @@
+import type { IReviewDTO } from "./review.dto.type";
 
 export const COURSE_LEVEL = {
   BEGINNER: "Beginner",
@@ -5,7 +6,7 @@ export const COURSE_LEVEL = {
   ADVANCED: "Advanced",
 } as const;
 
-export type CourseLevel = typeof COURSE_LEVEL[keyof typeof COURSE_LEVEL];
+export type CourseLevel = (typeof COURSE_LEVEL)[keyof typeof COURSE_LEVEL];
 
 export const COURSE_STATUS = {
   IN_PROGRESS: "inProgress",
@@ -15,7 +16,7 @@ export const COURSE_STATUS = {
   REJECTED: "rejected",
 } as const;
 
-export type CourseStatus = typeof COURSE_STATUS[keyof typeof COURSE_STATUS];
+export type CourseStatus = (typeof COURSE_STATUS)[keyof typeof COURSE_STATUS];
 
 export const LECTURE_TYPE = {
   VIDEO: "video",
@@ -23,9 +24,7 @@ export const LECTURE_TYPE = {
   NONE: "none",
 } as const;
 
-export type LectureType = typeof LECTURE_TYPE[keyof typeof LECTURE_TYPE];
-
-
+export type LectureType = (typeof LECTURE_TYPE)[keyof typeof LECTURE_TYPE];
 
 export interface ISearchQuery {
   search?: string;
@@ -41,12 +40,10 @@ export interface SlotCourseDTO {
   title: string;
 }
 
-
-
 export interface ILecture {
   _id?: string;
   title: string;
-  lectureType: LectureType
+  lectureType: LectureType;
   lectureContent: File | string;
 }
 
@@ -63,7 +60,7 @@ export interface ICourseListDTO {
   category: string;
   subCategory: string;
   language: string;
-  level:CourseLevel;
+  level: CourseLevel;
   price: number;
 }
 export interface ICourseDTO extends ICourseListDTO {
@@ -79,11 +76,11 @@ export interface CourseForm {
   categoryId: string;
   subCategoryId?: string;
   language: string;
-  level: CourseLevel
+  level: CourseLevel;
   price: number;
   mentorId: string;
   sessions: ISession[];
-  status?: CourseStatus
+  status?: CourseStatus;
 }
 
 // export interface IFormCourse {
@@ -114,7 +111,7 @@ export interface IFormCourseDTO {
     title: string;
   };
   language: string;
-  level:CourseLevel
+  level: CourseLevel;
   price: number;
   mentorId: {
     _id: string;
@@ -123,23 +120,16 @@ export interface IFormCourseDTO {
   };
   sessions: ISession[];
   description: string;
-  status: CourseStatus
+  status: CourseStatus;
   updated: string;
-  
 }
 
-
-
-export interface COurseDetaildWIthEnrolledData extends IFormCourseDTO{
-  isEnrolled:boolean
-  enrolledId:string
+export interface COurseDetaildWIthEnrolledData extends IFormCourseDTO {
+  isEnrolled: boolean;
+  enrolledId: string;
 }
 
-
-export type ILectureWithoutContent = Omit<
-  ILecture,
-  "lectureContent"
->;
+export type ILectureWithoutContent = Omit<ILecture, "lectureContent">;
 
 export interface ISessionWithoutContent {
   title: string;
@@ -149,7 +139,7 @@ export interface ISessionWithoutContent {
 export interface ICourseDetailsPageDTO
   extends Omit<IFormCourseDTO, "sessions"> {
   sessions: ISessionWithoutContent[];
+  avgRating: number;
+  enrolledStd: number;
+  courseReviews: IReviewDTO[];
 }
-
-
-

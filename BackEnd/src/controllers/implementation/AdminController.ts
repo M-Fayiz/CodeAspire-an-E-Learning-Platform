@@ -16,13 +16,11 @@ export class AdminController implements IAdminController {
     next: NextFunction,
   ): Promise<void> => {
     try {
-      const {page,search}=req.query
-     
-      
+      const { page, search } = req.query;
 
       const allUsers = await this._adminService.fetchAllUsers(
         Number(page),
-        search as string
+        search as string,
       );
       res.status(HttpStatus.OK).json(
         successResponse(HttpResponse.OK, {
@@ -106,8 +104,12 @@ export class AdminController implements IAdminController {
     next: NextFunction,
   ): Promise<void> => {
     try {
-      const {filter,startDate,endDate}=req.query
-      const dashBoardData = await this._adminService.getDashboardData(filter as FilterByDate,startDate as string,endDate as string);
+      const { filter, startDate, endDate } = req.query;
+      const dashBoardData = await this._adminService.getDashboardData(
+        filter as FilterByDate,
+        startDate as string,
+        endDate as string,
+      );
       res
         .status(HttpStatus.OK)
         .json(successResponse(HttpResponse.OK, { dashBoardData }));

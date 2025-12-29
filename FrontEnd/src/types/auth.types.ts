@@ -7,15 +7,15 @@ export interface ILogin {
 export interface ISignUp extends ILogin {
   name?: string;
   phone?: string;
-  role?: UserRoleType
+  role?: UserRoleType;
   confirmPassword?: string;
 }
-export const UserRole={
-  LEARNER:'learner',
-  MENTOR:'mentor',
-  ADMIN:'admin'
-}
-export type UserRoleType = (typeof UserRole)[keyof typeof UserRole]
+export const UserRole = {
+  LEARNER: "learner",
+  MENTOR: "mentor",
+  ADMIN: "admin",
+};
+export type UserRoleType = (typeof UserRole)[keyof typeof UserRole];
 
 export interface IDecodedUserType {
   id: string;
@@ -23,7 +23,7 @@ export interface IDecodedUserType {
   email: string;
   role: UserRoleType;
   profile?: string;
-  ApprovalStatus?:mentorApprovalStatus
+  ApprovalStatus?: mentorApprovalStatus;
   isRequested?: boolean;
 }
 
@@ -32,11 +32,10 @@ export interface AuthComponentProps {
   onGoogleAuth: (role: UserRoleType) => void;
 }
 
-export  const AuthStatus ={
+export const AuthStatus = {
   CHECKING: "checking",
   AUTHENTICATED: "authenticated",
   GUEST: "guest",
-  BLOCKED: "blocked"
-} as const
-export type AuthStatusType =
-  (typeof AuthStatus)[keyof typeof AuthStatus];
+  BLOCKED: "blocked",
+} as const;
+export type AuthStatusType = (typeof AuthStatus)[keyof typeof AuthStatus];

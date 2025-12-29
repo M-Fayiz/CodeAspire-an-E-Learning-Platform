@@ -19,7 +19,7 @@ function VerifyEmail() {
   useEffect(() => {
     async function verify() {
       if (!token || !email || hasVerifiedRef.current) return;
-      
+
       hasVerifiedRef.current = true;
 
       try {

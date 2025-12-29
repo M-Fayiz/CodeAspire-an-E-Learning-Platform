@@ -65,7 +65,7 @@ export class UserRepository
         email: profile.emails?.[0].value,
         name: profile.displayName,
         role: role,
-        isActive:true
+        isActive: true,
       });
     }
     return user;
@@ -76,16 +76,18 @@ export class UserRepository
     skip: number,
     searchQuery?: string,
   ): Promise<IUserModel[] | null> {
-    
-    return this.findAll({name: { $regex: searchQuery ?? "", $options: "i" }},limit,skip)
-
+    return this.findAll(
+      { name: { $regex: searchQuery ?? "", $options: "i" } },
+      limit,
+      skip,
+    );
   }
 
-async findUserCount(searchQuery?: string): Promise<number> {
-  return this.countDocuments({
-    name: { $regex: searchQuery ?? "", $options: "i" },
-  });
-}
+  async findUserCount(searchQuery?: string): Promise<number> {
+    return this.countDocuments({
+      name: { $regex: searchQuery ?? "", $options: "i" },
+    });
+  }
 
   async blockUser(id: Types.ObjectId): Promise<IUserModel | null> {
     return this.model.findByIdAndUpdate(
@@ -113,7 +115,7 @@ async findUserCount(searchQuery?: string): Promise<number> {
   }
   async updateMentorStatus(
     id: Types.ObjectId,
-    status:mentorApprovalStatus,
+    status: mentorApprovalStatus,
   ): Promise<IUserModel | null> {
     return await this.findByIDAndUpdate(id, { ApprovalStatus: status });
   }
@@ -135,19 +137,19 @@ async findUserCount(searchQuery?: string): Promise<number> {
   ): Promise<IUserModel | IMenterModel | ILearnerModel | IAdminModel | null> {
     return await this.findOne(filter);
   }
- async findDashBoardUserCount(
-  role: IRole,
-  start: Date,
-  end: Date
-): Promise<number> {
-  return await this.countDocuments({
-    role,
-    createdAt: {
-      $gte: start,
-      $lte: end,
-    },
-  });
-}
+  async findDashBoardUserCount(
+    role: IRole,
+    start: Date,
+    end: Date,
+  ): Promise<number> {
+    return await this.countDocuments({
+      role,
+      createdAt: {
+        $gte: start,
+        $lte: end,
+      },
+    });
+  }
 
   async SignedUsers(filter: FilterQuery<IUserModel>): Promise<graphPrps[]> {
     return await this.aggregate([

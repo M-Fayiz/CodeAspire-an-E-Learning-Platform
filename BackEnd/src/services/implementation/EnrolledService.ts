@@ -39,7 +39,10 @@ import { IMentorDhasboardDTO } from "../../types/dtos.type/mentorDashboard.dto.t
 import { mentorDashboardDTO } from "../../dtos/mentorDashboard.dto";
 import { timeFilter } from "../../utils/dashFilterGenerator.utils";
 import { ITransactionModel } from "../../models/transaction.model";
-import { TransactionStatus, TransactionType } from "../../const/transaction.const";
+import {
+  TransactionStatus,
+  TransactionType,
+} from "../../const/transaction.const";
 import { graphPrps } from "../../types/adminDahsboard.type";
 import { buildDateFilter } from "../../utils/dateBuilder";
 import { IUserRepo } from "../../repository/interface/IUserRepo";
@@ -122,7 +125,6 @@ export class EnrolledService implements IEnrolledService {
     if (!enrolledObjectId || !lectureObjectId) {
       throw createHttpError(HttpStatus.BAD_REQUEST, HttpResponse.INVALID_ID);
     }
-
 
     const updatedEnrollment = await this._erolledRepository.updateEnrolledData(
       enrolledObjectId,
@@ -236,19 +238,23 @@ export class EnrolledService implements IEnrolledService {
     );
     return graph.map((data) => chartTrendDTO(data));
   }
-  async getMentorDashboardData(mentorId: string,filter:FilterByDate,startDay?: string,endDay?: string,): Promise<IMentorDhasboardDTO> {
+  async getMentorDashboardData(
+    mentorId: string,
+    filter: FilterByDate,
+    startDay?: string,
+    endDay?: string,
+  ): Promise<IMentorDhasboardDTO> {
     const mentor_id = parseObjectId(mentorId);
     if (!mentor_id) {
       throw createHttpError(HttpStatus.BAD_REQUEST, HttpResponse.INVALID_ID);
     }
 
-
     const { start, end } = timeFilter(filter, startDay, endDay);
 
     const [studentsAndRating, topCourse, revanue] = await Promise.all([
-      this._erolledRepository.getMentorDashboardData(mentor_id,start,end),
-      this._erolledRepository.getTopSellingCourse(mentor_id,start,end),
-      this._transactionRepository.getMentorTotalRevenue(mentor_id,start,end),
+      this._erolledRepository.getMentorDashboardData(mentor_id, start, end),
+      this._erolledRepository.getTopSellingCourse(mentor_id, start, end),
+      this._transactionRepository.getMentorTotalRevenue(mentor_id, start, end),
     ]);
     return mentorDashboardDTO(studentsAndRating[0], topCourse, revanue);
   }
@@ -263,7 +269,8 @@ export class EnrolledService implements IEnrolledService {
     const dateMatch = buildDateFilter(filter);
 
     const matchStage: FilterQuery<ITransactionModel> = {
-      ...dateMatch,status:{$ne:TransactionStatus.REFUNDED}
+      ...dateMatch,
+      status: { $ne: TransactionStatus.REFUNDED },
     };
 
     if (mentorId) {
@@ -273,7 +280,7 @@ export class EnrolledService implements IEnrolledService {
       }
       matchStage.mentorId = mentor_id;
     }
-    matchStage.status={$ne:TransactionStatus.REFUNDED}
+    matchStage.status = { $ne: TransactionStatus.REFUNDED };
 
     const slotRevenue =
       await this._transactionRepository.getMentorRevanueONSlot({
@@ -296,7 +303,6 @@ export class EnrolledService implements IEnrolledService {
     };
   }
 
-  
   async learnerDashboardCardData(
     learnerId: string,
     filter?: string,

@@ -1,10 +1,5 @@
 import { useEffect, useState } from "react";
-import {
-  CheckCircle,
-  FileText,
-  ExternalLink,
-  ArrowRight,
-} from "lucide-react";
+import { CheckCircle, FileText, ExternalLink, ArrowRight } from "lucide-react";
 import { Link } from "react-router-dom";
 import { OrderService } from "@/service/order.service";
 
@@ -41,9 +36,7 @@ const PaymentSuccess = () => {
         invoiceUrl: session.invoice?.hosted_invoice_url,
         invoicePdf: session.invoice?.invoice_pdf,
         paymentType:
-          session.metadata?.paymentType === "SLOT_BOOKING"
-            ? "SLOT"
-            : "COURSE",
+          session.metadata?.paymentType === "SLOT_BOOKING" ? "SLOT" : "COURSE",
         createdAt: session.created,
       });
     })();
@@ -57,14 +50,11 @@ const PaymentSuccess = () => {
       : "/learner/slots";
 
   const redirectLabel =
-    data.paymentType === "COURSE"
-      ? "View Enrolled Courses"
-      : "View My Slots";
+    data.paymentType === "COURSE" ? "View Enrolled Courses" : "View My Slots";
 
   return (
     <div className="min-h-screen bg-gray-50 flex items-center justify-center px-4">
       <div className="w-full max-w-md bg-white rounded-2xl border border-gray-200 shadow-sm p-6">
-
         {/* Icon */}
         <div className="flex justify-center mb-4">
           <CheckCircle className="text-orange-500" size={56} />
@@ -91,9 +81,7 @@ const PaymentSuccess = () => {
 
           <Row label="Transaction ID">{data.paymentIntentId}</Row>
 
-          {data.invoiceId && (
-            <Row label="Invoice ID">{data.invoiceId}</Row>
-          )}
+          {data.invoiceId && <Row label="Invoice ID">{data.invoiceId}</Row>}
 
           <Row label="Date">
             {new Date(data.createdAt * 1000).toLocaleString()}

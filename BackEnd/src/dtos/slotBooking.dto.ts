@@ -19,7 +19,6 @@ export function videoSessionDTO(
 export function ListBookedSlotOfLearner(
   slot: IPopulatedBooking,
 ): IBookingDTOforLearner {
-  
   const options: Intl.DateTimeFormatOptions = {
     hour: "2-digit",
     minute: "2-digit",

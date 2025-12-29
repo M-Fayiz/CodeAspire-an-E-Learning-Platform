@@ -3,7 +3,7 @@ import { CourseLevel, CourseStatus, ILecture, ISession } from "../courses.type";
 import { ICategory } from "../category.types";
 import { IMenterModel } from "../../models/user.model";
 import { ICategoryModel } from "../../models/category.model";
-
+import { IReviewDTO } from "./review.dto.types";
 
 export interface IBaseCourse {
   _id: Types.ObjectId;
@@ -11,14 +11,14 @@ export interface IBaseCourse {
   description?: string;
   thumbnail?: string;
   language: string;
-  level: CourseLevel
+  level: CourseLevel;
   price: number;
 
   subCategoryId: ICategory;
   sessions?: ISession[];
   isActive?: boolean;
   isDraft?: boolean;
-  status: CourseStatus
+  status: CourseStatus;
   updatedAt: Date;
 }
 
@@ -35,7 +35,7 @@ export interface ICourseListDTO {
   category: string;
   subCategory: string;
   language: string;
-  level:CourseLevel
+  level: CourseLevel;
   price: number;
   isEnrolled: boolean;
 }
@@ -58,7 +58,7 @@ export interface IFormCourseDTO {
     title: string;
   };
   language: string;
-  level: CourseLevel
+  level: CourseLevel;
   price: number;
   mentorId: {
     _id: Types.ObjectId;
@@ -67,7 +67,7 @@ export interface IFormCourseDTO {
   };
   sessions: ISession[];
   description: string;
-  status:CourseStatus
+  status: CourseStatus;
   updated: string;
 }
 
@@ -81,8 +81,8 @@ export interface IBaseFormCourse {
   description: string;
   price: number;
   thumbnail: string;
-  status:CourseStatus
-  level:CourseLevel
+  status: CourseStatus;
+  level: CourseLevel;
   language: string;
   categoryId: Types.ObjectId;
   subCategoryId: Types.ObjectId;
@@ -93,11 +93,7 @@ export interface ICourseCreateForm extends IBaseFormCourse {
   sessions: ISession[];
 }
 
-
-export type ILectureWithoutContent = Omit<
-  ILecture,
-  "lectureContent"
->;
+export type ILectureWithoutContent = Omit<ILecture, "lectureContent">;
 
 export interface ISessionWithoutContent {
   title: string;
@@ -107,5 +103,7 @@ export interface ISessionWithoutContent {
 export interface ICourseDetailsPageDTO
   extends Omit<IFormCourseDTO, "sessions"> {
   sessions: ISessionWithoutContent[];
+  avgRating: number;
+  enrolledStd: number;
+  courseReviews: IReviewDTO[];
 }
-

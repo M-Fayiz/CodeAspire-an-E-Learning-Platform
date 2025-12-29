@@ -114,11 +114,11 @@ export class EnrolledController implements IEnrolledController {
     try {
       const { courseId } = req.params;
 
-      const { filter , startData, endDate } = req.query;
+      const { filter, startData, endDate } = req.query;
 
       const chartData = await this._enrolledService.getTrendingCourseGraph(
         courseId,
-        filter  as FilterByDate,
+        filter as FilterByDate,
         startData as string,
         endDate as string,
       );
@@ -137,12 +137,13 @@ export class EnrolledController implements IEnrolledController {
   ): Promise<void> => {
     try {
       const { mentorId } = req.params;
-      const {filter}=req.query
-      console.log('filter :',filter)
-      const dashboardData =
-        await this._enrolledService.getMentorDashboardData(mentorId, filter as FilterByDate);
+      const { filter } = req.query;
+      console.log("filter :", filter);
+      const dashboardData = await this._enrolledService.getMentorDashboardData(
+        mentorId,
+        filter as FilterByDate,
+      );
 
-    
       res
         .status(HttpStatus.OK)
         .json(successResponse(HttpResponse.OK, { dashboardData }));

@@ -18,7 +18,6 @@ export const adminService = {
     page: number,
     search: string,
   ): Promise<fetchedUsers> => {
-   
     try {
       const response = await axiosInstance.get(API.ADMIN.FETCH_ALL_USERS, {
         params: { page, search },
@@ -75,17 +74,18 @@ export const adminService = {
         status,
         feedback,
       });
-    
+
       return response.data;
     } catch (error) {
       throwAxiosError(error);
     }
   },
-  getDashboardCardsdata: async (filter:string): Promise<IAdminDashboardDTO> => {
+  getDashboardCardsdata: async (
+    filter: string,
+  ): Promise<IAdminDashboardDTO> => {
     try {
-      
-      const response = await axiosInstance.get(API.ADMIN.DASHBOARD_CARD,{
-        params:{filter}
+      const response = await axiosInstance.get(API.ADMIN.DASHBOARD_CARD, {
+        params: { filter },
       });
       return response.data.dashBoardData;
     } catch (error) {

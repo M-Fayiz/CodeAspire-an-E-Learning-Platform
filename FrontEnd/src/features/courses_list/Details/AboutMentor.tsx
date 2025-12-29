@@ -10,10 +10,14 @@ import { toast } from "sonner";
 interface MentorProps {
   mentorId: string;
   courseId: string;
-  enrolledId:string|null
+  enrolledId: string | null;
 }
 
-const MentorProfile: React.FC<MentorProps> = ({ mentorId, courseId ,enrolledId}) => {
+const MentorProfile: React.FC<MentorProps> = ({
+  mentorId,
+  courseId,
+  enrolledId,
+}) => {
   const [mentorProfile, setMentorProfile] = useState<MentorDTO>({
     name: "",
     bio: "",
@@ -117,7 +121,7 @@ const MentorProfile: React.FC<MentorProps> = ({ mentorId, courseId ,enrolledId})
               <MessageSquare className={`text-white w-4 h-4 hidden md:block`} />{" "}
               Chat with Mentor
             </button>
-            {enrolledId&&user?.role !== "admin" && (
+            {enrolledId && user?.role !== "admin" && (
               <Link
                 to={`/learner/slot-booking/${courseId}`}
                 className="inline-flex items-center gap-3 bg-orange-500 hover:bg-orange-600 text-white font-semibold px-6 py-3 rounded-full shadow-lg transition-all duration-300 hover:shadow-xl"

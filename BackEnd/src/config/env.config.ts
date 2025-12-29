@@ -92,10 +92,10 @@ export const env = {
   get CLIENT_URL_2() {
     return process.env.CLIENT_URL_2;
   },
-  get ACCESS_TOKEN_MAX_AGE(){
-    return process.env.ACCESS_TOKEN_MAX_AGE
+  get ACCESS_TOKEN_MAX_AGE() {
+    return process.env.ACCESS_TOKEN_MAX_AGE;
   },
-  get REFRESH_TOKEN_MAX_AGE(){
-    return process.env.REFRESH_TOKEN_MAX_AGE
-  }
+  get REFRESH_TOKEN_MAX_AGE() {
+    return process.env.REFRESH_TOKEN_MAX_AGE;
+  },
 };

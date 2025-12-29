@@ -10,6 +10,8 @@ export interface ISlotService {
   getMontorSlots(
     mentorId: string,
     page: number,
+    search: string,
+    filter: string,
   ): Promise<{ mappedSlots: ISlotDTO[]; totalDocument: number }>;
   updateSlot(slotId: string, slotData: ISlotModel): Promise<ISlotDTO>;
   getCourseSlot(courseId: string): Promise<ISlotPopulatedDTO>;

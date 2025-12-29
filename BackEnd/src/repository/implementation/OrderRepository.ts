@@ -29,7 +29,9 @@ export class OrderRepositoy
   ): Promise<IOrderModel | null> {
     return await this.findByIDAndUpdate(id, data);
   }
-  async  isOrdered(filter: FilterQuery<IOrderModel>): Promise<IOrderModel | null> {
-    return await this.findOne(filter)
+  async isOrdered(
+    filter: FilterQuery<IOrderModel>,
+  ): Promise<IOrderModel | null> {
+    return await this.findOne(filter);
   }
 }

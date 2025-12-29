@@ -45,7 +45,6 @@ export function getNextWeekDates(): Date[] {
   return next7Days;
 }
 
-
 export function getSlotDatesForMentor(slot: ISlotPopulatedDTO) {
   const today = new Date();
   const next7Days: { date: Date; day: string; formattedDate: string }[] = [];

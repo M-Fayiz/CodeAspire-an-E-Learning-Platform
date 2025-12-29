@@ -36,12 +36,10 @@ export class AdminService implements IAdminService {
 
   async fetchAllUsers(
     page: number,
-    search:string
+    search: string,
   ): Promise<UserFetchResponse> {
     const limit = 4;
     const skip = (page - 1) * limit;
-
-   
 
     const [allUsers, userCount] = await Promise.all([
       this._userRepo.findAllUsers(limit, skip, search),
@@ -135,7 +133,7 @@ export class AdminService implements IAdminService {
   }
   async approveMentor(
     mentorId: string,
-    status:mentorApprovalStatus,
+    status: mentorApprovalStatus,
     feedback?: string,
   ): Promise<{
     status: mentorApprovalStatus;
@@ -179,23 +177,16 @@ export class AdminService implements IAdminService {
     endDay?: string,
   ): Promise<IAdminDashboardDTO> {
     const { start, end } = timeFilter(filter, startDay, endDay);
-    
-    const [
-  mentors,
-  learners,
-  courseCount,
-  revenue,
-  topCourse,
-  topCategory,
-] = await Promise.all([
-  this._userRepo.findDashBoardUserCount(IRole.Mentor, start, end),
-  this._userRepo.findDashBoardUserCount(IRole.Learner, start, end),
-  this._courseRepository.findDocumentCount({}, start, end),
-  this._transactionRepository.getAdminRevenue(start, end),
-  this._enrolledRepository.getTopSellingCourse(undefined, start, end),
-  this._enrolledRepository.getTopSellingCategory(),
-]);
 
+    const [mentors, learners, courseCount, revenue, topCourse, topCategory] =
+      await Promise.all([
+        this._userRepo.findDashBoardUserCount(IRole.Mentor, start, end),
+        this._userRepo.findDashBoardUserCount(IRole.Learner, start, end),
+        this._courseRepository.findDocumentCount({}, start, end),
+        this._transactionRepository.getAdminRevenue(start, end),
+        this._enrolledRepository.getTopSellingCourse(undefined, start, end),
+        this._enrolledRepository.getTopSellingCategory(),
+      ]);
 
     return adminDashboardDTO(
       mentors,

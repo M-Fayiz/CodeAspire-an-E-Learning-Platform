@@ -40,8 +40,8 @@ export function mentorSlotsDTO(slotData: mentorUnPopulatedSlots): ISlotDTO {
   return {
     _id: slotData._id,
     course: {
-      _id: slotData.courseId._id as Types.ObjectId,
-      title: slotData.courseId.title,
+      _id: slotData.course._id as Types.ObjectId,
+      title: slotData.course.title,
     },
     mentorId: slotData.mentorId,
     selectedDays: slotData.selectedDays,

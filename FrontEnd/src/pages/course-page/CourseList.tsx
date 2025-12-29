@@ -1,6 +1,6 @@
 import { Link, useSearchParams } from "react-router";
 import CourseCard from "../../features/courses_list/List/CourseCard";
-import type {  ISearchQuery } from "@/types/DTOS/courses.dto.types";
+import type { ISearchQuery } from "@/types/DTOS/courses.dto.types";
 import { useEffect, useState } from "react";
 
 import SearchHeader from "../../features/courses_list/List/CourseSearchBar";
@@ -88,7 +88,6 @@ function CourseLayout() {
   };
 
   const handlePage = (_e: React.ChangeEvent<unknown>, value: number) => {
-    
     setSearchParams((prev) => {
       prev.set("page", String(value));
       return prev;
@@ -134,7 +133,6 @@ function CourseLayout() {
                 totalPages={totalPage}
                 onPageChange={handlePage}
               />
-          
             </div>
           )}
         </div>

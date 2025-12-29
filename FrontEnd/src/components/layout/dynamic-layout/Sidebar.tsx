@@ -21,34 +21,32 @@ const Sidebar: React.FC<ISidebarProps> = ({ user, isOpen, onClose }) => {
   const navigation = navigationConfig[user.role];
   const location = useLocation();
   const isActive = (path: string) =>
-  location.pathname === path ||
-  location.pathname.startsWith(path + "/");
+    location.pathname === path || location.pathname.startsWith(path + "/");
 
   const NavItem: React.FC<NavItemProps> = ({ item, isSecondary = false }) => (
-  <NavLink
-    to={item.path}
-    end={false}
-    className={({ isActive }) =>
-      `flex items-center px-3 py-2 rounded-lg text-sm font-medium transition-colors ${
-        isActive
-          ? "bg-black text-white"
-          : isSecondary
-            ? "text-gray-600 hover:text-gray-900 hover:bg-gray-50"
-            : "text-gray-700 hover:text-gray-900 hover:bg-gray-100"
-      }`
-    }
-  >
-    <item.icon className="w-5 h-5 mr-3" />
-    <span className="flex-1">{item.label}</span>
+    <NavLink
+      to={item.path}
+      end={false}
+      className={({ isActive }) =>
+        `flex items-center px-3 py-2 rounded-lg text-sm font-medium transition-colors ${
+          isActive
+            ? "bg-black text-white"
+            : isSecondary
+              ? "text-gray-600 hover:text-gray-900 hover:bg-gray-50"
+              : "text-gray-700 hover:text-gray-900 hover:bg-gray-100"
+        }`
+      }
+    >
+      <item.icon className="w-5 h-5 mr-3" />
+      <span className="flex-1">{item.label}</span>
 
-    {item.badge && (
-      <span className="ml-2 px-2 py-1 text-xs rounded-full bg-red-500 text-white">
-        {item.badge}
-      </span>
-    )}
-  </NavLink>
-);
-
+      {item.badge && (
+        <span className="ml-2 px-2 py-1 text-xs rounded-full bg-red-500 text-white">
+          {item.badge}
+        </span>
+      )}
+    </NavLink>
+  );
 
   return (
     <>

@@ -38,5 +38,7 @@ export interface ISlotBookingService {
     bookedId: string,
     status: BookingStatus,
   ): Promise<{ bookedId: Types.ObjectId; status: BookingStatus }>;
-  cancelSlot(bookedId:string):Promise<{status:BookingStatus,notification:INotificationDTO}>
+  cancelSlot(
+    bookedId: string,
+  ): Promise<{ status: BookingStatus; notification: INotificationDTO }>;
 }

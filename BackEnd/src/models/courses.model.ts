@@ -65,12 +65,11 @@ const courseSchema = new mongoose.Schema<ICourses>(
         ],
       },
     ],
-   status: {
+    status: {
       type: String,
       enum: Object.values(CourseStatus),
       default: CourseStatus.DRAFT,
     },
-
   },
   { timestamps: true },
 );

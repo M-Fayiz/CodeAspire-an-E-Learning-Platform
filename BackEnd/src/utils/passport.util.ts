@@ -37,7 +37,7 @@ if (clientID && clientSecret && callBack) {
             : {};
           const role = (state.role as IRole) || "learner";
           const user = await userRepo.findOrCreateUser(profile, role);
-          
+
           if (!user) {
             throw new Error("Internal Error");
           }
@@ -52,6 +52,5 @@ if (clientID && clientSecret && callBack) {
 } else {
   console.warn("⚠️ Google OAuth disabled: missing environment variables");
 }
-
 
 export default passport;

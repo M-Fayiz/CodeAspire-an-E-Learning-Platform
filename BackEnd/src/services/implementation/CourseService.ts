@@ -31,7 +31,9 @@ import { INotificationRepository } from "../../repository/interface/INotificatio
 import { NotificationTemplates } from "../../template/notification.template";
 import { INotificationDTO } from "../../types/dtos.type/notification.dto.types";
 import { notificationDto } from "../../dtos/notification.dto";
-
+import { IReviewRepository } from "../../repository/interface/IReviewRepository";
+import { popularedReviewDTO } from "../../dtos/review.dto";
+import { IReviewPopulatedDTO } from "../../types/dtos.type/review.dto.types";
 
 export class CourseService implements ICourseService {
   constructor(
@@ -39,6 +41,7 @@ export class CourseService implements ICourseService {
     private _categoryRepository: ICategoryRepository,
     private _enrolledRepository: IEnrolledRepository,
     private _notificationRepository: INotificationRepository,
+    private _reviewRepository: IReviewRepository,
   ) {}
 
   async createCourses(course: ICourses): Promise<ICourseCreateForm | null> {
@@ -143,48 +146,56 @@ export class CourseService implements ICourseService {
     return null;
   }
   async getCourse(
-  courseId: string,
-  learnerId?: string,
-): Promise<{ courseDetails: ICourseDetailsPageDTO; enrolledId: Types.ObjectId |null}> {
+    courseId: string,
+    learnerId?: string,
+  ): Promise<{
+    courseDetails: ICourseDetailsPageDTO;
+    enrolledId: Types.ObjectId | null;
+  }> {
+    const course_id = parseObjectId(courseId);
+    if (!course_id) {
+      throw createHttpError(HttpStatus.BAD_REQUEST, HttpResponse.INVALID_ID);
+    }
 
-  const course_id = parseObjectId(courseId);
-  if (!course_id) {
-    throw createHttpError(
-      HttpStatus.BAD_REQUEST,
-      HttpResponse.INVALID_ID
-    );
+    const learner_id = learnerId ? parseObjectId(learnerId) : null;
+
+    const [courseData, reviews, summery] = await Promise.all([
+      this._courseRepository.getCourseDetails(course_id),
+      this._reviewRepository.getCourseReview(course_id),
+      this._enrolledRepository.avgCourseRating(course_id),
+    ]);
+
+    const mappedReview = reviews
+      ? reviews?.map((review) =>
+          popularedReviewDTO(review as IReviewPopulatedDTO),
+        )
+      : [];
+    if (!courseData || courseData.length === 0) {
+      throw createHttpError(HttpStatus.NOT_FOUND, HttpResponse.ITEM_NOT_FOUND);
+    }
+    let isEnrolled: Types.ObjectId | null = null;
+
+    if (learner_id) {
+      const data = await this._enrolledRepository.isEnrolled(
+        learner_id,
+        course_id,
+      );
+
+      if (data) {
+        isEnrolled = data._id;
+      }
+    }
+
+    return {
+      courseDetails: courseDetailsPageDTO(
+        courseData[0],
+        mappedReview,
+        summery[0].avgRating,
+        summery[0].totalStudents,
+      ),
+      enrolledId: isEnrolled,
+    };
   }
-
-  const learner_id = learnerId
-    ? parseObjectId(learnerId)
-    : null;
-
-  const courseData = await this._courseRepository.getCourseDetails(course_id);
-
-  if (!courseData || courseData.length === 0) {
-    throw createHttpError(
-      HttpStatus.NOT_FOUND,
-      HttpResponse.ITEM_NOT_FOUND
-    );
-  }
-  let isEnrolled: Types.ObjectId | null = null;
-
-if (learner_id) {
-  const data = await this._enrolledRepository.isEnrolled(
-    learner_id,
-    course_id
-  );
-
-  if (data) {
-    isEnrolled = data._id;
-  }
-}
-  return {
-    courseDetails: courseDetailsPageDTO(courseData[0]),
-    enrolledId: isEnrolled,
-  };
-}
-
 
   async getDraftedCourses(
     search: string,
@@ -303,11 +314,18 @@ if (learner_id) {
 
     return courseDTO(courseData as unknown as IPopulatedCourse);
   }
-  async getAdminCourse(search:string, page:number): Promise<IFormCourseDTO[] | null> {
-    const limit =4
-    const skip =(page-1)*limit
-    const adminCoursList = await this._courseRepository.getAdminCoursList(search,limit,skip);
-    console.log(adminCoursList);
+  async getAdminCourse(
+    search: string,
+    page: number,
+  ): Promise<IFormCourseDTO[] | null> {
+    const limit = 4;
+    const skip = (page - 1) * limit;
+    const adminCoursList = await this._courseRepository.getAdminCoursList(
+      search,
+      limit,
+      skip,
+    );
+
     return adminCoursList
       ? adminCoursList.map((course) =>
           formCourseDto(course as IPopulatedCourse),
@@ -440,24 +458,16 @@ if (learner_id) {
     return CourseFormDataDTO(removedData as ICourses);
   }
   async getAdminCourseDetails(courseId: string): Promise<IFormCourseDTO> {
-     const course_id = parseObjectId(courseId);
-  if (!course_id) {
-    throw createHttpError(
-      HttpStatus.BAD_REQUEST,
-      HttpResponse.INVALID_ID
-    );
-  }
+    const course_id = parseObjectId(courseId);
+    if (!course_id) {
+      throw createHttpError(HttpStatus.BAD_REQUEST, HttpResponse.INVALID_ID);
+    }
 
-  
-  const courseData = await this._courseRepository.getCourseDetails(course_id);
+    const courseData = await this._courseRepository.getCourseDetails(course_id);
 
-  if (!courseData || courseData.length === 0) {
-    throw createHttpError(
-      HttpStatus.NOT_FOUND,
-      HttpResponse.ITEM_NOT_FOUND
-    );
+    if (!courseData || courseData.length === 0) {
+      throw createHttpError(HttpStatus.NOT_FOUND, HttpResponse.ITEM_NOT_FOUND);
+    }
+    return formCourseDto(courseData[0]);
   }
-   return formCourseDto(courseData[0])
-  }
-
 }

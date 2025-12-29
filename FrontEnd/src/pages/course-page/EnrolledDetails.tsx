@@ -27,6 +27,7 @@ const EnrolledCourseDetails = () => {
   const [activeTap, setActiveTap] = useState("overview");
   const [enrolledCourse, setEnrolledCourse] =
     useState<IEnrolledCoursedetailsDTO | null>(null);
+
   const [videoUrl, setVideoUrl] = useState({
     url: "",
     title: "",
@@ -43,7 +44,6 @@ const EnrolledCourseDetails = () => {
         sessionId,
       );
       if (result) {
-      
         setEnrolledCourse((prv) => (prv ? { ...prv, progress: result } : prv));
       }
     }
@@ -55,7 +55,9 @@ const EnrolledCourseDetails = () => {
 
   useEffect(() => {
     (async () => {
-      const data = await EnrolledService.getEnrolledCourseDetails(enrolledId as string);
+      const data = await EnrolledService.getEnrolledCourseDetails(
+        enrolledId as string,
+      );
       if (data) {
         setEnrolledCourse(data);
       }
@@ -75,17 +77,19 @@ const EnrolledCourseDetails = () => {
   return (
     <>
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 p-4">
-        <div className="lg:col-span-2 space-y-6">
+        <div className="lg:col-span-4 space-y-6">
           {!videoUrl.url ? (
             <div className="bg-white">
               {enrolledCourse && (
                 <Banner
-                  course={enrolledCourse as IEnrolledCoursedetailsDTO}
+                  level={enrolledCourse.course.level as string}
                   courseId={enrolledCourse?.courseId as string}
                   description={enrolledCourse?.course.description as string}
                   imageUrl={enrolledCourse?.course.thumbnail as string}
                   title={enrolledCourse?.course.title as string}
                   enrolledId={enrolledCourse._id as string}
+                  price={enrolledCourse.course.price}
+                  onEnrolledPage={true}
                 />
               )}
             </div>
@@ -161,151 +165,155 @@ const EnrolledCourseDetails = () => {
             />
           </div>
 
-          <div className="p-4 md:p-6 gridg-cols-4">
-            {activeTap === "overview" && <CourseOverview />}
-            {activeTap === "mentor" && (
-              <MentorProfile
-                courseId={enrolledCourse?.courseId as string}
-                mentorId={enrolledCourse?.course.mentorId._id as string}
-                enrolledId={enrolledCourse?._id as string}
-              />
-            )}
-            {activeTap === "curriculum" && (
-              <div className="p-5">
-                <div className="mb-6">
-                  <h2 className="text-2xl font-bold text-gray-900 mb-2">
-                    Course Curriculum
-                  </h2>
-                  <p className="text-gray-600">
-                    {enrolledCourse?.course.sessions.length} sections • lessons
-                    •
-                  </p>
-                </div>
-                <div className="space-y-2">
-                  {enrolledCourse?.course.sessions
-                    .filter(
-                      (session) =>
-                        session.lectures && session.lectures.length >= 1,
-                    )
-                    .map((session) => 
-                      (
-                      <Accordion
-                        key={session._id}
-                        type="single"
-                        collapsible
-                        className="border border-gray-200 rounded-sm overflow-hidden mb-3 shadow-sm"
-                      >
-                        <AccordionItem value={`session-${session._id}`}>
-                          <AccordionTrigger className={`w-full px-6 py-4 ${
-                                        session._id==enrolledCourse.progress.lastAccessedSession
-                                          ? "bg-orange-50 border-l-4 border-orange-500"
-                                          : "hover:bg-gray-50 focus:bg-orange-50"
-                                      } text-left transition-colors text-gray-900`}>
-                            <div className="flex items-center justify-between w-full">
-                              <div className="flex flex-col gap-1">
-
-                              <span className="text-lg font-medium">
-                                {session.title}
-                              </span>
-                              <span className="text-sm text-gray-500">
-                                {session.lectures.length} lectures
-                              </span>
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 p-4 md:p-6">
+            <div className="lg:col-span-8 space-y-6">
+              {activeTap === "overview" && <CourseOverview />}
+              {activeTap === "mentor" && (
+                <MentorProfile
+                  courseId={enrolledCourse?.courseId as string}
+                  mentorId={enrolledCourse?.course.mentorId._id as string}
+                  enrolledId={enrolledCourse?._id as string}
+                />
+              )}
+              {activeTap === "curriculum" && (
+                <div className="p-5">
+                  <div className="mb-6">
+                    <h2 className="text-2xl font-bold text-gray-900 mb-2">
+                      Course Curriculum
+                    </h2>
+                    <p className="text-gray-600">
+                      {enrolledCourse?.course.sessions.length} sections •
+                      lessons •
+                    </p>
+                  </div>
+                  <div className="space-y-2">
+                    {enrolledCourse?.course.sessions
+                      .filter(
+                        (session) =>
+                          session.lectures && session.lectures.length >= 1,
+                      )
+                      .map((session) => (
+                        <Accordion
+                          key={session._id}
+                          type="single"
+                          collapsible
+                          className="border border-gray-200 rounded-sm overflow-hidden mb-3 shadow-sm"
+                        >
+                          <AccordionItem value={`session-${session._id}`}>
+                            <AccordionTrigger
+                              className={`w-full px-6 py-4 ${
+                                session._id ==
+                                enrolledCourse.progress.lastAccessedSession
+                                  ? "bg-orange-50 border-l-4 border-orange-500"
+                                  : "hover:bg-gray-50 focus:bg-orange-50"
+                              } text-left transition-colors text-gray-900`}
+                            >
+                              <div className="flex items-center justify-between w-full">
+                                <div className="flex flex-col gap-1">
+                                  <span className="text-lg font-medium">
+                                    {session.title}
+                                  </span>
+                                  <span className="text-sm text-gray-500">
+                                    {session.lectures.length} lectures
+                                  </span>
+                                </div>
+                                <div>
+                                  {session._id ==
+                                    enrolledCourse.progress
+                                      .lastAccessedSession && (
+                                    <span className="text-xs text-orange-600 whitespace-nowrap">
+                                      Last watched
+                                    </span>
+                                  )}
+                                </div>
                               </div>
-                              <div>
+                            </AccordionTrigger>
 
-                              {session._id==enrolledCourse.progress.lastAccessedSession && (
-                                        <span className="text-xs text-orange-600 whitespace-nowrap">
-                                          Last watched
-                                        </span>
-                                      )}
-                              </div>
-                            </div>
-                          </AccordionTrigger>
+                            <AccordionContent className="bg-white mt-1 ">
+                              <div className="divide-y divide-gray-100">
+                                {session.lectures.map((lecture) => {
+                                  const isLastAccessed =
+                                    enrolledCourse.progress
+                                      .lastAccessedLecture === lecture._id;
 
-                          <AccordionContent className="bg-white mt-1 ">
-                            <div className="divide-y divide-gray-100">
-                              {session.lectures.map((lecture) => {
-                                const isLastAccessed =
-                                  enrolledCourse.progress
-                                    .lastAccessedLecture === lecture._id;
-
-                                return (
-                                  <button
-                                    key={lecture._id}
-                                    className={`w-full px-6 py-3 transition-colors
+                                  return (
+                                    <button
+                                      key={lecture._id}
+                                      className={`w-full px-6 py-3 transition-colors
                                       ${
                                         isLastAccessed
                                           ? "bg-orange-50 border-l-4 border-orange-500"
                                           : "hover:bg-gray-50 focus:bg-orange-50"
                                       }
                                     `}
-                                    onClick={() =>
-                                      setVideo(
-                                        lecture.lectureContent as string,
-                                        lecture.title,
-                                        lecture._id as string,
-                                        session._id as string,
-                                      )
-                                    }
-                                  >
-                                    <div className="flex items-center justify-between w-full">
-                                      {/* Left side */}
-                                      <div className="flex items-center gap-3">
-                                        <PlayCircle
-                                          className={`w-5 h-5 ${
-                                            isLastAccessed
-                                              ? "text-orange-600"
-                                              : "text-orange-500"
-                                          }`}
-                                        />
+                                      onClick={() =>
+                                        setVideo(
+                                          lecture.lectureContent as string,
+                                          lecture.title,
+                                          lecture._id as string,
+                                          session._id as string,
+                                        )
+                                      }
+                                    >
+                                      <div className="flex items-center justify-between w-full">
+                                        {/* Left side */}
+                                        <div className="flex items-center gap-3">
+                                          <PlayCircle
+                                            className={`w-5 h-5 ${
+                                              isLastAccessed
+                                                ? "text-orange-600"
+                                                : "text-orange-500"
+                                            }`}
+                                          />
 
-                                        <span
-                                          className={`text-sm ${
-                                            isLastAccessed
-                                              ? "text-orange-700 font-medium"
-                                              : "text-gray-800"
-                                          }`}
-                                        >
-                                          {lecture.title}
-                                        </span>
+                                          <span
+                                            className={`text-sm ${
+                                              isLastAccessed
+                                                ? "text-orange-700 font-medium"
+                                                : "text-gray-800"
+                                            }`}
+                                          >
+                                            {lecture.title}
+                                          </span>
+                                        </div>
+
+                                        {/* Right side */}
+                                        {isLastAccessed && (
+                                          <span className="text-xs text-orange-600 whitespace-nowrap">
+                                            Last watched
+                                          </span>
+                                        )}
                                       </div>
-
-                                      {/* Right side */}
-                                      {isLastAccessed && (
-                                        <span className="text-xs text-orange-600 whitespace-nowrap">
-                                          Last watched
-                                        </span>
-                                      )}
-                                    </div>
-                                  </button>
-                                );
-                              })}
-                            </div>
-                          </AccordionContent>
-                        </AccordionItem>
-                      </Accordion>
-                    ))}
+                                    </button>
+                                  );
+                                })}
+                              </div>
+                            </AccordionContent>
+                          </AccordionItem>
+                        </Accordion>
+                      ))}
+                  </div>
                 </div>
+              )}
+              {activeTap === "Reviews" && (
+                <CommentsSection
+                  userId={user!.id}
+                  courseId={enrolledCourse?.course._id as string}
+                  enrolledId={enrolledCourse?._id as string}
+                  starRating={enrolledCourse?.rating as number}
+                />
+              )}
+            </div>
+            {enrolledCourse?.course?.sessions && (
+              <div className="lg:col-span-4">
+                <CurriculumProgress
+                  sessions={enrolledCourse.course.sessions}
+                  progress={enrolledCourse.progress}
+                />
               </div>
-            )}
-            {activeTap === "Reviews" && (
-              <CommentsSection
-                userId={user!.id}
-                courseId={enrolledCourse?.course._id as string}
-                enrolledId={enrolledCourse?._id as string}
-                starRating={enrolledCourse?.rating as number}
-              />
             )}
           </div>
         </div>
-        {enrolledCourse?.course?.sessions && (
-          <div className="ls:col-span-1">
-            <CurriculumProgress
-              sessions={enrolledCourse.course.sessions}
-              progress={enrolledCourse.progress}
-            />
-          </div>
-        )}
       </div>
     </>
   );

@@ -30,27 +30,22 @@ export async function verifyUser(
     }
     req.user = user;
     next();
-  } catch (error:unknown) {
-   if (error instanceof jwt.TokenExpiredError) {
-    return next(
-      createHttpError(
-        HttpStatus.UNAUTHORIZED,
-        HttpResponse.ACCESS_TOKEN_EXPIRED
-      )
-    );
-  }
+  } catch (error: unknown) {
+    if (error instanceof jwt.TokenExpiredError) {
+      return next(
+        createHttpError(
+          HttpStatus.UNAUTHORIZED,
+          HttpResponse.ACCESS_TOKEN_EXPIRED,
+        ),
+      );
+    }
 
-  if (error instanceof jwt.JsonWebTokenError) {
-    return next(
-      createHttpError(
-        HttpStatus.UNAUTHORIZED,
-        HttpResponse.UNAUTHORIZED
-      )
-    );
-  }
-
+    if (error instanceof jwt.JsonWebTokenError) {
+      return next(
+        createHttpError(HttpStatus.UNAUTHORIZED, HttpResponse.UNAUTHORIZED),
+      );
+    }
 
     next(error);
-  
   }
 }

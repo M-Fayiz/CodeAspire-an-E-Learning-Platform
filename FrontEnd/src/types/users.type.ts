@@ -1,4 +1,4 @@
-import type {  UserRoleType } from "./auth.types";
+import type { UserRoleType } from "./auth.types";
 
 export interface IUserType {
   id: string;
@@ -29,7 +29,6 @@ export type mentorApprovalStatus =
   | "rejected"
   | "requested";
 
-
 export interface BaseUser {
   _id: string;
   name: string;
@@ -38,7 +37,7 @@ export interface BaseUser {
   profilePicture?: string;
   phone?: string;
   bio?: string;
-  role: UserRoleType
+  role: UserRoleType;
 }
 
 export interface AdminUser extends BaseUser {
@@ -46,7 +45,7 @@ export interface AdminUser extends BaseUser {
 }
 
 export interface LearnerUser extends BaseUser {
-  role:UserRoleType;
+  role: UserRoleType;
 }
 
 export interface MentorUser extends BaseUser {

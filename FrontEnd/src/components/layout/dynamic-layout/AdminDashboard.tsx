@@ -33,7 +33,7 @@ const AdminDashboard = () => {
   const [totalRevanue, setTotalRevanue] = useState(0);
   const [selectedTab, setSelectedTab] = useState("slot");
   const [selectedPeriod, setSelectedPeriod] = useState(FilterByDate.MONTH);
-  
+
   if (loading) return <Spinner />;
   if (!user) return <Navigate to="/auth/login" replace />;
 
@@ -53,7 +53,7 @@ const AdminDashboard = () => {
   useEffect(() => {
     (async () => {
       const graph = await EnrolledService.adminGraphRevanue(selectedPeriod);
-     
+
       if (graph) {
         setSlotRevenue(graph.slotRevanue || []);
         setCourseRevenue(graph.courseRevanue || []);
@@ -180,7 +180,6 @@ const AdminDashboard = () => {
           </Tabs>
         </div>
 
-    
         <RevenueDonutChart Options={dashData?.SourceOfRevenue || []} />
 
         <div className="bg-white grid-cols-3 rounded-lg p-6 shadow-sm border border-gray-100 lg:col-span-2 ">

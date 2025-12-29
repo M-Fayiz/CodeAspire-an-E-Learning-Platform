@@ -1,6 +1,5 @@
 import { TransactionType } from "../const/transaction.const";
 
-
 export interface IAdminRevenue {
   _id: null;
   revenue: number;

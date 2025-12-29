@@ -1,5 +1,3 @@
-
-
 import type { ICourseData } from "./courseForm.type";
 
 export type Days =

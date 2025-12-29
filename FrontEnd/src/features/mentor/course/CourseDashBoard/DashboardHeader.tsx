@@ -1,7 +1,7 @@
 import { useCourseFormContext } from "@/context/courseForm.context";
 import type { CourseDashboardDTO } from "@/types/DTOS/courseDashboard.dto.type";
 
-import { Eye, } from "lucide-react";
+import { Eye } from "lucide-react";
 import type React from "react";
 
 import { useNavigate } from "react-router";
@@ -31,10 +31,7 @@ const DashBoardHeader: React.FC<courseDashboardProps> = ({ courseData }) => {
                 {courseData.course.status}
               </span>
             </div>
-            <p className="text-gray-600 mb-4">
-            </p>
-
-            
+            <p className="text-gray-600 mb-4"></p>
           </div>
 
           <div className="flex gap-3">
@@ -45,7 +42,6 @@ const DashBoardHeader: React.FC<courseDashboardProps> = ({ courseData }) => {
               <Eye className="w-4 h-4" />
               Preview Course & edit Course
             </button>
-           
           </div>
         </div>
       </div>

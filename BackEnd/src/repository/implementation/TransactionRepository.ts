@@ -40,15 +40,15 @@ export class TransactionRepositoy
   }
   async getMentorTotalRevenue(
     mentorId: Types.ObjectId,
-    start?:Date,
-    end?:Date
+    start?: Date,
+    end?: Date,
   ): Promise<IMentorTotalRevanue[]> {
     return await this.aggregate<IMentorTotalRevanue>([
       {
         $match: {
           mentorId: mentorId,
-          createdAt:{$gte:start,$lte:end},
-          status:{$ne:TransactionStatus.REFUNDED}
+          createdAt: { $gte: start, $lte: end },
+          status: { $ne: TransactionStatus.REFUNDED },
         },
       },
       {
@@ -61,9 +61,14 @@ export class TransactionRepositoy
       },
     ]);
   }
-  async getAdminRevenue(start?:Date,end?:Date): Promise<SourceOfRevanye[]> {
+  async getAdminRevenue(start?: Date, end?: Date): Promise<SourceOfRevanye[]> {
     return this.aggregate<SourceOfRevanye>([
-      {$match:{createdAt:{$gte:start,$lte:end},status:{$ne:TransactionStatus.REFUNDED}}},
+      {
+        $match: {
+          createdAt: { $gte: start, $lte: end },
+          status: { $ne: TransactionStatus.REFUNDED },
+        },
+      },
       {
         $group: {
           _id: "$paymentType",
@@ -118,10 +123,15 @@ export class TransactionRepositoy
       { $sort: { date: 1 } },
     ]);
   }
-  async findTransaction(filter: FilterQuery<ITransactionModel>): Promise<ITransactionModel|null> {
-    return await this.findOne(filter)
+  async findTransaction(
+    filter: FilterQuery<ITransactionModel>,
+  ): Promise<ITransactionModel | null> {
+    return await this.findOne(filter);
   }
-  async updateTransaction(transactionId:Types.ObjectId, updateData: UpdateQuery<ITransactionModel>): Promise<ITransactionModel | null> {
-    return await this.findByIDAndUpdate(transactionId,updateData)
+  async updateTransaction(
+    transactionId: Types.ObjectId,
+    updateData: UpdateQuery<ITransactionModel>,
+  ): Promise<ITransactionModel | null> {
+    return await this.findByIDAndUpdate(transactionId, updateData);
   }
 }

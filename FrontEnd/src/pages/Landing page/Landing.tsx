@@ -6,9 +6,7 @@ import StatsSection from "../../components/layout/landing/Stats";
 import Footer from "../../components/layout/landing/Footer";
 import FeaturesSection from "@/components/layout/landing/Feature";
 
-
 const Landing = () => {
-
   return (
     <>
       <div className="w-full">
@@ -16,7 +14,7 @@ const Landing = () => {
         <HeroSection />
         <FeaturesSection />
         <CoursesSection />
-    
+
         <StatsSection />
         <Footer />
       </div>

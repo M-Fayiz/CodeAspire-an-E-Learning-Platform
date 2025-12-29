@@ -161,7 +161,7 @@ const ProfileManagement: React.FC = () => {
                 ) : (
                   <User className="w-1/2 h-1/2 text-gray-400" />
                 )}
-                <label className="absolute bottom-0 right-2 bg-blue-500 p-1 rounded-full cursor-pointer hover:bg-blue-600 transition duration-200 shadow-md">
+                <label className="absolute bottom-0 right-2 bg-orange-500 p-1 rounded-full cursor-pointer hover:bg-orange-600 transition duration-200 shadow-md">
                   <Camera className="w-4 h-4 text-white" />
                   <input
                     type="file"
@@ -197,7 +197,7 @@ const ProfileManagement: React.FC = () => {
                     onClick={handleEdit}
                     disabled={isEditing}
                     className={`flex items-center gap-2 px-4 py-2 rounded-lg text-white transition-colors
-                            ${isEditing ? "bg-blue-400 cursor-not-allowed" : "bg-blue-600 hover:bg-blue-700"}`}
+                            ${isEditing ? "bg-gray-400 cursor-not-allowed" : "bg-gray-600 hover:bg-gray-700"}`}
                   >
                     <Edit2 className="w-4 h-4" />
                     Edit Profile

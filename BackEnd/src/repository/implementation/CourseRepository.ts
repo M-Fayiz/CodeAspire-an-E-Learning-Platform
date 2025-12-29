@@ -139,9 +139,16 @@ export class CourseRepository
   ): Promise<ICourses | null> {
     return await this.findByIDAndUpdate(courseId, baseInfo);
   }
-  async getAdminCoursList(search:string,limit:number,skip:number): Promise<IPopulatedCourse[] | null> {
+  async getAdminCoursList(
+    search: string,
+    limit: number,
+    skip: number,
+  ): Promise<IPopulatedCourse[] | null> {
     return await this.findAll<IPopulatedCourse>(
-      { status: { $in: ["published", "rejected", "approved"] },title:{ $regex: search ?? "", $options: "i" } },
+      {
+        status: { $in: ["published", "rejected", "approved"] },
+        title: { $regex: search ?? "", $options: "i" },
+      },
       limit,
       skip,
       ["categoryId", "subCategoryId", "mentorId"],
