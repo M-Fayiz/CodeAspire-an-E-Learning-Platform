@@ -9,6 +9,7 @@ import {
   IListCourseSlot,
 } from "../../types/dtos.type/course.dtos.type";
 import { INotificationDTO } from "../../types/dtos.type/notification.dto.types";
+import { IUser } from "../../types/user.types";
 
 export interface ICourseService {
   createCourses(course: ICourses): Promise<ICourseCreateForm | null>;
@@ -71,7 +72,7 @@ export interface ICourseService {
   ): Promise<{ courseStatus: string | null; notifyDTO: INotificationDTO }>;
   publishCourse(courseId: string): Promise<string | null>;
   fetchCourseListForSlot(mentorId: string): Promise<IListCourseSlot[] | null>;
-  getCourseFormData(courseId: string): Promise<ICourseCreateForm>;
+  getCourseFormData(courseId: string,user:IUser): Promise<ICourseCreateForm>;
   removeSession(
     courseId: string,
     sessionId: string,

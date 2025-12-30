@@ -109,7 +109,7 @@ export class AuthService implements IAuthService {
       throw createHttpError(HttpStatus.NOT_FOUND, HttpResponse.USER_NOT_FOUND);
     }
     if (!user.isActive) {
-      throw createHttpError(HttpStatus.FORBIDDEN, HttpResponse.USER_BLOCKED);
+      throw createHttpError(HttpStatus.LOCKED, HttpResponse.USER_BLOCKED);
     }
 
     return userDTO(user);
@@ -132,7 +132,7 @@ export class AuthService implements IAuthService {
 
     const user = await this._userRepo.findUserByEmail(decode.email);
     if (!user?.isActive) {
-      throw createHttpError(HttpStatus.FORBIDDEN, HttpResponse.USER_BLOCKED);
+      throw createHttpError(HttpStatus.LOCKED, HttpResponse.USER_BLOCKED);
     }
 
     const payload = payloadDTO(user);

@@ -8,6 +8,6 @@ export function throwAxiosError(error: unknown): never {
 
   const status = err.response?.status;
   const data = err.response?.data;
-
+   
   throw new ApiError(message, status, data);
 }

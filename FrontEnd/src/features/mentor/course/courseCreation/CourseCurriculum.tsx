@@ -63,7 +63,7 @@ const CourseCurriculum: React.FC<CurriculumProps> = () => {
     title: "",
     lectures: [],
   });
-  const { formData, addSession, courseId, setFormData } =
+  const { formData, addSession, setFormData } =
     useCourseFormContext();
   const [sessionSpin, setSessionSpin] = useState(false);
   const [errors, setErros] = useState<{ [key: string]: string }>({});

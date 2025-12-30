@@ -12,7 +12,7 @@ import { useCourseFormContext } from "@/context/courseForm.context";
 import { lectureSchema } from "@/schema/courseForm.schema";
 import courseService from "@/service/mentor/course.service";
 import { sharedService } from "@/service/shared.service";
-import type { ILecture, ISession } from "@/types/DTOS/courses.dto.types";
+import type { ILecture } from "@/types/DTOS/courses.dto.types";
 import { ApiError } from "@/utility/apiError.util";
 import { useEffect, useState } from "react";
 import { toast } from "sonner";
@@ -41,7 +41,7 @@ export function EditLecture({
   const [videoURL, setVideoURL] = useState("");
   const [spin, setSpin] = useState(false);
   const [errors, setErros] = useState<{ [key: string]: string }>({});
-  const { addSession ,hydrateFromDB} = useCourseFormContext();
+  const { hydrateFromDB} = useCourseFormContext();
   const handleLectureChage = (
     e: React.ChangeEvent<
       HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement

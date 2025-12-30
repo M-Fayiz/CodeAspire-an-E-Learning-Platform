@@ -15,7 +15,7 @@ export function authorizedRole(...allowedRole: IRole[]) {
         );
       }
       if (!allowedRole.includes(user.role)) {
-        throw createHttpError(HttpStatus.FORBIDDEN, HttpResponse.ACCESS_DENIED);
+        throw createHttpError(HttpStatus.LOCKED, HttpResponse.ACCESS_DENIED);
       }
       next();
     } catch (error) {

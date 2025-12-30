@@ -231,7 +231,7 @@ export class OrderService implements IOrderService {
       },
       { idempotencyKey: idemKey },
     );
-    console.log("ss ", session);
+   
 
     await this._orderRepository.updateOrder(orderData._id, {
       paymentIntentId: session.id,

@@ -39,6 +39,8 @@ import LearnerBookedSlots from "@/pages/Slots/LearnersBooked";
 import MentorBookedSlots from "@/pages/Slots/MentorsBooked";
 import CertificatesList from "@/pages/certificate page/ListCertificatePage";
 import LearnerDashboard from "@/pages/learner page/Learner-Dashboard";
+import Unauthorized from "@/pages/not-found/UnAuthorized";
+import RootLayout from "@/components/auth-components/RouterLayout";
 
 function Form_Courses_Provider() {
   return (
@@ -184,7 +186,17 @@ export const router = createBrowserRouter([
     ],
   },
   {
-    path: "*",
-    element: <NotFound />,
+    element: <RootLayout />,   
+    children: [
+      {
+        path: "unauthorized",
+        element: <Unauthorized />,
+      },
+      {
+        path: "*",
+        element: <NotFound />,
+      },
+      
+    ],
   },
 ]);

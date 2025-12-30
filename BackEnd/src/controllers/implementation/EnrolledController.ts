@@ -5,6 +5,7 @@ import { successResponse } from "../../utils/response.util";
 import { HttpResponse } from "../../const/error-message.const";
 import { IEnrolledService } from "../../services/interface/IEnrolledService";
 import { FilterByDate } from "../../const/filter.const";
+import { IUser } from "../../types/user.types";
 
 export class EnrolledController implements IEnrolledController {
   constructor(private _enrolledService: IEnrolledService) {}
@@ -92,11 +93,12 @@ export class EnrolledController implements IEnrolledController {
   ): Promise<void> => {
     try {
       const { courseId, mentorId } = req.params;
-
+      const user=req.user
       const dashboardData =
         await this._enrolledService.getCourseEnrolledDashboardData(
           courseId,
           mentorId,
+          user as IUser
         );
 
       res

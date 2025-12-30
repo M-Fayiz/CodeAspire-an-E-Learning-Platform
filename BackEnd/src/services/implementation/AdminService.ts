@@ -19,6 +19,7 @@ import { ITransactionRepository } from "../../repository/interface/ITransactionR
 import { adminDashboardDTO } from "../../dtos/adminDashboard.dto";
 import { IAdminDashboardDTO } from "../../types/dtos.type/adminDashboard.dto.type";
 import { FilterByDate } from "../../const/filter.const";
+import redisClient from "../../config/redis.config";
 
 export type UserFetchResponse = {
   safeUsers: IMentorDTO | ILearnerDTO[];
@@ -92,10 +93,16 @@ export class AdminService implements IAdminService {
         HttpResponse.SERVER_ERROR,
       );
     }
+    if (!updatedUser.isActive) {
+    await redisClient.set(`blocked:user:${objectId}`, "true");
+  } else {
+    await redisClient.del(`blocked:user:${objectId}`);
+  }
     const result = {
       isActive: updatedUser.isActive,
       id: updatedUser.id,
     };
+
     return result;
   }
   async userProfile(userId: string): Promise<ILearnerDTO | IMentorDTO | null> {

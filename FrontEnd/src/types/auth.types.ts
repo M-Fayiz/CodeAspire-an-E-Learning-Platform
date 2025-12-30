@@ -37,5 +37,6 @@ export const AuthStatus = {
   AUTHENTICATED: "authenticated",
   GUEST: "guest",
   BLOCKED: "blocked",
+  ACCESS_DENIED:'denied'
 } as const;
 export type AuthStatusType = (typeof AuthStatus)[keyof typeof AuthStatus];

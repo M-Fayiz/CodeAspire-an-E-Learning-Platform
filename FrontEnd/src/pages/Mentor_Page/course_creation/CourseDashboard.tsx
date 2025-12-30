@@ -1,5 +1,4 @@
 import { useAuth } from "@/context/auth.context";
-import DashBoardHeader from "@/features/mentor/course/CourseDashBoard/DashboardHeader";
 import { ChartAreaInteractive } from "@/features/mentor/course/CourseDashBoard/TrendGraph";
 import { EnrolledService } from "@/service/Learner/enrolledCourse.service";
 import type { CourseDashboardDTO } from "@/types/DTOS/courseDashboard.dto.type";

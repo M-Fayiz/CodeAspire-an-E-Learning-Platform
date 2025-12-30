@@ -34,6 +34,7 @@ import { notificationDto } from "../../dtos/notification.dto";
 import { IReviewRepository } from "../../repository/interface/IReviewRepository";
 import { popularedReviewDTO } from "../../dtos/review.dto";
 import { IReviewPopulatedDTO } from "../../types/dtos.type/review.dto.types";
+import { IUser } from "../../types/user.types";
 
 export class CourseService implements ICourseService {
   constructor(
@@ -425,7 +426,7 @@ export class CourseService implements ICourseService {
 
     return courseList.map((course) => listCourseForSLot(course));
   }
-  async getCourseFormData(courseId: string): Promise<ICourseCreateForm> {
+  async getCourseFormData(courseId: string,user:IUser): Promise<ICourseCreateForm> {
     const course_Id = parseObjectId(courseId);
     if (!course_Id) {
       throw createHttpError(HttpStatus.BAD_REQUEST, HttpResponse.INVALID_ID);
@@ -433,6 +434,15 @@ export class CourseService implements ICourseService {
 
     const courseFormData =
       await this._courseRepository.getCourseFormData(course_Id);
+      console.log(courseFormData?.mentorId,' < > ',user._id)
+      if(!courseFormData){
+        throw createHttpError(HttpStatus.NOT_FOUND,HttpResponse.COURSE_NOT_FOUND)
+      }
+        if (courseFormData.mentorId.toString() !== user._id.toString()) {
+        throw createHttpError(HttpStatus.FORBIDDEN, HttpResponse.ACCESS_DENIED);
+      }
+
+
     if (!courseFormData) {
       throw createHttpError(
         HttpStatus.NOT_FOUND,

@@ -5,6 +5,9 @@ import { HttpStatus } from "../const/http-status.const";
 import { HttpResponse } from "../const/error-message.const";
 import { verifyAccesToken } from "../utils/jwt-token.util";
 import jwt from "jsonwebtoken";
+import redisClient from "../config/redis.config";
+
+
 export async function verifyUser(
   req: Request,
   res: Response,
@@ -23,10 +26,21 @@ export async function verifyUser(
         HttpResponse.ACCESS_TOKEN_EXPIRED,
       );
     }
-    const user = await UserModel.findOne({ email: decode.email });
+    const isBlocked = await redisClient.get(
+      `blocked:user:${decode._id}`
+    );
+    if(isBlocked){
+      throw createHttpError(
+    HttpStatus.LOCKED,
+    HttpResponse.USER_BLOCKED
+    );
+    }
+     const user = await UserModel
+      .findById(decode._id)
+      .select("_id email role isActive");
 
     if (!user || !user?.isActive) {
-      throw createHttpError(HttpStatus.FORBIDDEN, HttpResponse.USER_BLOCKED);
+      throw createHttpError(HttpStatus.LOCKED, HttpResponse.USER_BLOCKED);
     }
     req.user = user;
     next();

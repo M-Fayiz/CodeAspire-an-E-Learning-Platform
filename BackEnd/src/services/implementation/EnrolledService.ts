@@ -53,7 +53,7 @@ import { learnerDashboardCardsDTO } from "../../types/dtos.type/learnerDashboard
 import { learnerDashboardDetails } from "../../dtos/learnerDashnoard.dto";
 import { FilterByDate } from "../../const/filter.const";
 import { normalizeDate, updateLearningStreak } from "../../utils/streak.util";
-import { ILearnerStreask, IRole } from "../../types/user.types";
+import { ILearnerStreask, IRole, IUser } from "../../types/user.types";
 import { HTTPResponse } from "puppeteer";
 import { ILearnerModel } from "../../models/user.model";
 
@@ -156,7 +156,7 @@ export class EnrolledService implements IEnrolledService {
 
     const completedCount = updatedEnrollment.progress.completedLectures.length;
 
-    const completionPercentage = (completedCount / totalLectures!) * 100;
+    const completionPercentage = Math.floor((completedCount / totalLectures!) * 100)
 
     const status =
       completionPercentage === 100
@@ -174,7 +174,7 @@ export class EnrolledService implements IEnrolledService {
     );
 
     const user=await this._userRepository.findUser(updatedEnrollment.learnerId)
-
+    
     if(!user){
       throw createHttpError(HttpStatus.NOT_FOUND,HttpResponse.USER_NOT_FOUND)
     }
@@ -184,8 +184,9 @@ export class EnrolledService implements IEnrolledService {
     }
 
     const learner = user as ILearnerModel;
-
+    console.log('learner : stek ',learner)
       const updatedStreak = updateLearningStreak(learner);
+      console.log('updated strk :',updatedStreak)
       await this._userRepository.updateLearnerStreak(
         learner._id,
         updatedStreak as ILearnerStreask  ,
@@ -218,6 +219,7 @@ export class EnrolledService implements IEnrolledService {
   async getCourseEnrolledDashboardData(
     courseId: string,
     mentorId: string,
+    user:IUser
   ): Promise<CourseDashboardDTO | null> {
 
     const course_id = parseObjectId(courseId);
@@ -232,10 +234,16 @@ export class EnrolledService implements IEnrolledService {
       this._courseRepository.findCourse(course_id),
       this._transactionRepository.getCourseDashboardRevenue(course_id),
     ]);
+    
     if (!studentsAndRating || !course || !revenue) {
       throw createHttpError(HttpStatus.NOT_FOUND, HttpResponse.ITEM_NOT_FOUND);
     }
 
+    
+
+    if(course.mentorId._id.toString()!==user._id.toString()){
+      throw createHttpError(HttpStatus.FORBIDDEN,HttpResponse.ACCESS_DENIED)
+    }
     const { avgRating = 0, totalStudents = 0 } = studentsAndRating[0] || {};
 
     return courseDashboardDTO(totalStudents, avgRating, course, revenue[0]);

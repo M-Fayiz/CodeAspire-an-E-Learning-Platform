@@ -12,6 +12,7 @@ import {
   type ISignUp,
 } from "../types/auth.types";
 import { AuthService } from "../service/auth.service";
+import { HttpStatusCode } from "@/constants/statusCode";
 
 interface User extends IDecodedUserType {}
 
@@ -52,10 +53,10 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
       setUser(user);
       setStatus(AuthStatus.AUTHENTICATED);
     } catch (error: any) {
-      if (error?.status === 401) {
+      if (error?.status === HttpStatusCode.UNAUTHORIZED ) {
         setUser(null);
         setStatus(AuthStatus.GUEST);
-      } else if (error?.status === 403) {
+      } else if (error?.status ===HttpStatusCode.LOCKED) {
         setUser(null);
         setStatus(AuthStatus.BLOCKED);
       } else {

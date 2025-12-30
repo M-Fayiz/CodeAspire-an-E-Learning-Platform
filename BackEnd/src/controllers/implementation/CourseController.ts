@@ -7,6 +7,8 @@ import { HttpResponse } from "../../const/error-message.const";
 import { updatePart } from "../../types/courses.type";
 
 import { sendNotification } from "../../utils/socket.utils";
+import { IAnyUser, IMentor } from "../../types/user.types";
+
 
 export class CourseController implements ICourseController {
   constructor(private _courseService: ICourseService) {}
@@ -17,7 +19,7 @@ export class CourseController implements ICourseController {
     next: NextFunction,
   ): Promise<void> => {
     try {
-      console.log("created course :");
+  
       const createdCourseData = await this._courseService.createCourses(
         req.body.courseData,
       );
@@ -326,9 +328,10 @@ export class CourseController implements ICourseController {
   ): Promise<void> => {
     try {
       const { courseId } = req.params;
-
+      const user = req.user as IAnyUser;
+     
       const courseFormData =
-        await this._courseService.getCourseFormData(courseId);
+        await this._courseService.getCourseFormData(courseId,user as IUser);
       res
         .status(HttpStatus.OK)
         .json(successResponse(HttpResponse.OK, { courseFormData }));

@@ -22,7 +22,7 @@ export default function Publish() {
   return (
     <div className="flex items-center justify-center gap-4 p-6">
       <Button
-        className="flex items-center gap-2 px-6 py-3 rounded-2xl shadow-md bg-blue-600 hover:bg-blue-700 text-white hover:scale-105 transition-transform"
+        className="flex items-center gap-2 px-6 py-3 rounded-2xl shadow-md bg-blackhover:bg-black text-white hover:scale-105 transition-transform"
         onClick={onPublish}
       >
         <Send className="w-5 h-5" />

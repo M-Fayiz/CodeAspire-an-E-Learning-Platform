@@ -2,7 +2,7 @@ import { useEffect, type ReactNode } from "react";
 import { useLocation, useNavigate } from "react-router";
 import { Navigate } from "react-router-dom";
 import { useAuth } from "../../context/auth.context";
-import type { UserRoleType } from "../../types/auth.types";
+import { AuthStatus, type UserRoleType } from "../../types/auth.types";
 
 import { SocketProvider } from "@/context/socket.context";
 import { Spinner } from "../templates/Spinner";
@@ -29,16 +29,19 @@ export const Protected_Router: React.FC<ProtectedProps> = ({
     }
   }, [user, navigate]);
 
-  if (status === "checking") {
+  if (status ===AuthStatus.CHECKING) {
     return <Spinner fullScreen />;
   }
 
-  if (status === "guest") {
+  if (status ===AuthStatus.GUEST) {
     return <Navigate to="/auth/login" replace />;
   }
 
-  if (status === "blocked") {
+  if (status ===AuthStatus.BLOCKED) {
     return <Navigate to="/blocked" replace />;
+  }
+  if (status ===AuthStatus.ACCESS_DENIED) {
+    return  <Navigate to="/unauthorized" replace />;
   }
   if (!user) {
     return <Navigate to={fallback} state={{ from: location }} replace />;
