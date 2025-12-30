@@ -5,7 +5,7 @@ import {
   ILearnerModel,
   IAdminModel,
 } from "../../models/user.model";
-import { IRole, mentorApprovalStatus } from "../../types/user.types";
+import { ILearnerStreask, IRole, mentorApprovalStatus } from "../../types/user.types";
 import { FilterQuery, Types } from "mongoose";
 import { graphPrps } from "../../types/adminDahsboard.type";
 
@@ -62,4 +62,5 @@ export interface IUserRepo {
   ): Promise<IUserModel | IMenterModel | ILearnerModel | IAdminModel | null>;
   findDashBoardUserCount(role: IRole, start: Date, end: Date): Promise<number>;
   SignedUsers(filter: FilterQuery<IUserModel>): Promise<graphPrps[]>;
+  updateLearnerStreak(learnerId:Types.ObjectId,updatedData:ILearnerStreask ):Promise<ILearnerModel|null>
 }

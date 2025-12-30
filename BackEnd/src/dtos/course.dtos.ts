@@ -12,7 +12,6 @@ import {
 } from "../types/dtos.type/course.dtos.type";
 import {
   IReviewDTO,
-  IReviewPopulatedDTO,
 } from "../types/dtos.type/review.dto.types";
 
 export function courseListDTO(

@@ -8,7 +8,7 @@ import {
 } from "../../models/user.model";
 import { IUserRepo } from "../interface/IUserRepo";
 import { Profile } from "passport-google-oauth20";
-import { IRole, mentorApprovalStatus } from "../../types/user.types";
+import { ILearnerStreask, IRole, mentorApprovalStatus } from "../../types/user.types";
 import { FilterQuery, Types } from "mongoose";
 import { graphPrps } from "../../types/adminDahsboard.type";
 
@@ -171,5 +171,8 @@ export class UserRepository
       },
       { $sort: { date: 1 } },
     ]);
+  }
+  async updateLearnerStreak(learnerId: Types.ObjectId, updatedData:ILearnerStreask): Promise<ILearnerModel|null> {
+    return await this.findByIDAndUpdate<ILearnerModel>(learnerId,{$set:{learningStreak:updatedData}})
   }
 }

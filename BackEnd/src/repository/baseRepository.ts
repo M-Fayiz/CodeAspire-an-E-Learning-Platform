@@ -89,10 +89,10 @@ export abstract class BaseRepository<T extends Document> {
   ): Promise<T | null> {
     return this.model.findOneAndUpdate(filter, update, options);
   }
-  async findByIDAndUpdate(
+  async findByIDAndUpdate<F=T>(
     id: Types.ObjectId,
     update: UpdateQuery<T>,
-  ): Promise<T | null> {
+  ): Promise<F | null> {
     return this.model.findByIdAndUpdate(id, update, {
       new: true,
     });

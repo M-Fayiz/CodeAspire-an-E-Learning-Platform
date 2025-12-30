@@ -2,9 +2,6 @@ import ManagementLayout from "@/components/layout/ManagementLayout";
 import SlotBookingForm from "@/features/mentor/slots/SlotForm";
 import {
   Calendar,
-  Calendar1,
-  Calendar1Icon,
-  LucideCalendar1,
   Plus,
   Search,
 } from "lucide-react";

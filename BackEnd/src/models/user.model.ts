@@ -65,9 +65,11 @@ export const MentorModel = UserModel.discriminator<IMenterModel>(
 );
 
 const LearnerSchema = new mongoose.Schema({
-  enrolledCourses: [
-    { type: mongoose.Schema.Types.ObjectId, ref: DbModelName.COURSE },
-  ],
+  learningStreak: {
+    current: Number  ,     
+    longest: Number,       
+    lastLearningDate: Date
+   }
 });
 export const LearnerModel = UserModel.discriminator<ILearnerModel>(
   IRole.Learner,

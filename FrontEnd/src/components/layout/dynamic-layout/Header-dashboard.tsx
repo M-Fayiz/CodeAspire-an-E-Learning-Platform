@@ -1,10 +1,10 @@
 import {
   Bell,
   ChevronDown,
-  HelpCircle,
+
   LogOut,
   Menu,
-  Settings,
+
   User,
   X,
 } from "lucide-react";

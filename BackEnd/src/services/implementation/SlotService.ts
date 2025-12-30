@@ -15,7 +15,7 @@ import { IMentorSlot } from "../../types/slot.type";
 import { createHttpError } from "../../utils/http-error";
 import { convertTo12Hour } from "../../utils/timeManagement.util";
 import { ISlotService } from "../interface/ISlotService";
-import { DbModelName } from "../../const/modelName.const";
+
 
 export class SlotService implements ISlotService {
   constructor(

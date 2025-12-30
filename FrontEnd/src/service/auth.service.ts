@@ -1,4 +1,4 @@
-import type { AxiosError } from "axios";
+
 import { axiosInstance } from "../axios/createInstance";
 import type {
   IDecodedUserType,

@@ -73,6 +73,7 @@ const courseService = {
     courseId: string,
     session: Partial<ISession>,
   ): Promise<ICourseData> => {
+    console.log(courseId,'- -  --',courseId)
     try {
       const response = await axiosInstance.put(
         API.COURSE.ADD_SESSION(courseId),
@@ -89,6 +90,8 @@ const courseService = {
     sessionId: string,
     lecture: ILecture,
   ): Promise<ICourseDTO> => {
+    console.log('ss :',sessionId)
+    console.log('CI :',courseId)
     try {
       if (!courseId || !sessionId) {
         throw new Error(

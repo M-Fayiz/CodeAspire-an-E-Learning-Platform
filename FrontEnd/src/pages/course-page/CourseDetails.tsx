@@ -12,7 +12,7 @@ import type { ICourseDetailsPageDTO } from "@/types/DTOS/courses.dto.types";
 import { ArrowLeft, ClipboardPen, User } from "lucide-react";
 import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
-import CoursePreview from "./CourseCurriculum";
+import CoursePreview from "./CourseCurriculumPreview";
 import { ReviewCard } from "./Review";
 
 const CourseDetails = () => {

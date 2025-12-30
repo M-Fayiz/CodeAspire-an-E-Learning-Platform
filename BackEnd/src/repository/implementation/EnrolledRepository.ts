@@ -8,7 +8,7 @@ import {
   IEnrolledAggregation,
   IEnrollement,
 } from "../../types/enrollment.types";
-import { modelNames, Types, UpdateQuery } from "mongoose";
+import { Types, UpdateQuery } from "mongoose";
 import {
   CourseDetailsRating,
   IMentorDashboardData,

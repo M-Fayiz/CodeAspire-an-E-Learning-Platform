@@ -1,4 +1,4 @@
-import { useState, useEffect, use } from "react";
+import { useState, useEffect } from "react";
 import { ArrowRight, Play, Star } from "lucide-react";
 import { useNavigate } from "react-router";
 import { useAuth } from "@/context/auth.context";

@@ -142,7 +142,7 @@ export class CourseController implements ICourseController {
         courseId,
         session,
       );
-      console.warn("added session :", addedSessionData);
+   
       res
         .status(HttpStatus.OK)
         .json(successResponse(HttpResponse.OK, { addedSessionData }));
@@ -187,6 +187,7 @@ export class CourseController implements ICourseController {
         lectureId,
         lecture,
       );
+      
       res
         .status(HttpStatus.OK)
         .json(successResponse(HttpResponse.OK, { updatedData }));

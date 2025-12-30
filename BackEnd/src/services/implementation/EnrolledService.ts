@@ -52,6 +52,10 @@ import { ISlotBookingRepository } from "../../repository/interface/ISlotBookingR
 import { learnerDashboardCardsDTO } from "../../types/dtos.type/learnerDashboard.dto.type";
 import { learnerDashboardDetails } from "../../dtos/learnerDashnoard.dto";
 import { FilterByDate } from "../../const/filter.const";
+import { normalizeDate, updateLearningStreak } from "../../utils/streak.util";
+import { ILearnerStreask, IRole } from "../../types/user.types";
+import { HTTPResponse } from "puppeteer";
+import { ILearnerModel } from "../../models/user.model";
 
 export class EnrolledService implements IEnrolledService {
   constructor(
@@ -169,14 +173,35 @@ export class EnrolledService implements IEnrolledService {
       },
     );
 
+    const user=await this._userRepository.findUser(updatedEnrollment.learnerId)
+
+    if(!user){
+      throw createHttpError(HttpStatus.NOT_FOUND,HttpResponse.USER_NOT_FOUND)
+    }
+
+    if(user.role!==IRole.Learner){
+      throw createHttpError(HttpStatus.CONFLICT,HttpResponse.ACCESS_DENIED)
+    }
+
+    const learner = user as ILearnerModel;
+
+      const updatedStreak = updateLearningStreak(learner);
+      await this._userRepository.updateLearnerStreak(
+        learner._id,
+        updatedStreak as ILearnerStreask  ,
+      );
+    
     return finalEnrollment?.progress ?? null;
   }
 
   async addRating(enroledId: string, value: number): Promise<number> {
+
     const enrolled_id = parseObjectId(enroledId);
+
     if (!enrolled_id) {
       throw createHttpError(HttpStatus.BAD_REQUEST, HttpResponse.INVALID_ID);
     }
+
     const updatedData = await this._erolledRepository.addRating(
       enrolled_id,
       value,
@@ -194,12 +219,15 @@ export class EnrolledService implements IEnrolledService {
     courseId: string,
     mentorId: string,
   ): Promise<CourseDashboardDTO | null> {
+
     const course_id = parseObjectId(courseId);
     const mentor_id = parseObjectId(mentorId);
+
     if (!course_id || !mentor_id) {
       throw createHttpError(HttpStatus.BAD_REQUEST, HttpResponse.INVALID_ID);
     }
     const [studentsAndRating, course, revenue] = await Promise.all([
+
       this._erolledRepository.getEnrolledDasgboardData(course_id, mentor_id),
       this._courseRepository.findCourse(course_id),
       this._transactionRepository.getCourseDashboardRevenue(course_id),

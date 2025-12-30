@@ -291,13 +291,14 @@ export class CourseService implements ICourseService {
       LectureId,
       lecture,
     );
-    const coursedata = this._courseRepository.findCourse(CourseId);
+    const coursedata =await this._courseRepository.findCourse(CourseId);
     if (!coursedata) {
       throw createHttpError(
         HttpStatus.NOT_FOUND,
         HttpResponse.COURSE_NOT_FOUND,
       );
     }
+
     return courseDTO(coursedata as unknown as IPopulatedCourse);
   }
   async updateBaseCourseInfo(

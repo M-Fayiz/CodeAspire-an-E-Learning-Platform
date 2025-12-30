@@ -29,7 +29,7 @@ export function AddLecture({
 }: AddLectureProps) {
   const [lecture, setLecture] = useState<ILecture>({
     title: "",
-    lectureType: "none",
+    lectureType: "video",
     lectureContent: "",
   });
   const [videoURL, setVideoURL] = useState("");
@@ -76,7 +76,7 @@ export function AddLecture({
         setErros(fieldErros);
         return;
       }
-
+      console.log('0assed ')
       setSpin(true);
       const updatedCourseData = await courseService.addLecture(
         courseId,

@@ -1,5 +1,5 @@
 import type { IReviewDTO } from "@/types/DTOS/review.dto.type";
-import { StarRating } from "./Rating";
+
 
 interface ReviewCardProps {
   review: IReviewDTO;

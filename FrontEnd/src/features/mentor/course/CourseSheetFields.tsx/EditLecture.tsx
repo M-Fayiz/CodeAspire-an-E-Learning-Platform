@@ -41,7 +41,7 @@ export function EditLecture({
   const [videoURL, setVideoURL] = useState("");
   const [spin, setSpin] = useState(false);
   const [errors, setErros] = useState<{ [key: string]: string }>({});
-  const { addSession } = useCourseFormContext();
+  const { addSession ,hydrateFromDB} = useCourseFormContext();
   const handleLectureChage = (
     e: React.ChangeEvent<
       HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement
@@ -102,7 +102,9 @@ export function EditLecture({
         lecture,
       );
       if (updatedCourseData) {
-        addSession(updatedCourseData.sessions as ISession[]);
+        console.log('updated Session :',updatedCourseData)
+        hydrateFromDB(updatedCourseData)
+        // addSession(updatedCourseData.sessions as ISession[]);
         setSpin(false);
         closeSheet();
       }

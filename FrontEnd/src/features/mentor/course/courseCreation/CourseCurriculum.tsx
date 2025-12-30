@@ -96,9 +96,9 @@ const CourseCurriculum: React.FC<CurriculumProps> = () => {
       return;
     }
     try {
-      const addedSessions = await courseService.addSessions(courseId, sessions);
+      const addedSessions = await courseService.addSessions(formData._id as string, sessions);
       if (addedSessions) {
-        console.log("added Session :", addedSessions);
+      
         addSession(addedSessions.sessions as ISession[]);
         setSessionSpin(false);
       }
@@ -384,7 +384,7 @@ const CourseCurriculum: React.FC<CurriculumProps> = () => {
           <SheetDescription className="mt-4">
             {sheet === "addLecture" && (
               <AddLecture
-                courseId={courseId}
+                courseId={formData._id as string}
                 sessionId={selectedSession}
                 closeSheet={() => setSheet(null)}
               />
@@ -392,7 +392,7 @@ const CourseCurriculum: React.FC<CurriculumProps> = () => {
 
             {sheet === "editLecture" && (
               <EditLecture
-                courseId={courseId}
+                courseId={formData._id as string}
                 editLecture={passLecture as ILecture}
                 lectureId={passLecture?._id as string}
                 sessionId={selectedSession}
