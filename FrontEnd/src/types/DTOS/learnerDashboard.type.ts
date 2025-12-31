@@ -4,6 +4,7 @@ export interface learnerDashboardCardsDTO {
   TotalCertificate: number;
    learnerStreak:ILearnerStreask|null
   activeDays:string[]
+    inProgress:InProgress[]
 }
 export interface ILearnerStreask{
 current: number;       
@@ -20,4 +21,13 @@ export interface LearnerSlotCard {
   totalSession: number;
   totalCracked: number;
   totalFailed: number;
+}
+
+
+
+
+export interface InProgress {
+  enrolledId: string
+  title: string;
+  progress: number;
 }

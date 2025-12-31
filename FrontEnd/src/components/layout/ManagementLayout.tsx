@@ -2,7 +2,7 @@ import React, { type ReactNode } from "react";
 
 interface ManagementProps {
   title: string;
-  description: string;
+  description?: string;
   children: ReactNode;
   icon?: ReactNode;
 }

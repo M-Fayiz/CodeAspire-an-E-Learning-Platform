@@ -1,3 +1,4 @@
+import ManagementLayout from "@/components/layout/ManagementLayout";
 import { useAuth } from "@/context/auth.context";
 import CertificateService from "@/service/certificate.service";
 import type { ICertificateDTO } from "@/types/DTOS/certificate.dto.type";
@@ -35,26 +36,11 @@ const CertificatesList = () => {
   }
 
   return (
+    <ManagementLayout title="Certificates of Completion" icon={ <Award size={30} className="text-gray-800 text-2xl" />} >
+
     <div className="bg-gray-50 min-h-screen p-6">
       <div className="max-w-6xl mx-auto">
-        <div className=" bg-black p-5 rounded-lg flex justify-between mb-8 ">
-          <div className="flex justify-center">
-            <Award size={30} className="text-white text-2xl" />
-            <h1 className="text-2xl  text-white">Certificates of Completion</h1>
-          </div>
-          {/* <div>
-                  <select
-                    value={selectedPeriod}
-                    onChange={(e) => setSelectedPeriod(e.target.value)}
-                    className="border bg-white rounded-md px-3 py-2 text-black text-sm"
-                  >
-                    <option value={FilterByDate.Today}>Today</option>
-                    <option value={FilterByDate.WEEK}>Last 7 Days</option>
-                    <option value={FilterByDate.MONTH}>Last 30 Days</option>
-                    <option value={FilterByDate.YEAR}>Last 12 Months</option>
-                  </select>
-                </div> */}
-        </div>
+        
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
           {certificates.map((cert) => (
             <div
@@ -105,6 +91,7 @@ const CertificatesList = () => {
         </div>
       </div>
     </div>
+    </ManagementLayout>
   );
 };
 

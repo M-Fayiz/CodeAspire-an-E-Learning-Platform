@@ -7,7 +7,7 @@ import { HttpResponse } from "../../const/error-message.const";
 import { updatePart } from "../../types/courses.type";
 
 import { sendNotification } from "../../utils/socket.utils";
-import { IAnyUser, IMentor } from "../../types/user.types";
+import { IAnyUser, IUser } from "../../types/user.types";
 
 
 export class CourseController implements ICourseController {

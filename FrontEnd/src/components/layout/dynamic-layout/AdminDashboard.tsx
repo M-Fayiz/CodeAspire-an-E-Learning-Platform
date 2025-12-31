@@ -24,7 +24,7 @@ import {
 } from "@/components/ui/table";
 
 const AdminDashboard = () => {
-  const { user, loading } = useAuth();
+  const { user } = useAuth();
 
   const [dashData, setDashData] = useState<IAdminDashboardDTO | null>(null);
   const [slotRevenue, setSlotRevenue] = useState<graphPrps[]>([]);
@@ -34,7 +34,7 @@ const AdminDashboard = () => {
   const [selectedTab, setSelectedTab] = useState("slot");
   const [selectedPeriod, setSelectedPeriod] = useState(FilterByDate.MONTH);
 
-  if (loading) return <Spinner />;
+  
   if (!user) return <Navigate to="/auth/login" replace />;
 
   useEffect(() => {

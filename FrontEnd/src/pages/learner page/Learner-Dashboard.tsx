@@ -1,8 +1,7 @@
 import StatsCard from "@/features/learner-dahboard/StateCard";
-import CourseStatusList from "@/features/learner-dahboard/CourseStatus";
 
 import { useEffect, useState } from "react";
-import type { learnerDashboardCardsDTO } from "@/types/DTOS/learnerDashboard.type";
+import type { ILearnerStreask, learnerDashboardCardsDTO } from "@/types/DTOS/learnerDashboard.type";
 import { useAuth } from "@/context/auth.context";
 import { EnrolledService } from "@/service/Learner/enrolledCourse.service";
 
@@ -12,6 +11,9 @@ import {
 } from "@/components/ui/PieGraph";
 import LearnerDashboardSkeleton from "@/components/skelton/LearnerDashboardSkelton";
 import LearningCalendar from "@/features/learner-dahboard/StreakStatus";
+import InProgressCourseCard from "@/features/learner-dahboard/InprogressCourse";
+import ManagementLayout from "@/components/layout/ManagementLayout";
+import { Link } from "react-router";
 
 
 export type IInterviewType = "Cracked" | "Failed";
@@ -40,16 +42,10 @@ const LearnerDashboard = () => {
     return <LearnerDashboardSkeleton />;
   }
   return (
-  <div className="space-y-8 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-    {/* Header */}
-    <div className="rounded-lg bg-gray-50 p-4 sm:p-6">
-      <h1 className="text-xl sm:text-2xl font-bold text-gray-900">
-        Learner Dashboard
-      </h1>
-      <p className="mt-1 text-sm sm:text-base text-gray-500">
-        Track your learning and interview performance
-      </p>
-    </div>
+    <ManagementLayout title=" Learner Dashboard" description="Track your learning and interview performance">
+
+  <div className="space-y-5 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+
 
     {/* Stats */}
     <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
@@ -84,27 +80,33 @@ const LearnerDashboard = () => {
     </div>
 
     
-    {/* <div className="bg-white rounded-lg p-4 sm:p-6"> */}
-      <CourseStatusList />
-    {/* </div> */}
 
-    {learnerDashboardData?.learnerStreak &&
-      learnerDashboardData?.activeDays && (
-        <div className="bg-white ">
-          <LearningCalendar
-            streakData={learnerDashboardData.learnerStreak}
-            activeDates={learnerDashboardData.activeDays}
-          />
-        </div>
-      )}
+      <LearningCalendar
+        streakData={learnerDashboardData.learnerStreak as ILearnerStreask}
+        activeDates={learnerDashboardData.activeDays}
+      />
+
 
    
-    <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-      <div className="bg-white rounded-lg p-4 sm:p-6">
-        <RevenueDonutChart Options={circleChart} />
-      </div>
-    </div>
+   <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+  <div className="bg-white rounded-md p-4 sm:p-6 h-full">
+    <RevenueDonutChart Options={circleChart} />
   </div>
+  <div className="bg-white rounded-md p-4 sm:p-6 h-full">
+    <h2>Inprogress Courses</h2>
+     {learnerDashboardData.inProgress.map((course) => (
+      <Link  to={`/learner/enrolled-courses/${course.enrolledId}`} key={course.enrolledId}>
+          <InProgressCourseCard
+           
+            course={course}
+          />
+      </Link>
+        ))}
+  </div>
+</div>
+
+  </div>
+    </ManagementLayout>
 );
 
 };

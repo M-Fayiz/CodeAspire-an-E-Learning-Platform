@@ -1,3 +1,4 @@
+import { Types } from "mongoose";
 import { LearnerCourseCard, LearnerSlotCard } from "../learnerDashboard.type";
 import { ILearnerStreask } from "../user.types";
 
@@ -6,5 +7,13 @@ export interface learnerDashboardCardsDTO {
   slotData: LearnerSlotCard;
   TotalCertificate: number;
   learnerStreak:ILearnerStreask|null
-  activeDays:Date[]
+  activeDays:Date[],
+  inProgress:InProgress[]
 }
+
+export interface InProgress {
+  enrolledId: Types.ObjectId;
+  title: string;
+  progress: number;
+}
+

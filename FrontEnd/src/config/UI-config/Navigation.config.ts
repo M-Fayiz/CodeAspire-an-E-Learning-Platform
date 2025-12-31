@@ -1,3 +1,4 @@
+import type { UserRoleType } from "@/types/auth.types";
 import {
   Award,
   Layers,
@@ -18,9 +19,8 @@ export interface NavigationItem {
   badge?: number;
 }
 
-const navigationConfig = {
-  admin: {
-    primary: [
+const navigationConfig:Record<UserRoleType, NavigationItem[]>  = {
+  admin:  [
       {
         icon: Home,
         label: "Dashboard",
@@ -32,10 +32,9 @@ const navigationConfig = {
       { icon: Layers, label: "Category Management", path: "/admin/category" },
       { icon: MessageSquare, label: "Messages", path: "/admin/chats" },
     ],
-    secondary: [],
-  },
-  learner: {
-    primary: [
+    
+  
+  learner: [
       {
         icon: Home,
         label: "Dashboard",
@@ -61,10 +60,8 @@ const navigationConfig = {
 
       { icon: CalendarDays, label: "Slots", path: "/learner/booked-slots" },
     ],
-    secondary: [],
-  },
-  mentor: {
-    primary: [
+   
+    mentor: [
       { icon: Home, label: "Dashboard", path: "/mentor/dashboard" },
       { icon: Book, label: "My Courses", path: "/mentor/courses" },
 
@@ -85,8 +82,7 @@ const navigationConfig = {
         path: "/mentor/chats",
       },
     ],
-    secondary: [],
-  },
+  
 };
 
 export default navigationConfig;

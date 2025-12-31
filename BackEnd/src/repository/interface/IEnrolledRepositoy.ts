@@ -12,7 +12,7 @@ import {
   ITopCategory,
   ITopCourse,
 } from "../../types/mentorDashboard.types";
-import { LearnerCourseCard } from "../../types/learnerDashboard.type";
+import { InProgressCourse, LearnerCourseCard } from "../../types/learnerDashboard.type";
 
 export interface IEnrolledRepository {
   enrolleCourse(enrollData: IEnrollement): Promise<IEnrolledModel | null>;
@@ -61,4 +61,5 @@ export interface IEnrolledRepository {
     data: UpdateQuery<IEnrolledModel>,
   ): Promise<IEnrolledModel | null>;
   avgCourseRating(courseId: Types.ObjectId): Promise<CourseDetailsRating[]>;
+  getInprogressCourse(learnerId:Types.ObjectId,populate:string[]):Promise<InProgressCourse[]|null>
 }

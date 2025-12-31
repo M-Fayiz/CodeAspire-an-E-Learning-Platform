@@ -30,6 +30,7 @@ import { useSearchPagination } from "@/hooks/useSearchQuery";
 import { DateFilter } from "@/components/common/DateFilter";
 import type { DateRange } from "react-day-picker";
 import { ApiError } from "@/utility/apiError.util";
+import useDebounce from "@/hooks/useDebounce";
 
 export default function MentorBookedSlots() {
   const { user } = useAuth();
@@ -42,11 +43,16 @@ export default function MentorBookedSlots() {
   const [value, setValue] = useState<Date | DateRange | undefined>();
   const [showDateFilter, setShowDateFilter] = useState(false);
 
-  const { setFilter, filter, search, setSearch, page, setPage } =
+  const { search, setSearch, page, setPage } =
     useSearchPagination();
 
   const [totalPage, setTotalPage] = useState(1);
   const [searchInput, setSearchInput] = useState("");
+  const debounced=useDebounce(searchInput,300)
+
+  useEffect(()=>{
+    setSearch(debounced)
+  },[debounced])
 
   useEffect(() => {
     if (!user?.id) return;
@@ -54,8 +60,9 @@ export default function MentorBookedSlots() {
     (async () => {
       try {
         setLoading(true);
-        const data = await SlotBookingSercie.getBookedMentorSlotList(user.id);
+        const data = await SlotBookingSercie.getBookedMentorSlotList(user.id,page,search);
         setMentorSlots(data);
+        setTotalPage(2)
       } catch {
         toast.error("Failed to fetch mentor slots");
       } finally {
@@ -168,6 +175,7 @@ export default function MentorBookedSlots() {
     if (result) toast.success("Certificate generated successfully");
   };
 
+   
   return (
     <ManagementLayout
       title="Booked Slots List"

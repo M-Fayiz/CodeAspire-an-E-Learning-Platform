@@ -61,8 +61,13 @@ export default function LearningCalendar({ activeDates, streakData }: Props) {
   const totalActiveDays = activeDates.length;
 
   return (
-  <div className="w-full max-w-full bg-white rounded-md border border-gray-200 p-4 sm:p-5">
-    {/* Stats header */}
+   <div className="w-fit bg-white rounded-md border border-gray-200 p-4 sm:p-5">
+   
+      <div className="px-4 sm:px-6 py-4 border-b">
+    <h3 className="text-base sm:text-lg font-semibold text-gray-900">
+      Learning Streak
+    </h3>
+  </div>
     <div className="flex flex-col sm:flex-row sm:flex-wrap gap-3 sm:gap-6 mb-6 text-sm">
       <div>
         <span className="text-gray-500">Total active days: </span>
@@ -87,8 +92,10 @@ export default function LearningCalendar({ activeDates, streakData }: Props) {
     </div>
 
     {/* Calendar */}
-    <div className="relative overflow-x-auto">
-      <div className="inline-flex gap-3 min-w-max">
+   <div className="relative overflow-x-auto lg:overflow-visible">
+  <div className="flex gap-3 min-w-max lg:min-w-0 justify-start lg:justify-between">
+
+
         {Object.entries(monthsData).map(([monthKey, weeks]) => (
           <div key={monthKey} className="flex flex-col">
             {/* Month label */}
@@ -112,7 +119,7 @@ export default function LearningCalendar({ activeDates, streakData }: Props) {
                         onMouseEnter={() => setHoveredDate(date)}
                         onMouseLeave={() => setHoveredDate(null)}
                         className={`
-                          w-3 h-3 sm:w-3.5 sm:h-3.5
+                          w-2 h-2 sm:w-3.5 sm:h-3.5
                           rounded-sm transition-all cursor-pointer
                           ${isActive
                             ? "bg-orange-500 hover:bg-orange-600 sm:hover:scale-125"

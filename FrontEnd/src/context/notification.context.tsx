@@ -11,6 +11,7 @@ export const NotificationProvider: React.FC<{
   children: React.ReactNode;
 }> = ({ userId, children }) => {
   const value = useNotifications(userId);
+
   return (
     <NotificationContext.Provider value={value}>
       {children}

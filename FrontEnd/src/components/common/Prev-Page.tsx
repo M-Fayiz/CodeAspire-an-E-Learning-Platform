@@ -1,28 +1,11 @@
 import { ArrowLeft } from "lucide-react";
-import { useLocation, useNavigate } from "react-router-dom";
+import {  useNavigate } from "react-router-dom";
 
-interface BackToState {
-  backTo?: {
-    path: string;
-    label: string;
-  };
-}
 
-const BackTo = ({
-  fallbackPath = "/my-courses",
-  fallbackLabel = "My Courses",
-}: {
-  fallbackPath?: string;
-  fallbackLabel?: string;
-}) => {
+
+const BackTo = () => {
   const navigate = useNavigate();
-  const location = useLocation();
-
-  const state = location.state as BackToState;
-
-  const path = state?.backTo?.path ?? fallbackPath;
-  const label = state?.backTo?.label ?? fallbackLabel;
-
+ 
   return (
     <button
       onClick={() => navigate(-1)}

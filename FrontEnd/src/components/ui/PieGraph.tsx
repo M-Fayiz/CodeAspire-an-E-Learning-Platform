@@ -34,7 +34,7 @@ export const RevenueDonutChart: React.FC<{ Options: PieChartProps[] }> = ({
             ))}
           </Pie>
 
-          <Tooltip formatter={(value) => `₹${value.toLocaleString()}`} />
+          <Tooltip formatter={(value) => `${value.toLocaleString()}`} />
           <Legend />
         </PieChart>
       </CardContent>

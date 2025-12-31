@@ -352,18 +352,20 @@ export class EnrolledService implements IEnrolledService {
       throw createHttpError(HttpStatus.BAD_REQUEST, HttpResponse.INVALID_ID);
     }
 
-    const [courseCard, certificateCount, slotCard,learner] = await Promise.all([
+    const [courseCard, certificateCount, slotCard,learner,inProgress] = await Promise.all([
       this._erolledRepository.getLearnerDashboardCourseData(learner_Id),
       this._certificateRepository.learnerTotalCertificate(learner_Id),
       this._slotbookingRepository.learnerDashboardSlotCard(learner_Id),
-      this._learnerRepository.getLearnerStreak(learner_Id)
+      this._learnerRepository.getLearnerStreak(learner_Id),
+      this._erolledRepository.getInprogressCourse(learner_Id,['courseId'])
     ]);
 
     return learnerDashboardDetails(
       courseCard[0],
       slotCard[0],
       certificateCount,
-      learner as ILearnerModel
+      learner as ILearnerModel,
+      inProgress as InProgressCourse[]
     );
   }
 }
