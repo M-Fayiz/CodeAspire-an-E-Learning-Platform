@@ -48,7 +48,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
 
   const bootstrapAuth = async () => {
     try {
-      await AuthService.refreshToken();
+      // await AuthService.refreshToken();
       const user = await AuthService.authME();
       setUser(user);
       setStatus(AuthStatus.AUTHENTICATED);
