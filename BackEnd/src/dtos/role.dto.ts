@@ -34,7 +34,6 @@ export function LearnerDTO(learner: ILearnerModel): ILearnerDTO {
     isActive: learner.isActive,
     bio: learner.bio,
     ApprovalStatus: learner.ApprovalStatus,
-    enrolledCourses: learner.enrolledCourses,
   };
 }
 

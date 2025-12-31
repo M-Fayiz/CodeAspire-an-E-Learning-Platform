@@ -56,7 +56,7 @@ class OrderService {
         await this._orderRepository.updateOrderStatus(order_id, transaction_const_1.OrderStatus.COMPLETED);
         const adminShare = (0, calculateSplit_util_1.calculateShares)(Number(amount), Number(env_config_1.env.ADMIN_SHARE));
         const mentorShare = (0, calculateSplit_util_1.calculateShares)(Number(amount), Number(env_config_1.env.MENTOR_SHARE));
-        const paymentIntentId = typeof session.payment_intent === 'string'
+        const paymentIntentId = typeof session.payment_intent === "string"
             ? session.payment_intent
             : session.payment_intent?.id;
         const transactionData = {
@@ -150,6 +150,9 @@ class OrderService {
                 },
             ],
             mode: transaction_const_1.StripeConst.MODE,
+            invoice_creation: {
+                enabled: true,
+            },
             success_url: `${env_config_1.env.CLIENT_URL_2}/${transaction_const_1.StripeConst.SUCCESS_URL}`,
             client_reference_id: String(orderData._id),
             metadata: {
@@ -172,7 +175,6 @@ class OrderService {
         };
     }
     async getPaymentData(sessionId) {
-        console.log("session Id  :", sessionId);
         if (!stripe_config_1.stripe) {
             throw (0, http_error_1.createHttpError)(http_status_const_1.HttpStatus.INTERNAL_SERVER_ERROR, error_message_const_1.HttpResponse.STRIPR_NOT_AVAILABLE);
         }

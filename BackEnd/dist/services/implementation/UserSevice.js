@@ -112,7 +112,10 @@ class UserService {
         if (!mentor_Id) {
             throw (0, http_error_1.createHttpError)(http_status_const_1.HttpStatus.BAD_REQUEST, error_message_const_1.HttpResponse.INVALID_ID);
         }
-        const updateMentorData = await this._mentorRepository.updateMentorProfile(mentor_Id, { ...mentorData, ApprovalStatus: user_types_1.mentorApprovalStatus.REQUESTED });
+        const updateMentorData = await this._mentorRepository.updateMentorProfile(mentor_Id, {
+            ...mentorData,
+            ApprovalStatus: user_types_1.mentorApprovalStatus.REQUESTED,
+        });
         if (!updateMentorData) {
             throw (0, http_error_1.createHttpError)(http_status_const_1.HttpStatus.INTERNAL_SERVER_ERROR, error_message_const_1.HttpResponse.SERVER_ERROR);
         }

@@ -39,7 +39,7 @@ class UserRepository extends baseRepository_1.BaseRepository {
                 email: profile.emails?.[0].value,
                 name: profile.displayName,
                 role: role,
-                isActive: true
+                isActive: true,
             });
         }
         return user;
@@ -105,6 +105,9 @@ class UserRepository extends baseRepository_1.BaseRepository {
             },
             { $sort: { date: 1 } },
         ]);
+    }
+    async updateLearnerStreak(learnerId, updatedData) {
+        return await this.findByIDAndUpdate(learnerId, { $set: { learningStreak: updatedData } });
     }
 }
 exports.UserRepository = UserRepository;

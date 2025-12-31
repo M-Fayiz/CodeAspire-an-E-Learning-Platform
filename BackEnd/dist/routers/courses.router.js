@@ -13,11 +13,13 @@ const CategoryRepository_1 = require("../repository/implementation/CategoryRepos
 const EnrolledRepository_1 = require("../repository/implementation/EnrolledRepository");
 const user_types_1 = require("../types/user.types");
 const NotificationRepository_1 = require("../repository/implementation/NotificationRepository");
+const ReviewRepository_1 = require("../repository/implementation/ReviewRepository");
 const courseRepository = new CourseRepository_1.CourseRepository();
 const categoryRepository = new CategoryRepository_1.CategoryRepository();
 const enrolledRepositoy = new EnrolledRepository_1.EnrolledRepository();
 const notificationRepository = new NotificationRepository_1.NotificationRepository();
-const courseService = new CourseService_1.CourseService(courseRepository, categoryRepository, enrolledRepositoy, notificationRepository);
+const reviewRepository = new ReviewRepository_1.ReviewRepository();
+const courseService = new CourseService_1.CourseService(courseRepository, categoryRepository, enrolledRepositoy, notificationRepository, reviewRepository);
 const courseController = new CourseController_1.CourseController(courseService);
 const courseRouter = express_1.default.Router();
 courseRouter.get("/", courseController.fetchCourse);

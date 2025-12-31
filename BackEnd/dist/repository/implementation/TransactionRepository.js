@@ -30,7 +30,7 @@ class TransactionRepositoy extends baseRepository_1.BaseRepository {
                 $match: {
                     mentorId: mentorId,
                     createdAt: { $gte: start, $lte: end },
-                    status: { $ne: transaction_const_1.TransactionStatus.REFUNDED }
+                    status: { $ne: transaction_const_1.TransactionStatus.REFUNDED },
                 },
             },
             {
@@ -45,7 +45,12 @@ class TransactionRepositoy extends baseRepository_1.BaseRepository {
     }
     async getAdminRevenue(start, end) {
         return this.aggregate([
-            { $match: { createdAt: { $gte: start, $lte: end }, status: { $ne: transaction_const_1.TransactionStatus.REFUNDED } } },
+            {
+                $match: {
+                    createdAt: { $gte: start, $lte: end },
+                    status: { $ne: transaction_const_1.TransactionStatus.REFUNDED },
+                },
+            },
             {
                 $group: {
                     _id: "$paymentType",

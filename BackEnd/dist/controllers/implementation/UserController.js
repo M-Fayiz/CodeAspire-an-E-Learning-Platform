@@ -26,7 +26,9 @@ class UserController {
                 const { currentPassword, newPassword } = req.body;
                 const { userId } = req.params;
                 await this._userService.changePassword(userId, currentPassword, newPassword);
-                res.status(http_status_const_1.HttpStatus.OK).json((0, response_util_1.successResponse)(error_message_const_1.HttpResponse.OK, { changed: true }));
+                res
+                    .status(http_status_const_1.HttpStatus.OK)
+                    .json((0, response_util_1.successResponse)(error_message_const_1.HttpResponse.OK, { changed: true }));
             }
             catch (error) {
                 next(error);

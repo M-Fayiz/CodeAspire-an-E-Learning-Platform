@@ -5,7 +5,10 @@ const env_config_1 = require("./env.config");
 const redisClient = (0, redis_1.createClient)({
     url: env_config_1.env.REDIS_URL,
     socket: {
-        connectTimeout: 10000,
+        reconnectStrategy: (retries) => {
+            console.log(`Redis reconnect attempt ${retries}`);
+            return Math.min(retries * 100, 3000);
+        },
     },
 });
 redisClient.on("connect", () => {

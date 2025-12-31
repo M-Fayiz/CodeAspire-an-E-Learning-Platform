@@ -61,7 +61,8 @@ class EnrolledController {
         this.getCourseDashboardData = async (req, res, next) => {
             try {
                 const { courseId, mentorId } = req.params;
-                const dashboardData = await this._enrolledService.getCourseEnrolledDashboardData(courseId, mentorId);
+                const user = req.user;
+                const dashboardData = await this._enrolledService.getCourseEnrolledDashboardData(courseId, mentorId, user);
                 res
                     .status(http_status_const_1.HttpStatus.OK)
                     .json((0, response_util_1.successResponse)(error_message_const_1.HttpResponse.OK, { dashboardData }));
@@ -87,7 +88,7 @@ class EnrolledController {
             try {
                 const { mentorId } = req.params;
                 const { filter } = req.query;
-                console.log('filter :', filter);
+                console.log("filter :", filter);
                 const dashboardData = await this._enrolledService.getMentorDashboardData(mentorId, filter);
                 res
                     .status(http_status_const_1.HttpStatus.OK)

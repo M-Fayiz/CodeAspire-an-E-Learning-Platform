@@ -66,14 +66,53 @@ class SlotService {
      * @param mentorId
      * @returns array of mapped slot data
      */
-    async getMontorSlots(mentorId, page) {
+    async getMontorSlots(mentorId, page, search, filter) {
         const mentor_Id = (0, objectId_1.parseObjectId)(mentorId);
         if (!mentor_Id) {
             throw (0, http_error_1.createHttpError)(http_status_const_1.HttpStatus.NOT_FOUND, error_message_const_1.HttpResponse.INVALID_ID);
         }
         let limit = 5;
         let skip = (page - 1) * limit;
-        const mentorSlots = await this._slotRepository.getMentorSLotsList(mentor_Id, skip, limit, ["courseId"]);
+        const pipeline = [
+            {
+                $match: {
+                    mentorId: mentor_Id,
+                    isActive: true,
+                },
+            },
+        ];
+        if (filter) {
+            pipeline.push({
+                $match: {
+                    selectedDays: {
+                        $elemMatch: {
+                            day: filter,
+                            active: true,
+                        },
+                    },
+                },
+            });
+        }
+        pipeline.push({
+            $lookup: {
+                from: "courses",
+                localField: "courseId",
+                foreignField: "_id",
+                as: "course",
+            },
+        }, { $unwind: "$course" });
+        if (search) {
+            pipeline.push({
+                $match: {
+                    "course.title": {
+                        $regex: search,
+                        $options: "i",
+                    },
+                },
+            });
+        }
+        pipeline.push({ $skip: skip }, { $limit: limit });
+        const mentorSlots = await this._slotRepository.getMentorSLotsList(pipeline);
         if (!mentorSlots) {
             throw (0, http_error_1.createHttpError)(http_status_const_1.HttpStatus.NOT_FOUND, error_message_const_1.HttpResponse.ITEM_NOT_FOUND);
         }

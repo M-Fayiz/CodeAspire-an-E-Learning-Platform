@@ -56,6 +56,7 @@ import { updateLearningStreak } from "../../utils/streak.util";
 import { ILearnerStreask, IRole, IUser } from "../../types/user.types";
 import { ILearnerModel } from "../../models/user.model";
 import { ILearnerRepository } from "../../repository/interface/ILearnerRepository";
+import { InProgressCourse } from "../../types/learnerDashboard.type";
 
 export class EnrolledService implements IEnrolledService {
   constructor(

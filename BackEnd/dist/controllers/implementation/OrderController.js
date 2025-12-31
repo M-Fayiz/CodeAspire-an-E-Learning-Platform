@@ -27,7 +27,7 @@ class OrderController {
                 const paymentdata = await this._orderService.getPaymentData(id);
                 res
                     .status(http_status_const_1.HttpStatus.OK)
-                    .json((0, response_util_1.successResponse)(error_message_const_1.HttpResponse.OK, [paymentdata]));
+                    .json((0, response_util_1.successResponse)(error_message_const_1.HttpResponse.OK, { paymentdata }));
             }
             catch (error) {
                 next(error);

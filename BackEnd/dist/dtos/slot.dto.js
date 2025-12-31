@@ -32,8 +32,8 @@ function mentorSlotsDTO(slotData) {
     return {
         _id: slotData._id,
         course: {
-            _id: slotData.courseId._id,
-            title: slotData.courseId.title,
+            _id: slotData.course._id,
+            title: slotData.course.title,
         },
         mentorId: slotData.mentorId,
         selectedDays: slotData.selectedDays,

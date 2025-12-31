@@ -74,7 +74,7 @@ class EnrolledRepository extends baseRepository_1.BaseRepository {
             {
                 $match: {
                     mentorId: mentorId,
-                    createdAt: { $gte: start, $lte: end }
+                    createdAt: { $gte: start, $lte: end },
                 },
             },
             {
@@ -91,13 +91,20 @@ class EnrolledRepository extends baseRepository_1.BaseRepository {
         ]);
     }
     async getTopSellingCourse(mentorId, start, end) {
-        const matchStage = mentorId ? { mentorId, createdAt: {
-                $gte: start,
-                $lte: end,
-            } } : { createdAt: {
-                $gte: start,
-                $lte: end,
-            } };
+        const matchStage = mentorId
+            ? {
+                mentorId,
+                createdAt: {
+                    $gte: start,
+                    $lte: end,
+                },
+            }
+            : {
+                createdAt: {
+                    $gte: start,
+                    $lte: end,
+                },
+            };
         return await this.aggregate([
             {
                 $match: matchStage,
@@ -218,6 +225,29 @@ class EnrolledRepository extends baseRepository_1.BaseRepository {
     }
     async updateEnrolledData(enrolledId, data) {
         return await this.findByIDAndUpdate(enrolledId, data);
+    }
+    async avgCourseRating(courseId) {
+        return await this.aggregate([
+            {
+                $match: {
+                    courseId,
+                },
+            },
+            {
+                $group: {
+                    _id: null,
+                    avgRating: {
+                        $avg: "$rating",
+                    },
+                    totalStudents: {
+                        $sum: 1,
+                    },
+                },
+            },
+        ]);
+    }
+    async getInprogressCourse(learnerId, populate) {
+        return await this.find({ learnerId, courseStatus: enrollment_types_1.completionStatus.IN_PROGRESS }, populate);
     }
 }
 exports.EnrolledRepository = EnrolledRepository;

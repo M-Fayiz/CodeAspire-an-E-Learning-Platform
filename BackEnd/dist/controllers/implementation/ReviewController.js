@@ -24,7 +24,6 @@ class ReviewController {
             try {
                 const { courseId } = req.params;
                 const courseReview = await this._reviewService.getCourseReview(courseId);
-                console.log(courseReview);
                 res
                     .status(http_status_const_1.HttpStatus.OK)
                     .json((0, response_util_1.successResponse)(error_message_const_1.HttpResponse.OK, { courseReview }));

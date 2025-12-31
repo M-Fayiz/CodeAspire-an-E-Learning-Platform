@@ -14,14 +14,17 @@ const dashFilterGenerator_utils_1 = require("../../utils/dashFilterGenerator.uti
 const transaction_const_1 = require("../../const/transaction.const");
 const dateBuilder_1 = require("../../utils/dateBuilder");
 const learnerDashnoard_dto_1 = require("../../dtos/learnerDashnoard.dto");
+const streak_util_1 = require("../../utils/streak.util");
+const user_types_1 = require("../../types/user.types");
 class EnrolledService {
-    constructor(_erolledRepository, _courseRepository, _transactionRepository, _userRepository, _certificateRepository, _slotbookingRepository) {
+    constructor(_erolledRepository, _courseRepository, _transactionRepository, _userRepository, _certificateRepository, _slotbookingRepository, _learnerRepository) {
         this._erolledRepository = _erolledRepository;
         this._courseRepository = _courseRepository;
         this._transactionRepository = _transactionRepository;
         this._userRepository = _userRepository;
         this._certificateRepository = _certificateRepository;
         this._slotbookingRepository = _slotbookingRepository;
+        this._learnerRepository = _learnerRepository;
     }
     async getEnrolledCourses(learnerId) {
         const learner_id = (0, objectId_1.parseObjectId)(learnerId);
@@ -80,7 +83,7 @@ class EnrolledService {
             totalLectures += session.lectures.length;
         }
         const completedCount = updatedEnrollment.progress.completedLectures.length;
-        const completionPercentage = (completedCount / totalLectures) * 100;
+        const completionPercentage = Math.floor((completedCount / totalLectures) * 100);
         const status = completionPercentage === 100
             ? enrollment_types_1.completionStatus.COMPLETED
             : enrollment_types_1.completionStatus.IN_PROGRESS;
@@ -90,6 +93,18 @@ class EnrolledService {
                 courseStatus: status,
             },
         });
+        const user = await this._userRepository.findUser(updatedEnrollment.learnerId);
+        if (!user) {
+            throw (0, http_error_1.createHttpError)(http_status_const_1.HttpStatus.NOT_FOUND, error_message_const_1.HttpResponse.USER_NOT_FOUND);
+        }
+        if (user.role !== user_types_1.IRole.Learner) {
+            throw (0, http_error_1.createHttpError)(http_status_const_1.HttpStatus.CONFLICT, error_message_const_1.HttpResponse.ACCESS_DENIED);
+        }
+        const today = new Date();
+        today.setHours(0, 0, 0, 0);
+        const learner = user;
+        const updatedStreak = (0, streak_util_1.updateLearningStreak)(learner);
+        await this._learnerRepository.updateLearningStreak(learner._id, updatedStreak, today);
         return finalEnrollment?.progress ?? null;
     }
     async addRating(enroledId, value) {
@@ -103,7 +118,7 @@ class EnrolledService {
         }
         return updatedData.rating;
     }
-    async getCourseEnrolledDashboardData(courseId, mentorId) {
+    async getCourseEnrolledDashboardData(courseId, mentorId, user) {
         const course_id = (0, objectId_1.parseObjectId)(courseId);
         const mentor_id = (0, objectId_1.parseObjectId)(mentorId);
         if (!course_id || !mentor_id) {
@@ -116,6 +131,9 @@ class EnrolledService {
         ]);
         if (!studentsAndRating || !course || !revenue) {
             throw (0, http_error_1.createHttpError)(http_status_const_1.HttpStatus.NOT_FOUND, error_message_const_1.HttpResponse.ITEM_NOT_FOUND);
+        }
+        if (course.mentorId._id.toString() !== user._id.toString()) {
+            throw (0, http_error_1.createHttpError)(http_status_const_1.HttpStatus.FORBIDDEN, error_message_const_1.HttpResponse.ACCESS_DENIED);
         }
         const { avgRating = 0, totalStudents = 0 } = studentsAndRating[0] || {};
         return (0, courseDashboard_dto_1.courseDashboardDTO)(totalStudents, avgRating, course, revenue[0]);
@@ -150,7 +168,8 @@ class EnrolledService {
     async getRevenueGraph(filter, mentorId) {
         const dateMatch = (0, dateBuilder_1.buildDateFilter)(filter);
         const matchStage = {
-            ...dateMatch, status: { $ne: transaction_const_1.TransactionStatus.REFUNDED }
+            ...dateMatch,
+            status: { $ne: transaction_const_1.TransactionStatus.REFUNDED },
         };
         if (mentorId) {
             const mentor_id = (0, objectId_1.parseObjectId)(mentorId);
@@ -180,12 +199,14 @@ class EnrolledService {
         if (!learner_Id) {
             throw (0, http_error_1.createHttpError)(http_status_const_1.HttpStatus.BAD_REQUEST, error_message_const_1.HttpResponse.INVALID_ID);
         }
-        const [courseCard, certificateCount, slotCard] = await Promise.all([
+        const [courseCard, certificateCount, slotCard, learner, inProgress] = await Promise.all([
             this._erolledRepository.getLearnerDashboardCourseData(learner_Id),
             this._certificateRepository.learnerTotalCertificate(learner_Id),
             this._slotbookingRepository.learnerDashboardSlotCard(learner_Id),
+            this._learnerRepository.getLearnerStreak(learner_Id),
+            this._erolledRepository.getInprogressCourse(learner_Id, ['courseId'])
         ]);
-        return (0, learnerDashnoard_dto_1.learnerDashboardDetails)(courseCard[0], slotCard[0], certificateCount);
+        return (0, learnerDashnoard_dto_1.learnerDashboardDetails)(courseCard[0], slotCard[0], certificateCount, learner, inProgress);
     }
 }
 exports.EnrolledService = EnrolledService;

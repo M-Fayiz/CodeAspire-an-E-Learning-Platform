@@ -89,5 +89,5 @@ exports.NotificationTemplates = {
         link: `/learner/my-slots`,
         createdAt: new Date(),
         updatedAt: new Date(),
-    })
+    }),
 };

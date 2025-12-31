@@ -10,7 +10,6 @@ class CourseController {
         this._courseService = _courseService;
         this.addCourse = async (req, res, next) => {
             try {
-                console.log("created course :");
                 const createdCourseData = await this._courseService.createCourses(req.body.courseData);
                 res
                     .status(http_status_const_1.HttpStatus.OK)
@@ -79,7 +78,6 @@ class CourseController {
                 const { courseId } = req.params;
                 const { session } = req.body;
                 const addedSessionData = await this._courseService.addSessions(courseId, session);
-                console.warn("added session :", addedSessionData);
                 res
                     .status(http_status_const_1.HttpStatus.OK)
                     .json((0, response_util_1.successResponse)(error_message_const_1.HttpResponse.OK, { addedSessionData }));
@@ -205,7 +203,8 @@ class CourseController {
         this.getCourseFormData = async (req, res, next) => {
             try {
                 const { courseId } = req.params;
-                const courseFormData = await this._courseService.getCourseFormData(courseId);
+                const user = req.user;
+                const courseFormData = await this._courseService.getCourseFormData(courseId, user);
                 res
                     .status(http_status_const_1.HttpStatus.OK)
                     .json((0, response_util_1.successResponse)(error_message_const_1.HttpResponse.OK, { courseFormData }));

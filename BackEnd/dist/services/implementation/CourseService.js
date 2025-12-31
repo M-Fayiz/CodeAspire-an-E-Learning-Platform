@@ -9,12 +9,14 @@ const error_message_const_1 = require("../../const/error-message.const");
 const send_mail_util_1 = require("../../utils/send-mail.util");
 const notification_template_1 = require("../../template/notification.template");
 const notification_dto_1 = require("../../dtos/notification.dto");
+const review_dto_1 = require("../../dtos/review.dto");
 class CourseService {
-    constructor(_courseRepository, _categoryRepository, _enrolledRepository, _notificationRepository) {
+    constructor(_courseRepository, _categoryRepository, _enrolledRepository, _notificationRepository, _reviewRepository) {
         this._courseRepository = _courseRepository;
         this._categoryRepository = _categoryRepository;
         this._enrolledRepository = _enrolledRepository;
         this._notificationRepository = _notificationRepository;
+        this._reviewRepository = _reviewRepository;
     }
     async createCourses(course) {
         const mentorCourse = await this._courseRepository.findAllCourse({
@@ -89,10 +91,15 @@ class CourseService {
         if (!course_id) {
             throw (0, http_error_1.createHttpError)(http_status_const_1.HttpStatus.BAD_REQUEST, error_message_const_1.HttpResponse.INVALID_ID);
         }
-        const learner_id = learnerId
-            ? (0, objectId_1.parseObjectId)(learnerId)
-            : null;
-        const courseData = await this._courseRepository.getCourseDetails(course_id);
+        const learner_id = learnerId ? (0, objectId_1.parseObjectId)(learnerId) : null;
+        const [courseData, reviews, summery] = await Promise.all([
+            this._courseRepository.getCourseDetails(course_id),
+            this._reviewRepository.getCourseReview(course_id),
+            this._enrolledRepository.avgCourseRating(course_id),
+        ]);
+        const mappedReview = reviews
+            ? reviews?.map((review) => (0, review_dto_1.popularedReviewDTO)(review))
+            : [];
         if (!courseData || courseData.length === 0) {
             throw (0, http_error_1.createHttpError)(http_status_const_1.HttpStatus.NOT_FOUND, error_message_const_1.HttpResponse.ITEM_NOT_FOUND);
         }
@@ -104,7 +111,7 @@ class CourseService {
             }
         }
         return {
-            courseDetails: (0, course_dtos_1.courseDetailsPageDTO)(courseData[0]),
+            courseDetails: (0, course_dtos_1.courseDetailsPageDTO)(courseData[0], mappedReview, summery[0].avgRating, summery[0].totalStudents),
             enrolledId: isEnrolled,
         };
     }
@@ -169,7 +176,7 @@ class CourseService {
             throw (0, http_error_1.createHttpError)(http_status_const_1.HttpStatus.BAD_REQUEST, error_message_const_1.HttpResponse.INVALID_ID);
         }
         await this._courseRepository.editLecture(CourseId, SessionId, LectureId, lecture);
-        const coursedata = this._courseRepository.findCourse(CourseId);
+        const coursedata = await this._courseRepository.findCourse(CourseId);
         if (!coursedata) {
             throw (0, http_error_1.createHttpError)(http_status_const_1.HttpStatus.NOT_FOUND, error_message_const_1.HttpResponse.COURSE_NOT_FOUND);
         }
@@ -189,7 +196,6 @@ class CourseService {
         const limit = 4;
         const skip = (page - 1) * limit;
         const adminCoursList = await this._courseRepository.getAdminCoursList(search, limit, skip);
-        console.log(adminCoursList);
         return adminCoursList
             ? adminCoursList.map((course) => (0, course_dtos_1.formCourseDto)(course))
             : null;
@@ -258,12 +264,19 @@ class CourseService {
         }
         return courseList.map((course) => (0, course_dtos_1.listCourseForSLot)(course));
     }
-    async getCourseFormData(courseId) {
+    async getCourseFormData(courseId, user) {
         const course_Id = (0, objectId_1.parseObjectId)(courseId);
         if (!course_Id) {
             throw (0, http_error_1.createHttpError)(http_status_const_1.HttpStatus.BAD_REQUEST, error_message_const_1.HttpResponse.INVALID_ID);
         }
         const courseFormData = await this._courseRepository.getCourseFormData(course_Id);
+        console.log(courseFormData?.mentorId, ' < > ', user._id);
+        if (!courseFormData) {
+            throw (0, http_error_1.createHttpError)(http_status_const_1.HttpStatus.NOT_FOUND, error_message_const_1.HttpResponse.COURSE_NOT_FOUND);
+        }
+        if (courseFormData.mentorId.toString() !== user._id.toString()) {
+            throw (0, http_error_1.createHttpError)(http_status_const_1.HttpStatus.FORBIDDEN, error_message_const_1.HttpResponse.ACCESS_DENIED);
+        }
         if (!courseFormData) {
             throw (0, http_error_1.createHttpError)(http_status_const_1.HttpStatus.NOT_FOUND, error_message_const_1.HttpResponse.COURSE_NOT_FOUND);
         }

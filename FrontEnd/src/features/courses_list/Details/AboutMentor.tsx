@@ -2,6 +2,7 @@ import { useAuth } from "@/context/auth.context";
 import { ChatService } from "@/service/chat.service";
 import UserService from "@/service/user.service";
 import type { MentorDTO } from "@/types/DTOS/SharedCourseDetails";
+import { ApiError } from "@/utility/apiError.util";
 import { MessageSquare } from "lucide-react";
 import React, { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router";
@@ -50,7 +51,7 @@ const MentorProfile: React.FC<MentorProps> = ({
       }
     } catch (error) {
       if (error instanceof ApiError) {
-        toast.error(error.message);
+        toast.error(error.message as string);
       }
     }
   };

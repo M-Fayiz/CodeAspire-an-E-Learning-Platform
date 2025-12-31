@@ -31,7 +31,6 @@ function LearnerDTO(learner) {
         isActive: learner.isActive,
         bio: learner.bio,
         ApprovalStatus: learner.ApprovalStatus,
-        enrolledCourses: learner.enrolledCourses,
     };
 }
 function AdminDTO(admin) {

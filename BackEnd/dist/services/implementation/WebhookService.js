@@ -6,6 +6,7 @@ const stripe_config_1 = require("../../config/stripe.config");
 const http_error_1 = require("../../utils/http-error");
 const http_status_const_1 = require("../../const/http-status.const");
 const error_message_const_1 = require("../../const/error-message.const");
+const transaction_const_1 = require("../../const/transaction.const");
 class WebhookService {
     constructor(_orderService, _slotBookingService) {
         this._orderService = _orderService;
@@ -23,10 +24,10 @@ class WebhookService {
             const metadata = session.metadata;
             if (event.type === "checkout.session.completed") {
                 switch (metadata?.paymentType) {
-                    case "COURSE_PURCHASE":
+                    case transaction_const_1.TransactionType.COURSE_PURCHASE:
                         await this._orderService.handleCoursePurchase(session);
                         break;
-                    case "SLOT_BOOKING":
+                    case transaction_const_1.TransactionType.SLOT_BOOKING:
                         await this._slotBookingService.handleSlotBooking(session);
                         break;
                     default:

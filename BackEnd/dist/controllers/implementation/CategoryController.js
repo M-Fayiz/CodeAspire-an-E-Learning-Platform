@@ -10,7 +10,9 @@ class CategoryController {
         this.createCategory = async (req, res, next) => {
             try {
                 const result = await this._categoryService.createCategory(req.body.title, req.body.parentId);
-                res.status(http_status_const_1.HttpStatus.OK).json((0, response_util_1.successResponse)(error_message_const_1.HttpResponse.OK, result));
+                res
+                    .status(http_status_const_1.HttpStatus.OK)
+                    .json((0, response_util_1.successResponse)(error_message_const_1.HttpResponse.OK, result));
             }
             catch (error) {
                 next(error);

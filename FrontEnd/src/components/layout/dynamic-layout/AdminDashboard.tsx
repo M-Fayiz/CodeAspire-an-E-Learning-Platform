@@ -2,7 +2,6 @@
 
 import { BookCopy, IndianRupee, Users } from "lucide-react";
 import { useAuth } from "../../../context/auth.context";
-import { Spinner } from "../../templates/Spinner";
 import { Navigate } from "react-router";
 import { useEffect, useState } from "react";
 import { adminService } from "@/service/admin/admin.service";

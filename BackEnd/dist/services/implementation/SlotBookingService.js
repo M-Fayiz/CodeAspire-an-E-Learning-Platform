@@ -262,7 +262,9 @@ class SlotBookingService {
     }
     async cancelSlot(bookedId) {
         const booked_Id = (0, objectId_1.parseObjectId)(bookedId);
-        const bookedSlot = await this._slotBookingRepository.findSlots({ _id: booked_Id });
+        const bookedSlot = await this._slotBookingRepository.findSlots({
+            _id: booked_Id,
+        });
         if (!bookedSlot) {
             throw (0, http_error_1.createHttpError)(http_status_const_1.HttpStatus.NOT_FOUND, error_message_const_1.HttpResponse.SLOT_NOT_FOUND);
         }
@@ -287,9 +289,15 @@ class SlotBookingService {
             }
             const notification = notification_template_1.NotificationTemplates.SlotCancellation(bookedSlot.learnerId, slotStart.getDate().toLocaleString());
             const createdNotification = await this._notificationRepository.createNotification(notification);
-            return { status: cancelledData.status, notification: (0, notification_dto_1.notificationDto)(createdNotification) };
+            return {
+                status: cancelledData.status,
+                notification: (0, notification_dto_1.notificationDto)(createdNotification),
+            };
         }
-        const transaction = await this._transactionRepostiory.findTransaction({ slotBookingId: booked_Id, status: transaction_const_1.TransactionStatus.SUCCESS });
+        const transaction = await this._transactionRepostiory.findTransaction({
+            slotBookingId: booked_Id,
+            status: transaction_const_1.TransactionStatus.SUCCESS,
+        });
         if (!transaction) {
             throw (0, http_error_1.createHttpError)(http_status_const_1.HttpStatus.NOT_FOUND, error_message_const_1.HttpResponse.TRANSACTION_NOT_FOUND);
         }
@@ -301,15 +309,22 @@ class SlotBookingService {
             payment_intent: transaction.gatewayTransactionId,
             amount: refundAmount * 100,
         });
-        await this._transactionRepostiory.updateTransaction(transaction._id, { $set: { status: transaction_const_1.TransactionStatus.REFUNDED } });
-        let slotStatus = refundPercentage === 100 ? sessionBooking_type_1.BookingStatus.REFUNDED : sessionBooking_type_1.BookingStatus.CANCELLED;
+        await this._transactionRepostiory.updateTransaction(transaction._id, {
+            $set: { status: transaction_const_1.TransactionStatus.REFUNDED },
+        });
+        let slotStatus = refundPercentage === 100
+            ? sessionBooking_type_1.BookingStatus.REFUNDED
+            : sessionBooking_type_1.BookingStatus.CANCELLED;
         const updateSlot = await this._slotBookingRepository.updateSlotBookingData({ _id: booked_Id }, { $set: { status: slotStatus } });
         if (!updateSlot) {
             throw (0, http_error_1.createHttpError)(http_status_const_1.HttpStatus.INTERNAL_SERVER_ERROR, error_message_const_1.HttpResponse.SERVER_ERROR);
         }
         const notification = notification_template_1.NotificationTemplates.SlotCancellation(transaction.userId, slotStart.toLocaleString());
         const createdNotification = await this._notificationRepository.createNotification(notification);
-        return { status: updateSlot.status, notification: (0, notification_dto_1.notificationDto)(createdNotification) };
+        return {
+            status: updateSlot.status,
+            notification: (0, notification_dto_1.notificationDto)(createdNotification),
+        };
     }
 }
 exports.SlotBookingService = SlotBookingService;

@@ -11,6 +11,11 @@ const option = { discriminatorKey: "role", timestamps: true };
 const BaseUserSchema = new mongoose_1.default.Schema({
     name: { type: String, required: true },
     email: { type: String, required: true },
+    role: {
+        type: String,
+        enum: Object.values(user_types_1.IRole),
+        required: true,
+    },
     phone: Number,
     password: String,
     profilePicture: String,
@@ -38,7 +43,15 @@ const MentorSchema = new mongoose_1.default.Schema({
 });
 exports.MentorModel = exports.UserModel.discriminator(user_types_1.IRole.Mentor, MentorSchema);
 const LearnerSchema = new mongoose_1.default.Schema({
-    enrolledCourses: [{ type: mongoose_1.default.Schema.Types.ObjectId, ref: modelName_const_1.DbModelName.COURSE }],
+    learningStreak: {
+        current: Number,
+        longest: Number,
+        lastLearningDate: Date
+    },
+    activeDates: {
+        type: [Date],
+        default: [],
+    },
 });
 exports.LearnerModel = exports.UserModel.discriminator(user_types_1.IRole.Learner, LearnerSchema);
 const AdminSchema = new mongoose_1.default.Schema({

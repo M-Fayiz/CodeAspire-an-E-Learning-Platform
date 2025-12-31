@@ -62,7 +62,7 @@ class AuthController {
             const { newAccessToken, payload } = await this._authSerive.refreshAccessToken(refreshToken);
             res.cookie(auth_const_1.AUTH_TOKEN.ACCESS_TOKEN, newAccessToken, {
                 ...cookie_config_1.options,
-                maxAge: Number(env_config_1.env.ACCESS_TOKEN_MAX_AGE_TIME) * 60 * 1000,
+                maxAge: Number(env_config_1.env.ACCESS_TOKEN_MAX_AGE) * 60 * 1000,
             });
             res
                 .status(http_status_const_1.HttpStatus.OK)
@@ -90,7 +90,9 @@ class AuthController {
     async logout(req, res, next) {
         try {
             (0, clearCookies_util_1.clearCookies)(res);
-            res.status(http_status_const_1.HttpStatus.OK).json((0, response_util_1.successResponse)(error_message_const_1.HttpResponse.LOGGED_OUT, { logout: true }));
+            res
+                .status(http_status_const_1.HttpStatus.OK)
+                .json((0, response_util_1.successResponse)(error_message_const_1.HttpResponse.LOGGED_OUT, { logout: true }));
         }
         catch (error) {
             next(error);

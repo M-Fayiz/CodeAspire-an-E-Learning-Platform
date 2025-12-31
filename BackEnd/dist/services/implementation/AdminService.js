@@ -1,4 +1,7 @@
 "use strict";
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.AdminService = void 0;
 const error_message_const_1 = require("../../const/error-message.const");
@@ -11,6 +14,7 @@ const dashFilterGenerator_utils_1 = require("../../utils/dashFilterGenerator.uti
 const notification_template_1 = require("../../template/notification.template");
 const notification_dto_1 = require("../../dtos/notification.dto");
 const adminDashboard_dto_1 = require("../../dtos/adminDashboard.dto");
+const redis_config_1 = __importDefault(require("../../config/redis.config"));
 class AdminService {
     constructor(_userRepo, _notificationRepository, _courseRepository, _transactionRepository, _enrolledRepository) {
         this._userRepo = _userRepo;
@@ -59,6 +63,12 @@ class AdminService {
         const updatedUser = await this._userRepo.blockUser(objectId);
         if (!updatedUser) {
             throw (0, http_error_1.createHttpError)(http_status_const_1.HttpStatus.INTERNAL_SERVER_ERROR, error_message_const_1.HttpResponse.SERVER_ERROR);
+        }
+        if (!updatedUser.isActive) {
+            await redis_config_1.default.set(`blocked:user:${objectId}`, "true");
+        }
+        else {
+            await redis_config_1.default.del(`blocked:user:${objectId}`);
         }
         const result = {
             isActive: updatedUser.isActive,
@@ -118,7 +128,7 @@ class AdminService {
     }
     async getDashboardData(filter, startDay, endDay) {
         const { start, end } = (0, dashFilterGenerator_utils_1.timeFilter)(filter, startDay, endDay);
-        const [mentors, learners, courseCount, revenue, topCourse, topCategory,] = await Promise.all([
+        const [mentors, learners, courseCount, revenue, topCourse, topCategory] = await Promise.all([
             this._userRepo.findDashBoardUserCount(user_types_1.IRole.Mentor, start, end),
             this._userRepo.findDashBoardUserCount(user_types_1.IRole.Learner, start, end),
             this._courseRepository.findDocumentCount({}, start, end),

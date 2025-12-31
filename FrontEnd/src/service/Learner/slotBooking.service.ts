@@ -45,7 +45,12 @@ export const SlotBookingSercie = {
     try {
 
       const response = await axiosInstance.get(
-        API.SLOT_BOOK.ListeMentorBooking(mentorId),
+        API.SLOT_BOOK.ListeMentorBooking(mentorId),{
+          params:{
+            page,
+            search
+          }
+        }
       );
 
       return response.data.listsOfBooked;

@@ -69,7 +69,7 @@ function formCourseDto(course) {
         updated: course.updatedAt.toISOString(),
     };
 }
-function courseDetailsPageDTO(course) {
+function courseDetailsPageDTO(course, courseReview, avgRating, enrolledStd) {
     const excludedLecture = course.sessions?.map((session) => ({
         ...session,
         lectures: session.lectures.map(({ lectureContent, ...rest }) => rest),
@@ -98,6 +98,9 @@ function courseDetailsPageDTO(course) {
         sessions: excludedLecture ?? [],
         status: course.status,
         updated: course.updatedAt.toISOString(),
+        courseReviews: courseReview,
+        avgRating: avgRating,
+        enrolledStd: enrolledStd,
     };
 }
 function listCourseForSLot(course) {

@@ -71,7 +71,7 @@ class AuthService {
             throw (0, http_error_1.createHttpError)(http_status_const_1.HttpStatus.NOT_FOUND, error_message_const_1.HttpResponse.USER_NOT_FOUND);
         }
         if (!user.isActive) {
-            throw (0, http_error_1.createHttpError)(http_status_const_1.HttpStatus.FORBIDDEN, error_message_const_1.HttpResponse.USER_BLOCKED);
+            throw (0, http_error_1.createHttpError)(http_status_const_1.HttpStatus.LOCKED, error_message_const_1.HttpResponse.USER_BLOCKED);
         }
         return (0, user_dto_1.userDTO)(user);
     }
@@ -85,7 +85,7 @@ class AuthService {
         }
         const user = await this._userRepo.findUserByEmail(decode.email);
         if (!user?.isActive) {
-            throw (0, http_error_1.createHttpError)(http_status_const_1.HttpStatus.FORBIDDEN, error_message_const_1.HttpResponse.USER_BLOCKED);
+            throw (0, http_error_1.createHttpError)(http_status_const_1.HttpStatus.LOCKED, error_message_const_1.HttpResponse.USER_BLOCKED);
         }
         const payload = (0, payload_dto_1.payloadDTO)(user);
         const { accessToken } = (0, jwt_token_util_1.generateTokens)(payload);
