@@ -44,6 +44,7 @@ current: number;
 export interface ILearner extends IUser {
   role: IRole.Learner;
   learningStreak?: ILearnerStreask
+  activeDates?:Date[]
 }
 
 export interface IAdmin extends IUser {

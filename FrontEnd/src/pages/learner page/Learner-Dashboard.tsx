@@ -11,6 +11,8 @@ import {
   type PieChartProps,
 } from "@/components/ui/PieGraph";
 import LearnerDashboardSkeleton from "@/components/skelton/LearnerDashboardSkelton";
+import LearningCalendar from "@/features/learner-dahboard/StreakStatus";
+
 
 export type IInterviewType = "Cracked" | "Failed";
 
@@ -38,55 +40,73 @@ const LearnerDashboard = () => {
     return <LearnerDashboardSkeleton />;
   }
   return (
-    <div className="space-y-6">
-      {/* Header */}
-      <div className="bg-grey-500 p-4">
-        <h1 className="text-2xl font-bold text-gray-900">Learner Dashboard</h1>
-        <p className="text-gray-500">
-          Track your learning and interview performance
-        </p>
-      </div>
-
-      <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-        <StatsCard
-          title="Purchased Courses"
-          value={learnerDashboardData?.courseData.courseCount as number}
-        />
-        <StatsCard
-          title="Completed Courses"
-          value={learnerDashboardData?.courseData.completedCourse as number}
-        />
-        <StatsCard
-          title="In Progress"
-          value={learnerDashboardData?.courseData.inProgressCourse as number}
-        />
-        <StatsCard
-          title="Certificates Earned"
-          value={learnerDashboardData?.TotalCertificate as number}
-        />
-      </div>
-
-      <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-        <StatsCard
-          title="Interviews Attended"
-          value={learnerDashboardData?.slotData.totalSession as number}
-        />
-        <StatsCard
-          title="Cracked Interviews"
-          value={learnerDashboardData?.slotData.totalCracked as number}
-        />
-        <StatsCard
-          title="Failed Interviews"
-          value={learnerDashboardData?.slotData.totalFailed as number}
-        />
-        {/* <StatsCard title="Success Rate" value="66%" /> */}
-      </div>
-
-      <CourseStatusList />
-
-      <RevenueDonutChart Options={circleChart} />
+  <div className="space-y-8 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    {/* Header */}
+    <div className="rounded-lg bg-gray-50 p-4 sm:p-6">
+      <h1 className="text-xl sm:text-2xl font-bold text-gray-900">
+        Learner Dashboard
+      </h1>
+      <p className="mt-1 text-sm sm:text-base text-gray-500">
+        Track your learning and interview performance
+      </p>
     </div>
-  );
+
+    {/* Stats */}
+    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+      <StatsCard
+        title="Purchased Courses"
+        value={learnerDashboardData?.courseData.courseCount as number}
+      />
+      <StatsCard
+        title="Completed Courses"
+        value={learnerDashboardData?.courseData.completedCourse as number}
+      />
+      <StatsCard
+        title="In Progress"
+        value={learnerDashboardData?.courseData.inProgressCourse as number}
+      />
+      <StatsCard
+        title="Certificates Earned"
+        value={learnerDashboardData?.TotalCertificate as number}
+      />
+      <StatsCard
+        title="Interviews Attended"
+        value={learnerDashboardData?.slotData.totalSession as number}
+      />
+      <StatsCard
+        title="Cracked Interviews"
+        value={learnerDashboardData?.slotData.totalCracked as number}
+      />
+      <StatsCard
+        title="Failed Interviews"
+        value={learnerDashboardData?.slotData.totalFailed as number}
+      />
+    </div>
+
+    
+    {/* <div className="bg-white rounded-lg p-4 sm:p-6"> */}
+      <CourseStatusList />
+    {/* </div> */}
+
+    {learnerDashboardData?.learnerStreak &&
+      learnerDashboardData?.activeDays && (
+        <div className="bg-white ">
+          <LearningCalendar
+            streakData={learnerDashboardData.learnerStreak}
+            activeDates={learnerDashboardData.activeDays}
+          />
+        </div>
+      )}
+
+   
+    <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+      <div className="bg-white rounded-lg p-4 sm:p-6">
+        <RevenueDonutChart Options={circleChart} />
+      </div>
+    </div>
+  </div>
+);
+
 };
 
 export default LearnerDashboard;

@@ -172,7 +172,7 @@ export class UserRepository
       { $sort: { date: 1 } },
     ]);
   }
-  async updateLearnerStreak(learnerId: Types.ObjectId, updatedData:ILearnerStreask): Promise<ILearnerModel|null> {
-    return await this.findByIDAndUpdate<ILearnerModel>(learnerId,{$set:{learningStreak:updatedData}})
+    async updateLearnerStreak(learnerId: Types.ObjectId, updatedData:ILearnerStreask): Promise<ILearnerModel|null> {
+      return await this.findByIDAndUpdate<ILearnerModel>(learnerId,{$set:{learningStreak:updatedData}})
+    }
   }
-}

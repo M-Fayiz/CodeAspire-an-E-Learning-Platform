@@ -1,3 +1,4 @@
+import { ILearnerModel } from "../models/user.model";
 import { learnerDashboardCardsDTO } from "../types/dtos.type/learnerDashboard.dto.type";
 import {
   LearnerCourseCard,
@@ -7,6 +8,7 @@ export const learnerDashboardDetails = (
   courseData: Partial<LearnerCourseCard> = {},
   slotData: Partial<LearnerSlotCard> = {},
   TotalCertificate = 0,
+  learner:ILearnerModel
 ): learnerDashboardCardsDTO => ({
   courseData: {
     courseCount: courseData.courseCount ?? 0,
@@ -19,4 +21,6 @@ export const learnerDashboardDetails = (
     totalFailed: slotData.totalFailed ?? 0,
   },
   TotalCertificate,
+  activeDays:learner.activeDates??[],
+  learnerStreak:learner.learningStreak??null
 });

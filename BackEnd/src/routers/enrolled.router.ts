@@ -12,12 +12,14 @@ import { IRole } from "../types/user.types";
 import { UserRepository } from "../repository/implementation/UserRepository";
 import { CertificateRepository } from "../repository/implementation/CertificateRepository";
 import { SlotBookingRepository } from "../repository/implementation/SlotBookingRepositoy";
+import { LearnerRepository } from "../repository/implementation/LearnerRepository";
 const transactionRepository = new TransactionRepositoy();
 const enrolledRepository = new EnrolledRepository();
 const courseRepository = new CourseRepository();
 const userRepository = new UserRepository();
 const certificateRepository = new CertificateRepository();
 const slotBookingRepository = new SlotBookingRepository();
+const learnerRepository=new LearnerRepository()
 const enrolledService = new EnrolledService(
   enrolledRepository,
   courseRepository,
@@ -25,6 +27,7 @@ const enrolledService = new EnrolledService(
   userRepository,
   certificateRepository,
   slotBookingRepository,
+  learnerRepository
 );
 const enrolledController = new EnrolledController(enrolledService);
 

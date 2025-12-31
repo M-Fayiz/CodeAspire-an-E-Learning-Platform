@@ -52,10 +52,10 @@ import { ISlotBookingRepository } from "../../repository/interface/ISlotBookingR
 import { learnerDashboardCardsDTO } from "../../types/dtos.type/learnerDashboard.dto.type";
 import { learnerDashboardDetails } from "../../dtos/learnerDashnoard.dto";
 import { FilterByDate } from "../../const/filter.const";
-import { normalizeDate, updateLearningStreak } from "../../utils/streak.util";
+import { updateLearningStreak } from "../../utils/streak.util";
 import { ILearnerStreask, IRole, IUser } from "../../types/user.types";
-import { HTTPResponse } from "puppeteer";
 import { ILearnerModel } from "../../models/user.model";
+import { ILearnerRepository } from "../../repository/interface/ILearnerRepository";
 
 export class EnrolledService implements IEnrolledService {
   constructor(
@@ -65,6 +65,7 @@ export class EnrolledService implements IEnrolledService {
     private _userRepository: IUserRepo,
     private _certificateRepository: ICertificateRepository,
     private _slotbookingRepository: ISlotBookingRepository,
+    private _learnerRepository:ILearnerRepository
   ) {}
 
   async getEnrolledCourses(learnerId: string): Promise<IEnrolledListDto[]> {
@@ -182,14 +183,15 @@ export class EnrolledService implements IEnrolledService {
     if(user.role!==IRole.Learner){
       throw createHttpError(HttpStatus.CONFLICT,HttpResponse.ACCESS_DENIED)
     }
-
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
     const learner = user as ILearnerModel;
-    console.log('learner : stek ',learner)
       const updatedStreak = updateLearningStreak(learner);
-      console.log('updated strk :',updatedStreak)
-      await this._userRepository.updateLearnerStreak(
+
+     await this._learnerRepository.updateLearningStreak(
         learner._id,
         updatedStreak as ILearnerStreask  ,
+        today
       );
     
     return finalEnrollment?.progress ?? null;
@@ -350,16 +352,18 @@ export class EnrolledService implements IEnrolledService {
       throw createHttpError(HttpStatus.BAD_REQUEST, HttpResponse.INVALID_ID);
     }
 
-    const [courseCard, certificateCount, slotCard] = await Promise.all([
+    const [courseCard, certificateCount, slotCard,learner] = await Promise.all([
       this._erolledRepository.getLearnerDashboardCourseData(learner_Id),
       this._certificateRepository.learnerTotalCertificate(learner_Id),
       this._slotbookingRepository.learnerDashboardSlotCard(learner_Id),
+      this._learnerRepository.getLearnerStreak(learner_Id)
     ]);
 
     return learnerDashboardDetails(
       courseCard[0],
       slotCard[0],
       certificateCount,
+      learner as ILearnerModel
     );
   }
 }

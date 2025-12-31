@@ -28,6 +28,13 @@ const BaseUserSchema = new mongoose.Schema(
   {
     name: { type: String, required: true },
     email: { type: String, required: true },
+
+    role: {
+      type: String,
+      enum: Object.values(IRole),
+      required: true,
+    },
+
     phone: Number,
     password: String,
     profilePicture: String,
@@ -42,6 +49,7 @@ const BaseUserSchema = new mongoose.Schema(
   },
   option,
 );
+
 export const UserModel = mongoose.model<IUserModel>(
   DbModelName.USER,
   BaseUserSchema,
@@ -69,11 +77,16 @@ const LearnerSchema = new mongoose.Schema({
     current: Number  ,     
     longest: Number,       
     lastLearningDate: Date
-   }
+   },
+    activeDates: {
+    type: [Date],
+    default: [],
+  },
 });
 export const LearnerModel = UserModel.discriminator<ILearnerModel>(
   IRole.Learner,
   LearnerSchema,
+ 
 );
 
 const AdminSchema = new mongoose.Schema({

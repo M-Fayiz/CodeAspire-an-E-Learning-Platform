@@ -27,6 +27,7 @@ import orderRouter from "./routers/order.router";
 import webhookRouter from "./routers/webhook.router";
 import videoSessionRouter from "./routers/videoSession.router";
 import certificateRouter from "./routers/certificate.router";
+import { UserModel } from "./models/user.model";
 
 dotenv.config();
 
@@ -62,6 +63,7 @@ app.use(cors(corsSetUp));
 app.get("/", (req, res) => {
   res.send("SERVER WORKING");
 });
+console.log("DISCRIMINATORS:", UserModel.discriminators);
 
 app.use("/api/v1/auth", authRouter);
 app.use("/api/v1/users", userRouter);
