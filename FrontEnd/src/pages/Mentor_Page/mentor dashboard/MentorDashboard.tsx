@@ -81,7 +81,7 @@ export default function MentorDashboard() {
     <>
       {loading && <MentorDashboardSkeleton />}
 
-      <div className="min-h-screen bg-gray-50 p-6">
+      <div className="min-h-screen bg-gray-50 sm:p-2">
         <div className="bg-black p-5 rounded-lg flex items-center justify-between">
           <div>
             <h1 className="text-3xl font-bold text-white">Mentor Dashboard</h1>

@@ -40,9 +40,7 @@ export const Protected_Router: React.FC<ProtectedProps> = ({
   if (status ===AuthStatus.BLOCKED) {
     return <Navigate to="/blocked" replace />;
   }
-  if (status ===AuthStatus.ACCESS_DENIED) {
-    return  <Navigate to="/unauthorized" replace />;
-  }
+  
   if (!user) {
     return <Navigate to={fallback} state={{ from: location }} replace />;
   }

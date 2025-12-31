@@ -125,7 +125,7 @@ export class AuthService implements IAuthService {
 
     if (!decode) {
       throw createHttpError(
-        HttpStatus.NOT_FOUND,
+        HttpStatus.UNAUTHORIZED,
         HttpResponse.REFRESH_TOKEN_EXPIRED,
       );
     }
@@ -162,7 +162,7 @@ export class AuthService implements IAuthService {
 
     if (!isMatch) {
       throw createHttpError(
-        HttpStatus.FORBIDDEN,
+        HttpStatus.UNAUTHORIZED,
         HttpResponse.INVALID_CREDNTIALS,
       );
     }

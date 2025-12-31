@@ -4,13 +4,11 @@ import { IAuthService } from "../../services/interface/IAuthService";
 import { HttpStatus } from "../../const/http-status.const";
 import { HttpResponse } from "../../const/error-message.const";
 import { successResponse } from "../../utils/response.util";
-import { options } from "../../config/cookie.config";
 import { createHttpError } from "../../utils/http-error";
 import { clearCookies } from "../../utils/clearCookies.util";
 import { setAccessToken, setRefreshToken } from "../../utils/cookie.util";
 import { IUserModel } from "../../models/user.model";
 import { env } from "../../config/env.config";
-import { AUTH_TOKEN } from "../../const/auth.const";
 
 export class AuthController implements IAuthController {
   constructor(private _authSerive: IAuthService) {}
@@ -47,6 +45,7 @@ export class AuthController implements IAuthController {
   async authMe(req: Request, res: Response, next: NextFunction): Promise<void> {
     try {
       const { accessToken } = req.cookies;
+    console.log("❌ get into auth me");
 
       if (!accessToken) {
         return next(
@@ -82,13 +81,11 @@ export class AuthController implements IAuthController {
           HttpResponse.REFRESH_TOKEN_EXPIRED,
         );
       }
-
+      console.log('👍👍 refresh token')
       const { newAccessToken, payload } =
         await this._authSerive.refreshAccessToken(refreshToken);
-      res.cookie(AUTH_TOKEN.ACCESS_TOKEN, newAccessToken, {
-        ...options,
-        maxAge: Number(env.ACCESS_TOKEN_MAX_AGE) * 60 * 1000,
-      });
+        console.log("🔥 Refresh token endpoint HIT :",newAccessToken);
+       setAccessToken(res, newAccessToken);
       res
         .status(HttpStatus.OK)
         .json(successResponse(HttpResponse.OK, { user: payload }));
@@ -146,7 +143,7 @@ export class AuthController implements IAuthController {
     res: Response,
     next: NextFunction,
   ): Promise<void> {
-    console.log(req.body);
+ 
     try {
       const { email, token, password } = req.body;
       const response = await this._authSerive.resetPassword(

@@ -195,9 +195,10 @@ const SlotManagement = () => {
         description="Manage your slot"
         title="Slot Management"
       >
-        <div className="flex flex-col gap-4">
+        <div className="flex flex-col  gap-4 sm:gap-2">
           {/* 🔹 Top Action Bar */}
-          <div className="flex items-center justify-between">
+          <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+
             <Dialog open={isOpen} onOpenChange={setIsOpen}>
               <DialogTrigger asChild>
                 <Button onClick={() => resetForm()} variant="outline">
@@ -232,7 +233,7 @@ const SlotManagement = () => {
               </DialogContent>
             </Dialog>
 
-            <div className="flex items-center gap-3">
+            <div className="flex flex-col gap-3 sm:flex-row sm:items-center">
               {/* 🔹 Day Filter */}
               <select
                 value={filter}
@@ -250,7 +251,7 @@ const SlotManagement = () => {
               </select>
 
               {/* 🔹 Search */}
-              <div className="flex items-center gap-2 rounded-md border bg-white px-3 py-2 shadow-sm">
+              <div className="flex items-center gap-2 rounded-md border bg-white px-3 py-2 shadow-sm w-full sm:w-64">
                 <Search className="h-4 w-4 text-gray-500" />
                 <input
                   type="text"

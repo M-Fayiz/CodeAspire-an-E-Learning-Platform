@@ -54,7 +54,7 @@ export const AuthService = {
         const profilrUrl = await sharedService.getPreSignedDownloadURL(
           response.data.user.profile,
         );
-        console.log(profilrUrl);
+   
         if (profilrUrl) {
           response.data.user.profile = profilrUrl;
         }

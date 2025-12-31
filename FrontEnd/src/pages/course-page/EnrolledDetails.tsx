@@ -20,14 +20,14 @@ import {
   TableOfContentsIcon,
   User,
 } from "lucide-react";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useParams } from "react-router";
 
 const EnrolledCourseDetails = () => {
   const [activeTap, setActiveTap] = useState("overview");
   const [enrolledCourse, setEnrolledCourse] =
     useState<IEnrolledCoursedetailsDTO | null>(null);
-
+  const videRef=useRef<HTMLDivElement>(null)
   const [videoUrl, setVideoUrl] = useState({
     url: "",
     title: "",
@@ -35,7 +35,11 @@ const EnrolledCourseDetails = () => {
     sessionId: "",
   });
   const { user } = useAuth();
+ const scrollToBottom = () => {
+    videRef.current?.scrollIntoView({ behavior: "smooth" });
+  };
 
+  // useEffect(scrollToBottom, [messages]);
   const handleVideoEnd = async (lecture: string, sessionId: string) => {
     if (lecture) {
       const result = await EnrolledService.updateProgress(
@@ -94,7 +98,7 @@ const EnrolledCourseDetails = () => {
               )}
             </div>
           ) : (
-            <div className="bg-white rounded-sm shadow overflow-hidden border border-gray-200">
+            <div ref={videRef} className="bg-white rounded-sm shadow overflow-hidden border border-gray-200">
               <div className="bg-gradient-to-r from-orange-100 via-orange-50 to-purple-50 p-4">
                 <video
                   key={videoUrl.url}

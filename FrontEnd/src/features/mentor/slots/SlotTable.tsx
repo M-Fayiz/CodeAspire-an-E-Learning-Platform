@@ -11,11 +11,10 @@ interface SlotListProps {
   onEdit: (slot: ISlotDTO) => void;
   onToggleActive?: (slotId: string, isActive: boolean) => void;
 }
-
 const SlotList: React.FC<SlotListProps> = ({ slots, onEdit }) => {
   if (!slots.length) {
     return (
-      <Card className="bg-white border border-gray-200 text-black shadow-sm">
+      <Card>
         <CardContent className="p-8 text-center text-gray-500">
           No slots created yet.
         </CardContent>
@@ -24,86 +23,115 @@ const SlotList: React.FC<SlotListProps> = ({ slots, onEdit }) => {
   }
 
   return (
-    <Card className="bg-white border border-gray-200 text-black shadow-sm">
-      <CardContent>
-        <div className="overflow-x-auto">
-          <table className="w-full text-sm border-collapse">
-            <thead>
-              <tr className="bg-gray-100 text-gray-700">
-                <th className="p-3 text-left font-medium">Course</th>
-                <th className="p-3 text-left font-medium">Weekly Schedule</th>
-                <th className="p-3 text-left font-medium">Duration</th>
-                <th className="p-3 text-left font-medium">Price</th>
-                <th className="p-3 text-left font-medium">Status</th>
-                <th className="p-3 text-left font-medium">Actions</th>
-              </tr>
-            </thead>
+    <>
+      {/* 📱 Mobile Cards */}
+      <div className="grid gap-4 sm:hidden">
+        {slots.map((slot) => (
+          <Card key={slot._id} className="border">
+            <CardContent className="p-4 space-y-3">
+              <div className="font-semibold text-gray-800">
+                {slot.course.title}
+              </div>
 
-            <tbody>
-              {slots.map((slot) => (
-                <tr
-                  key={slot._id}
-                  className="border-b border-gray-200 hover:bg-gray-50 transition-colors"
+              <div className="text-sm text-gray-600 space-y-1">
+                {slot.selectedDays
+                  .filter((d) => d.active)
+                  .map((d, i) => (
+                    <div key={i} className="flex justify-between">
+                      <span>{d.day}</span>
+                      <span>
+                        {d.startTime} – {d.endTime}
+                      </span>
+                    </div>
+                  ))}
+              </div>
+
+              <div className="flex justify-between text-sm">
+                <span>Duration</span>
+                <span>{slot.slotDuration} min</span>
+              </div>
+
+              <div className="flex justify-between text-sm">
+                <span>Price</span>
+                <span>₹{slot.pricePerSlot ?? "N/A"}</span>
+              </div>
+
+              <div className="flex items-center justify-between">
+                <span
+                  className={`text-xs px-2 py-1 rounded ${
+                    slot.isActive
+                      ? "bg-green-100 text-green-700"
+                      : "bg-gray-100 text-gray-600"
+                  }`}
                 >
-                  <td className="p-3 text-gray-800">{slot.course.title}</td>
+                  {slot.isActive ? "Active" : "Inactive"}
+                </span>
 
-                  {/* Weekly Schedule */}
-                  <td className="p-3 text-gray-700 align-top">
-                    <div className="space-y-1">
+                <Button size="sm" variant="outline" onClick={() => onEdit(slot)}>
+                  <Pencil size={14} className="mr-1" />
+                  Edit
+                </Button>
+              </div>
+            </CardContent>
+          </Card>
+        ))}
+      </div>
+
+      {/* 💻 Desktop Table */}
+      <Card className="hidden sm:block">
+        <CardContent>
+          <div className="overflow-x-auto">
+            <table className="w-full text-sm">
+              <thead>
+                <tr className="bg-gray-100">
+                  <th className="p-3 text-left">Course</th>
+                  <th className="p-3 text-left">Weekly Schedule</th>
+                  <th className="p-3">Duration</th>
+                  <th className="p-3">Price</th>
+                  <th className="p-3">Status</th>
+                  <th className="p-3">Actions</th>
+                </tr>
+              </thead>
+
+              <tbody>
+                {slots.map((slot) => (
+                  <tr key={slot._id} className="border-b">
+                    <td className="p-3">{slot.course.title}</td>
+
+                    <td className="p-3">
                       {slot.selectedDays
                         .filter((d) => d.active)
-                        .map((daySlot, index) => (
-                          <div
-                            key={index}
-                            className="flex justify-between items-center"
-                          >
-                            <span className="font-medium text-gray-800 w-20">
-                              {daySlot.day}
-                            </span>
-                            <span className="text-gray-600 text-sm">
-                              {daySlot.startTime && daySlot.endTime
-                                ? `${daySlot.startTime} – ${daySlot.endTime}`
-                                : "No Time Set"}
-                            </span>
+                        .map((d, i) => (
+                          <div key={i}>
+                            {d.day}: {d.startTime} – {d.endTime}
                           </div>
                         ))}
-                    </div>
-                  </td>
+                    </td>
 
-                  <td className="p-3 text-gray-700">{slot.slotDuration} min</td>
-                  <td className="p-3 text-gray-700">
-                    ₹{slot.pricePerSlot ?? "N/A"}
-                  </td>
+                    <td className="p-3 text-center">{slot.slotDuration} min</td>
+                    <td className="p-3 text-center">₹{slot.pricePerSlot}</td>
 
-                  <td className="p-3 text-center">
-                    {slot.isActive ? (
-                      <span className="px-2 py-1 bg-green-100 text-green-800 rounded text-xs font-medium">
-                        Active
-                      </span>
-                    ) : (
-                      <span className="px-2 py-1 bg-gray-100 text-gray-600 rounded text-xs font-medium">
-                        Inactive
-                      </span>
-                    )}
-                  </td>
+                    <td className="p-3 text-center">
+                      {slot.isActive ? "Active" : "Inactive"}
+                    </td>
 
-                  <td className="p-3">
-                    <Button
-                      variant="outline"
-                      size="sm"
-                      className="border-gray-300 text-gray-800 hover:bg-gray-100"
-                      onClick={() => onEdit(slot)}
-                    >
-                      <Pencil size={15} className="mr-1 text-gray-600" /> Edit
-                    </Button>
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
-      </CardContent>
-    </Card>
+                    <td className="p-3 text-center">
+                      <Button
+                        size="sm"
+                        variant="outline"
+                        onClick={() => onEdit(slot)}
+                      >
+                        <Pencil size={14} />
+                      </Button>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        </CardContent>
+      </Card>
+    </>
   );
 };
 
