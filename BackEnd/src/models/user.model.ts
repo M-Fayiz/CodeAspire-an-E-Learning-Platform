@@ -39,7 +39,7 @@ const BaseUserSchema = new mongoose.Schema(
     password: String,
     profilePicture: String,
     googleId: { type: String },
-    isActive: { type: Boolean, default: false },
+    isActive: { type: Boolean, default: true },
     ApprovalStatus: {
       type: String,
       enum: ["pending", "approved", "rejected", "requested"],
@@ -107,7 +107,7 @@ export interface IMappedUser {
   isRequested?: boolean;
 }
 export interface IPayload {
-  id: Types.ObjectId;
+  _id: Types.ObjectId;
   name?: string;
   email: string;
   role: IRole;

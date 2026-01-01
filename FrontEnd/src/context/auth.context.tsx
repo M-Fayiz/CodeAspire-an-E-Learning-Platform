@@ -65,11 +65,12 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
       }
     }
   };
-
+  
   useEffect(() => {
     bootstrapAuth();
   }, []);
-
+  console.log('user : : :',user)
+  
   useEffect(() => {
   const handleForceLogout = () => {
     setUser(null);

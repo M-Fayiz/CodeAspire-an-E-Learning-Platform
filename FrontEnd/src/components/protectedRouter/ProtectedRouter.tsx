@@ -4,7 +4,6 @@ import { Navigate } from "react-router-dom";
 import { useAuth } from "../../context/auth.context";
 import { AuthStatus, type UserRoleType } from "../../types/auth.types";
 
-import { SocketProvider } from "@/context/socket.context";
 import { Spinner } from "../templates/Spinner";
 
 interface ProtectedProps {
@@ -53,5 +52,6 @@ export const Protected_Router: React.FC<ProtectedProps> = ({
     }
   }
 
-  return <SocketProvider userId={user?.id}>{children}</SocketProvider>;
+return <>{children}</>;
+
 };

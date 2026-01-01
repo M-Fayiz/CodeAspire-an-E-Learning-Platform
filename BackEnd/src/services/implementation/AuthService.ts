@@ -4,6 +4,7 @@ import {
   IMentor,
   ILearner,
   IAdmin,
+  mentorApprovalStatus,
 } from "../../types/user.types";
 import { IUserRepo } from "../../repository/interface/IUserRepo";
 import { hashPassword, comparePassword } from "../../utils/bcrypt.util";
@@ -26,6 +27,7 @@ import { redisPrefix } from "../../const/redisKey.const";
 import { userDTO } from "../../dtos/user.dto";
 import { IUserDTO } from "../../types/dtos.type/user.dto.types";
 import { payloadDTO } from "../../dtos/payload.dto";
+import logger from "../../config/logger.config";
 
 export class AuthService implements IAuthService {
   constructor(private _userRepo: IUserRepo) {}
@@ -75,7 +77,7 @@ export class AuthService implements IAuthService {
       password: storedData.password,
       role: storedData.role,
       isActive: true,
-      ApprovalStatus: "pending",
+      ApprovalStatus: mentorApprovalStatus.PENDING,
       isRequested: false,
     };
 
@@ -124,6 +126,7 @@ export class AuthService implements IAuthService {
     const decode = verifyRefreshToken(token) as JwtPayload;
 
     if (!decode) {
+      logger.warn('refresh expired')
       throw createHttpError(
         HttpStatus.UNAUTHORIZED,
         HttpResponse.REFRESH_TOKEN_EXPIRED,
@@ -162,7 +165,7 @@ export class AuthService implements IAuthService {
 
     if (!isMatch) {
       throw createHttpError(
-        HttpStatus.UNAUTHORIZED,
+        HttpStatus.BAD_REQUEST,
         HttpResponse.INVALID_CREDNTIALS,
       );
     }
@@ -236,7 +239,7 @@ export class AuthService implements IAuthService {
     payload: JwtPayload;
   }> {
     const payload: IPayload = {
-      id: user._id,
+      _id: user._id,
       email: user.email,
       role: user.role,
       ApprovalStatus: user.ApprovalStatus,

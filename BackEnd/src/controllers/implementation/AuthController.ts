@@ -9,13 +9,14 @@ import { clearCookies } from "../../utils/clearCookies.util";
 import { setAccessToken, setRefreshToken } from "../../utils/cookie.util";
 import { IUserModel } from "../../models/user.model";
 import { env } from "../../config/env.config";
+import logger from "../../config/logger.config";
 
 export class AuthController implements IAuthController {
-  constructor(private _authSerive: IAuthService) {}
+  constructor(private _authService: IAuthService) {}
 
   async signUp(req: Request, res: Response, next: NextFunction): Promise<void> {
     try {
-      const email = await this._authSerive.signUp(req.body);
+      const email = await this._authService.signUp(req.body);
       res
         .status(HttpStatus.OK)
         .json(successResponse(HttpResponse.OK, { email: email }));
@@ -29,7 +30,7 @@ export class AuthController implements IAuthController {
     next: NextFunction,
   ): Promise<void> {
     try {
-      const token = await this._authSerive.verifyEmail(req.body);
+      const token = await this._authService.verifyEmail(req.body);
       setAccessToken(res, token.accessToken);
       setRefreshToken(res, token.refreshToken);
       res.status(HttpStatus.OK).json(
@@ -45,7 +46,7 @@ export class AuthController implements IAuthController {
   async authMe(req: Request, res: Response, next: NextFunction): Promise<void> {
     try {
       const { accessToken } = req.cookies;
-    console.log("❌ get into auth me");
+    console.log("➡️ get into auth me");
 
       if (!accessToken) {
         return next(
@@ -55,7 +56,7 @@ export class AuthController implements IAuthController {
           ),
         );
       }
-      const user = await this._authSerive.authMe(accessToken);
+      const user = await this._authService.authMe(accessToken);
 
       res
         .status(HttpStatus.OK)
@@ -81,10 +82,10 @@ export class AuthController implements IAuthController {
           HttpResponse.REFRESH_TOKEN_EXPIRED,
         );
       }
-      console.log('👍👍 refresh token')
-      const { newAccessToken, payload } =
-        await this._authSerive.refreshAccessToken(refreshToken);
-        console.log("🔥 Refresh token endpoint HIT :",newAccessToken);
+      logger.info('➡️ refresh Token')
+       const { newAccessToken, payload } =
+        await this._authService.refreshAccessToken(refreshToken);
+        logger.info("🔥 Created New Access Token :",{newAccessToken});
        setAccessToken(res, newAccessToken);
       res
         .status(HttpStatus.OK)
@@ -98,7 +99,7 @@ export class AuthController implements IAuthController {
     try {
       const { email, password } = req.body;
 
-      const tokensAndUserData = await this._authSerive.login(email, password);
+      const tokensAndUserData = await this._authService.login(email, password);
       setAccessToken(res, tokensAndUserData.accessToken);
       setRefreshToken(res, tokensAndUserData.refreshToken);
 
@@ -129,7 +130,7 @@ export class AuthController implements IAuthController {
     next: NextFunction,
   ): Promise<void> {
     try {
-      const email = await this._authSerive.forgotPassword(req.body.email);
+      const email = await this._authService.forgotPassword(req.body.email);
 
       res
         .status(HttpStatus.OK)
@@ -146,7 +147,7 @@ export class AuthController implements IAuthController {
  
     try {
       const { email, token, password } = req.body;
-      const response = await this._authSerive.resetPassword(
+      const response = await this._authService.resetPassword(
         email,
         token,
         password,
@@ -168,7 +169,7 @@ export class AuthController implements IAuthController {
         res.status(HttpStatus.FORBIDDEN).json(HttpResponse.INVALID_CREDNTIALS);
         return;
       }
-      const Data = await this._authSerive.generateToken(req.user as IUserModel);
+      const Data = await this._authService.generateToken(req.user as IUserModel);
 
       setAccessToken(res, Data.accessToken);
       setRefreshToken(res, Data.refreshToken);
