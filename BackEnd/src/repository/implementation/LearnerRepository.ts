@@ -1,4 +1,4 @@
-import { Types } from "mongoose";
+import { Types, UpdateQuery } from "mongoose";
 import { ILearnerModel, LearnerModel } from "../../models/user.model";
 import { BaseRepository } from "../baseRepository";
 import { ILearnerStreask } from "../../types/user.types";
@@ -30,5 +30,8 @@ export class LearnerRepository
   }
   async  getLearnerStreak(learnerId: Types.ObjectId): Promise<ILearnerModel|null> {
       return await this.findById(learnerId)
+  }
+  async updateLearnerProfile(learnerId: Types.ObjectId, updateQuery: UpdateQuery<ILearnerModel>): Promise<ILearnerModel|null> {
+    return await this.findByIDAndUpdateProfile(learnerId,updateQuery)
   }
 }

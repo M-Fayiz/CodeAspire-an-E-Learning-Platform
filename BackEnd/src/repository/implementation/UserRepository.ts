@@ -124,8 +124,8 @@ export class UserRepository
     profileData: Partial<
       IUserModel | IMenterModel | ILearnerModel | IAdminModel
     >,
-  ): Promise<IUserModel | IMenterModel | ILearnerModel | IAdminModel | null> {
-    return await this.findByIDAndUpdate(id, { profileData });
+  ): Promise<IUserModel| IAdminModel | null> {
+    return await this.findByIDAndUpdateProfile(id, profileData );
   }
   async getUserProfile(
     userId: Types.ObjectId,

@@ -21,7 +21,7 @@ export async function verifyUser(
     }
 
     const decode = verifyAccesToken(accessToken);
-    console.log('decoded :',decode)
+   
     const userId = decode._id;
     if (!decode) {
       console.log('access token expired ')

@@ -11,16 +11,16 @@ export const API = {
     GOOGLE_AUTH: (role: string) => `/api/v1/auth/google?role:${role}`,
   },
   USER: {
-    FETCH_USER_PROFILE: (id: string) => `/users/me/${id}`,
-    UPDATE_USER_PROFILE: (id: string) => `/users/me/${id}`,
-    CHANGE_PASSWORD: (id: string) => `/users/${id}/change-password`,
-    UPDATE_PROFILE_PICTURE: (id: string) => `/users/${id}/profile-picture`,
+    FETCH_USER_PROFILE: (userId: string) => `/users/me/${userId}`,
+    UPDATE_USER_PROFILE: (userId: string) => `/users/me/${userId}`,
+    CHANGE_PASSWORD: (userId: string) => `/users/${userId}/change-password`,
+    UPDATE_PROFILE_PICTURE: (userId: string) => `/users/${userId}/profile-picture`,
     PUT_PRESIGNED_URL: "/users/s3-presigned-url",
     GET_PRESIGNED_URL: "/users/s3-getPresigned-url",
     UPDATE_MENTOR_PROFILE: (mentorId: string) =>
       `/users/${mentorId}/mentor-profile`,
-    UPDATE_PROFILE_DATA: (id: string) => `/users/${id}/profile-data`,
-    GET_USER_PROFILE: (id: string) => `/users/${id}/profile`,
+    UPDATE_PROFILE_DATA: (userId: string) => `/users/${userId}/profile-data`,
+    GET_USER_PROFILE: (userId: string) => `/users/${userId}/profile`,
   },
   SHARED: {
     UPLOAD_PUT_PRESIGNED_URL: "/shared/s3/presigned-url/upload",
@@ -29,25 +29,25 @@ export const API = {
   ADMIN: {
     FETCH_ALL_USERS: "/admin/users",
     GET_USER_PROFILE: (userId: string) => `/admin/users/${userId}`,
-    BLOCK_USER: (id: string) => `/admin/users/${id}/block`,
-    APPROVE_MENTOR: (id: string) => `/admin/users/${id}/approve`,
+    BLOCK_USER: (userId: string) => `/admin/users/${userId}/block`,
+    APPROVE_MENTOR: (userId: string) => `/admin/users/${userId}/approve`,
     DASHBOARD_CARD: `/admin/dashboard/cards`,
   },
   CATEGORY: {
     CREATE_CATEGORY: `/categories`,
     LIST_CATEGORIES: `/categories`,
-    EDIT_CATEGORY: (id: string) => `/categories/${id}`,
+    EDIT_CATEGORY: (categoryId: string) => `/categories/${categoryId}`,
   },
   COURSE: {
     CREATE_COURSE: "/courses",
     FETCH_COURSES: "/courses",
     ADD_OR_UPDATE_SESSION: (courseId: string, updatePart: string) =>
       `/courses/${courseId}?course_part=${updatePart}`,
-    GET_COURSE: (id: string) => `/courses/${id}`,
+    GET_COURSE: (courseId: string) => `/courses/${courseId}`,
     GET_MENTOR_DRAFTED_COURSE: `/courses/my-courses`,
-    ADD_SESSION: (id: string) => `/courses/${id}/sessions`,
-    ADD_LECTURE: (id: string, sessionId: string) =>
-      `/courses/${id}/sessions/${sessionId}`,
+    ADD_SESSION: (sessionId: string) => `/courses/${sessionId}/sessions`,
+    ADD_LECTURE: (courseId: string, sessionId: string) =>
+      `/courses/${courseId}/sessions/${sessionId}`,
     EDIT_LECTURE: (courseId: string, sessionId: string, lectureId: string) =>
       `/courses/${courseId}/sessions/${sessionId}/lectures/${lectureId}`,
     UPDATE_BASE_COURSE_INFO: (courseId: string) => `/courses/${courseId}`,

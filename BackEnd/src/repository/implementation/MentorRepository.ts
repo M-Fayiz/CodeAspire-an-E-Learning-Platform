@@ -15,6 +15,6 @@ export class MentorRepository
     id: Types.ObjectId,
     update: Partial<IMenterModel>,
   ): Promise<IMenterModel | null> {
-    return await this.findByIDAndUpdate(id, update);
+    return await this.findByIDAndUpdateProfile(id, update);
   }
 }

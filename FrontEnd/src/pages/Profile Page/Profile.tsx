@@ -69,7 +69,9 @@ const ProfileManagement: React.FC = () => {
     
     try {
       const result = await UserService.updateProfile(user!.id, updatedFields);
+      console.log('profile :',result)
       if (result) {
+        setProfile(result.updatedData)
         toast.success("Profile updated Successfully");
       }
     } catch (error) {

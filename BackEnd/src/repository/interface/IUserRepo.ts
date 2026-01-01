@@ -50,9 +50,7 @@ export interface IUserRepo {
   ): Promise<IUserModel | null>;
   updateUserprofile(
     id: Types.ObjectId,
-    profileData: Partial<
-      IUserModel | IMenterModel | ILearnerModel | IAdminModel
-    >,
+    profileData: Partial< IAdminModel>,
   ): Promise<IUserModel | IMenterModel | ILearnerModel | IAdminModel | null>;
   getUserProfile(
     userId: Types.ObjectId,

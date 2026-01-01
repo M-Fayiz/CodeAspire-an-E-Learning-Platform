@@ -34,7 +34,7 @@ const BaseUserSchema = new mongoose.Schema(
       enum: Object.values(IRole),
       required: true,
     },
-
+    bio: String,
     phone: Number,
     password: String,
     profilePicture: String,
@@ -57,7 +57,6 @@ export const UserModel = mongoose.model<IUserModel>(
 
 const MentorSchema = new mongoose.Schema({
   expertise: [String],
-  bio: String,
   yearsOfExperience: Number,
   mentorRating: Number,
   socialLinks: {

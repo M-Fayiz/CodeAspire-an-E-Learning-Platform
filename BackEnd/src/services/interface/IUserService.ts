@@ -16,7 +16,7 @@ export interface IUserService {
   ): Promise<boolean>;
   userProfilePitcureUpdate(imageURL: string, userId: string): Promise<string>;
   updateUserProfile(
-    id: string,
+    userId: string,
     userData: ILearner | IMentor | IAdmin,
   ): Promise<IMentorDTO | IMentorDTO | IAdminDTO | null>;
   getUserProfile(

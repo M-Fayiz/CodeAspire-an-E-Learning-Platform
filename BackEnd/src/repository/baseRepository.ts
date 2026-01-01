@@ -171,4 +171,18 @@ export abstract class BaseRepository<T extends Document> {
 
     return result ?? null;
   }
+  async findByIDAndUpdateProfile<F = T>(
+  id: Types.ObjectId,
+  update: Partial<T>,
+  ): Promise<F | null> {
+  return this.model.findByIdAndUpdate(
+    id,
+    { $set: update },
+    {
+      new: true,
+      runValidators: true,
+    },
+  )
+}
+
 }

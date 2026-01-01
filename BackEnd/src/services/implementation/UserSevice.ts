@@ -28,12 +28,14 @@ import {
 import { NotificationTemplates } from "../../template/notification.template";
 import { INotificationRepository } from "../../repository/interface/INotificationRepository";
 import { INotificationDTO } from "../../types/dtos.type/notification.dto.types";
+import { ILearnerRepository } from "../../repository/interface/ILearnerRepository";
 
 export class UserService implements IUserService {
   constructor(
     private _userRepository: IUserRepo,
     private _mentorRepository: IMentorRepository,
     private _notificationRepository: INotificationRepository,
+    private _learnerRepository:ILearnerRepository
   ) {}
 
   async fetchUser(
@@ -113,57 +115,55 @@ export class UserService implements IUserService {
     }
     return userData.profilePicture;
   }
-  async updateUserProfile<T extends ILearner | IMenterModel | IAdmin>(
-    id: string,
-    userData: T,
-  ): Promise<IMentorDTO | ILearnerDTO | IAdminDTO | null> {
-    const userId = parseObjectId(id);
-    if (!userId) {
-      throw createHttpError(
-        HttpStatus.BAD_REQUEST,
-        HttpResponse.INVALID_CREDNTIALS,
-      );
-    }
-
-    const user = await this._userRepository.findUserById(userId);
-    if (!user) {
-      throw createHttpError(HttpStatus.NOT_FOUND, HttpResponse.USER_NOT_FOUND);
-    }
-
-    const updateActions = {
-      mentor: async () => {
-        const result = await this._mentorRepository.updateMentorProfile(
-          userId,
-          userData as IMenterModel,
-        );
-        return result ? MentorDTO(result) : null;
-      },
-      admin: async () => {
-        const result = await this._userRepository.updateUserprofile(
-          userId,
-          userData as IAdminModel,
-        );
-        return result ? AdminDTO(result as IAdminModel) : null;
-      },
-      learner: async () => {
-        const result = await this._userRepository.updateUserprofile(
-          userId,
-          userData as ILearnerModel,
-        );
-        return result ? LearnerDTO(result as ILearnerModel) : null;
-      },
-    } as const;
-
-    const handler = updateActions[user.role as keyof typeof updateActions];
-    if (!handler) {
-      throw createHttpError(
-        HttpStatus.BAD_REQUEST,
-        `Invalid user role: ${user.role}`,
-      );
-    }
-
-    return handler();
+  async updateUserProfile<T extends Partial<ILearner | IMenterModel | IAdmin>>(
+  userId: string,
+  userData: T,
+): Promise<IMentorDTO | ILearnerDTO | IAdminDTO | null> {
+  const user_Id = parseObjectId(userId);
+  if (!user_Id) {
+    throw createHttpError(HttpStatus.BAD_REQUEST, HttpResponse.INVALID_CREDNTIALS);
   }
+
+  const user = await this._userRepository.findUserById(user_Id);
+  if (!user) {
+    throw createHttpError(HttpStatus.NOT_FOUND, HttpResponse.USER_NOT_FOUND);
+  }
+
+  const updateActions = {
+    mentor: async () => {
+      const result = await this._mentorRepository.updateMentorProfile(
+        user_Id,
+        userData as IMenterModel,
+      );
+      return result ? MentorDTO(result) : null;
+    },
+    admin: async () => {
+      const result = await this._userRepository.updateUserprofile(
+        user_Id,
+        userData as IAdminModel,
+      );
+      return result ? AdminDTO(result as IAdminModel) : null;
+    },
+    learner: async () => {
+      const result = await this._learnerRepository.updateLearnerProfile(
+        user_Id,
+        userData,
+      );
+      return result ? LearnerDTO(result) : null;
+    },
+  } as const;
+
+  const handler = updateActions[user.role as keyof typeof updateActions];
+  if (!handler) {
+    throw createHttpError(
+      HttpStatus.BAD_REQUEST,
+      `Invalid user role: ${user.role}`,
+    );
+  }
+
+  return handler();
+}
+
 
   async getUserProfile(
     userId: string,

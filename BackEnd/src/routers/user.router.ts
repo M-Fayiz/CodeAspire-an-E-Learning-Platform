@@ -6,14 +6,18 @@ import { UserService } from "../services/implementation/UserSevice";
 import { verifyUser } from "../middlewares/authentication.middleware";
 import { MentorRepository } from "../repository/implementation/MentorRepository";
 import { NotificationRepository } from "../repository/implementation/NotificationRepository";
+import { LearnerRepository } from "../repository/implementation/LearnerRepository";
 
 const userRepository = new UserRepository();
 const mentorRepository = new MentorRepository();
 const notificationRepository = new NotificationRepository();
+const learnerRepository=new LearnerRepository()
 const userService = new UserService(
   userRepository,
   mentorRepository,
   notificationRepository,
+  learnerRepository
+
 );
 const userController = new UserController(userService);
 
