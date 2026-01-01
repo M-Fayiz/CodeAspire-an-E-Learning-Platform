@@ -1,4 +1,4 @@
-import { useLocation, Link } from "react-router-dom";
+import { useLocation, Link, useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
 // import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "../../components/ui/Cards";
@@ -35,6 +35,7 @@ const NotFound: React.FC<NotFoundProps> = ({ error }) => {
     "$ npm run build",
     "✓ Build successful!",
   ];
+  const navigate=useNavigate()
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-orange-100 via-white to-gray-50 flex items-center justify-center p-4">
@@ -67,7 +68,7 @@ const NotFound: React.FC<NotFoundProps> = ({ error }) => {
           {/* Buttons */}
           <div className="flex flex-col sm:flex-row gap-4 justify-center lg:justify-start">
             <Link
-              to="/auth/signup"
+              to="/"
               className="group bg-gradient-to-r from-[#FF7A00] to-[#FF3D00] text-white px-8 py-2 rounded-full text-lg font-semibold hover:shadow-xl hover:scale-105 transition-all duration-300 flex items-center gap-2"
             >
               <Home size={20} />
@@ -75,7 +76,7 @@ const NotFound: React.FC<NotFoundProps> = ({ error }) => {
             </Link>
 
             <button
-              onClick={() => window.history.back()}
+              onClick={() => navigate(-1)}
               className="flex items-center gap-2 px-6 py-2 border border-gray-300 rounded-full text-gray-700 font-medium hover:bg-gray-100 transition-all duration-300"
             >
               <ArrowLeft size={20} />

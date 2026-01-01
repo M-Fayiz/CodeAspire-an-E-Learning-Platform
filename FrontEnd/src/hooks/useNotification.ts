@@ -1,9 +1,10 @@
 import { useEffect, useState, useMemo, useCallback } from "react";
 import type { INotificationDTO } from "@/types/DTOS/notification.dto";
 import { NotificationService } from "@/service/notification.service";
-import { useSocket } from "@/context/socket.context";
+
 import { toast } from "sonner";
 import { ApiError } from "@/utility/apiError.util";
+import { useSocket } from "./useSocket";
 
 export function useNotifications(userId: string) {
   const [notifications, setNotifications] = useState<INotificationDTO[]>([]);

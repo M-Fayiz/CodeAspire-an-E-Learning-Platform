@@ -1,6 +1,6 @@
 import { ChatEvents, SocketEvents } from "@/constants/socketEvents";
 import { useAuth } from "@/context/auth.context";
-import { useSocket } from "@/context/socket.context";
+import { useSocket } from "@/hooks/useSocket"; 
 import ChatList from "@/features/chat/ChatList";
 import ChatWindow from "@/features/chat/ChatWindow";
 import { ChatService } from "@/service/chat.service";

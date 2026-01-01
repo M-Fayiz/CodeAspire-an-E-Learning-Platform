@@ -15,6 +15,7 @@ const CourseEnrolledList = () => {
   const { user } = useAuth();
   const [enrolledCourse, setEnrolledCourses] = useState<IEnrolledListDto[]>([]);
   const [totalPage, setTotalPage] = useState(1);
+  const [loading,setLoading]=useState(false)
   const { search, page, setSearch, setPage } = useSearchPagination();
   const [searchInput, setSearchInput] = useState(search);
   const debouncedSearch = useDebounce(searchInput, 200);
@@ -26,11 +27,13 @@ const CourseEnrolledList = () => {
     if (!user?.id) return;
 
     (async () => {
+      setLoading(true)
       const data = await EnrolledService.getEnrolledCourse(user.id);
 
       if (data) {
         setEnrolledCourses(data);
         setTotalPage(data.length);
+        setLoading(false)
       }
     })();
   }, [user?.id, page]);
@@ -44,6 +47,15 @@ const CourseEnrolledList = () => {
       course.course.title.toLowerCase().includes(q),
     );
   }, [search, enrolledCourse]);
+  if(loading){
+    return(
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            {[1, 2, 3, 4].map((_, ind) => (
+              <CourseCardSkeleton key={ind} />
+            ))}
+      </div>
+    )
+  }
   return (
     <>
       <ManagementLayout
@@ -71,12 +83,23 @@ const CourseEnrolledList = () => {
             ))}
           </div>
         ) : (
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {[1, 2, 3, 4].map((_, ind) => (
-              <CourseCardSkeleton key={ind} />
-            ))}
-            <p>Please purchase a course and start your tech journey here</p>
+          
+          <div className="flex flex-col items-center justify-center gap-6 text-center py-12">
+            <p className="text-lg text-gray-600 max-w-md">
+              Purchase a course and start your tech journey with structured learning and expert guidance.
+            </p>
+
+            <Link
+              to="/courses"
+              className="group inline-flex items-center justify-center px-10 py-4 rounded-full 
+                        border-2 border-gray-300 text-base font-semibold text-gray-800
+                        hover:border-[#FF7A00] hover:text-[#FF7A00]
+                        hover:shadow-md transition-all duration-300"
+            >
+              Explore Courses
+            </Link>
           </div>
+
         )}
         <PaginationRounded
           currentPage={page}

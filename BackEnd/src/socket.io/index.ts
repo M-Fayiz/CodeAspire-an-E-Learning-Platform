@@ -3,7 +3,6 @@ import { Server as HttpServer } from "http";
 import { env } from "../config/env.config";
 import { verifyAccesToken } from "../utils/jwt-token.util";
 import redisClient from "../config/redis.config";
-import { redisPrefix } from "../const/redisKey.const";
 import { HttpResponse } from "../const/error-message.const";
 import { SocketEvents } from "../const/socketEvents.const";
 import { registerChatHandler } from "./chat.socket";
@@ -26,10 +25,9 @@ export const intitializeSocket = (server: HttpServer) => {
   io.use((socket: CustomSocket, next) => {
     const token = socket.handshake.auth?.token;
     if (!token) return next(new Error(HttpResponse.UNAUTHORIZED));
-    console.log("token :", token);
     try {
       const user = verifyAccesToken(token);
-
+      console.log('user from socket :',user)
       socket.data.userId = user._id;
       next();
     } catch {

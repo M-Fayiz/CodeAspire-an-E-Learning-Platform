@@ -16,7 +16,7 @@ const Header: React.FC = () => {
     window.addEventListener("scroll", handleScroll);
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
-
+  console.log('user IId >',user?.id)
   return (
     <header
       className={`fixed w-full z-50 transition-all duration-300 ${

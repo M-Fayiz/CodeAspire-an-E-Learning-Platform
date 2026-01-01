@@ -81,10 +81,10 @@ const LearnerDashboard = () => {
 
     
 
-      <LearningCalendar
+      {/* <LearningCalendar
         streakData={learnerDashboardData.learnerStreak as ILearnerStreask}
         activeDates={learnerDashboardData.activeDays}
-      />
+      /> */}
 
 
    
@@ -94,14 +94,21 @@ const LearnerDashboard = () => {
   </div>
   <div className="bg-white rounded-md p-4 sm:p-6 h-full">
     <h2>Inprogress Courses</h2>
-     {learnerDashboardData.inProgress.map((course) => (
+      {learnerDashboardData.inProgress.length>0?
+     learnerDashboardData.inProgress.map((course) => (
       <Link  to={`/learner/enrolled-courses/${course.enrolledId}`} key={course.enrolledId}>
           <InProgressCourseCard
            
             course={course}
           />
       </Link>
-        ))}
+        )):(
+           <div className="rounded-xl border border-gray-200 bg-white p-4 sm:p-6 text-center">
+        <p className="text-gray-500 text-sm sm:text-base">
+          You don’t have any course in progress right now.
+        </p>
+      </div>
+        )}
   </div>
 </div>
 

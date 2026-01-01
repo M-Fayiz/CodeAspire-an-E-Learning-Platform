@@ -35,7 +35,7 @@ const Header: React.FC<IHeaderProbs> = ({
 
   const { logout } = useAuth();
   const { count } = useNotificationContext();
-
+  console.log('use from header :',user.id)
   return (
     <header className="bg-white border-b border-gray-200 px-4 py-3 flex items-center justify-between sticky top-0 z-40">
       <div className="flex items-center space-x-4">
