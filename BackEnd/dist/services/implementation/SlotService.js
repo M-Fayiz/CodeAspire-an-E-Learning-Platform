@@ -13,8 +13,14 @@ class SlotService {
         this._slotBookingRepository = _slotBookingRepository;
         this._courseRepositoy = _courseRepositoy;
     }
-    async _validateSlotOverlap(mentorId, selectedDays) {
-        const existingSlots = await this._slotRepository.getMentorSLots(mentorId);
+    async _validateSlotOverlap(mentorId, selectedDays, existingSlotForUpdation) {
+        let existingSlots;
+        if (!existingSlotForUpdation) {
+            existingSlots = await this._slotRepository.getMentorSLots(mentorId);
+        }
+        else {
+            existingSlots = existingSlotForUpdation;
+        }
         if (!existingSlots)
             return;
         for (const newDay of selectedDays) {
@@ -59,7 +65,7 @@ class SlotService {
             days.startTime = (0, timeManagement_util_1.convertTo12Hour)(days.startTime);
             days.endTime = (0, timeManagement_util_1.convertTo12Hour)(days.endTime);
         }
-        return (0, slot_dto_1.mentorSlotsDTO)(updatedCourse);
+        return (0, slot_dto_1.createdSlotsDTO)(updatedCourse);
     }
     /**
      * fetch mentor's slot data
@@ -141,9 +147,17 @@ class SlotService {
         if (!slot_Id) {
             throw (0, http_error_1.createHttpError)(http_status_const_1.HttpStatus.BAD_REQUEST, error_message_const_1.HttpResponse.INVALID_ID);
         }
-        const existingSlots = await this._slotRepository.getMentorSLots(slotData.mentorId);
-        if (existingSlots) {
-            await this._validateSlotOverlap(slotData.mentorId, slotData.selectedDays);
+        const existingSlot = await this._slotRepository.findSlotByFilter({ _id: slot_Id });
+        if (!existingSlot) {
+            throw (0, http_error_1.createHttpError)(http_status_const_1.HttpStatus.NOT_FOUND, error_message_const_1.HttpResponse.ITEM_NOT_FOUND);
+        }
+        const timingChanged = (0, timeManagement_util_1.isSlotTimingChanged)(existingSlot.selectedDays, slotData.selectedDays);
+        if (timingChanged) {
+            const existingSlots = await this._slotRepository.getMentorSLots(slotData.mentorId);
+            const exceptCurrentSlot = existingSlots?.filter((slot) => !slot._id.equals(slot_Id));
+            if (exceptCurrentSlot?.length) {
+                await this._validateSlotOverlap(slotData.mentorId, slotData.selectedDays, exceptCurrentSlot);
+            }
         }
         const updatedSlot = await this._slotRepository.updateSlot(slot_Id, slotData);
         if (!updatedSlot) {
@@ -157,7 +171,7 @@ class SlotService {
             days.startTime = (0, timeManagement_util_1.convertTo12Hour)(days.startTime);
             days.endTime = (0, timeManagement_util_1.convertTo12Hour)(days.endTime);
         }
-        return (0, slot_dto_1.mentorSlotsDTO)(updatedCourse);
+        return (0, slot_dto_1.createdSlotsDTO)(updatedCourse);
     }
     /**
      * Fetch a mentor slot by its course ID.

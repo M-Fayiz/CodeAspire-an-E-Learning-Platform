@@ -23,7 +23,6 @@ class SlotController {
                 const { mentorId } = req.params;
                 const { page, search, filter } = req.query;
                 const mentorSlots = await this._slotService.getMontorSlots(mentorId, Number(page), search, filter);
-                console.log("menter slot :", mentorSlots);
                 res.status(http_status_const_1.HttpStatus.OK).json((0, response_util_1.successResponse)(error_message_const_1.HttpResponse.OK, {
                     mappedSlots: mentorSlots.mappedSlots,
                     totalPage: mentorSlots.totalDocument,

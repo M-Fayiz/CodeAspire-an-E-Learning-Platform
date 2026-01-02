@@ -2,6 +2,7 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.convertTo24Hour = convertTo24Hour;
 exports.convertTo12Hour = convertTo12Hour;
+exports.isSlotTimingChanged = isSlotTimingChanged;
 function convertTo24Hour(time12h) {
     const [time, modifier] = time12h.split(" ");
     let [hours, minutes] = time.split(":");
@@ -24,4 +25,7 @@ function convertTo12Hour(time24h) {
     else if (h > 12)
         h -= 12;
     return `${h}:${String(m).padStart(2, "0")} ${period}`;
+}
+function isSlotTimingChanged(oldDays, newDays) {
+    return JSON.stringify(oldDays) !== JSON.stringify(newDays);
 }
