@@ -7,10 +7,6 @@ import { ICertificateRepository } from "../../repository/interface/ICertificateR
 import { ICourseRepository } from "../../repository/interface/ICourseRepository";
 import { IUserRepo } from "../../repository/interface/IUserRepo";
 import { generateCertificateId } from "../../utils/generateCerteficateId.util";
-import generateCertificateHtml, {
-  generateCertificateHTML,
-} from "../../utils/generateCertificate.util";
-import { htmlToPdf } from "../../utils/htmlToPdf.util";
 import fs from "fs";
 import { createHttpError } from "../../utils/http-error";
 import { ICertificateService } from "../interface/ICertificateService";
@@ -21,6 +17,10 @@ import { INotificationRepository } from "../../repository/interface/INotificatio
 import { INotificationDTO } from "../../types/dtos.type/notification.dto.types";
 import { notificationDto } from "../../dtos/notification.dto";
 import { ensureTempDir } from "../../utils/fileGuard.util";
+import { generateCertificatePdf } from "../../utils/generateCertificatePdf.util";
+
+
+
 export class CertificateService implements ICertificateService {
   constructor(
     private _certificateRepository: ICertificateRepository,
@@ -55,22 +55,26 @@ export class CertificateService implements ICertificateService {
     const certId = generateCertificateId();
     const issuedDate = new Date().toLocaleDateString("en-IN");
 
-    const certificateDate: generateCertificateHTML = {
-      certId: certId,
-      courseName: programmTitle,
-      issuedDate: issuedDate,
-      studentName: learner.name,
-    };
-
-    const html = generateCertificateHtml(certificateDate);
+  
 
     const tempDir = ensureTempDir();
 
     const tempPath = path.join(tempDir, `${certId}.pdf`);
     const previewPath = path.join(tempDir, `${certId}-preview.png`);
 
+    await generateCertificatePdf(
+      {
+        studentName: learner.name,
+        courseName: programmTitle,
+        certId,
+        issuedDate,
+      },
+      tempPath,
+      previewPath,
+    );
 
-    await htmlToPdf(html, tempPath, previewPath);
+
+   
 
     const s3Key = await uploadPdfToS3(tempPath, `${certId}.pdf`);
     const previewKey = await uploadImageToS3(
@@ -107,6 +111,7 @@ export class CertificateService implements ICertificateService {
       notification: notificationDto(createdNotification),
     };
   }
+  
   async listCertificate(learnerId: string): Promise<ICertificateModel[]> {
     const learner_id = parseObjectId(learnerId);
     if (!learner_id) {

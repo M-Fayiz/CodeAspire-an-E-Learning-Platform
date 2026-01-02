@@ -9,14 +9,13 @@ const error_message_const_1 = require("../../const/error-message.const");
 const http_status_const_1 = require("../../const/http-status.const");
 const objectId_1 = require("../../mongoose/objectId");
 const generateCerteficateId_util_1 = require("../../utils/generateCerteficateId.util");
-const generateCertificate_util_1 = __importDefault(require("../../utils/generateCertificate.util"));
-const htmlToPdf_util_1 = require("../../utils/htmlToPdf.util");
 const fs_1 = __importDefault(require("fs"));
 const http_error_1 = require("../../utils/http-error");
 const uploadPdfToS3_util_1 = require("../../utils/uploadPdfToS3.util");
 const notification_template_1 = require("../../template/notification.template");
 const notification_dto_1 = require("../../dtos/notification.dto");
 const fileGuard_util_1 = require("../../utils/fileGuard.util");
+const generateCertificatePdf_util_1 = require("../../utils/generateCertificatePdf.util");
 class CertificateService {
     constructor(_certificateRepository, _userRepository, _courseRepository, _notificatioinRepository) {
         this._certificateRepository = _certificateRepository;
@@ -40,17 +39,15 @@ class CertificateService {
         }
         const certId = (0, generateCerteficateId_util_1.generateCertificateId)();
         const issuedDate = new Date().toLocaleDateString("en-IN");
-        const certificateDate = {
-            certId: certId,
-            courseName: programmTitle,
-            issuedDate: issuedDate,
-            studentName: learner.name,
-        };
-        const html = (0, generateCertificate_util_1.default)(certificateDate);
         const tempDir = (0, fileGuard_util_1.ensureTempDir)();
         const tempPath = path_1.default.join(tempDir, `${certId}.pdf`);
         const previewPath = path_1.default.join(tempDir, `${certId}-preview.png`);
-        await (0, htmlToPdf_util_1.htmlToPdf)(html, tempPath, previewPath);
+        await (0, generateCertificatePdf_util_1.generateCertificatePdf)({
+            studentName: learner.name,
+            courseName: programmTitle,
+            certId,
+            issuedDate,
+        }, tempPath, previewPath);
         const s3Key = await (0, uploadPdfToS3_util_1.uploadPdfToS3)(tempPath, `${certId}.pdf`);
         const previewKey = await (0, uploadPdfToS3_util_1.uploadImageToS3)(previewPath, `${certId}-preview.png`);
         await Promise.all([
