@@ -1,6 +1,6 @@
 import type { ILearnerStreask } from "@/types/DTOS/learnerDashboard.type";
 import generateLast365Days from "@/utility/generateDays.util";
-import { useRef, useState } from "react";
+import { useState } from "react";
 
 type Props = {
   activeDates: string[];
