@@ -66,12 +66,12 @@ const ProfileManagement: React.FC = () => {
   const handleSave = async (e: React.FormEvent<HTMLFormElement>) => {
     setIsEditing(false);
     e.preventDefault();
-    
+
     try {
       const result = await UserService.updateProfile(user!.id, updatedFields);
-      console.log('profile :',result)
+
       if (result) {
-        setProfile(result.updatedData)
+        setProfile(result.updatedData);
         toast.success("Profile updated Successfully");
       }
     } catch (error) {

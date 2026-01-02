@@ -43,16 +43,15 @@ export default function MentorBookedSlots() {
   const [value, setValue] = useState<Date | DateRange | undefined>();
   const [showDateFilter, setShowDateFilter] = useState(false);
 
-  const { search, setSearch, page, setPage } =
-    useSearchPagination();
+  const { search, setSearch, page, setPage } = useSearchPagination();
 
   const [totalPage, setTotalPage] = useState(1);
   const [searchInput, setSearchInput] = useState("");
-  const debounced=useDebounce(searchInput,300)
+  const debounced = useDebounce(searchInput, 300);
 
-  useEffect(()=>{
-    setSearch(debounced)
-  },[debounced])
+  useEffect(() => {
+    setSearch(debounced);
+  }, [debounced]);
 
   useEffect(() => {
     if (!user?.id) return;
@@ -60,9 +59,13 @@ export default function MentorBookedSlots() {
     (async () => {
       try {
         setLoading(true);
-        const data = await SlotBookingSercie.getBookedMentorSlotList(user.id,page,search);
+        const data = await SlotBookingSercie.getBookedMentorSlotList(
+          user.id,
+          page,
+          search,
+        );
         setMentorSlots(data);
-        setTotalPage(2)
+        setTotalPage(2);
       } catch {
         toast.error("Failed to fetch mentor slots");
       } finally {
@@ -175,7 +178,6 @@ export default function MentorBookedSlots() {
     if (result) toast.success("Certificate generated successfully");
   };
 
-   
   return (
     <ManagementLayout
       title="Booked Slots List"

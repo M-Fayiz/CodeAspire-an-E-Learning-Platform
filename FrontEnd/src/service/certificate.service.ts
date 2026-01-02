@@ -16,7 +16,8 @@ const CertificateService = {
         courseId,
         programmTitle: prgrmTitle,
       });
-      return response.data.createdCertificated;
+      console.log("certificate :", response.data.certificate);
+      return response.data.certificate;
     } catch (error) {
       throwAxiosError(error);
     }

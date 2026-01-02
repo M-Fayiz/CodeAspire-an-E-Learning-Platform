@@ -39,18 +39,18 @@ export const SlotBookingSercie = {
   },
   getBookedMentorSlotList: async (
     mentorId: string,
-    page:number,
-    search:string
+    page: number,
+    search: string,
   ): Promise<IBookingDTOforMentors[]> => {
     try {
-
       const response = await axiosInstance.get(
-        API.SLOT_BOOK.ListeMentorBooking(mentorId),{
-          params:{
+        API.SLOT_BOOK.ListeMentorBooking(mentorId),
+        {
+          params: {
             page,
-            search
-          }
-        }
+            search,
+          },
+        },
       );
 
       return response.data.listsOfBooked;

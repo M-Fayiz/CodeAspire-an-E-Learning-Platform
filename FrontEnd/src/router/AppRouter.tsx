@@ -186,7 +186,7 @@ export const router = createBrowserRouter([
     ],
   },
   {
-    element: <RootLayout />,   
+    element: <RootLayout />,
     children: [
       {
         path: "unauthorized",
@@ -196,7 +196,6 @@ export const router = createBrowserRouter([
         path: "*",
         element: <NotFound />,
       },
-      
     ],
   },
 ]);

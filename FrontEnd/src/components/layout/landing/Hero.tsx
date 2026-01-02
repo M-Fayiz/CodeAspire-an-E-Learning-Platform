@@ -12,8 +12,8 @@ const HeroSection: React.FC = () => {
     "Data Scientist",
     "DevOps Engineer",
   ];
-  const {user}=useAuth()
-  const navigate=useNavigate()
+  const { user } = useAuth();
+  const navigate = useNavigate();
   useEffect(() => {
     const interval = setInterval(() => {
       setCurrentText((prev) => (prev + 1) % texts.length);
@@ -21,30 +21,29 @@ const HeroSection: React.FC = () => {
     return () => clearInterval(interval);
   }, []);
 
-
-    const navigateTO = () => {
-  if (!user) {
-    navigate("/auth/login");
-    return;
-  }
-
-  switch (user.role) {
-    case UserRole.ADMIN:
-      navigate("/admin/dashboard");
-      break;
-
-    case UserRole.MENTOR:
-      navigate("/mentor/dashboard");
-      break;
-
-    case UserRole.LEARNER:
-      navigate("/learner/dashboard");
-      break;
-
-    default:
+  const navigateTO = () => {
+    if (!user) {
       navigate("/auth/login");
-  }
-};
+      return;
+    }
+
+    switch (user.role) {
+      case UserRole.ADMIN:
+        navigate("/admin/dashboard");
+        break;
+
+      case UserRole.MENTOR:
+        navigate("/mentor/dashboard");
+        break;
+
+      case UserRole.LEARNER:
+        navigate("/learner/dashboard");
+        break;
+
+      default:
+        navigate("/auth/login");
+    }
+  };
 
   return (
     <section className="relative min-h-screen flex items-center justify-center bg-gradient-to-br from-orange-50 via-white to-gray-50 overflow-hidden">
@@ -77,12 +76,15 @@ const HeroSection: React.FC = () => {
             </p>
 
             <div className="flex flex-col sm:flex-row gap-4 justify-center lg:justify-start">
-              <button onClick={navigateTO} className="group bg-gradient-to-r from-[#FF7A00] to-[#FF3D00] text-white px-8 py-4 rounded-full text-lg font-semibold hover:shadow-2xl hover:scale-105 transition-all duration-300 flex items-center justify-center">
-               {!user
-                ? "Get Started"
-                : user.role === UserRole.LEARNER
-                ? "Start Learning Now"
-                : `Go to ${user.role} Dashboard`}
+              <button
+                onClick={navigateTO}
+                className="group bg-gradient-to-r from-[#FF7A00] to-[#FF3D00] text-white px-8 py-4 rounded-full text-lg font-semibold hover:shadow-2xl hover:scale-105 transition-all duration-300 flex items-center justify-center"
+              >
+                {!user
+                  ? "Get Started"
+                  : user.role === UserRole.LEARNER
+                    ? "Start Learning Now"
+                    : `Go to ${user.role} Dashboard`}
 
                 <ArrowRight className="ml-2 w-5 h-5 group-hover:translate-x-1 transition-transform" />
               </button>

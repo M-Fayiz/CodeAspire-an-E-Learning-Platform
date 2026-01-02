@@ -15,7 +15,7 @@ const CourseEnrolledList = () => {
   const { user } = useAuth();
   const [enrolledCourse, setEnrolledCourses] = useState<IEnrolledListDto[]>([]);
   const [totalPage, setTotalPage] = useState(1);
-  const [loading,setLoading]=useState(false)
+  const [loading, setLoading] = useState(false);
   const { search, page, setSearch, setPage } = useSearchPagination();
   const [searchInput, setSearchInput] = useState(search);
   const debouncedSearch = useDebounce(searchInput, 200);
@@ -27,13 +27,13 @@ const CourseEnrolledList = () => {
     if (!user?.id) return;
 
     (async () => {
-      setLoading(true)
+      setLoading(true);
       const data = await EnrolledService.getEnrolledCourse(user.id);
 
       if (data) {
         setEnrolledCourses(data);
         setTotalPage(data.length);
-        setLoading(false)
+        setLoading(false);
       }
     })();
   }, [user?.id, page]);
@@ -47,14 +47,14 @@ const CourseEnrolledList = () => {
       course.course.title.toLowerCase().includes(q),
     );
   }, [search, enrolledCourse]);
-  if(loading){
-    return(
+  if (loading) {
+    return (
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {[1, 2, 3, 4].map((_, ind) => (
-              <CourseCardSkeleton key={ind} />
-            ))}
+        {[1, 2, 3, 4].map((_, ind) => (
+          <CourseCardSkeleton key={ind} />
+        ))}
       </div>
-    )
+    );
   }
   return (
     <>
@@ -83,10 +83,10 @@ const CourseEnrolledList = () => {
             ))}
           </div>
         ) : (
-          
           <div className="flex flex-col items-center justify-center gap-6 text-center py-12">
             <p className="text-lg text-gray-600 max-w-md">
-              Purchase a course and start your tech journey with structured learning and expert guidance.
+              Purchase a course and start your tech journey with structured
+              learning and expert guidance.
             </p>
 
             <Link
@@ -99,7 +99,6 @@ const CourseEnrolledList = () => {
               Explore Courses
             </Link>
           </div>
-
         )}
         <PaginationRounded
           currentPage={page}

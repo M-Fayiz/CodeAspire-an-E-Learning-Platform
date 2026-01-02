@@ -4,7 +4,6 @@ import { useNavigate } from "react-router-dom";
 import { useAppErrorStore } from "@/store/auth.store";
 import { toast } from "sonner";
 
-
 export default function AppErrorHandler() {
   const navigate = useNavigate();
   const { redirectTo, message, clear } = useAppErrorStore();

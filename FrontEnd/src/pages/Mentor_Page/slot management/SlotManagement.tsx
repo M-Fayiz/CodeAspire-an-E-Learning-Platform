@@ -1,10 +1,6 @@
 import ManagementLayout from "@/components/layout/ManagementLayout";
 import SlotBookingForm from "@/features/mentor/slots/SlotForm";
-import {
-  Calendar,
-  Plus,
-  Search,
-} from "lucide-react";
+import { Calendar, Plus, Search } from "lucide-react";
 import {
   Dialog,
   DialogClose,
@@ -198,7 +194,6 @@ const SlotManagement = () => {
         <div className="flex flex-col  gap-4 sm:gap-2">
           {/* 🔹 Top Action Bar */}
           <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
-
             <Dialog open={isOpen} onOpenChange={setIsOpen}>
               <DialogTrigger asChild>
                 <Button onClick={() => resetForm()} variant="outline">

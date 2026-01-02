@@ -1,7 +1,5 @@
 import type { InProgress } from "@/types/DTOS/learnerDashboard.type";
 
-
-
 interface Props {
   course?: InProgress | null;
 }
@@ -51,7 +49,6 @@ const InProgressCourseCard: React.FC<Props> = ({ course }) => {
       </div>
 
       {/* CTA */}
-      
     </div>
   );
 };

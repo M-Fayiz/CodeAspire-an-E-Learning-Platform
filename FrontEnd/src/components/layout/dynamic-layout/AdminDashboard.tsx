@@ -33,7 +33,6 @@ const AdminDashboard = () => {
   const [selectedTab, setSelectedTab] = useState("slot");
   const [selectedPeriod, setSelectedPeriod] = useState(FilterByDate.MONTH);
 
-  
   if (!user) return <Navigate to="/auth/login" replace />;
 
   useEffect(() => {

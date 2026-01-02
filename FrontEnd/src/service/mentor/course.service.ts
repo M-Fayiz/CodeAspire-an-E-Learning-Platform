@@ -73,7 +73,7 @@ const courseService = {
     courseId: string,
     session: Partial<ISession>,
   ): Promise<ICourseData> => {
-    console.log(courseId,'- -  --',courseId)
+    console.log(courseId, "- -  --", courseId);
     try {
       const response = await axiosInstance.put(
         API.COURSE.ADD_SESSION(courseId),
@@ -90,8 +90,8 @@ const courseService = {
     sessionId: string,
     lecture: ILecture,
   ): Promise<ICourseDTO> => {
-    console.log('ss :',sessionId)
-    console.log('CI :',courseId)
+    console.log("ss :", sessionId);
+    console.log("CI :", courseId);
     try {
       if (!courseId || !sessionId) {
         throw new Error(
@@ -296,9 +296,7 @@ const courseService = {
       throwAxiosError(error);
     }
   },
-  approveCourse: async (
-    coursId: string,
-  ): Promise<CourseStatus > => {
+  approveCourse: async (coursId: string): Promise<CourseStatus> => {
     try {
       const response = await axiosInstance.patch(
         API.COURSE.APPROVE_CURSE(coursId),
@@ -312,7 +310,7 @@ const courseService = {
     coursId: string,
     feedBack: string,
     mentorEmail: string,
-  ): Promise< CourseStatus > => {
+  ): Promise<CourseStatus> => {
     try {
       const response = await axiosInstance.patch(
         API.COURSE.REJECT_COURSE(coursId),

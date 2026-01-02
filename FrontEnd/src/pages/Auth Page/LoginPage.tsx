@@ -22,8 +22,7 @@ const LoginPage: React.FC = () => {
       await login(data);
       navigate("/", { replace: true });
     } catch (error) {
-      if(error instanceof ApiError){
-
+      if (error instanceof ApiError) {
         toast.error(error.message);
       }
     } finally {

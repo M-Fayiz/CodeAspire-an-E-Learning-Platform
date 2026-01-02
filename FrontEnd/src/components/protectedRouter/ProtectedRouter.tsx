@@ -28,18 +28,18 @@ export const Protected_Router: React.FC<ProtectedProps> = ({
     }
   }, [user, navigate]);
 
-  if (status ===AuthStatus.CHECKING) {
+  if (status === AuthStatus.CHECKING) {
     return <Spinner fullScreen />;
   }
 
-  if (status ===AuthStatus.GUEST) {
+  if (status === AuthStatus.GUEST) {
     return <Navigate to="/auth/login" replace />;
   }
 
-  if (status ===AuthStatus.BLOCKED) {
+  if (status === AuthStatus.BLOCKED) {
     return <Navigate to="/blocked" replace />;
   }
-  
+
   if (!user) {
     return <Navigate to={fallback} state={{ from: location }} replace />;
   }
@@ -52,6 +52,5 @@ export const Protected_Router: React.FC<ProtectedProps> = ({
     }
   }
 
-return <>{children}</>;
-
+  return <>{children}</>;
 };

@@ -1,4 +1,3 @@
-
 import { axiosInstance } from "../axios/createInstance";
 import type {
   IDecodedUserType,
@@ -54,7 +53,7 @@ export const AuthService = {
         const profilrUrl = await sharedService.getPreSignedDownloadURL(
           response.data.user.profile,
         );
-   
+
         if (profilrUrl) {
           response.data.user.profile = profilrUrl;
         }

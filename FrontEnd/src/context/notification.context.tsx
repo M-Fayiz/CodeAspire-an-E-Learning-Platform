@@ -6,7 +6,9 @@ const NotificationContext = createContext<ReturnType<
   typeof useNotifications
 > | null>(null);
 
-export const NotificationProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
+export const NotificationProvider: React.FC<{ children: React.ReactNode }> = ({
+  children,
+}) => {
   const { user } = useAuth();
 
   const value = useNotifications(user?.id ?? "");
@@ -31,4 +33,3 @@ export const useNotificationContext = () => {
   }
   return context;
 };
-

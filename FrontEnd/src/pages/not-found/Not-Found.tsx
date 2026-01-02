@@ -35,7 +35,7 @@ const NotFound: React.FC<NotFoundProps> = ({ error }) => {
     "$ npm run build",
     "✓ Build successful!",
   ];
-  const navigate=useNavigate()
+  const navigate = useNavigate();
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-orange-100 via-white to-gray-50 flex items-center justify-center p-4">

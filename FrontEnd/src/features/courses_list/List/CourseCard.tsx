@@ -5,7 +5,7 @@ interface CourseCardProps {
 }
 const CourseCard: React.FC<CourseCardProps> = ({ course }) => {
   return (
-    <div className="bg-white rounded-lg shadow-md hover:shadow-lg transition-shadow duration-300 overflow-hidden group">
+    <div className="bg-white rounded-md shadow-md hover:shadow-lg transition-shadow duration-300 overflow-hidden group">
       <div className="relative">
         <img
           src={course.thumbnail as string}
@@ -20,13 +20,13 @@ const CourseCard: React.FC<CourseCardProps> = ({ course }) => {
             <Heart className="w-4 h-4" fill={isFavorite ? 'currentColor' : 'none'} />
           </button>
         </div> */}
-        <div className="absolute bottom-3 left-3">
+        {/* <div className="absolute bottom-3 left-3">
           {course.isEnrolled && (
             <span className="bg-orange-200 text-orange-600 px-2 py-1 rounded text-xs font-medium">
-              {/* {course.category} */}
+              {course.category}
             </span>
           )}
-        </div>
+        </div> */}
       </div>
 
       <div className="p-4">
@@ -58,7 +58,7 @@ const CourseCard: React.FC<CourseCardProps> = ({ course }) => {
             </span>
           </div>
           <button className="bg-[black] flex gap-2   text-white px-4 py-2 rounded-md hover:bg-black transition-colors text-sm font-medium">
-            View COurse
+            View Course
           </button>
         </div>
       </div>

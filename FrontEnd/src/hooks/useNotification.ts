@@ -13,37 +13,35 @@ export function useNotifications(userId: string) {
   const socket = useSocket();
 
   useEffect(() => {
-  if (!userId) {
-    setNotifications([]);
-    setCount(0);
-    setLoading(false);
-    return;
-  }
-
-  (async () => {
-    try {
-      setLoading(true);
-      const data = await NotificationService.getNotification(userId);
-
-      if (data) {
-        const sorted = data.sort(
-          (a, b) =>
-            new Date(b.createdAt).getTime() -
-            new Date(a.createdAt).getTime(),
-        );
-        setNotifications(sorted);
-        setCount(sorted.filter((n) => !n.isRead).length);
-      }
-    } catch (err) {
-      if (err instanceof ApiError) {
-        toast.error(err.message);
-      }
-    } finally {
+    if (!userId) {
+      setNotifications([]);
+      setCount(0);
       setLoading(false);
+      return;
     }
-  })();
-}, [userId]);
 
+    (async () => {
+      try {
+        setLoading(true);
+        const data = await NotificationService.getNotification(userId);
+
+        if (data) {
+          const sorted = data.sort(
+            (a, b) =>
+              new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime(),
+          );
+          setNotifications(sorted);
+          setCount(sorted.filter((n) => !n.isRead).length);
+        }
+      } catch (err) {
+        if (err instanceof ApiError) {
+          toast.error(err.message);
+        }
+      } finally {
+        setLoading(false);
+      }
+    })();
+  }, [userId]);
 
   useEffect(() => {
     if (!socket) return;

@@ -8,7 +8,7 @@ import {
   File,
 } from "lucide-react";
 import { useAuth } from "@/context/auth.context";
-import { useSocket } from "@/hooks/useSocket"; 
+import { useSocket } from "@/hooks/useSocket";
 import type { IMessageDto } from "@/types/DTOS/message.dto.types";
 
 import { v4 as uuid } from "uuid";

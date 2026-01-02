@@ -20,6 +20,7 @@ import { NotificationTemplates } from "../../template/notification.template";
 import { INotificationRepository } from "../../repository/interface/INotificationRepository";
 import { INotificationDTO } from "../../types/dtos.type/notification.dto.types";
 import { notificationDto } from "../../dtos/notification.dto";
+import { ensureTempDir } from "../../utils/fileGuard.util";
 export class CertificateService implements ICertificateService {
   constructor(
     private _certificateRepository: ICertificateRepository,
@@ -63,13 +64,11 @@ export class CertificateService implements ICertificateService {
 
     const html = generateCertificateHtml(certificateDate);
 
-    const tempPath = path.join(process.cwd(), "src", "temp", `${certId}.pdf`);
-    const previewPath = path.join(
-      process.cwd(),
-      "src",
-      "temp",
-      `${certId}-preview.png`,
-    );
+    const tempDir = ensureTempDir();
+
+    const tempPath = path.join(tempDir, `${certId}.pdf`);
+    const previewPath = path.join(tempDir, `${certId}-preview.png`);
+
 
     await htmlToPdf(html, tempPath, previewPath);
 
@@ -78,8 +77,11 @@ export class CertificateService implements ICertificateService {
       previewPath,
       `${certId}-preview.png`,
     );
-    fs.unlinkSync(tempPath);
-    fs.unlinkSync(previewPath);
+   await Promise.all([
+      fs.promises.unlink(tempPath),
+      fs.promises.unlink(previewPath),
+    ]);
+
     const CertificateData: ICertificate = {
       learnerId: learner_Id,
       courseId: course_id,

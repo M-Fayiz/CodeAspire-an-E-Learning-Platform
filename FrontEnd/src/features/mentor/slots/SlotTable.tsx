@@ -67,7 +67,11 @@ const SlotList: React.FC<SlotListProps> = ({ slots, onEdit }) => {
                   {slot.isActive ? "Active" : "Inactive"}
                 </span>
 
-                <Button size="sm" variant="outline" onClick={() => onEdit(slot)}>
+                <Button
+                  size="sm"
+                  variant="outline"
+                  onClick={() => onEdit(slot)}
+                >
                   <Pencil size={14} className="mr-1" />
                   Edit
                 </Button>

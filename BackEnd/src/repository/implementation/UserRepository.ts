@@ -77,7 +77,7 @@ export class UserRepository
     searchQuery?: string,
   ): Promise<IUserModel[] | null> {
     return this.findAll(
-      { name: { $regex: searchQuery ?? "", $options: "i" } },
+      {role:{$ne:IRole.Admin}, name: { $regex: searchQuery ?? "", $options: "i" } },
       limit,
       skip,
     );

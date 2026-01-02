@@ -1,13 +1,4 @@
-import {
-  Bell,
-  ChevronDown,
-
-  LogOut,
-  Menu,
-
-  User,
-  X,
-} from "lucide-react";
+import { Bell, ChevronDown, LogOut, Menu, User, X } from "lucide-react";
 import React, { useState } from "react";
 import type { IDecodedUserType } from "../../../types/auth.types";
 import { useAuth } from "../../../context/auth.context";
@@ -35,7 +26,7 @@ const Header: React.FC<IHeaderProbs> = ({
 
   const { logout } = useAuth();
   const { count } = useNotificationContext();
-  console.log('use from header :',user.id)
+  console.log("use from header :", user.id);
   return (
     <header className="bg-white border-b border-gray-200 px-4 py-3 flex items-center justify-between sticky top-0 z-40">
       <div className="flex items-center space-x-4">
@@ -83,11 +74,15 @@ const Header: React.FC<IHeaderProbs> = ({
             onClick={() => setShowProfileDropdown(!showProfileDropdown)}
             className="flex items-center space-x-2 p-2 rounded-md hover:bg-gray-100 transition-colors"
           >
-            <img
-              src={user.profile}
-              alt={user.name}
-              className="w-8 h-8 rounded-full"
-            />
+            {user.profile ? (
+              <img
+                src={user.profile}
+                alt={user.name}
+                className="w-8 h-8 rounded-full"
+              />
+            ) : (
+              <User className="w-1/2 h-1/2 text-gray-400" />
+            )}
             <div className="hidden sm:block text-left">
               <p className="text-sm font-medium text-gray-900">{user.name}</p>
               <p className="text-xs text-gray-500 capitalize">{user.role}</p>
@@ -110,7 +105,6 @@ const Header: React.FC<IHeaderProbs> = ({
                   <User className="w-4 h-4 mr-3" />
                   My Profile
                 </Link>
-                
               </div>
               <div className="border-t border-gray-200 py-2">
                 <button

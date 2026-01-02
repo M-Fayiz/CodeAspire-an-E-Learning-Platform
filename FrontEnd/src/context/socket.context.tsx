@@ -66,10 +66,6 @@ export const SocketProvider: React.FC<{ children: ReactNode }> = ({
   const value = useMemo(() => ({ socket }), [socket]);
 
   return (
-    <SocketContext.Provider value={value}>
-      {children}
-    </SocketContext.Provider>
+    <SocketContext.Provider value={value}>{children}</SocketContext.Provider>
   );
 };
-
-

@@ -20,8 +20,12 @@ const createInstance = (): AxiosInstance => {
         originalRequest?.url?.includes("/auth/me") ||
         originalRequest?.url?.includes("/auth/refresh-token");
       console.log("isAuthEndpoin :", isAuthEndpoint);
-    
-      if (status === HttpStatusCode.UNAUTHORIZED && !originalRequest._retry && !isAuthEndpoint) {
+
+      if (
+        status === HttpStatusCode.UNAUTHORIZED &&
+        !originalRequest._retry &&
+        !isAuthEndpoint
+      ) {
         originalRequest._retry = true;
         try {
           await AuthService.refreshToken();
@@ -30,15 +34,15 @@ const createInstance = (): AxiosInstance => {
           window.dispatchEvent(new Event("force-logout"));
         }
       }
-         if (status === HttpStatusCode.FORBIDDEN) {
-      router.navigate("/unauthorized");
-      return; // ⛔ STOP propagation
-    }
+      if (status === HttpStatusCode.FORBIDDEN) {
+        router.navigate("/unauthorized");
+        return;
+      }
 
-    if (status === HttpStatusCode.LOCKED) {
-      router.navigate("/login");
-      return;
-    }
+      if (status === HttpStatusCode.LOCKED) {
+        router.navigate("/login");
+        return;
+      }
       return Promise.reject({
         status,
         message: (error.response?.data as any)?.error || "Request failed",

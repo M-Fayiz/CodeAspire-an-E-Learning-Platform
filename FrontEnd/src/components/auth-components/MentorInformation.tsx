@@ -10,7 +10,6 @@ import { toast } from "sonner";
 import { mentorSchema } from "@/schema/mentor.schema";
 import { ApiError } from "@/utility/apiError.util";
 
-
 const MentorDataForm = () => {
   const { user } = useAuth();
   const navigate = useNavigate();

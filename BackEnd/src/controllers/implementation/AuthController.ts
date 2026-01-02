@@ -9,7 +9,7 @@ import { clearCookies } from "../../utils/clearCookies.util";
 import { setAccessToken, setRefreshToken } from "../../utils/cookie.util";
 import { IUserModel } from "../../models/user.model";
 import { env } from "../../config/env.config";
-import logger from "../../config/logger.config";
+
 
 export class AuthController implements IAuthController {
   constructor(private _authService: IAuthService) {}
@@ -82,10 +82,10 @@ export class AuthController implements IAuthController {
           HttpResponse.REFRESH_TOKEN_EXPIRED,
         );
       }
-      logger.info('➡️ refresh Token')
+    console.log('➡️ refresh Token')
        const { newAccessToken, payload } =
         await this._authService.refreshAccessToken(refreshToken);
-        logger.info("🔥 Created New Access Token :",{newAccessToken});
+        console.log("🔥 Created New Access Token :",{newAccessToken});
        setAccessToken(res, newAccessToken);
       res
         .status(HttpStatus.OK)

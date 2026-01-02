@@ -22,9 +22,25 @@ export const adminService = {
       const response = await axiosInstance.get(API.ADMIN.FETCH_ALL_USERS, {
         params: { page, search },
       });
-      console.log(response?.data);
+   const { users, totalPage } = response.data;
+      const updatedUsers = await Promise.all(
+        users.map(async (user: IUserType) => {
+          if (!user.profilePicture) return user;
 
-      return response?.data;
+          const profileUrl =
+            await sharedService.getPreSignedDownloadURL(user.profilePicture as string);
+
+          return {
+            ...user,
+            profilePicture: profileUrl,
+          };
+        })
+      );
+      console.log(updatedUsers)
+      return {
+        users: updatedUsers,
+        totalPage,
+      };
     } catch (error) {
       throwAxiosError(error);
     }

@@ -113,11 +113,12 @@ function CourseLayout() {
             </div>
 
             <div className="lg:col-span-3">
-              <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6 mb-8">
+              <div className="grid grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
                 {loading &&
                   [1, 3, 4, 5, 6].map((_, ind) => (
                     <CourseCardSkeleton key={ind} />
                   ))}
+
                 {courses.map((course, ind) => (
                   <Link key={ind} to={`${course._id}`}>
                     <CourseCard course={course} />

@@ -2,13 +2,13 @@ export interface learnerDashboardCardsDTO {
   courseData: LearnerCourseCard;
   slotData: LearnerSlotCard;
   TotalCertificate: number;
-   learnerStreak:ILearnerStreask|null
-  activeDays:string[]
-    inProgress:InProgress[]
+  learnerStreak: ILearnerStreask | null;
+  activeDays: string[];
+  inProgress: InProgress[];
 }
-export interface ILearnerStreask{
-current: number;       
-  longest: number;        
+export interface ILearnerStreask {
+  current: number;
+  longest: number;
   lastLearningDate: Date;
 }
 export interface LearnerCourseCard {
@@ -23,11 +23,8 @@ export interface LearnerSlotCard {
   totalFailed: number;
 }
 
-
-
-
 export interface InProgress {
-  enrolledId: string
+  enrolledId: string;
   title: string;
   progress: number;
 }

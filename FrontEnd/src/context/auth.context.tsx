@@ -24,7 +24,7 @@ interface AuthContextProps {
     data: ISignUp,
   ) => Promise<{ status: number; message: string; email: string }>;
   logout: () => Promise<void>;
-   checkAuth: () => Promise<void>;
+  checkAuth: () => Promise<void>;
 }
 
 const AuthContext = createContext<AuthContextProps>({
@@ -35,7 +35,7 @@ const AuthContext = createContext<AuthContextProps>({
     throw new Error("Signup not completed");
   },
   status: AuthStatus.CHECKING,
-  checkAuth:async()=>{}
+  checkAuth: async () => {},
 });
 
 interface AuthContext {
@@ -53,10 +53,10 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
       setUser(user);
       setStatus(AuthStatus.AUTHENTICATED);
     } catch (error: any) {
-      if (error?.status === HttpStatusCode.UNAUTHORIZED ) {
+      if (error?.status === HttpStatusCode.UNAUTHORIZED) {
         setUser(null);
         setStatus(AuthStatus.GUEST);
-      } else if (error?.status ===HttpStatusCode.LOCKED) {
+      } else if (error?.status === HttpStatusCode.LOCKED) {
         setUser(null);
         setStatus(AuthStatus.BLOCKED);
       } else {
@@ -65,23 +65,21 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
       }
     }
   };
-  
+
   useEffect(() => {
     bootstrapAuth();
   }, []);
-  console.log('user : : :',user)
-  
+  console.log("user : : :", user);
+
   useEffect(() => {
-  const handleForceLogout = () => {
-    setUser(null);
-    setStatus(AuthStatus.GUEST);
-  };
+    const handleForceLogout = () => {
+      setUser(null);
+      setStatus(AuthStatus.GUEST);
+    };
 
-  window.addEventListener("force-logout", handleForceLogout);
-  return () =>
-    window.removeEventListener("force-logout", handleForceLogout);
-}, []);
-
+    window.addEventListener("force-logout", handleForceLogout);
+    return () => window.removeEventListener("force-logout", handleForceLogout);
+  }, []);
 
   const login = async (data: ISignUp) => {
     await AuthService.login(data);
@@ -101,7 +99,9 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   };
 
   return (
-    <AuthContext.Provider value={{ user, status, login, signup, logout ,checkAuth:bootstrapAuth}}>
+    <AuthContext.Provider
+      value={{ user, status, login, signup, logout, checkAuth: bootstrapAuth }}
+    >
       {children}
     </AuthContext.Provider>
   );

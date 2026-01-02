@@ -18,7 +18,6 @@ interface NavItemProps {
 const Sidebar: React.FC<ISidebarProps> = ({ user, isOpen, onClose }) => {
   const navigation = navigationConfig[user.role];
 
-
   const NavItem: React.FC<NavItemProps> = ({ item, isSecondary = false }) => (
     <NavLink
       to={item.path}

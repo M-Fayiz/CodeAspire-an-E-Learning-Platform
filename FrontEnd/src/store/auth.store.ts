@@ -1,4 +1,3 @@
-
 import { create } from "zustand";
 
 type AppErrorState = {
@@ -12,8 +11,7 @@ export const useAppErrorStore = create<AppErrorState>((set) => ({
   redirectTo: null,
   message: null,
 
-  setRedirect: (path, message) =>
-    set({ redirectTo: path, message }),
+  setRedirect: (path, message) => set({ redirectTo: path, message }),
 
   clear: () => set({ redirectTo: null, message: null }),
 }));

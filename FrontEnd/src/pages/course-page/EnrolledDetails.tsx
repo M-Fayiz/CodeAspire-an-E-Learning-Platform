@@ -1,3 +1,4 @@
+import BackTo from "@/components/common/Prev-Page";
 import Taps from "@/components/common/Taps";
 import {
   Accordion,
@@ -27,7 +28,7 @@ const EnrolledCourseDetails = () => {
   const [activeTap, setActiveTap] = useState("overview");
   const [enrolledCourse, setEnrolledCourse] =
     useState<IEnrolledCoursedetailsDTO | null>(null);
-  const videRef=useRef<HTMLDivElement>(null)
+  const videRef = useRef<HTMLDivElement>(null);
   const [videoUrl, setVideoUrl] = useState({
     url: "",
     title: "",
@@ -35,11 +36,10 @@ const EnrolledCourseDetails = () => {
     sessionId: "",
   });
   const { user } = useAuth();
- const scrollToBottom = () => {
+  const scrollToBottom = () => {
     videRef.current?.scrollIntoView({ behavior: "smooth" });
   };
 
-  // useEffect(scrollToBottom, [messages]);
   const handleVideoEnd = async (lecture: string, sessionId: string) => {
     if (lecture) {
       const result = await EnrolledService.updateProgress(
@@ -77,11 +77,12 @@ const EnrolledCourseDetails = () => {
     setVideoUrl((prev) => ({ ...prev, url, title, lecture, sessionId }));
   };
 
-  // console.log("sessions :", enrolledCourse?.course.sessions);
+  // console.log("sessions :", enrolledCourse?.course.category);
   return (
     <>
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 p-4">
-        <div className="lg:col-span-4 space-y-6">
+        <BackTo/>
+        <div ref={videRef} className="lg:col-span-4 space-y-6">
           {!videoUrl.url ? (
             <div className="bg-white">
               {enrolledCourse && (
@@ -94,11 +95,12 @@ const EnrolledCourseDetails = () => {
                   enrolledId={enrolledCourse._id as string}
                   price={enrolledCourse.course.price}
                   onEnrolledPage={true}
+                  category={enrolledCourse.course.category.title}
                 />
               )}
             </div>
           ) : (
-            <div ref={videRef} className="bg-white rounded-sm shadow overflow-hidden border border-gray-200">
+            <div className="bg-white rounded-sm shadow overflow-hidden border border-gray-200">
               <div className="bg-gradient-to-r from-orange-100 via-orange-50 to-purple-50 p-4">
                 <video
                   key={videoUrl.url}
@@ -250,14 +252,16 @@ const EnrolledCourseDetails = () => {
                                           : "hover:bg-gray-50 focus:bg-orange-50"
                                       }
                                     `}
-                                      onClick={() =>
+                                      onClick={() => {
                                         setVideo(
                                           lecture.lectureContent as string,
                                           lecture.title,
                                           lecture._id as string,
                                           session._id as string,
-                                        )
-                                      }
+                                        );
+
+                                        scrollToBottom();
+                                      }}
                                     >
                                       <div className="flex items-center justify-between w-full">
                                         {/* Left side */}

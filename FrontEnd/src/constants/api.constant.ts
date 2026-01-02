@@ -14,7 +14,8 @@ export const API = {
     FETCH_USER_PROFILE: (userId: string) => `/users/me/${userId}`,
     UPDATE_USER_PROFILE: (userId: string) => `/users/me/${userId}`,
     CHANGE_PASSWORD: (userId: string) => `/users/${userId}/change-password`,
-    UPDATE_PROFILE_PICTURE: (userId: string) => `/users/${userId}/profile-picture`,
+    UPDATE_PROFILE_PICTURE: (userId: string) =>
+      `/users/${userId}/profile-picture`,
     PUT_PRESIGNED_URL: "/users/s3-presigned-url",
     GET_PRESIGNED_URL: "/users/s3-getPresigned-url",
     UPDATE_MENTOR_PROFILE: (mentorId: string) =>

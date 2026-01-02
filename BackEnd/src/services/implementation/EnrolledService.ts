@@ -343,10 +343,7 @@ export class EnrolledService implements IEnrolledService {
   }
 
   async learnerDashboardCardData(
-    learnerId: string,
-    filter?: string,
-    startDate?: string,
-    endDate?: string,
+    learnerId: string
   ): Promise<learnerDashboardCardsDTO> {
     const learner_Id = parseObjectId(learnerId);
     if (!learner_Id) {

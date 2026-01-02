@@ -7,7 +7,6 @@ const Unauthorized = () => {
   return (
     <div className="min-h-screen bg-[#FFF4E8] flex items-center justify-center px-6">
       <div className="max-w-lg w-full text-center">
-        
         {/* Icon */}
         <div className="flex justify-center mb-6">
           <div className="bg-orange-100 text-orange-500 p-4 rounded-full">
@@ -22,8 +21,8 @@ const Unauthorized = () => {
 
         {/* Subtitle */}
         <p className="text-slate-600 mb-8 leading-relaxed">
-          You don’t have permission to view this page.  
-          Please sign in with the correct account or return to a safe page.
+          You don’t have permission to view this page. Please sign in with the
+          correct account or return to a safe page.
         </p>
 
         {/* Actions */}

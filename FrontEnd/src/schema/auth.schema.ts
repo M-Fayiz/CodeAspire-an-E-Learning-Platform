@@ -9,17 +9,16 @@ const baseFields = {
       /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[\W_]).+$/,
       "Password must include uppercase, lowercase, number, and special character",
     ),
- role: z.enum(["admin", "mentor", "learner  "]),
-   name: z
-  .string()
-  .trim()
-  .min(4, "Name must be at least 4 characters")
-  .max(150, "Name must be less than 150 characters")
-  .regex(
-    /^[A-Za-z]+(?:[ .'-][A-Za-z]+)*$/,
-    "Name can contain only letters, spaces, dots, hyphens, and apostrophes",
-  ),
-
+  role: z.enum(["admin", "mentor", "learner  "]),
+  name: z
+    .string()
+    .trim()
+    .min(4, "Name must be at least 4 characters")
+    .max(150, "Name must be less than 150 characters")
+    .regex(
+      /^[A-Za-z]+(?:[ .'-][A-Za-z]+)*$/,
+      "Name can contain only letters, spaces, dots, hyphens, and apostrophes",
+    ),
 
   phone: z.string().min(10, "Phone number must be 10 digits"),
 };

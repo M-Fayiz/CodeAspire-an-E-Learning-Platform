@@ -19,70 +19,68 @@ export interface NavigationItem {
   badge?: number;
 }
 
-const navigationConfig:Record<UserRoleType, NavigationItem[]>  = {
-  admin:  [
-      {
-        icon: Home,
-        label: "Dashboard",
-        path: "/admin/dashboard",
-        active: true,
-      },
-      { icon: Users, label: "User Management", path: "/admin/users" },
-      { icon: Book, label: "Course Management", path: "/admin/courses" },
-      { icon: Layers, label: "Category Management", path: "/admin/category" },
-      { icon: MessageSquare, label: "Messages", path: "/admin/chats" },
-    ],
-    
-  
+const navigationConfig: Record<UserRoleType, NavigationItem[]> = {
+  admin: [
+    {
+      icon: Home,
+      label: "Dashboard",
+      path: "/admin/dashboard",
+      active: true,
+    },
+    { icon: Users, label: "User Management", path: "/admin/users" },
+    { icon: Book, label: "Course Management", path: "/admin/courses" },
+    { icon: Layers, label: "Category Management", path: "/admin/category" },
+    { icon: MessageSquare, label: "Messages", path: "/admin/chats" },
+  ],
+
   learner: [
-      {
-        icon: Home,
-        label: "Dashboard",
-        path: "/learner/dashboard",
-        active: true,
-      },
-      {
-        icon: BookOpen,
-        label: "My Courses",
-        path: "/learner/enrolled-courses",
-      },
+    {
+      icon: Home,
+      label: "Dashboard",
+      path: "/learner/dashboard",
+      active: true,
+    },
+    {
+      icon: BookOpen,
+      label: "My Courses",
+      path: "/learner/enrolled-courses",
+    },
 
-      {
-        icon: Award,
-        label: "Certificates",
-        path: "/learner/my-certificate",
-      },
-      {
-        icon: MessageSquare,
-        label: "Messages",
-        path: "/learner/chats",
-      },
+    {
+      icon: Award,
+      label: "Certificates",
+      path: "/learner/my-certificate",
+    },
+    {
+      icon: MessageSquare,
+      label: "Messages",
+      path: "/learner/chats",
+    },
 
-      { icon: CalendarDays, label: "Slots", path: "/learner/booked-slots" },
-    ],
-   
-    mentor: [
-      { icon: Home, label: "Dashboard", path: "/mentor/dashboard" },
-      { icon: Book, label: "My Courses", path: "/mentor/courses" },
+    { icon: CalendarDays, label: "Slots", path: "/learner/booked-slots" },
+  ],
 
-      {
-        icon: CalendarDays,
-        label: "Slots Management",
-        path: "/mentor/slot-management",
-      },
-      {
-        icon: CalendarDays,
-        label: "Booked Slots",
-        path: "/mentor/booked-slot-list",
-      },
+  mentor: [
+    { icon: Home, label: "Dashboard", path: "/mentor/dashboard" },
+    { icon: Book, label: "My Courses", path: "/mentor/courses" },
 
-      {
-        icon: MessageSquare,
-        label: "Messages",
-        path: "/mentor/chats",
-      },
-    ],
-  
+    {
+      icon: CalendarDays,
+      label: "Slots Management",
+      path: "/mentor/slot-management",
+    },
+    {
+      icon: CalendarDays,
+      label: "Booked Slots",
+      path: "/mentor/booked-slot-list",
+    },
+
+    {
+      icon: MessageSquare,
+      label: "Messages",
+      path: "/mentor/chats",
+    },
+  ],
 };
 
 export default navigationConfig;

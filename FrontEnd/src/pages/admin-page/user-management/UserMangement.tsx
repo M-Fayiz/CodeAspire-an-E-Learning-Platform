@@ -8,8 +8,9 @@ import PaginationRounded from "../../../components/ui/Pagination";
 import useDebounce from "@/hooks/useDebounce";
 import { toast } from "sonner";
 import { useSearchPagination } from "@/hooks/useSearchQuery";
-import { Search } from "lucide-react";
+import { Search, Users2 } from "lucide-react";
 import { ApiError } from "@/utility/apiError.util";
+import ManagementLayout from "@/components/layout/ManagementLayout";
 
 const UserManagement: React.FC = () => {
   const [users, setUsers] = useState<IUserType[]>([]);
@@ -64,71 +65,66 @@ const UserManagement: React.FC = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gray-50 p-6">
-      <div className="max-w-7xl mx-auto">
-        {/* Header */}
-        <div className="mb-6">
-          <h1 className="text-3xl font-bold text-gray-900">User Management</h1>
-          <p className="text-gray-600 mt-1">
-            Manage mentors and learners in your platform
+  <ManagementLayout
+    title="User Management"
+    description="Manage mentors and learners in your platform"
+    icon={<Users2 size={32}/>}
+  >
+   
+    <div className="relative mb-6">
+      <Search className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400 w-5 h-5" />
+      <input
+        type="text"
+        value={searchInput}
+        onChange={(e) => setSearchInput(e.target.value)}
+        placeholder="Search users"
+        className="w-full pl-11 pr-4 py-3 text-sm bg-white border border-gray-300 rounded-lg
+          focus:outline-none focus:ring-2 focus:ring-black"
+      />
+    </div>
+
+
+    <div className="w-full bg-white sm:shadow sm:rounded-lg overflow-hidden">
+      {users.length === 0 ? (
+        <div className="p-6 text-center">
+          <h3 className="text-lg font-medium text-gray-900 mb-2">
+            No Users Found
+          </h3>
+          <p className="text-gray-500">
+            There are no users matching your search.
           </p>
         </div>
-
-        {/* Search */}
-        <div className="relative mb-6 bg-white p-3 rounded-lg shadow-sm">
-          <Search className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400 w-5 h-5" />
-          <input
-            type="text"
-            value={searchInput}
-            onChange={(e) => setSearchInput(e.target.value)}
-            placeholder="Search users"
-            className="w-full pl-11 pr-4 py-2.5 text-sm border border-gray-300 rounded-md
-        focus:outline-none focus:ring-2 focus:ring-black focus:border-transparent"
-          />
+      ) : (
+        <div className="relative w-full overflow-x-scroll sm:overflow-x-visible">
+          <table className="min-w-[900px] sm:min-w-full divide-y divide-gray-200">
+            <TableHeader />
+            <tbody className="divide-y divide-gray-200">
+              {users.map((user) => (
+                <TableRow
+                  key={user.id}
+                  user={user}
+                  onDelete={handleDelete}
+                />
+              ))}
+            </tbody>
+          </table>
         </div>
-
-        {/* Table */}
-        <div className="w-full bg-white shadow rounded-lg overflow-hidden">
-          {users.length === 0 ? (
-            <div className="p-8 text-center">
-              <h3 className="text-lg font-medium text-gray-900 mb-2">
-                No Users Found
-              </h3>
-              <p className="text-gray-500">
-                There are no users matching your search.
-              </p>
-            </div>
-          ) : (
-            <div className="overflow-x-auto">
-              <table className="min-w-full divide-y divide-gray-200">
-                <TableHeader />
-                <tbody className="divide-y divide-gray-200">
-                  {users.map((user) => (
-                    <TableRow
-                      key={user.id}
-                      user={user}
-                      onDelete={handleDelete}
-                    />
-                  ))}
-                </tbody>
-              </table>
-            </div>
-          )}
-        </div>
-
-        {/* Pagination */}
-        {users.length > 0 && (
-          <div className="mt-6 flex justify-center">
-            <PaginationRounded
-              currentPage={page}
-              totalPages={totalPage}
-              onPageChange={handlePages}
-            />
-          </div>
-        )}
-      </div>
+      )}
     </div>
-  );
+
+    {/* Pagination */}
+    {users.length > 0 && (
+      <div className="mt-6 flex justify-center">
+        <PaginationRounded
+          currentPage={page}
+          totalPages={totalPage}
+          onPageChange={handlePages}
+        />
+      </div>
+    )}
+  </ManagementLayout>
+);
+
 };
 
 export default UserManagement;

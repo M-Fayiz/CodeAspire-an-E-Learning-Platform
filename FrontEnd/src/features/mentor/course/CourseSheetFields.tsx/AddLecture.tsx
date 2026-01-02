@@ -76,7 +76,7 @@ export function AddLecture({
         setErros(fieldErros);
         return;
       }
-      console.log('0assed ')
+      console.log("0assed ");
       setSpin(true);
       const updatedCourseData = await courseService.addLecture(
         courseId,

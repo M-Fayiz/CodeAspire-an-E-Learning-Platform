@@ -11,4 +11,4 @@ function generateLast365Days() {
   return days;
 }
 
-export default generateLast365Days
+export default generateLast365Days;

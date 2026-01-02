@@ -52,8 +52,6 @@ export interface IEnrolledService {
   }>;
   learnerDashboardCardData(
     learnerId: string,
-    filter?: string,
-    startDate?: string,
-    endDate?: string,
+    
   ): Promise<learnerDashboardCardsDTO>;
 }

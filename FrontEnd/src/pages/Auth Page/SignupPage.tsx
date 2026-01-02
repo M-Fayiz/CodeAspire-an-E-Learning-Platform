@@ -23,9 +23,8 @@ const SignupPage: React.FC = () => {
       setShowModal(true);
       setModalEmail(result.email);
     } catch (error) {
-      console.log(error)
-      if(error  instanceof ApiError){
-
+      console.log(error);
+      if (error instanceof ApiError) {
         toast.error(error.message);
       }
     }

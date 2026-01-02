@@ -67,6 +67,7 @@ export default function LearnerBookedSlots() {
 
   return (
     <div className="max-w-7xl mx-auto">
+      
       <BookingTable
         role="learner"
         slots={learnerSlots}

@@ -1,8 +1,6 @@
 import type { ILearnerStreask } from "@/types/DTOS/learnerDashboard.type";
 import generateLast365Days from "@/utility/generateDays.util";
-import { useState } from "react";
-
-
+import { useRef, useState } from "react";
 
 type Props = {
   activeDates: string[];
@@ -13,19 +11,18 @@ export default function LearningCalendar({ activeDates, streakData }: Props) {
   const [hoveredDate, setHoveredDate] = useState<string | null>(null);
 
   const days = generateLast365Days();
-  const normalizedActiveDates = activeDates.map(d => 
-    new Date(d).toISOString().slice(0, 10)
+  const normalizedActiveDates = activeDates.map((d) =>
+    new Date(d).toISOString().slice(0, 10),
   );
   const activeSet = new Set(normalizedActiveDates);
 
-
   const monthsData: Record<string, string[][]> = {};
-  let currentMonth = '';
+  let currentMonth = "";
   let currentWeek: string[] = [];
 
   days.forEach((date, index) => {
-    const monthKey = date.slice(0, 7); 
-    
+    const monthKey = date.slice(0, 7);
+
     const dayOfWeek = new Date(date).getDay();
 
     if (monthKey !== currentMonth) {
@@ -51,62 +48,74 @@ export default function LearningCalendar({ activeDates, streakData }: Props) {
     }
   });
 
-  const monthNames = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
-  
+  const monthNames = [
+    "Jan",
+    "Feb",
+    "Mar",
+    "Apr",
+    "May",
+    "Jun",
+    "Jul",
+    "Aug",
+    "Sep",
+    "Oct",
+    "Nov",
+    "Dec",
+  ];
+
   const getMonthLabel = (monthKey: string) => {
-    const month = parseInt(monthKey.split('-')[1]) - 1;
+    const month = parseInt(monthKey.split("-")[1]) - 1;
     return monthNames[month];
   };
 
   const totalActiveDays = activeDates.length;
 
+
+
   return (
-   <div className="w-fit bg-white rounded-md border border-gray-200 p-4 sm:p-5">
-   
-      <div className="px-4 sm:px-6 py-4 border-b">
-    <h3 className="text-base sm:text-lg font-semibold text-gray-900">
-      Learning Streak
-    </h3>
-  </div>
-    <div className="flex flex-col sm:flex-row sm:flex-wrap gap-3 sm:gap-6 mb-6 text-sm">
-      <div>
-        <span className="text-gray-500">Total active days: </span>
-        <span className="font-semibold text-gray-900">
-          {totalActiveDays}
-        </span>
+    <div className=" bg-white rounded-md border border-gray-200 p-2 sm:p-3">
+      <div className="px-2 sm:px-4 py-2 ">
+        <h3 className="text-base sm:text-lg font-semibold text-gray-900">
+          Learning Streak
+        </h3>
       </div>
+      <div className="flex pl-4  sm:flex-row sm:flex-wrap gap-3 sm:gap-6 mb-6 text-sm">
+        <div>
+          <span className="text-gray-500">Total active days: </span>
+          <span className="font-semibold text-gray-900">{totalActiveDays}</span>
+        </div>
 
-      <div>
-        <span className="text-gray-500">Max streak: </span>
-        <span className="font-semibold text-gray-900">
-          {streakData.longest}
-        </span>
+        <div>
+          <span className="text-gray-500">Max streak: </span>
+          <span className="font-semibold text-gray-900">
+            {streakData.longest}
+          </span>
+        </div>
+
+        <div>
+          <span className="text-gray-500">Current: </span>
+          <span className="font-semibold text-orange-600">
+            {streakData.current}
+          </span>
+        </div>
       </div>
+  
+      <div className="relative overflow-x-scroll scrollbar-thin scrollbar-thumb-gray-300">
 
-      <div>
-        <span className="text-gray-500">Current: </span>
-        <span className="font-semibold text-orange-600">
-          {streakData.current}
-        </span>
-      </div>
-    </div>
+       <div className="relative w-fit overflow-hidden">
+    <div className="flex gap-3 pb-3 px-3 w-max">
 
-    {/* Calendar */}
-   <div className="relative overflow-x-auto lg:overflow-visible">
-  <div className="flex gap-3 min-w-max lg:min-w-0 justify-start lg:justify-between">
+      {Object.entries(monthsData).map(([monthKey, weeks]) => (
+        <div key={monthKey} className="flex flex-col shrink-0">
+          {/* Month Label */}
+          <div className="text-[15px] sm:text-xs text-gray-500 mb-2 text-center">
+            {getMonthLabel(monthKey)}
+          </div>
 
-
-        {Object.entries(monthsData).map(([monthKey, weeks]) => (
-          <div key={monthKey} className="flex flex-col">
-            {/* Month label */}
-            <div className="text-xs text-gray-500 mb-2 h-4 text-center">
-              {getMonthLabel(monthKey)}
-            </div>
-
-            {/* Weeks */}
-            <div className="flex gap-1">
-              {weeks.map((week, weekIndex) => (
-                <div
+          
+          <div className="flex gap-1">
+            {weeks.map((week, weekIndex) => (
+              <div
                   key={weekIndex}
                   className="flex flex-col gap-1"
                 >
@@ -131,27 +140,39 @@ export default function LearningCalendar({ activeDates, streakData }: Props) {
                     );
                   })}
                 </div>
-              ))}
-            </div>
+            ))}
           </div>
-        ))}
-      </div>
-
-      {/* Tooltip */}
-      {hoveredDate && (
-        <div className="absolute -top-10 left-2 px-3 py-1.5 bg-gray-900 text-white text-xs rounded shadow-lg pointer-events-none whitespace-nowrap">
-          {new Date(hoveredDate).toLocaleDateString("en-US", {
-            month: "short",
-            day: "numeric",
-            year: "numeric",
-          })}
-          {activeSet.has(hoveredDate) && (
-            <span className="ml-2 text-orange-400">● Active</span>
-          )}
         </div>
-      )}
+      ))}
+
     </div>
   </div>
-);
 
+        
+        {hoveredDate && (
+          <div
+            className="
+                absolute 
+                -top-10 left-1/2 -translate-x-1/2
+                px-3 py-1.5
+                bg-gray-900 text-white text-xs
+                rounded shadow-lg
+                pointer-events-none
+                whitespace-nowrap
+                z-50
+              "
+          >
+            {new Date(hoveredDate).toLocaleDateString("en-US", {
+              month: "short",
+              day: "numeric",
+              year: "numeric",
+            })}
+            {activeSet.has(hoveredDate) && (
+              <span className="ml-2 text-orange-400">● Active</span>
+            )}
+          </div>
+        )}
+      </div>
+    </div>
+  );
 }

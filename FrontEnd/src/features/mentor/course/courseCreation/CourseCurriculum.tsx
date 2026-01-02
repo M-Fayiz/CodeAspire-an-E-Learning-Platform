@@ -63,8 +63,7 @@ const CourseCurriculum: React.FC<CurriculumProps> = () => {
     title: "",
     lectures: [],
   });
-  const { formData, addSession, setFormData } =
-    useCourseFormContext();
+  const { formData, addSession, setFormData } = useCourseFormContext();
   const [sessionSpin, setSessionSpin] = useState(false);
   const [errors, setErros] = useState<{ [key: string]: string }>({});
   const [selectedSession, setSelectedSession] = useState("");
@@ -96,9 +95,11 @@ const CourseCurriculum: React.FC<CurriculumProps> = () => {
       return;
     }
     try {
-      const addedSessions = await courseService.addSessions(formData._id as string, sessions);
+      const addedSessions = await courseService.addSessions(
+        formData._id as string,
+        sessions,
+      );
       if (addedSessions) {
-      
         addSession(addedSessions.sessions as ISession[]);
         setSessionSpin(false);
       }

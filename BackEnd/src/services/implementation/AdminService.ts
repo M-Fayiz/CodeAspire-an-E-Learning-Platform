@@ -39,7 +39,7 @@ export class AdminService implements IAdminService {
     page: number,
     search: string,
   ): Promise<UserFetchResponse> {
-    const limit = 4;
+    const limit = 6;
     const skip = (page - 1) * limit;
 
     const [allUsers, userCount] = await Promise.all([

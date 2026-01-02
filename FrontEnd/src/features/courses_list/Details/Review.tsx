@@ -6,6 +6,7 @@ import { toast } from "sonner";
 import { Spinner } from "@/components/templates/Spinner";
 import StarRating from "../Enrolled Course/StarRating";
 import { EnrolledService } from "@/service/Learner/enrolledCourse.service";
+import { User } from "lucide-react";
 
 interface CommentProps {
   userId: string;
@@ -118,14 +119,17 @@ const CommentsSection: React.FC<CommentProps> = ({
           review.map((data) => (
             <div key={data._id} className="flex gap-3">
               <div className="flex-shrink-0">
-                <img
-                  className="w-10 h-10 rounded-full bg-gray-200 flex items-center justify-center text-lg"
-                  src={data.learner.profilePicture}
-                  alt=""
-                />
+                {data.learner.profilePicture ? (
+                  <img
+                    className="w-10 h-10 rounded-full bg-gray-200 flex items-center justify-center text-lg"
+                    src={data.learner.profilePicture}
+                    alt=""
+                  />
+                ) : (
+                  <User className="w-1/2 h-1/2 text-gray-400" />
+                )}
               </div>
 
-              {/* data Content */}
               <div className="flex-1 min-w-0">
                 <div className="flex items-center gap-2 mb-2">
                   <span className="font-semibold text-gray-900">

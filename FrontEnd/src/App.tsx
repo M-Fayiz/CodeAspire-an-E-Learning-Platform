@@ -9,14 +9,13 @@ function App() {
   return (
     <>
       <AuthProvider>
-  <SocketProvider>
-    <NotificationProvider>
-      <RouterProvider router={router} />
-      <Toaster/>
-    </NotificationProvider>
-  </SocketProvider>
-</AuthProvider>
-
+        <SocketProvider>
+          <NotificationProvider>
+            <RouterProvider router={router} />
+            <Toaster />
+          </NotificationProvider>
+        </SocketProvider>
+      </AuthProvider>
     </>
   );
 }

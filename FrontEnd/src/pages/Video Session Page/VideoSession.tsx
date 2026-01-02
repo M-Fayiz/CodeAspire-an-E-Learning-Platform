@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { useAuth } from "@/context/auth.context";
-import { useSocket } from "@/hooks/useSocket"; 
+import { useSocket } from "@/hooks/useSocket";
 import VideoService from "@/service/videoSession.service";
 import { useP2PCall } from "@/hooks/useP2PCall";
 import {

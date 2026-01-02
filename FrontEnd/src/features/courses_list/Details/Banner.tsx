@@ -25,6 +25,7 @@ interface BannerProps {
   level: string;
   rating?: number;
   totalStudent?: number;
+  category?: string;
   onEnrolledPage: boolean;
 }
 
@@ -39,6 +40,7 @@ const Banner: React.FC<BannerProps> = ({
   rating,
   totalStudent,
   onEnrolledPage,
+  category,
 }) => {
   const { user } = useAuth();
 
@@ -55,7 +57,7 @@ const Banner: React.FC<BannerProps> = ({
       }
     }
   };
-
+  console.log(category);
   return (
     <div className="relative w-full py-5 px-6 md:px-16 lg:px-24">
       {level && <Badge label={level} type="info" />}
@@ -65,7 +67,10 @@ const Banner: React.FC<BannerProps> = ({
           <h1 className="text-4xl md:text-6xl font-bold text-gray-800 mb-6 leading-snug">
             {title}
           </h1>
-          <p className="text-lg text-gray-600 mb-6">{description}</p>
+          <p className="text-lg text-gray-600 mb-2">{description}</p>
+          <span className="bg-orange-200 mb-6 text-orange-600 px-2 py-1 rounded text-xs font-medium">
+            {category}
+          </span>
           {!onEnrolledPage && (
             <div>
               <div>
@@ -84,7 +89,7 @@ const Banner: React.FC<BannerProps> = ({
               </div>
             </div>
           )}
-
+          <div className="absolute bottom-3 left-3"></div>
           <div className="mt-5">
             {user?.role == "learner" && (
               <>

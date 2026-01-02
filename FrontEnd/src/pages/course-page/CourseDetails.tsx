@@ -70,6 +70,7 @@ const CourseDetails = () => {
               rating={course?.avgRating as number}
               totalStudent={course?.enrolledStd as number}
               onEnrolledPage={false}
+              category={course?.category.title}
             />
           )}
         </div>
