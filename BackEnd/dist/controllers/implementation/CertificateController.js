@@ -13,7 +13,6 @@ class CertificateController {
                 const { learnerId, courseId, programmTitle } = req.body;
                 const { certificate, notification } = await this._certificateService.createCertificate(learnerId, courseId, programmTitle);
                 (0, socket_utils_1.sendNotification)(notification.userId, notification);
-                console.log("cer :  ", certificate);
                 res
                     .status(http_status_const_1.HttpStatus.OK)
                     .json((0, response_util_1.successResponse)(error_message_const_1.HttpResponse.OK, { certificate }));

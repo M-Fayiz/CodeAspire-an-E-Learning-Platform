@@ -6,8 +6,8 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const fs_1 = __importDefault(require("fs"));
 const path_1 = __importDefault(require("path"));
 function generateCertificateHtml({ studentName, courseName, certId, issuedDate, verifyUrl, }) {
-    const templatePath = path_1.default.join(process.cwd(), "src", "template", "certificate.template.html");
-    const imagePath = path_1.default.join(process.cwd(), "src", "assets", "certificateModel.png");
+    const imagePath = path_1.default.join(process.cwd(), "public", "assets", "certificateModel.png");
+    const templatePath = path_1.default.join(process.cwd(), "public", "template", "certificate.template.html");
     const imageBase64 = fs_1.default.readFileSync(imagePath, "base64");
     const BG_PATH = `data:image/png;base64,${imageBase64}`;
     let html = fs_1.default.readFileSync(templatePath, "utf8");

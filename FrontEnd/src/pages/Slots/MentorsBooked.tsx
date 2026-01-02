@@ -27,8 +27,8 @@ import type { studentStatus } from "@/types/sessionBooking.type";
 import ManagementLayout from "@/components/layout/ManagementLayout";
 import PaginationRounded from "@/components/ui/Pagination";
 import { useSearchPagination } from "@/hooks/useSearchQuery";
-import { DateFilter } from "@/components/common/DateFilter";
-import type { DateRange } from "react-day-picker";
+// import { DateFilter } from "@/components/common/DateFilter";
+// import type { DateRange } from "react-day-picker";
 import { ApiError } from "@/utility/apiError.util";
 import useDebounce from "@/hooks/useDebounce";
 
@@ -40,8 +40,8 @@ export default function MentorBookedSlots() {
   const [loading, setLoading] = useState(false);
   const [open, setOpen] = useState(false);
   const [slots, setSlots] = useState<IBookingDTOforLearner | null>(null);
-  const [value, setValue] = useState<Date | DateRange | undefined>();
-  const [showDateFilter, setShowDateFilter] = useState(false);
+  // const [value, setValue] = useState<Date | DateRange | undefined>();
+  // const [showDateFilter, setShowDateFilter] = useState(false);
 
   const { search, setSearch, page, setPage } = useSearchPagination();
 
@@ -186,16 +186,16 @@ export default function MentorBookedSlots() {
     >
       <div className="flex flex-col gap-4 max-w-7xl mx-auto">
         <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
-          <Button
+          {/* <Button
             variant="outline"
             onClick={() => setShowDateFilter((prev) => !prev)}
           >
             {showDateFilter ? "Hide Date Filter" : "Filter by Date"}
-          </Button>
+          </Button> */}
 
-          {showDateFilter && (
+          {/* {showDateFilter && (
             <DateFilter mode="single" value={value} onChange={setValue} />
-          )}
+          )} */}
 
           <div className="flex items-center gap-2 rounded-md border bg-white px-3 py-2 shadow-sm">
             <Search className="h-4 w-4 text-gray-500" />

@@ -18,7 +18,7 @@ export const SlotBookingSercie = {
         API.SLOT_BOOK.BOOK_SLOT,
         bookingData,
       );
-      console.log(response.data);
+      
 
       return response.data.checkoutURL;
     } catch (error) {

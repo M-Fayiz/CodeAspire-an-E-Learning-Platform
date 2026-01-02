@@ -16,19 +16,21 @@ function generateCertificateHtml({
   issuedDate,
   verifyUrl,
 }: generateCertificateHTML) {
-  const templatePath = path.join(
-    process.cwd(),
-    "src",
-    "template",
-    "certificate.template.html",
-  );
+  
+const imagePath = path.join(
+  process.cwd(),
+  "public",
+  "assets",
+  "certificateModel.png"
+);
 
-  const imagePath = path.join(
-    process.cwd(),
-    "src",
-    "assets",
-    "certificateModel.png",
-  );
+const templatePath = path.join(
+  process.cwd(),
+  "public",
+  "template",
+  "certificate.template.html"
+);
+
 
   const imageBase64 = fs.readFileSync(imagePath, "base64");
 
