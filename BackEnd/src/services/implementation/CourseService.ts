@@ -186,13 +186,15 @@ export class CourseService implements ICourseService {
         isEnrolled = data._id;
       }
     }
+    const avgRating = summery?.[0]?.avgRating ?? 0;
+const totalStudents = summery?.[0]?.totalStudents ?? 0;
 
     return {
       courseDetails: courseDetailsPageDTO(
         courseData[0],
         mappedReview,
-        summery[0].avgRating,
-        summery[0].totalStudents,
+        avgRating,
+        totalStudents,
       ),
       enrolledId: isEnrolled,
     };

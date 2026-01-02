@@ -110,8 +110,10 @@ class CourseService {
                 isEnrolled = data._id;
             }
         }
+        const avgRating = summery?.[0]?.avgRating ?? 0;
+        const totalStudents = summery?.[0]?.totalStudents ?? 0;
         return {
-            courseDetails: (0, course_dtos_1.courseDetailsPageDTO)(courseData[0], mappedReview, summery[0].avgRating, summery[0].totalStudents),
+            courseDetails: (0, course_dtos_1.courseDetailsPageDTO)(courseData[0], mappedReview, avgRating, totalStudents),
             enrolledId: isEnrolled,
         };
     }

@@ -100,7 +100,8 @@ export function courseDetailsPageDTO(
     ...session,
     lectures: session.lectures.map(({ lectureContent, ...rest }) => rest),
   }));
-
+  console.log("------------",avgRating)
+  console.log(courseReview)
   return {
     _id: course._id,
     title: course.title || "",
@@ -126,7 +127,7 @@ export function courseDetailsPageDTO(
     status: course.status,
     updated: course.updatedAt.toISOString(),
     courseReviews: courseReview,
-    avgRating: avgRating,
+    avgRating: avgRating??0,
     enrolledStd: enrolledStd,
   };
 }
