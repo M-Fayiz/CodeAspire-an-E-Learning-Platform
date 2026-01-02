@@ -12,14 +12,15 @@ export const SlotService = {
    * @returns  new created document from the DB
    */
   createSlots: async (
-    slotFormData: Partial<IMentorSlot>,
+    slotFormData: Partial<ISlotDTO>,
   ): Promise<ISlotDTO> => {
     try {
       const response = await axiosInstance.post(
         API.SLOTS.CREATE_SLOTS,
         slotFormData,
       );
-      return response.data.createdSlot;
+    
+      return response.data.createdData;
     } catch (error) {
       throwAxiosError(error);
     }
@@ -69,7 +70,7 @@ export const SlotService = {
   },
   getCourseSlot: async (courseId: string): Promise<ISlotPopulatedDTO> => {
     try {
-      console.log("course Id", courseId);
+     
       const response = await axiosInstance.get(
         API.SLOTS.GET_COURSE_SLOT(courseId),
       );

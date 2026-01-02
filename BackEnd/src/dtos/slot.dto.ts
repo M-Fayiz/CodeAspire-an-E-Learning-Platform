@@ -1,6 +1,7 @@
 import { Types } from "mongoose";
 import { ISlotModel } from "../models/slot.model";
 import {
+  createdUnPopulatedSlots,
   ISlotDTO,
   ISlotPopulatedDTO,
   ISlotpopultedDataFromDB,
@@ -37,11 +38,29 @@ export function slotPopulatedMapper(
 }
 
 export function mentorSlotsDTO(slotData: mentorUnPopulatedSlots): ISlotDTO {
+
   return {
     _id: slotData._id,
     course: {
       _id: slotData.course._id as Types.ObjectId,
       title: slotData.course.title,
+    },
+    mentorId: slotData.mentorId,
+    selectedDays: slotData.selectedDays,
+    slotDuration: slotData.slotDuration,
+    pricePerSlot: slotData.pricePerSlot,
+    isActive: slotData.isActive,
+    createdAt: slotData.createdAt,
+    updatedAt: slotData.updatedAt,
+  };
+}
+export function createdSlotsDTO(slotData: createdUnPopulatedSlots): ISlotDTO {
+
+  return {
+    _id: slotData._id,
+    course: {
+      _id: slotData.courseId._id as Types.ObjectId,
+      title: slotData.courseId.title,
     },
     mentorId: slotData.mentorId,
     selectedDays: slotData.selectedDays,

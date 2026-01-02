@@ -25,6 +25,11 @@ export interface mentorUnPopulatedSlots extends IBaseSlot {
   mentorId: Types.ObjectId;
   course: ICourses;
 }
+export interface createdUnPopulatedSlots extends IBaseSlot {
+  _id: Types.ObjectId;
+  mentorId: Types.ObjectId;
+  courseId: ICourses;
+}
 
 export interface mentorPopulatedSlots extends IBaseSlot {
   _id: Types.ObjectId;

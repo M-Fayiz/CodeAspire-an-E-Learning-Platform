@@ -2,7 +2,7 @@ import React from "react";
 
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
-// import { Switch } from "@/components/ui/switch";
+
 import { Pencil } from "lucide-react";
 import type { ISlotDTO } from "@/types/DTOS/slot.dto";
 
@@ -21,10 +21,10 @@ const SlotList: React.FC<SlotListProps> = ({ slots, onEdit }) => {
       </Card>
     );
   }
-
+  console.log('slots :',slots)
   return (
     <>
-      {/* 📱 Mobile Cards */}
+   
       <div className="grid gap-4 sm:hidden">
         {slots.map((slot) => (
           <Card key={slot._id} className="border">
@@ -81,7 +81,7 @@ const SlotList: React.FC<SlotListProps> = ({ slots, onEdit }) => {
         ))}
       </div>
 
-      {/* 💻 Desktop Table */}
+   
       <Card className="hidden sm:block">
         <CardContent>
           <div className="overflow-x-auto">

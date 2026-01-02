@@ -1,3 +1,5 @@
+import { IMentorSlot } from "../types/slot.type";
+
 export function convertTo24Hour(time12h: string) {
   const [time, modifier] = time12h.split(" ");
   let [hours, minutes] = time.split(":");
@@ -21,4 +23,12 @@ export function convertTo12Hour(time24h: string) {
   else if (h > 12) h -= 12;
 
   return `${h}:${String(m).padStart(2, "0")} ${period}`;
+}
+
+
+export function isSlotTimingChanged(
+  oldDays: IMentorSlot["selectedDays"],
+  newDays: IMentorSlot["selectedDays"]
+): boolean {
+  return JSON.stringify(oldDays) !== JSON.stringify(newDays);
 }

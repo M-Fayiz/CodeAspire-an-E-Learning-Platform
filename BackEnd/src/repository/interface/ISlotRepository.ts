@@ -1,5 +1,5 @@
 import { FilterQuery, PipelineStage, Types } from "mongoose";
-import { ISlotModel } from "../../models/slot.model";
+import { ISlot, ISlotModel } from "../../models/slot.model";
 
 import {
   ISlotpopultedDataFromDB,
@@ -7,7 +7,7 @@ import {
 } from "../../types/dtos.type/slots.dto.type";
 
 export interface ISlotRepository {
-  createSlot(slotData: Partial<ISlotModel>): Promise<ISlotModel>;
+  createSlot(slotData: Partial<ISlot>): Promise<ISlotModel>;
   getMentorSLotsList(
     query: PipelineStage[],
   ): Promise<mentorUnPopulatedSlots[] | null>;
@@ -18,7 +18,7 @@ export interface ISlotRepository {
   getUpdateSlots(
     slotId: Types.ObjectId,
     populate?: string[],
-  ): Promise<mentorUnPopulatedSlots | null>;
+  ): Promise<createdUnPopulatedSlots | null>;
   updateSlot(
     slotId: Types.ObjectId,
     slotData: ISlotModel,

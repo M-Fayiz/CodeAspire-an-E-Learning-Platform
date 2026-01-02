@@ -2,12 +2,13 @@ import mongoose, { Schema, Document, Types } from "mongoose";
 import { IBaseSlot } from "../types/slot.type";
 import { DbModelName } from "../const/modelName.const";
 
-export interface ISlotModel extends IBaseSlot, Document {
-  _id: Types.ObjectId;
+export interface ISlot extends IBaseSlot {
   mentorId: Types.ObjectId;
   courseId: Types.ObjectId;
 }
-
+export interface ISlotModel extends ISlot,Document {
+  _id: Types.ObjectId;
+}
 const SlotDaySchema = new Schema(
   {
     startTime: { type: String },

@@ -85,7 +85,7 @@ const SlotManagement = () => {
         const fieldName = err.path.join(".");
         errors[fieldName] = err.message;
       });
-      console.log(errors);
+      
       setFormError(errors);
       return;
     }
@@ -121,11 +121,14 @@ const SlotManagement = () => {
     }
 
     try {
-      const payload = {
-        ...formData,
-        mentorId: user?.id,
-        selectedDays: updatedTime,
-      };
+     const payload = {
+      courseId: formData.courseId,
+      mentorId: user!.id,
+      selectedDays: updatedTime,
+      slotDuration: formData.slotDuration,
+      pricePerSlot: formData.pricePerSlot,
+    };
+
 
       if (formData._id) {
         const updatedData = await SlotService.updateSlot(payload, formData._id);
@@ -183,7 +186,7 @@ const SlotManagement = () => {
     });
     setFormError({});
   };
-
+  
   return (
     <>
       <ManagementLayout
@@ -192,7 +195,6 @@ const SlotManagement = () => {
         title="Slot Management"
       >
         <div className="flex flex-col  gap-4 sm:gap-2">
-          {/* 🔹 Top Action Bar */}
           <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
             <Dialog open={isOpen} onOpenChange={setIsOpen}>
               <DialogTrigger asChild>
@@ -229,7 +231,6 @@ const SlotManagement = () => {
             </Dialog>
 
             <div className="flex flex-col gap-3 sm:flex-row sm:items-center">
-              {/* 🔹 Day Filter */}
               <select
                 value={filter}
                 onChange={(e) => setFilter(e.target.value)}
@@ -245,7 +246,7 @@ const SlotManagement = () => {
                 <option value="Sunday">Sunday</option>
               </select>
 
-              {/* 🔹 Search */}
+              
               <div className="flex items-center gap-2 rounded-md border bg-white px-3 py-2 shadow-sm w-full sm:w-64">
                 <Search className="h-4 w-4 text-gray-500" />
                 <input

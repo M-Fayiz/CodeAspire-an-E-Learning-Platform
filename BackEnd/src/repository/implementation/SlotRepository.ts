@@ -56,7 +56,7 @@ export class SlotRepository
   async getUpdateSlots(
     slotId: Types.ObjectId,
     populate?: string[],
-  ): Promise<mentorUnPopulatedSlots | null> {
+  ): Promise<createdUnPopulatedSlots | null> {
     return await this.findOne({ _id: slotId }, populate);
   }
 }
