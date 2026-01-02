@@ -11,10 +11,11 @@ const role_dto_1 = require("../../dtos/role.dto");
 // import logger from "../../config/logger.config";
 const notification_template_1 = require("../../template/notification.template");
 class UserService {
-    constructor(_userRepository, _mentorRepository, _notificationRepository) {
+    constructor(_userRepository, _mentorRepository, _notificationRepository, _learnerRepository) {
         this._userRepository = _userRepository;
         this._mentorRepository = _mentorRepository;
         this._notificationRepository = _notificationRepository;
+        this._learnerRepository = _learnerRepository;
     }
     async fetchUser(id) {
         const userId = (0, objectId_1.parseObjectId)(id);
@@ -64,26 +65,26 @@ class UserService {
         }
         return userData.profilePicture;
     }
-    async updateUserProfile(id, userData) {
-        const userId = (0, objectId_1.parseObjectId)(id);
-        if (!userId) {
+    async updateUserProfile(userId, userData) {
+        const user_Id = (0, objectId_1.parseObjectId)(userId);
+        if (!user_Id) {
             throw (0, http_error_1.createHttpError)(http_status_const_1.HttpStatus.BAD_REQUEST, error_message_const_1.HttpResponse.INVALID_CREDNTIALS);
         }
-        const user = await this._userRepository.findUserById(userId);
+        const user = await this._userRepository.findUserById(user_Id);
         if (!user) {
             throw (0, http_error_1.createHttpError)(http_status_const_1.HttpStatus.NOT_FOUND, error_message_const_1.HttpResponse.USER_NOT_FOUND);
         }
         const updateActions = {
             mentor: async () => {
-                const result = await this._mentorRepository.updateMentorProfile(userId, userData);
+                const result = await this._mentorRepository.updateMentorProfile(user_Id, userData);
                 return result ? (0, role_dto_1.MentorDTO)(result) : null;
             },
             admin: async () => {
-                const result = await this._userRepository.updateUserprofile(userId, userData);
+                const result = await this._userRepository.updateUserprofile(user_Id, userData);
                 return result ? (0, role_dto_1.AdminDTO)(result) : null;
             },
             learner: async () => {
-                const result = await this._userRepository.updateUserprofile(userId, userData);
+                const result = await this._learnerRepository.updateLearnerProfile(user_Id, userData);
                 return result ? (0, role_dto_1.LearnerDTO)(result) : null;
             },
         };

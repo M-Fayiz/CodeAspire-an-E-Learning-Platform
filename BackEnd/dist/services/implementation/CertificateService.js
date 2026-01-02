@@ -16,6 +16,7 @@ const http_error_1 = require("../../utils/http-error");
 const uploadPdfToS3_util_1 = require("../../utils/uploadPdfToS3.util");
 const notification_template_1 = require("../../template/notification.template");
 const notification_dto_1 = require("../../dtos/notification.dto");
+const fileGuard_util_1 = require("../../utils/fileGuard.util");
 class CertificateService {
     constructor(_certificateRepository, _userRepository, _courseRepository, _notificatioinRepository) {
         this._certificateRepository = _certificateRepository;
@@ -46,13 +47,16 @@ class CertificateService {
             studentName: learner.name,
         };
         const html = (0, generateCertificate_util_1.default)(certificateDate);
-        const tempPath = path_1.default.join(process.cwd(), "src", "temp", `${certId}.pdf`);
-        const previewPath = path_1.default.join(process.cwd(), "src", "temp", `${certId}-preview.png`);
+        const tempDir = (0, fileGuard_util_1.ensureTempDir)();
+        const tempPath = path_1.default.join(tempDir, `${certId}.pdf`);
+        const previewPath = path_1.default.join(tempDir, `${certId}-preview.png`);
         await (0, htmlToPdf_util_1.htmlToPdf)(html, tempPath, previewPath);
         const s3Key = await (0, uploadPdfToS3_util_1.uploadPdfToS3)(tempPath, `${certId}.pdf`);
         const previewKey = await (0, uploadPdfToS3_util_1.uploadImageToS3)(previewPath, `${certId}-preview.png`);
-        fs_1.default.unlinkSync(tempPath);
-        fs_1.default.unlinkSync(previewPath);
+        await Promise.all([
+            fs_1.default.promises.unlink(tempPath),
+            fs_1.default.promises.unlink(previewPath),
+        ]);
         const CertificateData = {
             learnerId: learner_Id,
             courseId: course_id,

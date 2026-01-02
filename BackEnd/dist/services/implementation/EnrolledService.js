@@ -194,7 +194,7 @@ class EnrolledService {
             signedUsers,
         };
     }
-    async learnerDashboardCardData(learnerId, filter, startDate, endDate) {
+    async learnerDashboardCardData(learnerId) {
         const learner_Id = (0, objectId_1.parseObjectId)(learnerId);
         if (!learner_Id) {
             throw (0, http_error_1.createHttpError)(http_status_const_1.HttpStatus.BAD_REQUEST, error_message_const_1.HttpResponse.INVALID_ID);

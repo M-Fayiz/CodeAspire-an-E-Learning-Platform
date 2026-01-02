@@ -24,9 +24,9 @@ const intitializeSocket = (server) => {
         const token = socket.handshake.auth?.token;
         if (!token)
             return next(new Error(error_message_const_1.HttpResponse.UNAUTHORIZED));
-        console.log("token :", token);
         try {
             const user = (0, jwt_token_util_1.verifyAccesToken)(token);
+            console.log('user from socket :', user);
             socket.data.userId = user._id;
             next();
         }

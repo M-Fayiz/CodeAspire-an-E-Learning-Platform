@@ -101,5 +101,11 @@ class BaseRepository {
         }, { new: true });
         return result ?? null;
     }
+    async findByIDAndUpdateProfile(id, update) {
+        return this.model.findByIdAndUpdate(id, { $set: update }, {
+            new: true,
+            runValidators: true,
+        });
+    }
 }
 exports.BaseRepository = BaseRepository;

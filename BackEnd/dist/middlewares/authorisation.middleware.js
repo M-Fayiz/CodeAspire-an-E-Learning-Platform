@@ -12,7 +12,7 @@ function authorizedRole(...allowedRole) {
                 throw (0, http_error_1.createHttpError)(http_status_const_1.HttpStatus.UNAUTHORIZED, error_message_const_1.HttpResponse.UNAUTHORIZED);
             }
             if (!allowedRole.includes(user.role)) {
-                throw (0, http_error_1.createHttpError)(http_status_const_1.HttpStatus.LOCKED, error_message_const_1.HttpResponse.ACCESS_DENIED);
+                throw (0, http_error_1.createHttpError)(http_status_const_1.HttpStatus.FORBIDDEN, error_message_const_1.HttpResponse.ACCESS_DENIED);
             }
             next();
         }

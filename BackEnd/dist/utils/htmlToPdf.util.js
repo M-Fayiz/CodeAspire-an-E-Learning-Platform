@@ -15,7 +15,7 @@ async function htmlToPdf(html, outputPath, previewPath) {
     await page.pdf({
         path: outputPath,
         width: "1123px",
-        height: " 800px",
+        height: "800px",
         printBackground: true,
     });
     await page.screenshot({

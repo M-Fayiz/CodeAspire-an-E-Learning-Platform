@@ -24,6 +24,7 @@ if (clientID && clientSecret && callBack) {
                 : {};
             const role = state.role || "learner";
             const user = await userRepo.findOrCreateUser(profile, role);
+            // console.log('user :',user)
             if (!user) {
                 throw new Error("Internal Error");
             }

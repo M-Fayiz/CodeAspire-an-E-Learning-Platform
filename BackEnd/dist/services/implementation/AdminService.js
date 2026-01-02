@@ -24,7 +24,7 @@ class AdminService {
         this._enrolledRepository = _enrolledRepository;
     }
     async fetchAllUsers(page, search) {
-        const limit = 4;
+        const limit = 6;
         const skip = (page - 1) * limit;
         const [allUsers, userCount] = await Promise.all([
             this._userRepo.findAllUsers(limit, skip, search),

@@ -8,7 +8,7 @@ const error_message_const_1 = require("../const/error-message.const");
 const http_status_const_1 = require("../const/http-status.const");
 const http_error_1 = require("../utils/http-error");
 const logger_config_1 = __importDefault(require("../config/logger.config"));
-const errorHandler = (err, req, res, next) => {
+const errorHandler = (err, req, res, _next) => {
     let statusCode = http_status_const_1.HttpStatus.INTERNAL_SERVER_ERROR;
     let message = error_message_const_1.HttpResponse.SERVER_ERROR;
     if (err instanceof http_error_1.HttpError) {

@@ -4,6 +4,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.AuthService = void 0;
+const user_types_1 = require("../../types/user.types");
 const bcrypt_util_1 = require("../../utils/bcrypt.util");
 const send_mail_util_1 = require("../../utils/send-mail.util");
 const uuid_1 = require("uuid");
@@ -17,6 +18,7 @@ const crypto_util_1 = require("../../utils/crypto.util");
 const redisKey_const_1 = require("../../const/redisKey.const");
 const user_dto_1 = require("../../dtos/user.dto");
 const payload_dto_1 = require("../../dtos/payload.dto");
+const logger_config_1 = __importDefault(require("../../config/logger.config"));
 class AuthService {
     constructor(_userRepo) {
         this._userRepo = _userRepo;
@@ -50,7 +52,7 @@ class AuthService {
             password: storedData.password,
             role: storedData.role,
             isActive: true,
-            ApprovalStatus: "pending",
+            ApprovalStatus: user_types_1.mentorApprovalStatus.PENDING,
             isRequested: false,
         };
         const newUser = await this._userRepo.createUser(user);
@@ -81,7 +83,8 @@ class AuthService {
         }
         const decode = (0, jwt_token_util_2.verifyRefreshToken)(token);
         if (!decode) {
-            throw (0, http_error_1.createHttpError)(http_status_const_1.HttpStatus.NOT_FOUND, error_message_const_1.HttpResponse.REFRESH_TOKEN_EXPIRED);
+            logger_config_1.default.warn('refresh expired');
+            throw (0, http_error_1.createHttpError)(http_status_const_1.HttpStatus.UNAUTHORIZED, error_message_const_1.HttpResponse.REFRESH_TOKEN_EXPIRED);
         }
         const user = await this._userRepo.findUserByEmail(decode.email);
         if (!user?.isActive) {
@@ -102,7 +105,7 @@ class AuthService {
         }
         const isMatch = await (0, bcrypt_util_1.comparePassword)(password, user.password);
         if (!isMatch) {
-            throw (0, http_error_1.createHttpError)(http_status_const_1.HttpStatus.FORBIDDEN, error_message_const_1.HttpResponse.INVALID_CREDNTIALS);
+            throw (0, http_error_1.createHttpError)(http_status_const_1.HttpStatus.BAD_REQUEST, error_message_const_1.HttpResponse.INVALID_CREDNTIALS);
         }
         const MappedUser = (0, user_dto_1.userDTO)(user);
         const { accessToken, refreshToken } = (0, jwt_token_util_1.generateTokens)((0, payload_dto_1.payloadDTO)(user));
@@ -141,7 +144,7 @@ class AuthService {
     }
     async generateToken(user) {
         const payload = {
-            id: user._id,
+            _id: user._id,
             email: user.email,
             role: user.role,
             ApprovalStatus: user.ApprovalStatus,

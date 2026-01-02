@@ -18,5 +18,8 @@ class LearnerRepository extends baseRepository_1.BaseRepository {
     async getLearnerStreak(learnerId) {
         return await this.findById(learnerId);
     }
+    async updateLearnerProfile(learnerId, updateQuery) {
+        return await this.findByIDAndUpdateProfile(learnerId, updateQuery);
+    }
 }
 exports.LearnerRepository = LearnerRepository;

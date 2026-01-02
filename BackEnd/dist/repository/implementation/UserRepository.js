@@ -3,6 +3,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.UserRepository = void 0;
 const baseRepository_1 = require("../baseRepository");
 const user_model_1 = require("../../models/user.model");
+const user_types_1 = require("../../types/user.types");
 class UserRepository extends baseRepository_1.BaseRepository {
     constructor() {
         super(user_model_1.UserModel);
@@ -45,7 +46,7 @@ class UserRepository extends baseRepository_1.BaseRepository {
         return user;
     }
     async findAllUsers(limit, skip, searchQuery) {
-        return this.findAll({ name: { $regex: searchQuery ?? "", $options: "i" } }, limit, skip);
+        return this.findAll({ role: { $ne: user_types_1.IRole.Admin }, name: { $regex: searchQuery ?? "", $options: "i" } }, limit, skip);
     }
     async findUserCount(searchQuery) {
         return this.countDocuments({
@@ -68,7 +69,7 @@ class UserRepository extends baseRepository_1.BaseRepository {
         return await this.findByIDAndUpdate(id, { ApprovalStatus: status });
     }
     async updateUserprofile(id, profileData) {
-        return await this.findByIDAndUpdate(id, { profileData });
+        return await this.findByIDAndUpdateProfile(id, profileData);
     }
     async getUserProfile(userId) {
         return await this.findOne({ _id: userId });

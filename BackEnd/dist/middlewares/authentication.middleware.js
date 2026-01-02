@@ -15,18 +15,22 @@ async function verifyUser(req, res, next) {
     try {
         const { accessToken } = req.cookies;
         if (!accessToken) {
+            console.log('no acesstoken');
             throw (0, http_error_1.createHttpError)(http_status_const_1.HttpStatus.UNAUTHORIZED, error_message_const_1.HttpResponse.UNAUTHORIZED);
         }
         const decode = (0, jwt_token_util_1.verifyAccesToken)(accessToken);
+        const userId = decode._id;
         if (!decode) {
+            console.log('access token expired ');
             throw (0, http_error_1.createHttpError)(http_status_const_1.HttpStatus.UNAUTHORIZED, error_message_const_1.HttpResponse.ACCESS_TOKEN_EXPIRED);
         }
-        const isBlocked = await redis_config_1.default.get(`blocked:user:${decode._id}`);
+        const isBlocked = await redis_config_1.default.get(`blocked:user:${userId}`);
         if (isBlocked) {
+            console.log('user blocked 🟥');
             throw (0, http_error_1.createHttpError)(http_status_const_1.HttpStatus.LOCKED, error_message_const_1.HttpResponse.USER_BLOCKED);
         }
         const user = await user_model_1.UserModel
-            .findById(decode._id)
+            .findById(userId)
             .select("_id email role isActive");
         if (!user || !user?.isActive) {
             throw (0, http_error_1.createHttpError)(http_status_const_1.HttpStatus.LOCKED, error_message_const_1.HttpResponse.USER_BLOCKED);

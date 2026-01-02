@@ -16,11 +16,12 @@ const BaseUserSchema = new mongoose_1.default.Schema({
         enum: Object.values(user_types_1.IRole),
         required: true,
     },
+    bio: String,
     phone: Number,
     password: String,
     profilePicture: String,
     googleId: { type: String },
-    isActive: { type: Boolean, default: false },
+    isActive: { type: Boolean, default: true },
     ApprovalStatus: {
         type: String,
         enum: ["pending", "approved", "rejected", "requested"],
@@ -31,7 +32,6 @@ const BaseUserSchema = new mongoose_1.default.Schema({
 exports.UserModel = mongoose_1.default.model(modelName_const_1.DbModelName.USER, BaseUserSchema);
 const MentorSchema = new mongoose_1.default.Schema({
     expertise: [String],
-    bio: String,
     yearsOfExperience: Number,
     mentorRating: Number,
     socialLinks: {

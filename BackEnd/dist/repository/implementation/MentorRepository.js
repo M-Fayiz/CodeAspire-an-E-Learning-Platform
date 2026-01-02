@@ -8,7 +8,7 @@ class MentorRepository extends baseRepository_1.BaseRepository {
         super(user_model_1.MentorModel);
     }
     async updateMentorProfile(id, update) {
-        return await this.findByIDAndUpdate(id, update);
+        return await this.findByIDAndUpdateProfile(id, update);
     }
 }
 exports.MentorRepository = MentorRepository;

@@ -4,19 +4,17 @@ exports.AuthController = void 0;
 const http_status_const_1 = require("../../const/http-status.const");
 const error_message_const_1 = require("../../const/error-message.const");
 const response_util_1 = require("../../utils/response.util");
-const cookie_config_1 = require("../../config/cookie.config");
 const http_error_1 = require("../../utils/http-error");
 const clearCookies_util_1 = require("../../utils/clearCookies.util");
 const cookie_util_1 = require("../../utils/cookie.util");
 const env_config_1 = require("../../config/env.config");
-const auth_const_1 = require("../../const/auth.const");
 class AuthController {
-    constructor(_authSerive) {
-        this._authSerive = _authSerive;
+    constructor(_authService) {
+        this._authService = _authService;
     }
     async signUp(req, res, next) {
         try {
-            const email = await this._authSerive.signUp(req.body);
+            const email = await this._authService.signUp(req.body);
             res
                 .status(http_status_const_1.HttpStatus.OK)
                 .json((0, response_util_1.successResponse)(error_message_const_1.HttpResponse.OK, { email: email }));
@@ -27,7 +25,7 @@ class AuthController {
     }
     async verifyEmail(req, res, next) {
         try {
-            const token = await this._authSerive.verifyEmail(req.body);
+            const token = await this._authService.verifyEmail(req.body);
             (0, cookie_util_1.setAccessToken)(res, token.accessToken);
             (0, cookie_util_1.setRefreshToken)(res, token.refreshToken);
             res.status(http_status_const_1.HttpStatus.OK).json((0, response_util_1.successResponse)(error_message_const_1.HttpResponse.LOGGED_IN_SUCCESSFULLY, {
@@ -41,10 +39,11 @@ class AuthController {
     async authMe(req, res, next) {
         try {
             const { accessToken } = req.cookies;
+            console.log("➡️ get into auth me");
             if (!accessToken) {
                 return next((0, http_error_1.createHttpError)(http_status_const_1.HttpStatus.UNAUTHORIZED, error_message_const_1.HttpResponse.ACCESS_TOKEN_EXPIRED));
             }
-            const user = await this._authSerive.authMe(accessToken);
+            const user = await this._authService.authMe(accessToken);
             res
                 .status(http_status_const_1.HttpStatus.OK)
                 .json((0, response_util_1.successResponse)(error_message_const_1.HttpResponse.OK, { user: user, token: accessToken }));
@@ -59,11 +58,10 @@ class AuthController {
             if (!refreshToken) {
                 throw (0, http_error_1.createHttpError)(http_status_const_1.HttpStatus.FORBIDDEN, error_message_const_1.HttpResponse.REFRESH_TOKEN_EXPIRED);
             }
-            const { newAccessToken, payload } = await this._authSerive.refreshAccessToken(refreshToken);
-            res.cookie(auth_const_1.AUTH_TOKEN.ACCESS_TOKEN, newAccessToken, {
-                ...cookie_config_1.options,
-                maxAge: Number(env_config_1.env.ACCESS_TOKEN_MAX_AGE) * 60 * 1000,
-            });
+            console.log('➡️ refresh Token');
+            const { newAccessToken, payload } = await this._authService.refreshAccessToken(refreshToken);
+            console.log("🔥 Created New Access Token :", { newAccessToken });
+            (0, cookie_util_1.setAccessToken)(res, newAccessToken);
             res
                 .status(http_status_const_1.HttpStatus.OK)
                 .json((0, response_util_1.successResponse)(error_message_const_1.HttpResponse.OK, { user: payload }));
@@ -75,7 +73,7 @@ class AuthController {
     async login(req, res, next) {
         try {
             const { email, password } = req.body;
-            const tokensAndUserData = await this._authSerive.login(email, password);
+            const tokensAndUserData = await this._authService.login(email, password);
             (0, cookie_util_1.setAccessToken)(res, tokensAndUserData.accessToken);
             (0, cookie_util_1.setRefreshToken)(res, tokensAndUserData.refreshToken);
             res.status(http_status_const_1.HttpStatus.OK).json((0, response_util_1.successResponse)(error_message_const_1.HttpResponse.LOGGED_IN_SUCCESSFULLY, {
@@ -100,7 +98,7 @@ class AuthController {
     }
     async forgotPassword(req, res, next) {
         try {
-            const email = await this._authSerive.forgotPassword(req.body.email);
+            const email = await this._authService.forgotPassword(req.body.email);
             res
                 .status(http_status_const_1.HttpStatus.OK)
                 .json((0, response_util_1.successResponse)(error_message_const_1.HttpResponse.OK, { email: email }));
@@ -110,10 +108,9 @@ class AuthController {
         }
     }
     async resetPassword(req, res, next) {
-        console.log(req.body);
         try {
             const { email, token, password } = req.body;
-            const response = await this._authSerive.resetPassword(email, token, password);
+            const response = await this._authService.resetPassword(email, token, password);
             res
                 .status(http_status_const_1.HttpStatus.OK)
                 .json((0, response_util_1.successResponse)(error_message_const_1.HttpResponse.OK, { email: response }));
@@ -128,7 +125,7 @@ class AuthController {
                 res.status(http_status_const_1.HttpStatus.FORBIDDEN).json(error_message_const_1.HttpResponse.INVALID_CREDNTIALS);
                 return;
             }
-            const Data = await this._authSerive.generateToken(req.user);
+            const Data = await this._authService.generateToken(req.user);
             (0, cookie_util_1.setAccessToken)(res, Data.accessToken);
             (0, cookie_util_1.setRefreshToken)(res, Data.refreshToken);
             res.redirect(`${env_config_1.env.CLIENT_URL_2}/?token=${Data.accessToken}`);

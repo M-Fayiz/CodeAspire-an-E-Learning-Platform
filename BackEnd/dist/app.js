@@ -32,7 +32,6 @@ const order_router_1 = __importDefault(require("./routers/order.router"));
 const webhook_router_1 = __importDefault(require("./routers/webhook.router"));
 const videoSession_router_1 = __importDefault(require("./routers/videoSession.router"));
 const certificate_router_1 = __importDefault(require("./routers/certificate.router"));
-const user_model_1 = require("./models/user.model");
 dotenv_1.default.config();
 const app = (0, express_1.default)();
 // MIddlewares
@@ -53,7 +52,6 @@ app.use((0, cors_1.default)(cors_config_1.corsSetUp));
 app.get("/", (req, res) => {
     res.send("SERVER WORKING");
 });
-console.log("DISCRIMINATORS:", user_model_1.UserModel.discriminators);
 app.use("/api/v1/auth", auth_router_1.default);
 app.use("/api/v1/users", user_router_1.default);
 app.use("/api/v1/admin", admin_router_1.default);
