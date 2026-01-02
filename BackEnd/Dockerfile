@@ -6,8 +6,7 @@ COPY package*.json ./
 RUN npm install --omit=dev
 
 COPY dist ./dist
-COPY public ./public  
-COPY temp ./temp 
+COPY public ./public
 
 EXPOSE 4000
 
