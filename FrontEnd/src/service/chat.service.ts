@@ -43,7 +43,7 @@ export const ChatService = {
           };
         }),
       );
-      console.log("u[date User ", updatedUsers);
+      
       return updatedUsers;
     } catch (error) {
       throwAxiosError(error);

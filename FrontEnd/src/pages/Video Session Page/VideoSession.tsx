@@ -69,22 +69,22 @@ export const VideoRoom = () => {
     setCallState("calling");
     await call(roomId, user.id);
   };
-  const handleRejoin = async () => {
-    if (!roomId || !user) return;
+  // const handleRejoin = async () => {
+  //   if (!roomId || !user) return;
 
-    if (localRef.current && remoteRef.current) {
-      await init({
-        roomId,
-        userId: user.id,
-        localVideo: localRef.current,
-        remoteVideo: remoteRef.current,
-        onConnected: () => setCallState("connected"),
-        onDisconnected: () => setCallState("disconnected"),
-      });
+  //   if (localRef.current && remoteRef.current) {
+  //     await init({
+  //       roomId,
+  //       userId: user.id,
+  //       localVideo: localRef.current,
+  //       remoteVideo: remoteRef.current,
+  //       onConnected: () => setCallState("connected"),
+  //       onDisconnected: () => setCallState("disconnected"),
+  //     });
 
-      await call(roomId, user.id);
-    }
-  };
+  //     await call(roomId, user.id);
+  //   }
+  // };
 
   const handleMic = () => {
     setMuted((prev) => {
@@ -198,14 +198,14 @@ export const VideoRoom = () => {
             <PhoneOff />
           </button>
 
-          {callState === "disconnected" && (
+          {/* {callState === "disconnected" && (
             <button
               onClick={handleRejoin}
               className="p-4 rounded-xl bg-yellow-500 text-white"
             >
               Rejoin Call
             </button>
-          )}
+          )} */}
         </div>
       )}
     </div>

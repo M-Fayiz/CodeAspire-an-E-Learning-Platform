@@ -46,12 +46,23 @@ export class CourseService implements ICourseService {
   ) {}
 
   async createCourses(course: ICourses): Promise<ICourseCreateForm | null> {
+
+    const now=new Date()
+    const year=new Date()
+    year.setDate(year.getDate()-365)
+
+
     const mentorCourse = await this._courseRepository.findAllCourse({
       mentorId: course.mentorId,
-      categoryId: course.categoryId,
+
+      createdAt:{
+        $gte:year,
+        $lte:now
+      }
     });
 
-    if (mentorCourse && mentorCourse.length > 2) {
+    
+    if (mentorCourse && mentorCourse.length > 5) {
       throw createHttpError(HttpStatus.CONFLICT, HttpResponse.ITEM_EXIST);
     }
 

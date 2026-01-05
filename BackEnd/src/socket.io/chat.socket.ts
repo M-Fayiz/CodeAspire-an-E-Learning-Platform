@@ -1,7 +1,6 @@
 import { Server, Socket } from "socket.io";
 import { ChatService } from "../services/implementation/ChatService";
-// import { redisPrefix } from '../const/redisKey'
-// import redisClient from '../config/redis.config'
+
 import {
   ChatEmitEvents,
   ChatListenEvents,

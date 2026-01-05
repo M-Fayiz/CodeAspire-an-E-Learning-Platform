@@ -13,7 +13,7 @@ export const OrderService = {
   }> => {
     try {
       const response = await axiosInstance.post(
-        "/orders/payment/create-checkout-session",
+        API.PAYMENT.CREATE_PAYMENT_INTENT,
         { courseId, userId },
       );
       return response.data;

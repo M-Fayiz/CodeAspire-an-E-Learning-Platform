@@ -22,7 +22,7 @@ import {
 } from "@/components/ui/table";
 import type { graphPrps } from "@/features/dashboard/Graph";
 import RevenueChart from "@/features/dashboard/Graph";
-import { RevenueStackedChart } from "@/components/chart/StackedChart";
+// import { RevenueStackedChart } from "@/components/chart/StackedChart";
 
 const EMPTY_CHART: graphPrps[] = [];
 
@@ -169,7 +169,7 @@ export default function MentorDashboard() {
               <RevenueDonutChart Options={mentorDashData?.revanue || []} />
             </div>
             {/* <div className="bg-white rounded-lg p-6 shadow-sm border border-gray-100 flex items-center justify-center"> */}
-            <RevenueStackedChart />
+            {/* <RevenueStackedChart /> */}
             {/* </div> */}
           </div>
         </div>

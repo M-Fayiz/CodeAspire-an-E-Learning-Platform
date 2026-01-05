@@ -5,7 +5,7 @@ import { throwAxiosError } from "@/utility/throwErrot";
 
 const VideoService = {
   startVideoSession: async (bookingId: string): Promise<IVideoSessionDTO> => {
-    console.log("boking :", bookingId);
+
     try {
       const response = await axiosInstance.get(
         API.VIDEO.START_VIDEO(bookingId),

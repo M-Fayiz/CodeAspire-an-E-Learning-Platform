@@ -49,7 +49,7 @@ const CertificatesList = () => {
                 className="bg-white rounded-sm border border-gray-200 shadow-sm hover:shadow-lg transition-all duration-200"
               >
                 {/* Preview Area */}
-                <div className="h-40 bg-gradient-to-br from-gray-100 to-gray-200 rounde-sm flex items-center justify-center">
+                <div className="h-35 bg-gradient-to-br from-gray-100 to-gray-200 rounde-sm flex items-center justify-center">
                   <img
                     className="rounded-sm w-screen"
                     src={cert.preview_image || ""}

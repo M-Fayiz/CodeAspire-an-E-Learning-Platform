@@ -288,8 +288,8 @@ const ChatWindow: React.FC<ChatWindowProps> = ({
               </div>
             </div>
           ))}
-          <div ref={messagesEndRef} />
         </div>
+          <div ref={messagesEndRef} />
       </div>
 
       <div className="border-t border-gray-200 px-6 py-4  bg-white">

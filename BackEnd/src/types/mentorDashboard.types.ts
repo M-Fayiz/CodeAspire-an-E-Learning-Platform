@@ -10,6 +10,7 @@ export interface IMentorTotalRevanue {
   _id: TransactionType;
   revenue: number;
 }
+
 export interface ITopCourse {
   courseId: Types.ObjectId;
   title: string;

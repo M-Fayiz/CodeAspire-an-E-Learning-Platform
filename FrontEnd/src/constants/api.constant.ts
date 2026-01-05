@@ -68,7 +68,7 @@ export const API = {
       `/courses/${courseId}/session/${sessionId}/lecture/${lectureId}`,
   },
   PAYMENT: {
-    CREATE_PAYMENT_INTENT: "/orders/create-checkout-session",
+    CREATE_PAYMENT_INTENT: "/orders/payment/create-checkout-session",
     GET_PAYMENT_DATA: (sessionsId: string) => `/orders/stripe/${sessionsId}`,
   },
   ENROLLEMENT: {

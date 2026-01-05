@@ -53,7 +53,7 @@ export const intitializeSocket = (server: HttpServer) => {
     const after = await redisClient.sCard(key);
 
     if (before === 0 && after === 1) {
-      io.emit(SocketEvents.USER_ONLINE, userId);
+      io.to(`user:${userId}`).emit(SocketEvents.USER_ONLINE, userId);
     }
 
     socket.on("presence:check", async (targetUserId: string) => {
