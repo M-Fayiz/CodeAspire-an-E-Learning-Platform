@@ -1,5 +1,5 @@
 import mongoose, { Schema, Document, Types } from "mongoose";
-import { IMessage } from "../types/message.type";
+import { IMessage, MessageStatus, MessageType } from "../types/message.type";
 import { DbModelName } from "../const/modelName.const";
 
 export interface IMessageModel
@@ -20,14 +20,14 @@ const MessageSchema = new mongoose.Schema<IMessageModel>({
   content: { type: String },
   type: {
     type: String,
-    enum: ["text", "image", "video", "pdf"],
-    default: "text",
+    enum: Object.values(MessageType),
+    default: MessageType.TEXT,
   },
   mediaUrl: { type: String },
   status: {
     type: String,
-    enum: ["sending", "sent", "delivered", "read"],
-    default: "sending",
+    enum: Object.values(MessageStatus),
+    default: MessageStatus.SENDING,
   },
   createdAt: { type: Date, default: Date.now },
 });

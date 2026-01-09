@@ -93,12 +93,12 @@ export class EnrolledController implements IEnrolledController {
   ): Promise<void> => {
     try {
       const { courseId, mentorId } = req.params;
-      const user=req.user
+      const user = req.user;
       const dashboardData =
         await this._enrolledService.getCourseEnrolledDashboardData(
           courseId,
           mentorId,
-          user as IUser
+          user as IUser,
         );
 
       res

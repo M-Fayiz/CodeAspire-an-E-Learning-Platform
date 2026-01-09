@@ -35,7 +35,7 @@ export class UserService implements IUserService {
     private _userRepository: IUserRepo,
     private _mentorRepository: IMentorRepository,
     private _notificationRepository: INotificationRepository,
-    private _learnerRepository:ILearnerRepository
+    private _learnerRepository: ILearnerRepository,
   ) {}
 
   async fetchUser(
@@ -116,54 +116,56 @@ export class UserService implements IUserService {
     return userData.profilePicture;
   }
   async updateUserProfile<T extends Partial<ILearner | IMenterModel | IAdmin>>(
-  userId: string,
-  userData: T,
-): Promise<IMentorDTO | ILearnerDTO | IAdminDTO | null> {
-  const user_Id = parseObjectId(userId);
-  if (!user_Id) {
-    throw createHttpError(HttpStatus.BAD_REQUEST, HttpResponse.INVALID_CREDNTIALS);
-  }
-
-  const user = await this._userRepository.findUserById(user_Id);
-  if (!user) {
-    throw createHttpError(HttpStatus.NOT_FOUND, HttpResponse.USER_NOT_FOUND);
-  }
-
-  const updateActions = {
-    mentor: async () => {
-      const result = await this._mentorRepository.updateMentorProfile(
-        user_Id,
-        userData as IMenterModel,
+    userId: string,
+    userData: T,
+  ): Promise<IMentorDTO | ILearnerDTO | IAdminDTO | null> {
+    const user_Id = parseObjectId(userId);
+    if (!user_Id) {
+      throw createHttpError(
+        HttpStatus.BAD_REQUEST,
+        HttpResponse.INVALID_CREDNTIALS,
       );
-      return result ? MentorDTO(result) : null;
-    },
-    admin: async () => {
-      const result = await this._userRepository.updateUserprofile(
-        user_Id,
-        userData as IAdminModel,
-      );
-      return result ? AdminDTO(result as IAdminModel) : null;
-    },
-    learner: async () => {
-      const result = await this._learnerRepository.updateLearnerProfile(
-        user_Id,
-        userData,
-      );
-      return result ? LearnerDTO(result) : null;
-    },
-  } as const;
+    }
 
-  const handler = updateActions[user.role as keyof typeof updateActions];
-  if (!handler) {
-    throw createHttpError(
-      HttpStatus.BAD_REQUEST,
-      `Invalid user role: ${user.role}`,
-    );
+    const user = await this._userRepository.findUserById(user_Id);
+    if (!user) {
+      throw createHttpError(HttpStatus.NOT_FOUND, HttpResponse.USER_NOT_FOUND);
+    }
+
+    const updateActions = {
+      mentor: async () => {
+        const result = await this._mentorRepository.updateMentorProfile(
+          user_Id,
+          userData as IMenterModel,
+        );
+        return result ? MentorDTO(result) : null;
+      },
+      admin: async () => {
+        const result = await this._userRepository.updateUserprofile(
+          user_Id,
+          userData as IAdminModel,
+        );
+        return result ? AdminDTO(result as IAdminModel) : null;
+      },
+      learner: async () => {
+        const result = await this._learnerRepository.updateLearnerProfile(
+          user_Id,
+          userData,
+        );
+        return result ? LearnerDTO(result) : null;
+      },
+    } as const;
+
+    const handler = updateActions[user.role as keyof typeof updateActions];
+    if (!handler) {
+      throw createHttpError(
+        HttpStatus.BAD_REQUEST,
+        `Invalid user role: ${user.role}`,
+      );
+    }
+
+    return handler();
   }
-
-  return handler();
-}
-
 
   async getUserProfile(
     userId: string,

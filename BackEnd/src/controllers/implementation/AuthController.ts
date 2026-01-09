@@ -10,7 +10,6 @@ import { setAccessToken, setRefreshToken } from "../../utils/cookie.util";
 import { IUserModel } from "../../models/user.model";
 import { env } from "../../config/env.config";
 
-
 export class AuthController implements IAuthController {
   constructor(private _authService: IAuthService) {}
 
@@ -46,7 +45,7 @@ export class AuthController implements IAuthController {
   async authMe(req: Request, res: Response, next: NextFunction): Promise<void> {
     try {
       const { accessToken } = req.cookies;
-    console.log("➡️ get into auth me");
+      console.log("➡️ get into auth me");
 
       if (!accessToken) {
         return next(
@@ -82,11 +81,11 @@ export class AuthController implements IAuthController {
           HttpResponse.REFRESH_TOKEN_EXPIRED,
         );
       }
-    console.log('➡️ refresh Token')
-       const { newAccessToken, payload } =
+      console.log("➡️ refresh Token");
+      const { newAccessToken, payload } =
         await this._authService.refreshAccessToken(refreshToken);
-        console.log("🔥 Created New Access Token :",{newAccessToken});
-       setAccessToken(res, newAccessToken);
+      console.log("🔥 Created New Access Token :", { newAccessToken });
+      setAccessToken(res, newAccessToken);
       res
         .status(HttpStatus.OK)
         .json(successResponse(HttpResponse.OK, { user: payload }));
@@ -144,7 +143,6 @@ export class AuthController implements IAuthController {
     res: Response,
     next: NextFunction,
   ): Promise<void> {
- 
     try {
       const { email, token, password } = req.body;
       const response = await this._authService.resetPassword(
@@ -169,7 +167,9 @@ export class AuthController implements IAuthController {
         res.status(HttpStatus.FORBIDDEN).json(HttpResponse.INVALID_CREDNTIALS);
         return;
       }
-      const Data = await this._authService.generateToken(req.user as IUserModel);
+      const Data = await this._authService.generateToken(
+        req.user as IUserModel,
+      );
 
       setAccessToken(res, Data.accessToken);
       setRefreshToken(res, Data.refreshToken);

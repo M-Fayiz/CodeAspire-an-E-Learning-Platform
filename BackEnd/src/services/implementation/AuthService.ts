@@ -126,7 +126,7 @@ export class AuthService implements IAuthService {
     const decode = verifyRefreshToken(token) as JwtPayload;
 
     if (!decode) {
-      logger.warn('refresh expired')
+      logger.warn("refresh expired");
       throw createHttpError(
         HttpStatus.UNAUTHORIZED,
         HttpResponse.REFRESH_TOKEN_EXPIRED,

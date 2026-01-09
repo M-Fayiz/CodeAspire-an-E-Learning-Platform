@@ -2,7 +2,6 @@ import { FilterQuery, PipelineStage, Types } from "mongoose";
 import { ISlot, ISlotModel } from "../../models/slot.model";
 
 import {
-
   createdUnPopulatedSlots,
   ISlotpopultedDataFromDB,
   mentorUnPopulatedSlots,

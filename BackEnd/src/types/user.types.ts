@@ -36,15 +36,15 @@ export interface IMentor extends IUser {
   };
   resume?: string;
 }
-export interface ILearnerStreask{
-current: number;       
-  longest: number;        
+export interface ILearnerStreask {
+  current: number;
+  longest: number;
   lastLearningDate: Date;
 }
 export interface ILearner extends IUser {
   role: IRole.Learner;
-  learningStreak?: ILearnerStreask
-  activeDates?:Date[]
+  learningStreak?: ILearnerStreask;
+  activeDates?: Date[];
 }
 
 export interface IAdmin extends IUser {

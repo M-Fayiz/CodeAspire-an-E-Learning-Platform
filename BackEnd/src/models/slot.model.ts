@@ -6,7 +6,7 @@ export interface ISlot extends IBaseSlot {
   mentorId: Types.ObjectId;
   courseId: Types.ObjectId;
 }
-export interface ISlotModel extends ISlot,Document {
+export interface ISlotModel extends ISlot, Document {
   _id: Types.ObjectId;
 }
 const SlotDaySchema = new Schema(

@@ -89,7 +89,7 @@ export abstract class BaseRepository<T extends Document> {
   ): Promise<T | null> {
     return this.model.findOneAndUpdate(filter, update, options);
   }
-  async findByIDAndUpdate<F=T>(
+  async findByIDAndUpdate<F = T>(
     id: Types.ObjectId,
     update: UpdateQuery<T>,
   ): Promise<F | null> {
@@ -172,17 +172,16 @@ export abstract class BaseRepository<T extends Document> {
     return result ?? null;
   }
   async findByIDAndUpdateProfile<F = T>(
-  id: Types.ObjectId,
-  update: Partial<T>,
+    id: Types.ObjectId,
+    update: Partial<T>,
   ): Promise<F | null> {
-  return this.model.findByIdAndUpdate(
-    id,
-    { $set: update },
-    {
-      new: true,
-      runValidators: true,
-    },
-  )
-}
-
+    return this.model.findByIdAndUpdate(
+      id,
+      { $set: update },
+      {
+        new: true,
+        runValidators: true,
+      },
+    );
+  }
 }

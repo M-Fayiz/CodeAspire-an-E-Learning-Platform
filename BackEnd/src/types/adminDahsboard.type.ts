@@ -1,4 +1,5 @@
 import { TransactionType } from "../const/transaction.const";
+import { IRole } from "./user.types";
 
 export interface IAdminRevenue {
   _id: null;
@@ -13,3 +14,9 @@ export interface SourceOfRevanye {
   _id: TransactionType;
   value: number;
 }
+
+export interface Mentorstatus{
+    approved: number,
+    rejected: number
+  }
+

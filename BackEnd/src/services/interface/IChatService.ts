@@ -19,4 +19,6 @@ export interface IChatService {
   listUsers(senderId: string): Promise<IChatListDTO[]>;
   getMessages(chatId: string, limit: number): Promise<IMessageDto[]>;
   readMessages(messageIds: string[]): Promise<IMessageDto[]>;
+  incrementUnreadMSG(chatId: Types.ObjectId, userId: string): Promise<IChatDTO>;
+  resetUnreadMsg(chatId: string, userId: string): Promise<IChatDTO>;
 }

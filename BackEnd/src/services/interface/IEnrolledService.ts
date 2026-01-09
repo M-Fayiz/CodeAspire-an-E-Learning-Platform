@@ -30,7 +30,7 @@ export interface IEnrolledService {
   getCourseEnrolledDashboardData(
     courseId: string,
     mentorId: string,
-    user:IUser
+    user: IUser,
   ): Promise<CourseDashboardDTO | null>;
   getTrendingCourseGraph(
     courseId: string,
@@ -52,6 +52,5 @@ export interface IEnrolledService {
   }>;
   learnerDashboardCardData(
     learnerId: string,
-    
   ): Promise<learnerDashboardCardsDTO>;
 }

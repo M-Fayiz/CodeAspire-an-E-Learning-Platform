@@ -94,10 +94,10 @@ export class AdminService implements IAdminService {
       );
     }
     if (!updatedUser.isActive) {
-    await redisClient.set(`blocked:user:${objectId}`, "true");
-  } else {
-    await redisClient.del(`blocked:user:${objectId}`);
-  }
+      await redisClient.set(`blocked:user:${objectId}`, "true");
+    } else {
+      await redisClient.del(`blocked:user:${objectId}`);
+    }
     const result = {
       isActive: updatedUser.isActive,
       id: updatedUser.id,
@@ -185,7 +185,7 @@ export class AdminService implements IAdminService {
   ): Promise<IAdminDashboardDTO> {
     const { start, end } = timeFilter(filter, startDay, endDay);
 
-    const [mentors, learners, courseCount, revenue, topCourse, topCategory] =
+    const [mentors, learners, courseCount, revenue, topCourse, topCategory,mentorStatus] =
       await Promise.all([
         this._userRepo.findDashBoardUserCount(IRole.Mentor, start, end),
         this._userRepo.findDashBoardUserCount(IRole.Learner, start, end),
@@ -193,8 +193,9 @@ export class AdminService implements IAdminService {
         this._transactionRepository.getAdminRevenue(start, end),
         this._enrolledRepository.getTopSellingCourse(undefined, start, end),
         this._enrolledRepository.getTopSellingCategory(),
+        this._userRepo.getMentorStatus({role:IRole.Mentor,createdAt:{$gte:start,$lte:end}})
       ]);
-
+    
     return adminDashboardDTO(
       mentors,
       learners,
@@ -202,6 +203,7 @@ export class AdminService implements IAdminService {
       revenue,
       topCourse,
       topCategory,
+      mentorStatus[0]
     );
   }
 }

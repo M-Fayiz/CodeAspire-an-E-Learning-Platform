@@ -9,7 +9,6 @@ import { updatePart } from "../../types/courses.type";
 import { sendNotification } from "../../utils/socket.utils";
 import { IAnyUser, IUser } from "../../types/user.types";
 
-
 export class CourseController implements ICourseController {
   constructor(private _courseService: ICourseService) {}
 
@@ -19,7 +18,6 @@ export class CourseController implements ICourseController {
     next: NextFunction,
   ): Promise<void> => {
     try {
-  
       const createdCourseData = await this._courseService.createCourses(
         req.body.courseData,
       );
@@ -144,7 +142,7 @@ export class CourseController implements ICourseController {
         courseId,
         session,
       );
-   
+
       res
         .status(HttpStatus.OK)
         .json(successResponse(HttpResponse.OK, { addedSessionData }));
@@ -189,7 +187,7 @@ export class CourseController implements ICourseController {
         lectureId,
         lecture,
       );
-      
+
       res
         .status(HttpStatus.OK)
         .json(successResponse(HttpResponse.OK, { updatedData }));
@@ -329,9 +327,11 @@ export class CourseController implements ICourseController {
     try {
       const { courseId } = req.params;
       const user = req.user as IAnyUser;
-     
-      const courseFormData =
-        await this._courseService.getCourseFormData(courseId,user as IUser);
+
+      const courseFormData = await this._courseService.getCourseFormData(
+        courseId,
+        user as IUser,
+      );
       res
         .status(HttpStatus.OK)
         .json(successResponse(HttpResponse.OK, { courseFormData }));

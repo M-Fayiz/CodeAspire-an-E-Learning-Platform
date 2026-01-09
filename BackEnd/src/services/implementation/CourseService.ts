@@ -46,22 +46,19 @@ export class CourseService implements ICourseService {
   ) {}
 
   async createCourses(course: ICourses): Promise<ICourseCreateForm | null> {
-
-    const now=new Date()
-    const year=new Date()
-    year.setDate(year.getDate()-365)
-
+    const now = new Date();
+    const year = new Date();
+    year.setDate(year.getDate() - 365);
 
     const mentorCourse = await this._courseRepository.findAllCourse({
       mentorId: course.mentorId,
 
-      createdAt:{
-        $gte:year,
-        $lte:now
-      }
+      createdAt: {
+        $gte: year,
+        $lte: now,
+      },
     });
 
-    
     if (mentorCourse && mentorCourse.length > 5) {
       throw createHttpError(HttpStatus.CONFLICT, HttpResponse.ITEM_EXIST);
     }
@@ -198,7 +195,7 @@ export class CourseService implements ICourseService {
       }
     }
     const avgRating = summery?.[0]?.avgRating ?? 0;
-const totalStudents = summery?.[0]?.totalStudents ?? 0;
+    const totalStudents = summery?.[0]?.totalStudents ?? 0;
 
     return {
       courseDetails: courseDetailsPageDTO(
@@ -305,7 +302,7 @@ const totalStudents = summery?.[0]?.totalStudents ?? 0;
       LectureId,
       lecture,
     );
-    const coursedata =await this._courseRepository.findCourse(CourseId);
+    const coursedata = await this._courseRepository.findCourse(CourseId);
     if (!coursedata) {
       throw createHttpError(
         HttpStatus.NOT_FOUND,
@@ -439,7 +436,10 @@ const totalStudents = summery?.[0]?.totalStudents ?? 0;
 
     return courseList.map((course) => listCourseForSLot(course));
   }
-  async getCourseFormData(courseId: string,user:IUser): Promise<ICourseCreateForm> {
+  async getCourseFormData(
+    courseId: string,
+    user: IUser,
+  ): Promise<ICourseCreateForm> {
     const course_Id = parseObjectId(courseId);
     if (!course_Id) {
       throw createHttpError(HttpStatus.BAD_REQUEST, HttpResponse.INVALID_ID);
@@ -447,14 +447,16 @@ const totalStudents = summery?.[0]?.totalStudents ?? 0;
 
     const courseFormData =
       await this._courseRepository.getCourseFormData(course_Id);
-      console.log(courseFormData?.mentorId,' < > ',user._id)
-      if(!courseFormData){
-        throw createHttpError(HttpStatus.NOT_FOUND,HttpResponse.COURSE_NOT_FOUND)
-      }
-        if (courseFormData.mentorId.toString() !== user._id.toString()) {
-        throw createHttpError(HttpStatus.FORBIDDEN, HttpResponse.ACCESS_DENIED);
-      }
-
+    console.log(courseFormData?.mentorId, " < > ", user._id);
+    if (!courseFormData) {
+      throw createHttpError(
+        HttpStatus.NOT_FOUND,
+        HttpResponse.COURSE_NOT_FOUND,
+      );
+    }
+    if (courseFormData.mentorId.toString() !== user._id.toString()) {
+      throw createHttpError(HttpStatus.FORBIDDEN, HttpResponse.ACCESS_DENIED);
+    }
 
     if (!courseFormData) {
       throw createHttpError(

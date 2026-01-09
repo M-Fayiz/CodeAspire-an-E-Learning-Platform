@@ -19,7 +19,7 @@ const courseRepository = new CourseRepository();
 const userRepository = new UserRepository();
 const certificateRepository = new CertificateRepository();
 const slotBookingRepository = new SlotBookingRepository();
-const learnerRepository=new LearnerRepository()
+const learnerRepository = new LearnerRepository();
 const enrolledService = new EnrolledService(
   enrolledRepository,
   courseRepository,
@@ -27,7 +27,7 @@ const enrolledService = new EnrolledService(
   userRepository,
   certificateRepository,
   slotBookingRepository,
-  learnerRepository
+  learnerRepository,
 );
 const enrolledController = new EnrolledController(enrolledService);
 

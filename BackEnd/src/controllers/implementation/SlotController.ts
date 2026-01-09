@@ -38,7 +38,7 @@ export class SlotController implements ISlotController {
         search as string,
         filter as string,
       );
-      
+
       res.status(HttpStatus.OK).json(
         successResponse(HttpResponse.OK, {
           mappedSlots: mentorSlots.mappedSlots,

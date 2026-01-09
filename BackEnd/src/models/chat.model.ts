@@ -11,6 +11,11 @@ const ChatSchema = new mongoose.Schema<IChatModel>({
   participantKey: { type: String, unique: true },
   latestMessage: { type: String },
   lastMessageTime: { type: Date },
+  unreadCount: {
+    type: Map,
+    of: Number,
+    default: {},
+  },
   createdAt: { type: Date, default: Date.now },
 });
 

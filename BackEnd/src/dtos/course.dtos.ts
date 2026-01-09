@@ -10,9 +10,7 @@ import {
   ICourseCreateForm,
   ICourseDetailsPageDTO,
 } from "../types/dtos.type/course.dtos.type";
-import {
-  IReviewDTO,
-} from "../types/dtos.type/review.dto.types";
+import { IReviewDTO } from "../types/dtos.type/review.dto.types";
 
 export function courseListDTO(
   course: IPopulatedCourse,
@@ -100,8 +98,8 @@ export function courseDetailsPageDTO(
     ...session,
     lectures: session.lectures.map(({ lectureContent, ...rest }) => rest),
   }));
-  console.log("------------",avgRating)
-  console.log(courseReview)
+  console.log("------------", avgRating);
+  console.log(courseReview);
   return {
     _id: course._id,
     title: course.title || "",
@@ -127,7 +125,7 @@ export function courseDetailsPageDTO(
     status: course.status,
     updated: course.updatedAt.toISOString(),
     courseReviews: courseReview,
-    avgRating: avgRating??0,
+    avgRating: avgRating ?? 0,
     enrolledStd: enrolledStd,
   };
 }

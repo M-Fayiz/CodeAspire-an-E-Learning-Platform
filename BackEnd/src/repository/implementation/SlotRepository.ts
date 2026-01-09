@@ -4,7 +4,6 @@ import { BaseRepository } from "../baseRepository";
 import { ISlotRepository } from "../interface/ISlotRepository";
 
 import {
-
   createdUnPopulatedSlots,
   ISlotpopultedDataFromDB,
   mentorUnPopulatedSlots,

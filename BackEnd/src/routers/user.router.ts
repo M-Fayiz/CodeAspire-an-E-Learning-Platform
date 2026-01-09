@@ -11,13 +11,12 @@ import { LearnerRepository } from "../repository/implementation/LearnerRepositor
 const userRepository = new UserRepository();
 const mentorRepository = new MentorRepository();
 const notificationRepository = new NotificationRepository();
-const learnerRepository=new LearnerRepository()
+const learnerRepository = new LearnerRepository();
 const userService = new UserService(
   userRepository,
   mentorRepository,
   notificationRepository,
-  learnerRepository
-
+  learnerRepository,
 );
 const userController = new UserController(userService);
 

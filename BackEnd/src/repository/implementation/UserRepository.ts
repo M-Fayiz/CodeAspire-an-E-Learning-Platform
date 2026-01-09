@@ -8,9 +8,13 @@ import {
 } from "../../models/user.model";
 import { IUserRepo } from "../interface/IUserRepo";
 import { Profile } from "passport-google-oauth20";
-import { ILearnerStreask, IRole, mentorApprovalStatus } from "../../types/user.types";
+import {
+  ILearnerStreask,
+  IRole,
+  mentorApprovalStatus,
+} from "../../types/user.types";
 import { FilterQuery, Types } from "mongoose";
-import { graphPrps } from "../../types/adminDahsboard.type";
+import { graphPrps, Mentorstatus } from "../../types/adminDahsboard.type";
 
 export class UserRepository
   extends BaseRepository<IUserModel>
@@ -77,7 +81,10 @@ export class UserRepository
     searchQuery?: string,
   ): Promise<IUserModel[] | null> {
     return this.findAll(
-      {role:{$ne:IRole.Admin}, name: { $regex: searchQuery ?? "", $options: "i" } },
+      {
+        role: { $ne: IRole.Admin },
+        name: { $regex: searchQuery ?? "", $options: "i" },
+      },
       limit,
       skip,
     );
@@ -124,8 +131,8 @@ export class UserRepository
     profileData: Partial<
       IUserModel | IMenterModel | ILearnerModel | IAdminModel
     >,
-  ): Promise<IUserModel| IAdminModel | null> {
-    return await this.findByIDAndUpdateProfile(id, profileData );
+  ): Promise<IUserModel | IAdminModel | null> {
+    return await this.findByIDAndUpdateProfile(id, profileData);
   }
   async getUserProfile(
     userId: Types.ObjectId,
@@ -172,7 +179,30 @@ export class UserRepository
       { $sort: { date: 1 } },
     ]);
   }
-    async updateLearnerStreak(learnerId: Types.ObjectId, updatedData:ILearnerStreask): Promise<ILearnerModel|null> {
-      return await this.findByIDAndUpdate<ILearnerModel>(learnerId,{$set:{learningStreak:updatedData}})
-    }
+  async updateLearnerStreak(
+    learnerId: Types.ObjectId,
+    updatedData: ILearnerStreask,
+  ): Promise<ILearnerModel | null> {
+    return await this.findByIDAndUpdate<ILearnerModel>(learnerId, {
+      $set: { learningStreak: updatedData },
+    });
   }
+  async  getMentorStatus(filter: FilterQuery<IUserModel>): Promise<Mentorstatus[]> {
+    return await this.aggregate<Mentorstatus>([
+      { $match:filter },
+      {$group:{
+        _id:null,
+        approved:{
+          $sum:{
+            $cond:[{$eq:["$ApprovalStatus",'approved']},1,0]
+          }
+        },
+        rejected:{
+          $sum:{
+            $cond:[{$eq:["$ApprovalStatus",'rejected']},1,0]
+          }
+        },
+      }}
+    ])
+  }
+}

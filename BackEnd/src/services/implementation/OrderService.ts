@@ -231,7 +231,6 @@ export class OrderService implements IOrderService {
       },
       { idempotencyKey: idemKey },
     );
-   
 
     await this._orderRepository.updateOrder(orderData._id, {
       paymentIntentId: session.id,

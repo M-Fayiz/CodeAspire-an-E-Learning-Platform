@@ -14,15 +14,14 @@ export interface LearnerSlotCard {
   totalFailed: number;
 }
 
-
-export interface InProgressCourse{
-  _id:Types.ObjectId,
-   progress: {
-      completedLectures: Types.ObjectId[];
-      lastAccessedLecture: Types.ObjectId | null;
-      lastAccessedSession: Types.ObjectId | null;
-      completionPercentage: number;
-    },
-    courseStatus: completionStatus;
-    courseId:ICourses
+export interface InProgressCourse {
+  _id: Types.ObjectId;
+  progress: {
+    completedLectures: Types.ObjectId[];
+    lastAccessedLecture: Types.ObjectId | null;
+    lastAccessedSession: Types.ObjectId | null;
+    completionPercentage: number;
+  };
+  courseStatus: completionStatus;
+  courseId: ICourses;
 }

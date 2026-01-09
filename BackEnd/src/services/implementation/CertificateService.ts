@@ -19,8 +19,6 @@ import { notificationDto } from "../../dtos/notification.dto";
 import { ensureTempDir } from "../../utils/fileGuard.util";
 import { generateCertificatePdf } from "../../utils/generateCertificatePdf.util";
 
-
-
 export class CertificateService implements ICertificateService {
   constructor(
     private _certificateRepository: ICertificateRepository,
@@ -55,8 +53,6 @@ export class CertificateService implements ICertificateService {
     const certId = generateCertificateId();
     const issuedDate = new Date().toLocaleDateString("en-IN");
 
-  
-
     const tempDir = ensureTempDir();
 
     const tempPath = path.join(tempDir, `${certId}.pdf`);
@@ -73,15 +69,12 @@ export class CertificateService implements ICertificateService {
       previewPath,
     );
 
-
-   
-
     const s3Key = await uploadPdfToS3(tempPath, `${certId}.pdf`);
     const previewKey = await uploadImageToS3(
       previewPath,
       `${certId}-preview.png`,
     );
-   await Promise.all([
+    await Promise.all([
       fs.promises.unlink(tempPath),
       fs.promises.unlink(previewPath),
     ]);
@@ -111,7 +104,7 @@ export class CertificateService implements ICertificateService {
       notification: notificationDto(createdNotification),
     };
   }
-  
+
   async listCertificate(learnerId: string): Promise<ICertificateModel[]> {
     const learner_id = parseObjectId(learnerId);
     if (!learner_id) {

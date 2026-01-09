@@ -38,7 +38,6 @@ export function slotPopulatedMapper(
 }
 
 export function mentorSlotsDTO(slotData: mentorUnPopulatedSlots): ISlotDTO {
-
   return {
     _id: slotData._id,
     course: {
@@ -55,7 +54,6 @@ export function mentorSlotsDTO(slotData: mentorUnPopulatedSlots): ISlotDTO {
   };
 }
 export function createdSlotsDTO(slotData: createdUnPopulatedSlots): ISlotDTO {
-
   return {
     _id: slotData._id,
     course: {

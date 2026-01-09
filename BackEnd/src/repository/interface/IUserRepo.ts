@@ -5,9 +5,13 @@ import {
   ILearnerModel,
   IAdminModel,
 } from "../../models/user.model";
-import { ILearnerStreask, IRole, mentorApprovalStatus } from "../../types/user.types";
+import {
+  ILearnerStreask,
+  IRole,
+  mentorApprovalStatus,
+} from "../../types/user.types";
 import { FilterQuery, Types } from "mongoose";
-import { graphPrps } from "../../types/adminDahsboard.type";
+import { graphPrps, Mentorstatus } from "../../types/adminDahsboard.type";
 
 export interface IUserRepo {
   createUser(user: IUserModel): Promise<IUserModel>;
@@ -50,7 +54,7 @@ export interface IUserRepo {
   ): Promise<IUserModel | null>;
   updateUserprofile(
     id: Types.ObjectId,
-    profileData: Partial< IAdminModel>,
+    profileData: Partial<IAdminModel>,
   ): Promise<IUserModel | IMenterModel | ILearnerModel | IAdminModel | null>;
   getUserProfile(
     userId: Types.ObjectId,
@@ -60,5 +64,9 @@ export interface IUserRepo {
   ): Promise<IUserModel | IMenterModel | ILearnerModel | IAdminModel | null>;
   findDashBoardUserCount(role: IRole, start: Date, end: Date): Promise<number>;
   SignedUsers(filter: FilterQuery<IUserModel>): Promise<graphPrps[]>;
-  updateLearnerStreak(learnerId:Types.ObjectId,updatedData:ILearnerStreask ):Promise<ILearnerModel|null>
+  updateLearnerStreak(
+    learnerId: Types.ObjectId,
+    updatedData: ILearnerStreask,
+  ): Promise<ILearnerModel | null>;
+  getMentorStatus(filter: FilterQuery<IUserModel>):Promise<Mentorstatus[]>
 }

@@ -25,10 +25,9 @@ export function convertTo12Hour(time24h: string) {
   return `${h}:${String(m).padStart(2, "0")} ${period}`;
 }
 
-
 export function isSlotTimingChanged(
   oldDays: IMentorSlot["selectedDays"],
-  newDays: IMentorSlot["selectedDays"]
+  newDays: IMentorSlot["selectedDays"],
 ): boolean {
   return JSON.stringify(oldDays) !== JSON.stringify(newDays);
 }

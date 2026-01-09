@@ -1,4 +1,4 @@
-import { SourceOfRevanye } from "../types/adminDahsboard.type";
+import { Mentorstatus, SourceOfRevanye } from "../types/adminDahsboard.type";
 import { IAdminDashboardDTO } from "../types/dtos.type/adminDashboard.dto.type";
 import { ITopCategory, ITopCourse } from "../types/mentorDashboard.types";
 
@@ -9,6 +9,7 @@ export function adminDashboardDTO(
   revenue: SourceOfRevanye[],
   topCourse: ITopCourse[],
   topCategory: ITopCategory[],
+  mentorStatus:Mentorstatus
 ): IAdminDashboardDTO {
   let updated = revenue.map((data) => ({ name: data._id, value: data.value }));
 
@@ -21,5 +22,9 @@ export function adminDashboardDTO(
       category: topCategory,
       course: topCourse,
     },
+    mentorStatus:{
+      approved:mentorStatus.approved??0,
+      rejected:mentorStatus.rejected??0
+    }
   };
 }

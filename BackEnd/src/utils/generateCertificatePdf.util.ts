@@ -1,4 +1,4 @@
-import PDFDocument from 'pdfkit'
+import PDFDocument from "pdfkit";
 import fs from "fs";
 import path from "path";
 
@@ -36,21 +36,19 @@ export async function generateCertificatePdf(
       height: 794,
     });
 
-   
     const fontRegular = path.resolve(
-  process.cwd(),
-  "public",
-  "fonts",
-  "PlayfairDisplay-Regular.ttf",
-);
+      process.cwd(),
+      "public",
+      "fonts",
+      "PlayfairDisplay-Regular.ttf",
+    );
 
-const fontBold = path.resolve(
-  process.cwd(),
-  "public",
-  "fonts",
-  "PlayfairDisplay-Bold.ttf",
-);
-
+    const fontBold = path.resolve(
+      process.cwd(),
+      "public",
+      "fonts",
+      "PlayfairDisplay-Bold.ttf",
+    );
 
     doc.registerFont("Bold", fontBold);
     doc.registerFont("Regular", fontRegular);
@@ -64,22 +62,14 @@ const fontBold = path.resolve(
         align: "center",
       });
 
-   
-    doc
-      .font("Regular")
-      .fontSize(36)
-      .text(data.courseName, 130, 500, {
-        width: 860,
-        align: "center",
-      });
+    doc.font("Regular").fontSize(36).text(data.courseName, 130, 500, {
+      width: 860,
+      align: "center",
+    });
 
-    doc
-      .fontSize(20)
-      .text(`Issued Date: ${data.issuedDate}`, 820, 680);
+    doc.fontSize(20).text(`Issued Date: ${data.issuedDate}`, 820, 680);
 
-    doc
-      .fontSize(20)
-      .text(`Certificate ID: ${data.certId}`, 820, 710);
+    doc.fontSize(20).text(`Certificate ID: ${data.certId}`, 820, 710);
 
     doc.end();
 

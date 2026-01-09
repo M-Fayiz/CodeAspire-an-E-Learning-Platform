@@ -14,7 +14,6 @@ export function updateLearningStreak(learner: ILearnerModel) {
     ? normalizeDate(new Date(learner.learningStreak.lastLearningDate))
     : null;
 
-
   if (!lastDate) {
     learner.learningStreak = {
       current: 1,
@@ -27,18 +26,16 @@ export function updateLearningStreak(learner: ILearnerModel) {
   const diffDays =
     (today.getTime() - lastDate.getTime()) / (1000 * 60 * 60 * 24);
 
-
   if (diffDays === 0) {
     return learner.learningStreak;
   }
-  if(!learner.learningStreak){
-    throw createHttpError(HttpStatus.NOT_FOUND,HttpResponse.ITEM_NOT_FOUND)
+  if (!learner.learningStreak) {
+    throw createHttpError(HttpStatus.NOT_FOUND, HttpResponse.ITEM_NOT_FOUND);
   }
- 
+
   if (diffDays === 1) {
     learner.learningStreak.current += 1;
   } else {
-    
     learner.learningStreak.current = 1;
   }
 

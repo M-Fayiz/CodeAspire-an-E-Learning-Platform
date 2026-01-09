@@ -30,4 +30,21 @@ export class ChatRepository
     const result = await this.find({ users: senderId }, ["users"]);
     return result as unknown as IChatPopulated[];
   }
+  async IncrementUnreadMsg(
+    chatId: Types.ObjectId,
+    userId: Types.ObjectId,
+  ): Promise<IChatModel | null> {
+    return await this.findByIDAndUpdate(chatId, {
+      $inc: {
+        [`unreadCount.${userId}`]: 1,
+      },
+    });
+  }
+  async resetUnreadMsg(chatId: Types.ObjectId, userId: Types.ObjectId): Promise<IChatModel | null> {
+    return await this.findByIDAndUpdate(chatId, {
+      $inc: {
+        [`unreadCount.${userId}`]: 0,
+      },
+    });
+  }
 }

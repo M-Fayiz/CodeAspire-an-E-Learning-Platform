@@ -11,4 +11,12 @@ export interface IChatRespository {
     filter: FilterQuery<IChatModel>,
   ): Promise<IChatModel | null>;
   listUsers(senderId: Types.ObjectId): Promise<IChatPopulated[] | null>;
+  IncrementUnreadMsg(
+    chatId: Types.ObjectId,
+    userId: Types.ObjectId,
+  ): Promise<IChatModel | null>;
+  resetUnreadMsg(
+    chatId: Types.ObjectId,
+    userId: Types.ObjectId,
+  ): Promise<IChatModel | null>;
 }

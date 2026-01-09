@@ -8,7 +8,7 @@ import { stripe } from "../../config/stripe.config";
 import { createHttpError } from "../../utils/http-error";
 import { HttpStatus } from "../../const/http-status.const";
 import { HttpResponse } from "../../const/error-message.const";
-import {  TransactionType } from "../../const/transaction.const";
+import { TransactionType } from "../../const/transaction.const";
 export class WebhookService implements IWebhookService {
   constructor(
     private _orderService: IOrderService,
@@ -39,7 +39,7 @@ export class WebhookService implements IWebhookService {
           case TransactionType.COURSE_PURCHASE:
             await this._orderService.handleCoursePurchase(session);
             break;
-         
+
           case TransactionType.SLOT_BOOKING:
             await this._slotBookingService.handleSlotBooking(session);
             break;

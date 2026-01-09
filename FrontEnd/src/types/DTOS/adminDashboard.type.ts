@@ -16,7 +16,15 @@ export interface IAdminDashboardDTO {
     course: ITopCourse[];
     category: ITopCategory[];
   };
+  mentorStatus:Mentorstatus
+
 }
+
+export interface Mentorstatus{
+    approved: number,
+    rejected: number
+  }
+
 export interface ITopCategory {
   categoryId: string;
   title: string;

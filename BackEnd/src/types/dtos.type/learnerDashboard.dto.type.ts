@@ -6,9 +6,9 @@ export interface learnerDashboardCardsDTO {
   courseData: LearnerCourseCard;
   slotData: LearnerSlotCard;
   TotalCertificate: number;
-  learnerStreak:ILearnerStreask|null
-  activeDays:Date[],
-  inProgress:InProgress[]
+  learnerStreak: ILearnerStreask | null;
+  activeDays: Date[];
+  inProgress: InProgress[];
 }
 
 export interface InProgress {
@@ -16,4 +16,3 @@ export interface InProgress {
   title: string;
   progress: number;
 }
-

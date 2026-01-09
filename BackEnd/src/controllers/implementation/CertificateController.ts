@@ -25,7 +25,6 @@ export class CertificateController implements ICertificateController {
         );
       sendNotification(notification.userId, notification);
 
-    
       res
         .status(HttpStatus.OK)
         .json(successResponse(HttpResponse.OK, { certificate }));

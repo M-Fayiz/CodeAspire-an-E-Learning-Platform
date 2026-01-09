@@ -15,7 +15,10 @@ import {
   ITopCategory,
   ITopCourse,
 } from "../../types/mentorDashboard.types";
-import { InProgressCourse, LearnerCourseCard } from "../../types/learnerDashboard.type";
+import {
+  InProgressCourse,
+  LearnerCourseCard,
+} from "../../types/learnerDashboard.type";
 
 export class EnrolledRepository
   extends BaseRepository<IEnrolledModel>
@@ -304,7 +307,13 @@ export class EnrolledRepository
       },
     ]);
   }
-  async getInprogressCourse(learnerId: Types.ObjectId, populate: string[]): Promise<InProgressCourse[]|null> {
-    return await this.find<InProgressCourse>({learnerId,courseStatus:completionStatus.IN_PROGRESS},populate)
+  async getInprogressCourse(
+    learnerId: Types.ObjectId,
+    populate: string[],
+  ): Promise<InProgressCourse[] | null> {
+    return await this.find<InProgressCourse>(
+      { learnerId, courseStatus: completionStatus.IN_PROGRESS },
+      populate,
+    );
   }
 }

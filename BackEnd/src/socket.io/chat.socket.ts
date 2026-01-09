@@ -13,6 +13,7 @@ import { parseObjectId } from "../mongoose/objectId";
 import { createHttpError } from "../utils/http-error";
 import { HttpStatus } from "../const/http-status.const";
 import { ChatEvents } from "../const/socketEvents.const";
+import { MessageStatus, MessageType } from "../types/message.type";
 
 const chatRepository = new ChatRepository();
 const messageRepository = new MessageRepository();
@@ -22,9 +23,11 @@ export const registerChatHandler = (
   io: Server,
   socket: Socket<ChatListenEvents, ChatEmitEvents, {}, SocketData>,
 ) => {
+
   const userId = socket.data.userId;
 
   socket.on(ChatEvents.JOIN, async (payload) => {
+
     const { roomId } = payload || {};
 
     if (!roomId) {
@@ -43,6 +46,7 @@ export const registerChatHandler = (
     }
 
     socket.join(`chat:${roomId}`);
+
     await new Promise((r) => setTimeout(r, 100));
 
     socket.to(`chat:${roomId}`).emit(ChatEvents.NOTIFICATION, { roomId });
@@ -50,53 +54,63 @@ export const registerChatHandler = (
 
   socket.on(ChatEvents.SEND, async (payload, ack) => {
     try {
-      console.log('[ayload ',payload)
-      const { roomId, content, type = "text", mediaUrl } = payload;
-      if (!roomId || (!content && type == "text")) {
+      
+      const { roomId, content, type = MessageType.TEXT, mediaUrl } = payload;
+
+      if (!roomId || (!content && type == MessageType.TEXT)) {
         return ack?.({ error: "Invalid payload" });
       }
 
       const chat = await chatService.findChat(roomId);
-      console.log('chat :',chat)
+
       if (!chat || !chat.users.map(String).includes(userId)) {
         return ack?.({ error: "Not a Participant" });
       }
 
       const room_id = parseObjectId(roomId);
-      const user_id = parseObjectId(userId);
+      const senderId = parseObjectId(userId);
 
-      if (!room_id || !user_id) {
+      if (!room_id || !senderId) {
         throw createHttpError(HttpStatus.BAD_REQUEST, HttpResponse.INVALID_ID);
       }
 
+      const otherUsers = chat.users
+        .map((id) => id.toString())
+        .filter((id) => id !== userId);
+
+      if (otherUsers.length !== 1) {
+        throw new Error("Invalid one-to-one chat state");
+      }
+
+      const receiverId = otherUsers[0];
+
       const messageData = await chatService.createMessage({
         chatId: room_id,
-        sender: user_id,
+        sender: senderId,
         content,
         type,
-        status: "sent",
+        status: MessageStatus.SENT,
         mediaUrl,
       });
-      console.log('saved message : :',messageData)
-      let previewMessage = "";
 
-      if (type === "text") {
-        previewMessage = content as string;
-      } else if (type === "image") {
-        previewMessage = "📷 Image";
-      } else if (type === "pdf") {
-        previewMessage = "📎 File";
-      } else if (type === "video") {
-        previewMessage = "🎥 Video";
-      } else if (type === "audio") {
-        previewMessage = "🎵 Audio";
-      } else {
-        previewMessage = "Message";
-      }
+      let previewMessage = "Message";
+      if (type === MessageType.TEXT) previewMessage = content as string;
+      else if (type === MessageType.IMAGE) previewMessage = "📷 Image";
+      else if (type === MessageType.PDF) previewMessage = "📎 File";
+      else if (type === MessageType.VIDEO) previewMessage = "🎥 Video";
+
       await chatService.updateChat(room_id, {
         latestMessage: previewMessage,
         lastMessageTime: new Date().toISOString(),
       });
+
+      const updatedChat = await chatService.incrementUnreadMSG(
+        room_id,
+        otherUsers[0],
+      );
+
+      io.to(`user:${receiverId}`).emit(ChatEvents.UPDATE, updatedChat);
+      io.to(`user:${userId}`).emit(ChatEvents.UPDATE, updatedChat);
 
       const messageToEmit = {
         _id: messageData._id,
@@ -110,7 +124,6 @@ export const registerChatHandler = (
       };
 
       io.to(`chat:${roomId}`).emit(ChatEvents.NEW_MESSAGE, messageToEmit);
-      // ack?.({ success: true, message: messageToEmit, tempId });
     } catch (error) {
       console.error("Error handling SEND event:", error);
     }
@@ -129,10 +142,17 @@ export const registerChatHandler = (
   });
 
   socket.on(ChatEvents.READ, async ({ roomId, messageIds }) => {
-    await chatService.readMessages(messageIds);
-    io.to(`chat:${roomId}`).emit(ChatEvents.DELIVERED, {
-      messageIds,
-      status: "read",
-    });
-  });
+
+  const readerId = userId
+
+    
+
+  await chatService.readMessages(messageIds);
+
+  const updatedChat=await chatService.resetUnreadMsg(roomId, readerId);
+
+
+  io.to(`user:${readerId}`).emit(ChatEvents.UPDATE, updatedChat);
+});
+
 };

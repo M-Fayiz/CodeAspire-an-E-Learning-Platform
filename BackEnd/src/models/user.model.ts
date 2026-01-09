@@ -73,11 +73,11 @@ export const MentorModel = UserModel.discriminator<IMenterModel>(
 
 const LearnerSchema = new mongoose.Schema({
   learningStreak: {
-    current: Number  ,     
-    longest: Number,       
-    lastLearningDate: Date
-   },
-    activeDates: {
+    current: Number,
+    longest: Number,
+    lastLearningDate: Date,
+  },
+  activeDates: {
     type: [Date],
     default: [],
   },
@@ -85,7 +85,6 @@ const LearnerSchema = new mongoose.Schema({
 export const LearnerModel = UserModel.discriminator<ILearnerModel>(
   IRole.Learner,
   LearnerSchema,
- 
 );
 
 const AdminSchema = new mongoose.Schema({

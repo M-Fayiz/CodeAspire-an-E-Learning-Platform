@@ -71,6 +71,8 @@ const AdminDashboard = () => {
         icon: IndianRupee,
       },
       { label: "Total Courses", value: dashData?.totalCourses, icon: BookCopy },
+      { label: "Approved Mentors", value: dashData?.mentorStatus.approved, icon: BookCopy },
+      { label: "Rejected Mentors", value: dashData?.mentorStatus.rejected, icon: BookCopy },
     ],
   };
 
@@ -95,7 +97,7 @@ const AdminDashboard = () => {
         </div>
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-4 lg:grid-cols-4 gap-6">
+      <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-3 gap-6">
         {content.stats.map((stat, index) => (
           <div
             key={index}

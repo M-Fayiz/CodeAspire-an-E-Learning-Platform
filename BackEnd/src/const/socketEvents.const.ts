@@ -14,4 +14,5 @@ export enum ChatEvents {
   NOTIFICATION = "chat:notification",
   STATUS_UPDARE = "chat:status",
   ERROR = "chat:error",
+  UPDATE = "chat:update",
 }

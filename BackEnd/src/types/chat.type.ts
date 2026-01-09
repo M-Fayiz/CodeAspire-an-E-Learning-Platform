@@ -5,5 +5,6 @@ export interface IChat {
   participantKey: string;
   latestMessage?: string;
   lastMessageTime: Date;
+  unreadCount: Map<string, number>;
   createdAt?: Date;
 }

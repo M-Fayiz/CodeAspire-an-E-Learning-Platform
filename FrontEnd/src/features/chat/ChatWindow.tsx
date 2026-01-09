@@ -73,6 +73,24 @@ const ChatWindow: React.FC<ChatWindowProps> = ({
       }
     })();
   }, [messages.length]);
+  
+useEffect(() => {
+  if (!socket || !userData || !user?.id) return;
+
+  const myId = user.id;
+
+  const unreadMessages = messages.filter(
+    (m) => m.sender !== myId && m.status !== "read"
+  );
+
+  if (unreadMessages.length === 0) return;
+
+  socket.emit(ChatEvents.READ, {
+    roomId: userData._id, 
+    messageIds: unreadMessages.map((m) => m._id),
+  });
+  }, [messages.length, userData?._id]);
+
 
   const handleSendMessage = () => {
     if (!socket || !inputMessage.trim()) return;

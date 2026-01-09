@@ -27,7 +27,7 @@ export const intitializeSocket = (server: HttpServer) => {
     if (!token) return next(new Error(HttpResponse.UNAUTHORIZED));
     try {
       const user = verifyAccesToken(token);
-      console.log('user from socket :',user)
+
       socket.data.userId = user._id;
       next();
     } catch {
@@ -37,7 +37,7 @@ export const intitializeSocket = (server: HttpServer) => {
 
   io.on(SocketEvents.CONNECT, async (socket: CustomSocket) => {
     const userId = socket.data.userId;
-    console.log("userId :", userId);
+
     if (!userId) {
       console.error("Socket connected without userId");
       socket.disconnect(true);

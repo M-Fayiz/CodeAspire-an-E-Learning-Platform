@@ -66,7 +66,7 @@ export class EnrolledService implements IEnrolledService {
     private _userRepository: IUserRepo,
     private _certificateRepository: ICertificateRepository,
     private _slotbookingRepository: ISlotBookingRepository,
-    private _learnerRepository:ILearnerRepository
+    private _learnerRepository: ILearnerRepository,
   ) {}
 
   async getEnrolledCourses(learnerId: string): Promise<IEnrolledListDto[]> {
@@ -158,7 +158,9 @@ export class EnrolledService implements IEnrolledService {
 
     const completedCount = updatedEnrollment.progress.completedLectures.length;
 
-    const completionPercentage = Math.floor((completedCount / totalLectures!) * 100)
+    const completionPercentage = Math.floor(
+      (completedCount / totalLectures!) * 100,
+    );
 
     const status =
       completionPercentage === 100
@@ -175,31 +177,32 @@ export class EnrolledService implements IEnrolledService {
       },
     );
 
-    const user=await this._userRepository.findUser(updatedEnrollment.learnerId)
-    
-    if(!user){
-      throw createHttpError(HttpStatus.NOT_FOUND,HttpResponse.USER_NOT_FOUND)
+    const user = await this._userRepository.findUser(
+      updatedEnrollment.learnerId,
+    );
+
+    if (!user) {
+      throw createHttpError(HttpStatus.NOT_FOUND, HttpResponse.USER_NOT_FOUND);
     }
 
-    if(user.role!==IRole.Learner){
-      throw createHttpError(HttpStatus.CONFLICT,HttpResponse.ACCESS_DENIED)
+    if (user.role !== IRole.Learner) {
+      throw createHttpError(HttpStatus.CONFLICT, HttpResponse.ACCESS_DENIED);
     }
     const today = new Date();
     today.setHours(0, 0, 0, 0);
     const learner = user as ILearnerModel;
-      const updatedStreak = updateLearningStreak(learner);
+    const updatedStreak = updateLearningStreak(learner);
 
-     await this._learnerRepository.updateLearningStreak(
-        learner._id,
-        updatedStreak as ILearnerStreask  ,
-        today
-      );
-    
+    await this._learnerRepository.updateLearningStreak(
+      learner._id,
+      updatedStreak as ILearnerStreask,
+      today,
+    );
+
     return finalEnrollment?.progress ?? null;
   }
 
   async addRating(enroledId: string, value: number): Promise<number> {
-
     const enrolled_id = parseObjectId(enroledId);
 
     if (!enrolled_id) {
@@ -222,9 +225,8 @@ export class EnrolledService implements IEnrolledService {
   async getCourseEnrolledDashboardData(
     courseId: string,
     mentorId: string,
-    user:IUser
+    user: IUser,
   ): Promise<CourseDashboardDTO | null> {
-
     const course_id = parseObjectId(courseId);
     const mentor_id = parseObjectId(mentorId);
 
@@ -232,20 +234,17 @@ export class EnrolledService implements IEnrolledService {
       throw createHttpError(HttpStatus.BAD_REQUEST, HttpResponse.INVALID_ID);
     }
     const [studentsAndRating, course, revenue] = await Promise.all([
-
       this._erolledRepository.getEnrolledDasgboardData(course_id, mentor_id),
       this._courseRepository.findCourse(course_id),
       this._transactionRepository.getCourseDashboardRevenue(course_id),
     ]);
-    
+
     if (!studentsAndRating || !course || !revenue) {
       throw createHttpError(HttpStatus.NOT_FOUND, HttpResponse.ITEM_NOT_FOUND);
     }
 
-    
-
-    if(course.mentorId._id.toString()!==user._id.toString()){
-      throw createHttpError(HttpStatus.FORBIDDEN,HttpResponse.ACCESS_DENIED)
+    if (course.mentorId._id.toString() !== user._id.toString()) {
+      throw createHttpError(HttpStatus.FORBIDDEN, HttpResponse.ACCESS_DENIED);
     }
     const { avgRating = 0, totalStudents = 0 } = studentsAndRating[0] || {};
 
@@ -350,20 +349,21 @@ export class EnrolledService implements IEnrolledService {
       throw createHttpError(HttpStatus.BAD_REQUEST, HttpResponse.INVALID_ID);
     }
 
-    const [courseCard, certificateCount, slotCard,learner,inProgress] = await Promise.all([
-      this._erolledRepository.getLearnerDashboardCourseData(learner_Id),
-      this._certificateRepository.learnerTotalCertificate(learner_Id),
-      this._slotbookingRepository.learnerDashboardSlotCard(learner_Id),
-      this._learnerRepository.getLearnerStreak(learner_Id),
-      this._erolledRepository.getInprogressCourse(learner_Id,['courseId'])
-    ]);
+    const [courseCard, certificateCount, slotCard, learner, inProgress] =
+      await Promise.all([
+        this._erolledRepository.getLearnerDashboardCourseData(learner_Id),
+        this._certificateRepository.learnerTotalCertificate(learner_Id),
+        this._slotbookingRepository.learnerDashboardSlotCard(learner_Id),
+        this._learnerRepository.getLearnerStreak(learner_Id),
+        this._erolledRepository.getInprogressCourse(learner_Id, ["courseId"]),
+      ]);
 
     return learnerDashboardDetails(
       courseCard[0],
       slotCard[0],
       certificateCount,
       learner as ILearnerModel,
-      inProgress as InProgressCourse[]
+      inProgress as InProgressCourse[],
     );
   }
 }

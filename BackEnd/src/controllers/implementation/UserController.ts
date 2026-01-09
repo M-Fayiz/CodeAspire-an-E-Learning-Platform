@@ -76,7 +76,7 @@ export class UserController implements IUserController {
   ): Promise<void> => {
     try {
       const { userId } = req.params;
-      console.log('body :',req.body)
+      console.log("body :", req.body);
       const updatedData = await this._userService.updateUserProfile(
         userId,
         req.body,

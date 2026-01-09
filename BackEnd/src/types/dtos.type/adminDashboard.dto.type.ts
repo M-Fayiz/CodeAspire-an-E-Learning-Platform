@@ -1,4 +1,5 @@
 import { TransactionType } from "../../const/transaction.const";
+import { Mentorstatus } from "../adminDahsboard.type";
 import { ITopCategory, ITopCourse } from "../mentorDashboard.types";
 
 interface RevanueSource {
@@ -15,4 +16,5 @@ export interface IAdminDashboardDTO {
     course: ITopCourse[];
     category: ITopCategory[];
   };
+  mentorStatus:Mentorstatus
 }
