@@ -10,6 +10,6 @@ export class HttpError extends Error {
 
 export const createHttpError = (statusCode: number, message: string) => {
   const errorResponse = new HttpError(statusCode, message);
-  console.log("error response from server ", errorResponse);
+  console.error("error response from server ", errorResponse);
   return errorResponse;
 };

@@ -27,6 +27,7 @@ import orderRouter from "./routers/order.router";
 import webhookRouter from "./routers/webhook.router";
 import videoSessionRouter from "./routers/videoSession.router";
 import certificateRouter from "./routers/certificate.router";
+import chatBotRouter from "./routers/chatbot.router";
 
 dotenv.config();
 
@@ -78,6 +79,7 @@ app.use("/api/v1/slots", slotRouter);
 app.use("/api/v1/slot-booking", bookingROuter);
 app.use("/api/v1/video", videoSessionRouter);
 app.use("/api/v1/certificate", certificateRouter);
+app.use("/api/v1/chat-bot", chatBotRouter);
 const port = env.port;
 dbConnect();
 

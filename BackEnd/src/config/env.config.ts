@@ -98,4 +98,7 @@ export const env = {
   get REFRESH_TOKEN_MAX_AGE() {
     return process.env.REFRESH_TOKEN_MAX_AGE;
   },
+  get GEMINI_API_KEY() {
+    return process.env.GEMINI_API_KEY;
+  },
 };

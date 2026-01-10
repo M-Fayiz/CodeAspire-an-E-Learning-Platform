@@ -1,5 +1,5 @@
 import { TransactionType } from "../const/transaction.const";
-import { IRole } from "./user.types";
+
 
 export interface IAdminRevenue {
   _id: null;

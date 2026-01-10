@@ -39,6 +39,8 @@
   "dependencies": {
     "@aws-sdk/client-s3": "^3.839.0",
     "@aws-sdk/s3-request-presigner": "^3.839.0",
+    "@google/genai": "^1.35.0",
+    "@google/generative-ai": "^0.24.1",
     "@types/cookie-parser": "^1.4.9",
     "@types/crypto-js": "^4.2.2",
     "@types/express-session": "^1.18.2",
