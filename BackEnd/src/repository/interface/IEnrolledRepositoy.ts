@@ -1,4 +1,4 @@
-import { Types, UpdateQuery } from "mongoose";
+import { FilterQuery, Types, UpdateQuery } from "mongoose";
 import { IEnrolledModel } from "../../models/enrolled.model";
 import {
   chartAggregation,
@@ -68,4 +68,5 @@ export interface IEnrolledRepository {
     learnerId: Types.ObjectId,
     populate: string[],
   ): Promise<InProgressCourse[] | null>;
+  findEnrlloedCourse(filter:FilterQuery<IEnrolledModel>):Promise<IEnrolledModel|null>
 }

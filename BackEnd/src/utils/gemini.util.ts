@@ -1,16 +1,19 @@
 
 import { GoogleGenAI } from "@google/genai";
-import { env } from "../config/env.config";
+export type GeminiMessage = {
+  role: Sender
+  parts: { text: string }[];
+};
 
 
 const genAI  = new GoogleGenAI({});
 
 
-export const askGemini = async (prompt:string) => {
+export const askGemini = async ( contents: GeminiMessage[]) => {
 
     const response = await genAI.models.generateContent({
     model: "gemini-2.5-flash",
-    contents: prompt,
+    contents: contents,
   });
     return response.text
  

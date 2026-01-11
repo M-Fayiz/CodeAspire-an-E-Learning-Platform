@@ -7,7 +7,7 @@ export interface  IChatBotModel extends IChatBot,Document<Types.ObjectId>{}
 
 
 const messageSchema = new Schema<IBotMessage>({
-  sender: {
+  role: {
     type: String,
     enum: Object.values(Sender),
     required: true,
@@ -24,7 +24,7 @@ const messageSchema = new Schema<IBotMessage>({
 
 const courseChatSchema = new Schema<IChatBotModel>(
   {
-    userId: {
+    learnerId: {
       type: Schema.Types.ObjectId,
       ref: DbModelName.USER,
       required: true,

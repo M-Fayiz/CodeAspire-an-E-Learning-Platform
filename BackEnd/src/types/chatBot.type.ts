@@ -1,16 +1,23 @@
 import { Types } from "mongoose";
 
 export interface IChatBot{
-    userId:Types.ObjectId,
+    learnerId:Types.ObjectId,
     courseId:Types.ObjectId
     messages:IBotMessage[]
 }
 export enum Sender{
     USER='user',
-    AI='ai'
+    AI='model',
+   
 }
 export interface IBotMessage{
-    sender:Sender,
+    role:Sender,
     content:string,
     createdAt:Date
+}
+
+export interface IchatbotUser{
+  learnerId:Types.ObjectId,
+    courseId:Types.ObjectId
+    messages:string 
 }

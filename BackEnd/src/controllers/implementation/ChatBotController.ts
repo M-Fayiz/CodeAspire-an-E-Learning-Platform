@@ -11,14 +11,9 @@ export class ChatbotController implements IChatbotController{
   try {
     console.log(req.body);
 
-    const { prompt } = req.body;
+    const { chatbotData,currentLecture,currentSession } = req.body;
 
-    if (!prompt) {
-      res.status(400).json({ message: "prompt is required" });
-      return;
-    }
-
-    const promptResult = await this._chatbotService.createChat(prompt);
+    const promptResult = await this._chatbotService.createChat(chatbotData,currentSession,currentLecture);
 
     console.log("prompt result:", promptResult);
 

@@ -8,7 +8,7 @@ import {
   IEnrolledAggregation,
   IEnrollement,
 } from "../../types/enrollment.types";
-import { Types, UpdateQuery } from "mongoose";
+import { FilterQuery, Types, UpdateQuery } from "mongoose";
 import {
   CourseDetailsRating,
   IMentorDashboardData,
@@ -315,5 +315,8 @@ export class EnrolledRepository
       { learnerId, courseStatus: completionStatus.IN_PROGRESS },
       populate,
     );
+  }
+  async findEnrlloedCourse(filter: FilterQuery<IEnrolledModel>): Promise<IEnrolledModel|null> {
+    return await this.findOne(filter)
   }
 }
