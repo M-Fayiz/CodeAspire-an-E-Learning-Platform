@@ -12,7 +12,7 @@ class HttpError extends Error {
 exports.HttpError = HttpError;
 const createHttpError = (statusCode, message) => {
     const errorResponse = new HttpError(statusCode, message);
-    console.log("error response from server ", errorResponse);
+    console.error("error response from server ", errorResponse);
     return errorResponse;
 };
 exports.createHttpError = createHttpError;

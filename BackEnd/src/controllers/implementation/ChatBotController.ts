@@ -15,10 +15,8 @@ export class ChatbotController implements IChatbotController{
    
 
       const { learnerId,courseId,message} = req.body;
-
+      console.log('message :',message)
       const createdChat = await this._chatbotService.createChat(learnerId,courseId,message);
-
-      console.log("prompt result:", createdChat);
 
       res.status(HttpStatus.OK).json(successResponse(HttpResponse.OK,{createdChat}))
     } catch (error) {
@@ -28,8 +26,7 @@ export class ChatbotController implements IChatbotController{
  fetchChat=async(req: Request, res: Response, next: NextFunction): Promise<void>=> {
    try {
     const {learnerId,courseId}=req.params
-    console.log(learnerId)
-    console.log(courseId)
+ 
 
     const chatMessage=await this._chatbotService.fetchChat(learnerId as string,courseId as string)
 

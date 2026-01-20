@@ -43,6 +43,11 @@ const ChatSchema = new mongoose_1.default.Schema({
     participantKey: { type: String, unique: true },
     latestMessage: { type: String },
     lastMessageTime: { type: Date },
+    unreadCount: {
+        type: Map,
+        of: Number,
+        default: {},
+    },
     createdAt: { type: Date, default: Date.now },
 });
 exports.ChatModel = mongoose_1.default.model(modelName_const_1.DbModelName.CHAT, ChatSchema);

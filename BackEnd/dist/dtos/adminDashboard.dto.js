@@ -1,7 +1,7 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.adminDashboardDTO = adminDashboardDTO;
-function adminDashboardDTO(mentor, learners, courses, revenue, topCourse, topCategory) {
+function adminDashboardDTO(mentor, learners, courses, revenue, topCourse, topCategory, mentorStatus) {
     let updated = revenue.map((data) => ({ name: data._id, value: data.value }));
     return {
         totalCourses: courses,
@@ -12,5 +12,9 @@ function adminDashboardDTO(mentor, learners, courses, revenue, topCourse, topCat
             category: topCategory,
             course: topCourse,
         },
+        mentorStatus: {
+            approved: mentorStatus.approved ?? 0,
+            rejected: mentorStatus.rejected ?? 0
+        }
     };
 }

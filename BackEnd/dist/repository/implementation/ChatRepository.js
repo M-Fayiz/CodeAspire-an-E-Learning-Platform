@@ -23,5 +23,19 @@ class ChatRepository extends baseRepository_1.BaseRepository {
         const result = await this.find({ users: senderId }, ["users"]);
         return result;
     }
+    async IncrementUnreadMsg(chatId, userId) {
+        return await this.findByIDAndUpdate(chatId, {
+            $inc: {
+                [`unreadCount.${userId}`]: 1,
+            },
+        });
+    }
+    async resetUnreadMsg(chatId, userId) {
+        return await this.findByIDAndUpdate(chatId, {
+            $inc: {
+                [`unreadCount.${userId}`]: 0,
+            },
+        });
+    }
 }
 exports.ChatRepository = ChatRepository;

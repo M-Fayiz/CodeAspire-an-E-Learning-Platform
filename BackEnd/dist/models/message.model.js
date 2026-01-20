@@ -35,6 +35,7 @@ var __importStar = (this && this.__importStar) || (function () {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.MessageModel = void 0;
 const mongoose_1 = __importStar(require("mongoose"));
+const message_type_1 = require("../types/message.type");
 const modelName_const_1 = require("../const/modelName.const");
 const MessageSchema = new mongoose_1.default.Schema({
     chatId: {
@@ -50,14 +51,14 @@ const MessageSchema = new mongoose_1.default.Schema({
     content: { type: String },
     type: {
         type: String,
-        enum: ["text", "image", "video", "pdf"],
-        default: "text",
+        enum: Object.values(message_type_1.MessageType),
+        default: message_type_1.MessageType.TEXT,
     },
     mediaUrl: { type: String },
     status: {
         type: String,
-        enum: ["sending", "sent", "delivered", "read"],
-        default: "sending",
+        enum: Object.values(message_type_1.MessageStatus),
+        default: message_type_1.MessageStatus.SENDING,
     },
     createdAt: { type: Date, default: Date.now },
 });

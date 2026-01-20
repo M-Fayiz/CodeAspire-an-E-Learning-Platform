@@ -46,7 +46,7 @@ const LearnerSchema = new mongoose_1.default.Schema({
     learningStreak: {
         current: Number,
         longest: Number,
-        lastLearningDate: Date
+        lastLearningDate: Date,
     },
     activeDates: {
         type: [Date],

@@ -26,7 +26,6 @@ const intitializeSocket = (server) => {
             return next(new Error(error_message_const_1.HttpResponse.UNAUTHORIZED));
         try {
             const user = (0, jwt_token_util_1.verifyAccesToken)(token);
-            console.log('user from socket :', user);
             socket.data.userId = user._id;
             next();
         }
@@ -36,7 +35,6 @@ const intitializeSocket = (server) => {
     });
     io.on(socketEvents_const_1.SocketEvents.CONNECT, async (socket) => {
         const userId = socket.data.userId;
-        console.log("userId :", userId);
         if (!userId) {
             console.error("Socket connected without userId");
             socket.disconnect(true);
@@ -48,7 +46,7 @@ const intitializeSocket = (server) => {
         await redis_config_1.default.sAdd(key, socket.id);
         const after = await redis_config_1.default.sCard(key);
         if (before === 0 && after === 1) {
-            io.emit(socketEvents_const_1.SocketEvents.USER_ONLINE, userId);
+            io.to(`user:${userId}`).emit(socketEvents_const_1.SocketEvents.USER_ONLINE, userId);
         }
         socket.on("presence:check", async (targetUserId) => {
             const exists = await redis_config_1.default.exists(`online:${targetUserId}`);

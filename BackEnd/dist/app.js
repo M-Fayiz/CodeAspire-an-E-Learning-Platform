@@ -32,6 +32,7 @@ const order_router_1 = __importDefault(require("./routers/order.router"));
 const webhook_router_1 = __importDefault(require("./routers/webhook.router"));
 const videoSession_router_1 = __importDefault(require("./routers/videoSession.router"));
 const certificate_router_1 = __importDefault(require("./routers/certificate.router"));
+const chatbot_router_1 = __importDefault(require("./routers/chatbot.router"));
 dotenv_1.default.config();
 const app = (0, express_1.default)();
 // MIddlewares
@@ -67,6 +68,7 @@ app.use("/api/v1/slots", slots_router_1.default);
 app.use("/api/v1/slot-booking", slotbooking_router_1.default);
 app.use("/api/v1/video", videoSession_router_1.default);
 app.use("/api/v1/certificate", certificate_router_1.default);
+app.use("/api/v1/chat-bot", chatbot_router_1.default);
 const port = env_config_1.env.port;
 (0, db_config_1.dbConnect)();
 // Error Handler

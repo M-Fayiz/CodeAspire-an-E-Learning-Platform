@@ -2,11 +2,11 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.learnerDashboardDetails = void 0;
 const learnerDashboardDetails = (courseData = {}, slotData = {}, TotalCertificate = 0, learner, inProgress) => {
-    const InProgressCourse = inProgress.map(course => {
+    const InProgressCourse = inProgress.map((course) => {
         return {
             enrolledId: course._id,
             title: course.courseId.title,
-            progress: course.progress.completionPercentage
+            progress: course.progress.completionPercentage,
         };
     });
     return {
@@ -23,7 +23,7 @@ const learnerDashboardDetails = (courseData = {}, slotData = {}, TotalCertificat
         TotalCertificate,
         activeDays: learner.activeDates ?? [],
         learnerStreak: learner.learningStreak ?? null,
-        inProgress: InProgressCourse
+        inProgress: InProgressCourse,
     };
 };
 exports.learnerDashboardDetails = learnerDashboardDetails;

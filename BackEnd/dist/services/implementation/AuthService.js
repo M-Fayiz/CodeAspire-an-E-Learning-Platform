@@ -83,7 +83,7 @@ class AuthService {
         }
         const decode = (0, jwt_token_util_2.verifyRefreshToken)(token);
         if (!decode) {
-            logger_config_1.default.warn('refresh expired');
+            logger_config_1.default.warn("refresh expired");
             throw (0, http_error_1.createHttpError)(http_status_const_1.HttpStatus.UNAUTHORIZED, error_message_const_1.HttpResponse.REFRESH_TOKEN_EXPIRED);
         }
         const user = await this._userRepo.findUserByEmail(decode.email);

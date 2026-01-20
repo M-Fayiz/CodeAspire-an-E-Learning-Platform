@@ -46,7 +46,10 @@ class UserRepository extends baseRepository_1.BaseRepository {
         return user;
     }
     async findAllUsers(limit, skip, searchQuery) {
-        return this.findAll({ role: { $ne: user_types_1.IRole.Admin }, name: { $regex: searchQuery ?? "", $options: "i" } }, limit, skip);
+        return this.findAll({
+            role: { $ne: user_types_1.IRole.Admin },
+            name: { $regex: searchQuery ?? "", $options: "i" },
+        }, limit, skip);
     }
     async findUserCount(searchQuery) {
         return this.countDocuments({
@@ -108,7 +111,27 @@ class UserRepository extends baseRepository_1.BaseRepository {
         ]);
     }
     async updateLearnerStreak(learnerId, updatedData) {
-        return await this.findByIDAndUpdate(learnerId, { $set: { learningStreak: updatedData } });
+        return await this.findByIDAndUpdate(learnerId, {
+            $set: { learningStreak: updatedData },
+        });
+    }
+    async getMentorStatus(filter) {
+        return await this.aggregate([
+            { $match: filter },
+            { $group: {
+                    _id: null,
+                    approved: {
+                        $sum: {
+                            $cond: [{ $eq: ["$ApprovalStatus", 'approved'] }, 1, 0]
+                        }
+                    },
+                    rejected: {
+                        $sum: {
+                            $cond: [{ $eq: ["$ApprovalStatus", 'rejected'] }, 1, 0]
+                        }
+                    },
+                } }
+        ]);
     }
 }
 exports.UserRepository = UserRepository;

@@ -13,7 +13,7 @@ const dbConnect = async () => {
         console.log("🗳️  DB Connected ");
     }
     catch (error) {
-        console.log(error);
+        console.log('DB ERROR :', error);
     }
 };
 exports.dbConnect = dbConnect;

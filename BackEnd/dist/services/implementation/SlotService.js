@@ -147,7 +147,9 @@ class SlotService {
         if (!slot_Id) {
             throw (0, http_error_1.createHttpError)(http_status_const_1.HttpStatus.BAD_REQUEST, error_message_const_1.HttpResponse.INVALID_ID);
         }
-        const existingSlot = await this._slotRepository.findSlotByFilter({ _id: slot_Id });
+        const existingSlot = await this._slotRepository.findSlotByFilter({
+            _id: slot_Id,
+        });
         if (!existingSlot) {
             throw (0, http_error_1.createHttpError)(http_status_const_1.HttpStatus.NOT_FOUND, error_message_const_1.HttpResponse.ITEM_NOT_FOUND);
         }

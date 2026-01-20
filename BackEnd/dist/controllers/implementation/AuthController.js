@@ -58,7 +58,7 @@ class AuthController {
             if (!refreshToken) {
                 throw (0, http_error_1.createHttpError)(http_status_const_1.HttpStatus.FORBIDDEN, error_message_const_1.HttpResponse.REFRESH_TOKEN_EXPIRED);
             }
-            console.log('➡️ refresh Token');
+            console.log("➡️ refresh Token");
             const { newAccessToken, payload } = await this._authService.refreshAccessToken(refreshToken);
             console.log("🔥 Created New Access Token :", { newAccessToken });
             (0, cookie_util_1.setAccessToken)(res, newAccessToken);

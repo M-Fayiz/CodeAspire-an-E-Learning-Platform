@@ -33,19 +33,12 @@ async function generateCertificatePdf(data, pdfPath, previewPath) {
             width: 860,
             align: "center",
         });
-        doc
-            .font("Regular")
-            .fontSize(36)
-            .text(data.courseName, 130, 500, {
+        doc.font("Regular").fontSize(36).text(data.courseName, 130, 500, {
             width: 860,
             align: "center",
         });
-        doc
-            .fontSize(20)
-            .text(`Issued Date: ${data.issuedDate}`, 820, 680);
-        doc
-            .fontSize(20)
-            .text(`Certificate ID: ${data.certId}`, 820, 710);
+        doc.fontSize(20).text(`Issued Date: ${data.issuedDate}`, 820, 680);
+        doc.fontSize(20).text(`Certificate ID: ${data.certId}`, 820, 710);
         doc.end();
         pdfStream.on("finish", () => {
             fs_1.default.copyFileSync(bgImage, previewPath);

@@ -1,0 +1,20 @@
+"use strict";
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
+Object.defineProperty(exports, "__esModule", { value: true });
+const express_1 = __importDefault(require("express"));
+const chatBotRouter = express_1.default.Router();
+const ChatbotRepository_1 = require("../repository/implementation/ChatbotRepository");
+const ChatbotService_1 = require("../services/implementation/ChatbotService");
+const ChatBotController_1 = require("../controllers/implementation/ChatBotController");
+const EnrolledRepository_1 = require("../repository/implementation/EnrolledRepository");
+const CourseRepository_1 = require("../repository/implementation/CourseRepository");
+const chatbotRepository = new ChatbotRepository_1.ChatbotRepository();
+const enrolledRepository = new EnrolledRepository_1.EnrolledRepository();
+const courseRepository = new CourseRepository_1.CourseRepository();
+const chatbotService = new ChatbotService_1.ChatbotService(chatbotRepository, enrolledRepository, courseRepository);
+const chatbotController = new ChatBotController_1.ChatbotController(chatbotService);
+chatBotRouter.post('/', chatbotController.chat);
+chatBotRouter.get('/learner/:learnerId/course/:courseId', chatbotController.fetchChat);
+exports.default = chatBotRouter;

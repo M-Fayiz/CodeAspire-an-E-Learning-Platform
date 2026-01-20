@@ -19,11 +19,17 @@ class CourseService {
         this._reviewRepository = _reviewRepository;
     }
     async createCourses(course) {
+        const now = new Date();
+        const year = new Date();
+        year.setDate(year.getDate() - 365);
         const mentorCourse = await this._courseRepository.findAllCourse({
             mentorId: course.mentorId,
-            categoryId: course.categoryId,
+            createdAt: {
+                $gte: year,
+                $lte: now,
+            },
         });
-        if (mentorCourse && mentorCourse.length > 2) {
+        if (mentorCourse && mentorCourse.length > 5) {
             throw (0, http_error_1.createHttpError)(http_status_const_1.HttpStatus.CONFLICT, error_message_const_1.HttpResponse.ITEM_EXIST);
         }
         const createdCourse = await this._courseRepository.createCourses(course);
@@ -272,7 +278,7 @@ class CourseService {
             throw (0, http_error_1.createHttpError)(http_status_const_1.HttpStatus.BAD_REQUEST, error_message_const_1.HttpResponse.INVALID_ID);
         }
         const courseFormData = await this._courseRepository.getCourseFormData(course_Id);
-        console.log(courseFormData?.mentorId, ' < > ', user._id);
+        console.log(courseFormData?.mentorId, " < > ", user._id);
         if (!courseFormData) {
             throw (0, http_error_1.createHttpError)(http_status_const_1.HttpStatus.NOT_FOUND, error_message_const_1.HttpResponse.COURSE_NOT_FOUND);
         }

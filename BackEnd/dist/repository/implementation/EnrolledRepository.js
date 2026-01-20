@@ -249,5 +249,8 @@ class EnrolledRepository extends baseRepository_1.BaseRepository {
     async getInprogressCourse(learnerId, populate) {
         return await this.find({ learnerId, courseStatus: enrollment_types_1.completionStatus.IN_PROGRESS }, populate);
     }
+    async findEnrlloedCourse(filter) {
+        return await this.findOne(filter);
+    }
 }
 exports.EnrolledRepository = EnrolledRepository;

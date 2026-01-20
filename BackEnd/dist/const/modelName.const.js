@@ -16,4 +16,5 @@ var DbModelName;
     DbModelName["USER"] = "User";
     DbModelName["MESSAGE"] = "Message";
     DbModelName["CERTIFICATE"] = "Certificate";
+    DbModelName["CHAT_BOT"] = "ChatBot";
 })(DbModelName || (exports.DbModelName = DbModelName = {}));

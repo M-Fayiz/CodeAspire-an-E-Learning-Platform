@@ -96,7 +96,7 @@ const sendMail = async (email, title, message) => {
                 <h1>${title}</h1>
                 <p>${message}.</p><br />
                 <p>.</p>
-                <p>— TechMaster Team</p>
+                <p>— CodeAspire Team</p>
             `,
         };
         await email_config_1.default.sendMail(option);

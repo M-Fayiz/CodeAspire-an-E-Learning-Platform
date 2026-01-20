@@ -64,7 +64,6 @@ class ChatService {
     }
     async listUsers(senderId) {
         const sender_Id = (0, objectId_1.parseObjectId)(senderId);
-        console.log("senderid ", senderId);
         if (!sender_Id) {
             throw (0, http_error_1.createHttpError)(http_status_const_1.HttpStatus.NOT_FOUND, error_message_const_1.HttpResponse.INVALID_ID);
         }
@@ -77,7 +76,6 @@ class ChatService {
     }
     async getMessages(chatId, limit) {
         const chat_id = (0, objectId_1.parseObjectId)(chatId);
-        console.log("this is chat 🛜 ", chatId);
         if (!chat_id) {
             throw (0, http_error_1.createHttpError)(http_status_const_1.HttpStatus.BAD_REQUEST, error_message_const_1.HttpResponse.INVALID_ID);
         }
@@ -94,6 +92,29 @@ class ChatService {
             throw (0, http_error_1.createHttpError)(http_status_const_1.HttpStatus.INTERNAL_SERVER_ERROR, error_message_const_1.HttpResponse.SERVER_ERROR);
         }
         return updatedData.map((data) => (0, messaage_dto_1.MessageDto)(data));
+    }
+    async incrementUnreadMSG(chatId, userId) {
+        const user_id = (0, objectId_1.parseObjectId)(userId);
+        if (!user_id) {
+            throw (0, http_error_1.createHttpError)(http_status_const_1.HttpStatus.BAD_REQUEST, error_message_const_1.HttpResponse.INVALID_ID);
+        }
+        const updatedData = await this._chatRepository.IncrementUnreadMsg(chatId, user_id);
+        if (!updatedData) {
+            throw (0, http_error_1.createHttpError)(http_status_const_1.HttpStatus.INTERNAL_SERVER_ERROR, error_message_const_1.HttpResponse.SERVER_ERROR);
+        }
+        return (0, chat_dto_1.chatDto)(updatedData);
+    }
+    async resetUnreadMsg(chatId, userId) {
+        const user_id = (0, objectId_1.parseObjectId)(userId);
+        const chat_Id = (0, objectId_1.parseObjectId)(chatId);
+        if (!user_id || !chat_Id) {
+            throw (0, http_error_1.createHttpError)(http_status_const_1.HttpStatus.BAD_REQUEST, error_message_const_1.HttpResponse.INVALID_ID);
+        }
+        const updatedData = await this._chatRepository.resetUnreadMsg(chat_Id, user_id);
+        if (!updatedData) {
+            throw (0, http_error_1.createHttpError)(http_status_const_1.HttpStatus.INTERNAL_SERVER_ERROR, error_message_const_1.HttpResponse.SERVER_ERROR);
+        }
+        return (0, chat_dto_1.chatDto)(updatedData);
     }
 }
 exports.ChatService = ChatService;

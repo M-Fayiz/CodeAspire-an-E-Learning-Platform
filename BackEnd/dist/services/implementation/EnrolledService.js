@@ -204,7 +204,7 @@ class EnrolledService {
             this._certificateRepository.learnerTotalCertificate(learner_Id),
             this._slotbookingRepository.learnerDashboardSlotCard(learner_Id),
             this._learnerRepository.getLearnerStreak(learner_Id),
-            this._erolledRepository.getInprogressCourse(learner_Id, ['courseId'])
+            this._erolledRepository.getInprogressCourse(learner_Id, ["courseId"]),
         ]);
         return (0, learnerDashnoard_dto_1.learnerDashboardDetails)(courseCard[0], slotCard[0], certificateCount, learner, inProgress);
     }

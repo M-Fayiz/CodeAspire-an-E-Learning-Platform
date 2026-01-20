@@ -18,4 +18,5 @@ var ChatEvents;
     ChatEvents["NOTIFICATION"] = "chat:notification";
     ChatEvents["STATUS_UPDARE"] = "chat:status";
     ChatEvents["ERROR"] = "chat:error";
+    ChatEvents["UPDATE"] = "chat:update";
 })(ChatEvents || (exports.ChatEvents = ChatEvents = {}));
