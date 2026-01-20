@@ -84,6 +84,7 @@ export const sendToken = async (
     console.log(error);
   }
 };
+
 export const sendMail = async (
   email: string,
   title: string,
@@ -98,7 +99,7 @@ export const sendMail = async (
                 <h1>${title}</h1>
                 <p>${message}.</p><br />
                 <p>.</p>
-                <p>— TechMaster Team</p>
+                <p>— CodeAspire Team</p>
             `,
     };
 

@@ -2,7 +2,7 @@
 import { Sender } from "../types/chatBot.type";
 import { ICourses } from "../types/courses.type";
 
-export const systemInstruction=(course:ICourses,currentSession:string,currentLecture:string) => {
+export const systemInstruction=(course:ICourses) => {
     const lecctureContent=course.sessions?.map(session=>session.lectures.map(lecture=>lecture.title)).join(',')
     return{
 
@@ -14,11 +14,6 @@ export const systemInstruction=(course:ICourses,currentSession:string,currentLec
       
       Course title: ${course.title}
       Course level: ${course.level}
-      Language: ${course.language}
-      
-      Current session: ${currentSession}
-      Current lecture: ${currentLecture}
-     
       
       Lecture content:
       ${lecctureContent}

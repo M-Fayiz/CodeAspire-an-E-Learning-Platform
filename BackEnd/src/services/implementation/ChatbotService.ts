@@ -6,23 +6,25 @@ import { IChatbotRepository } from "../../repository/interface/IChatbotRepositor
 import { ICourseRepository } from "../../repository/interface/ICourseRepository";
 import { IEnrolledRepository } from "../../repository/interface/IEnrolledRepositoy";
 import { systemInstruction } from "../../template/systemInstruction.template";
-import { IchatbotUser, Sender } from "../../types/chatBot.type";
+import {  Sender } from "../../types/chatBot.type";
 import { IChatbotDTO } from "../../types/dtos.type/chatbot.dto.type";
 import { askGemini, GeminiMessage } from "../../utils/gemini.util";
 import { createHttpError } from "../../utils/http-error";
 import { IChatbotService } from "../interface/IChatbotService";
+import { parseObjectId } from "../../mongoose/objectId";
 
 
 export class ChatbotService implements IChatbotService{
 
     constructor(private _chatbotRepository:IChatbotRepository, private _enrolledRepository:IEnrolledRepository, private _courseRepository:ICourseRepository){}
 
-    async createChat(chatbotData: IchatbotUser,crntSessionTitle:string,currentLectureTitle:string): Promise<IChatbotDTO> {
+    async createChat(learnerId:string,courseId:string,message:string): Promise<IChatbotDTO> {
 
-        const {courseId,messages,learnerId}=chatbotData
+        
         const course_Id=new Types.ObjectId(courseId);
+        const learner_Id=new Types.ObjectId(learnerId);
 
-        const isEnrolled=await this._enrolledRepository.findEnrlloedCourse({learnerId,courseId})
+        const isEnrolled=await this._enrolledRepository.findEnrlloedCourse({courseId:course_Id,learnerId:learner_Id})
 
         if(!isEnrolled){
             throw createHttpError(HttpStatus.NOT_FOUND,HttpResponse.NOT_ENROLLED)
@@ -38,16 +40,16 @@ export class ChatbotService implements IChatbotService{
         let chat= await this._chatbotRepository.findChat({learnerId,courseId})
 
         if(!chat){
-            chat=await this._chatbotRepository.createChat({learnerId,courseId,messages:[]})
+            chat=await this._chatbotRepository.createChat({learnerId:learner_Id,courseId:course_Id,messages:[]})
         }
     
         chat.messages.push({
             role:Sender.USER,
-            content:messages,
+            content:message,
             createdAt:new Date()
         })
 
-        const systemInstructionData=systemInstruction(course,crntSessionTitle,currentLectureTitle)
+        const systemInstructionData=systemInstruction(course)
 
         const contents:GeminiMessage[] =[
             systemInstructionData,
@@ -71,5 +73,19 @@ export class ChatbotService implements IChatbotService{
             throw createHttpError(HttpStatus.INTERNAL_SERVER_ERROR,HttpResponse.SERVER_ERROR)
         }
         return chatbotDTO(updatedChat)
+    }
+    async fetchChat(learnerId: string, courseId: string): Promise<IChatbotDTO> {
+        const learner_Id=parseObjectId(learnerId)
+        const course_Id=parseObjectId(courseId)
+        if(!learner_Id||!course_Id){
+            throw createHttpError(HttpStatus.BAD_REQUEST,HttpResponse.INVALID_ID)
+        }
+
+        const getChtatbotChats=await this._chatbotRepository.findChat({learnerId,courseId})
+        if(!getChtatbotChats){
+            throw createHttpError(HttpStatus.NOT_FOUND,HttpResponse.ITEM_NOT_FOUND)
+        }
+
+        return chatbotDTO(getChtatbotChats)
     }
 }

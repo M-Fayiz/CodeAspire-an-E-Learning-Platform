@@ -1,5 +1,6 @@
 
 import { GoogleGenAI } from "@google/genai";
+import { Sender } from "../types/chatBot.type";
 export type GeminiMessage = {
   role: Sender
   parts: { text: string }[];

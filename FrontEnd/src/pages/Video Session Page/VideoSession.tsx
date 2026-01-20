@@ -124,19 +124,20 @@ export const VideoRoom = () => {
     <div className="min-h-full my-15 bg-gray-50 text-gray-900 font-sans p-6 flex flex-col items-center">
       {/* <h1 className="text-3xl font-semibold mb-6">{`session on ${}`}</h1> */}
 
-      <div className="relative w-full max-w-5xl aspect-video bg-black rounded-2xl overflow-hidden shadow-md mb-8">
+      <div className="relative w-full max-w-5xl aspect-video bg-black rounded-md overflow-hidden shadow-md mb-8">
         <video
           ref={remoteRef}
           autoPlay
           playsInline
-          className="absolute inset-0 w-full h-full object-cover"
+          className="absolute inset-0 w-full h-full object-cover  border-gray shadow-4xl"
         />
         <video
           ref={localRef}
           autoPlay
           playsInline
           muted
-          className="absolute bottom-4 right-4 w-1/4 h-1/4 rounded-lg border-2 border-white shadow-lg object-cover"
+          className="absolute bottom-4 right-4 w-1/4 h-1/4 rounded-lg border-2 border-gray-200+
+          n+ shadow-4xl object-cover"
         />
       </div>
 

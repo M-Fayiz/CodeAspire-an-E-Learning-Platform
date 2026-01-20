@@ -15,6 +15,7 @@ const chatbotService=new ChatbotService(chatbotRepository,enrolledRepository,cou
 const chatbotController=new ChatbotController(chatbotService)
 
 chatBotRouter.post('/',chatbotController.chat)
+chatBotRouter.get('/learner/:learnerId/course/:courseId',chatbotController.fetchChat)
 
 
 export default chatBotRouter

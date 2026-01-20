@@ -7,6 +7,7 @@ import {
   AccordionTrigger,
 } from "@/components/ui/accordion";
 import { useAuth } from "@/context/auth.context";
+import ChatBot from "@/features/chatbot/Chatbot";
 import MentorProfile from "@/features/courses_list/Details/AboutMentor";
 import Banner from "@/features/courses_list/Details/Banner";
 import CourseOverview from "@/features/courses_list/Details/OverView";
@@ -310,6 +311,9 @@ const EnrolledCourseDetails = () => {
                   enrolledId={enrolledCourse?._id as string}
                   starRating={enrolledCourse?.rating as number}
                 />
+              )}
+              {activeTap === "curriculum" && (
+                <ChatBot courseId={enrolledCourse?.courseId as string} learnerId={user?.id as string}/>
               )}
             </div>
             {enrolledCourse?.course?.sessions && (

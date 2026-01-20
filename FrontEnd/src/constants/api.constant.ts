@@ -132,4 +132,8 @@ export const API = {
     LEARNER_DASHBOARD: (learnerId: string) =>
       `/enrollements/${learnerId}/dashboard`,
   },
+  CHAT_BOT:{
+      FETCH_MESSAGE:(learnerId:string,courseId:string)=>`/chat-bot/learner/${learnerId}/course/${courseId}`,
+      createChat:'/chat-bot/'
+  }
 };

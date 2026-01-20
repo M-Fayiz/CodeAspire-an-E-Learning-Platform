@@ -81,6 +81,7 @@ app.use("/api/v1/video", videoSessionRouter);
 app.use("/api/v1/certificate", certificateRouter);
 app.use("/api/v1/chat-bot", chatBotRouter);
 const port = env.port;
+
 dbConnect();
 
 // Error Handler

@@ -26,15 +26,17 @@ function VerifyEmail() {
       try {
         await AuthService.verifyEmail(email, token);
 
-        // toast.success(res.message);
         checkAuth();
         setTimeout(() => {
           navigate("/");
         }, 3000);
+
       } catch (err) {
+
         if (err instanceof ApiError) toast.error(err.message);
         // navigate('*')
         setError("Verification failed. Try again .");
+        
       }
     }
 
