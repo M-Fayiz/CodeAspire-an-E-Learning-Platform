@@ -137,7 +137,8 @@ class AdminService {
             this._enrolledRepository.getTopSellingCategory(),
             this._userRepo.getMentorStatus({ role: user_types_1.IRole.Mentor, createdAt: { $gte: start, $lte: end } })
         ]);
-        return (0, adminDashboard_dto_1.adminDashboardDTO)(mentors, learners, courseCount, revenue, topCourse, topCategory, mentorStatus[0]);
+        const mentorStatusData = mentorStatus[0] ?? { approved: 0, rejected: 0 };
+        return (0, adminDashboard_dto_1.adminDashboardDTO)(mentors, learners, courseCount, revenue, topCourse, topCategory, mentorStatusData);
     }
 }
 exports.AdminService = AdminService;

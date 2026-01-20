@@ -14,9 +14,10 @@ type PopulateFieldType =
   | PopulateOptions
   | Array<string | PopulateOptions>;
 
-  type ArrayKeys<T> = {
-  [K in keyof T]: T[K] extends Array<any> ? K : never;
+type ArrayKeys<T> = {
+  [K in keyof T]-?: NonNullable<T[K]> extends any[] ? K : never;
 }[keyof T];
+
 
 
 export abstract class BaseRepository<T extends Document> {
@@ -112,10 +113,10 @@ export abstract class BaseRepository<T extends Document> {
       { new: true },
     );
   }
-  async pushToArray<K extends ArrayKeys<T>>(
+ async pushToArray<K extends ArrayKeys<T>>(
   filter: FilterQuery<T>,
   arrayPath: K,
-  element: T[K] extends Array<infer U> ? U : never,
+  element: NonNullable<T[K]> extends Array<infer U> ? U : never,
 ): Promise<T | null> {
   return this.model.findOneAndUpdate(
     filter,
@@ -123,6 +124,7 @@ export abstract class BaseRepository<T extends Document> {
     { new: true }
   ).lean<T>().exec();
 }
+
 
   async findItemAndUpdate(
     filter: FilterQuery<T>,
@@ -163,10 +165,12 @@ export abstract class BaseRepository<T extends Document> {
       .lean<T>();
   }
 
-  async pullFromArray<K extends ArrayKeys<T>>(
+async pullFromArray<K extends ArrayKeys<T>>(
   filter: FilterQuery<T>,
   arrayPath: K,
-  match: Partial<T[K] extends Array<infer U> ? U : never>,
+  match: Partial<
+    NonNullable<T[K]> extends Array<infer U> ? U : never
+  >,
 ): Promise<T | null> {
   return this.model.findOneAndUpdate(
     filter,
@@ -174,6 +178,7 @@ export abstract class BaseRepository<T extends Document> {
     { new: true }
   ).lean<T>().exec();
 }
+
 
   async findByIDAndUpdateProfile<F = T>(
     id: Types.ObjectId,

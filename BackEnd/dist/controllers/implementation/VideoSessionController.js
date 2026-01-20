@@ -10,7 +10,7 @@ class VideoSessionController {
         this.startVideoSession = async (req, res, next) => {
             try {
                 const { bookedId } = req.params;
-                const { sesionData, createdLearnerNotify, createdMentorNotify } = await this._slotBookingSevice.findBookedSlot(bookedId);
+                const { sesionData } = await this._slotBookingSevice.findBookedSlot(bookedId);
                 // sendNotification(createdMentorNotify.userId, createdMentorNotify);
                 // sendNotification(createdLearnerNotify.userId, createdLearnerNotify);
                 res

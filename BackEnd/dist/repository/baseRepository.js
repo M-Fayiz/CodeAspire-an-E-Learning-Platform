@@ -62,24 +62,14 @@ class BaseRepository {
     async findBySlugAndUpdate(slug, update) {
         return this.model.findOneAndUpdate({ slug: slug }, { $set: update }, { new: true });
     }
-    async PushToArray(filter, arrayPath, elements) {
-        const update = { $push: { [arrayPath]: elements } };
-        return this.model
-            .findOneAndUpdate(filter, update, { new: true })
-            .lean()
-            .exec();
+    async pushToArray(filter, arrayPath, element) {
+        return this.model.findOneAndUpdate(filter, { $push: { [arrayPath]: element } }, { new: true }).lean().exec();
     }
     async findItemAndUpdate(filter, update, options = { new: true }) {
         return this.model.findOneAndUpdate(filter, update, options);
     }
-    async addTOSet(filter, arrayPath, elements) {
-        const update = {
-            $addToSet: { [arrayPath]: elements },
-        };
-        return this.model
-            .findOneAndUpdate(filter, update, { new: true })
-            .lean()
-            .exec();
+    async addToSet(filter, arrayPath, element) {
+        return this.model.findOneAndUpdate(filter, { $addToSet: { [arrayPath]: element } }, { new: true }).lean().exec();
     }
     async aggregate(pipeline) {
         return this.model.aggregate(pipeline).exec();
@@ -93,13 +83,8 @@ class BaseRepository {
             .findOneAndUpdate(filter, updateData, { new: true })
             .lean();
     }
-    async pullItemFromArray(filter, arrayPath, itemId) {
-        const result = await this.model.findOneAndUpdate(filter, {
-            $pull: {
-                [arrayPath]: { _id: itemId },
-            },
-        }, { new: true });
-        return result ?? null;
+    async pullFromArray(filter, arrayPath, match) {
+        return this.model.findOneAndUpdate(filter, { $pull: { [arrayPath]: match } }, { new: true }).lean().exec();
     }
     async findByIDAndUpdateProfile(id, update) {
         return this.model.findByIdAndUpdate(id, { $set: update }, {

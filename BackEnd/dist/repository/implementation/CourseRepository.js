@@ -52,10 +52,10 @@ class CourseRepository extends baseRepository_1.BaseRepository {
         ]);
     }
     async addSession(courseId, session) {
-        return await this.PushToArray(courseId, "sessions", session);
+        return this.pushToArray({ _id: courseId }, "sessions", session);
     }
     async addLecture(courseId, sessionId, lecture) {
-        return await this.PushToArray({ _id: courseId, "sessions._id": sessionId }, "sessions.$.lectures", lecture);
+        return this.model.findOneAndUpdate({ _id: courseId, "sessions._id": sessionId }, { $push: { "sessions.$.lectures": lecture } }, { new: true }).lean().exec();
     }
     async findSession(courseId, title) {
         return await this.findOne({
@@ -129,10 +129,17 @@ class CourseRepository extends baseRepository_1.BaseRepository {
         return await this.findOne({ _id: courseId });
     }
     async removeSession(courseId, sessionId) {
-        return await this.pullItemFromArray({ _id: courseId }, "sessions", sessionId);
+        return this.pullFromArray({ _id: courseId }, "sessions", { _id: sessionId });
     }
     async removeLecture(courseId, sessionId, lectureId) {
-        return await this.pullItemFromArray({ _id: courseId }, `sessions[${sessionId}].lectures`, lectureId);
+        return this.model.findOneAndUpdate({
+            _id: courseId,
+            "sessions._id": sessionId,
+        }, {
+            $pull: {
+                "sessions.$.lectures": { _id: lectureId },
+            },
+        }, { new: true }).lean().exec();
     }
 }
 exports.CourseRepository = CourseRepository;

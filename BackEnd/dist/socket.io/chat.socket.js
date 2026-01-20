@@ -13,9 +13,6 @@ const message_type_1 = require("../types/message.type");
 const chatRepository = new ChatRepository_1.ChatRepository();
 const messageRepository = new MessageRespository_1.MessageRepository();
 const chatService = new ChatService_1.ChatService(chatRepository, messageRepository);
-/**
- * Convert string → MessageType enum safely
- */
 function toMessageType(type) {
     if (!type)
         return message_type_1.MessageType.TEXT;
@@ -26,7 +23,6 @@ function toMessageType(type) {
 }
 const registerChatHandler = (io, socket) => {
     const userId = socket.data.userId;
-    /* ---------------- JOIN CHAT ---------------- */
     socket.on(socketEvents_const_1.ChatEvents.JOIN, async (payload) => {
         const { roomId } = payload || {};
         if (!roomId) {
@@ -52,7 +48,6 @@ const registerChatHandler = (io, socket) => {
         await new Promise((r) => setTimeout(r, 100));
         socket.to(`chat:${roomId}`).emit(socketEvents_const_1.ChatEvents.NOTIFICATION, { roomId });
     });
-    /* ---------------- SEND MESSAGE ---------------- */
     socket.on(socketEvents_const_1.ChatEvents.SEND, async (payload, ack) => {
         try {
             const { roomId, content, mediaUrl } = payload;
@@ -80,11 +75,10 @@ const registerChatHandler = (io, socket) => {
                 chatId: room_id,
                 sender: senderId,
                 content,
-                type, // ✅ ENUM ONLY
+                type,
                 status: message_type_1.MessageStatus.SENT,
                 mediaUrl,
             });
-            /* -------- Chat Preview -------- */
             let previewMessage = "Message";
             if (type === message_type_1.MessageType.TEXT)
                 previewMessage = content;
@@ -117,7 +111,6 @@ const registerChatHandler = (io, socket) => {
             ack?.({ error: "Failed to send message" });
         }
     });
-    /* ---------------- DELIVERED ---------------- */
     socket.on(socketEvents_const_1.ChatEvents.DELIVERED, async ({ roomId, messageId }) => {
         const chat = await chatService.findChat(roomId);
         if (!chat || !chat.users.map(String).includes(userId))
@@ -130,7 +123,6 @@ const registerChatHandler = (io, socket) => {
             status: message_type_1.MessageStatus.DELIVERED,
         });
     });
-    /* ---------------- READ ---------------- */
     socket.on(socketEvents_const_1.ChatEvents.READ, async ({ roomId, messageIds }) => {
         const readerId = userId;
         await chatService.readMessages(messageIds);

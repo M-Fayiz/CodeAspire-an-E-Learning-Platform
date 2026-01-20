@@ -20,8 +20,12 @@ class EnrolledRepository extends baseRepository_1.BaseRepository {
     async isEnrolled(learnerId, courseId) {
         return await this.findOne({ learnerId: learnerId, courseId: courseId });
     }
-    async updatedProgress(enrolledId, lecture) {
-        return await this.addTOSet({ _id: enrolledId }, "progress.completedLectures", lecture);
+    async updatedProgress(enrolledId, lectureId) {
+        return this.model.findOneAndUpdate({ _id: enrolledId }, {
+            $addToSet: {
+                "progress.completedLectures": lectureId,
+            },
+        }, { new: true }).lean().exec();
     }
     async addRating(enrolledId, value) {
         return await this.findByIDAndUpdate(enrolledId, { rating: value });

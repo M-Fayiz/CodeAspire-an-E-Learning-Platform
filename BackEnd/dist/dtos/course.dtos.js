@@ -72,7 +72,7 @@ function formCourseDto(course) {
 function courseDetailsPageDTO(course, courseReview, avgRating, enrolledStd) {
     const excludedLecture = course.sessions?.map((session) => ({
         ...session,
-        lectures: session.lectures.map(({ lectureContent, ...rest }) => rest),
+        lectures: session.lectures.map(({ lectureContent: _lectureContent, ...rest }) => rest),
     }));
     console.log("------------", avgRating);
     console.log(courseReview);

@@ -49,15 +49,20 @@ export class EnrolledRepository
     return await this.findOne({ learnerId: learnerId, courseId: courseId });
   }
   async updatedProgress(
-    enrolledId: Types.ObjectId,
-    lecture: Types.ObjectId,
-  ): Promise<IEnrolledModel | null> {
-    return await this.addTOSet(
-      { _id: enrolledId },
-      "progress.completedLectures",
-      lecture,
-    );
-  }
+  enrolledId: Types.ObjectId,
+  lectureId: Types.ObjectId,
+): Promise<IEnrolledModel | null> {
+  return this.model.findOneAndUpdate(
+    { _id: enrolledId },
+    {
+      $addToSet: {
+        "progress.completedLectures": lectureId,
+      },
+    },
+    { new: true },
+  ).lean<IEnrolledModel>().exec();
+}
+
   async addRating(
     enrolledId: Types.ObjectId,
     value: number,

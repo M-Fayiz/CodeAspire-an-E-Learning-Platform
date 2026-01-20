@@ -34,6 +34,7 @@ export interface ILecture {
 }
 
 export interface ISession {
+  _id?: Types.ObjectId;
   title: string;
   lectures: ILecture[];
 }
