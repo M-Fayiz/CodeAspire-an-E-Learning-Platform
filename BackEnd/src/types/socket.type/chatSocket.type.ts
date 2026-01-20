@@ -1,4 +1,5 @@
 import { ChatEvents } from "../../const/socketEvents.const";
+import { IMessageModel } from "../../models/message.model";
 
 export interface ChatListenEvents {
   [ChatEvents.JOIN]: (payload: { roomId: string }) => void;
@@ -23,7 +24,7 @@ export interface ChatListenEvents {
 }
 
 export interface ChatEmitEvents {
-  [ChatEvents.NEW_MESSAGE]: (data: any) => void;
+  [ChatEvents.NEW_MESSAGE]: (data: IMessageModel) => void;
   [ChatEvents.NOTIFICATION]: (data: { roomId: string }) => void;
   [ChatEvents.STATUS_UPDARE]: (data: {
     messageId?: string;

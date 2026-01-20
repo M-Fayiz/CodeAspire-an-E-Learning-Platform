@@ -195,7 +195,8 @@ export class AdminService implements IAdminService {
         this._enrolledRepository.getTopSellingCategory(),
         this._userRepo.getMentorStatus({role:IRole.Mentor,createdAt:{$gte:start,$lte:end}})
       ]);
-    
+    const mentorStatusData =
+  mentorStatus[0] ?? { approved: 0, rejected: 0 };
     return adminDashboardDTO(
       mentors,
       learners,
@@ -203,7 +204,7 @@ export class AdminService implements IAdminService {
       revenue,
       topCourse,
       topCategory,
-      mentorStatus[0]
+     mentorStatusData
     );
   }
 

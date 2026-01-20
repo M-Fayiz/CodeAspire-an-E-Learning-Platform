@@ -16,7 +16,7 @@ export function adminDashboardDTO(
   return {
     totalCourses: courses,
     totalLearners: learners,
-    totalMentors: mentor,
+    totalMentors: mentor, 
     SourceOfRevenue: updated,
     topSelling: {
       category: topCategory,

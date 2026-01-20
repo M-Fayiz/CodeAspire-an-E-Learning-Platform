@@ -16,7 +16,7 @@ export class VideoSessionController implements IVideoSeesionController {
   ): Promise<void> => {
     try {
       const { bookedId } = req.params;
-      const { sesionData, createdLearnerNotify, createdMentorNotify } =
+      const { sesionData } =
         await this._slotBookingSevice.findBookedSlot(bookedId);
       // sendNotification(createdMentorNotify.userId, createdMentorNotify);
       // sendNotification(createdLearnerNotify.userId, createdLearnerNotify);

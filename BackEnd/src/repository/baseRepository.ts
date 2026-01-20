@@ -14,6 +14,11 @@ type PopulateFieldType =
   | PopulateOptions
   | Array<string | PopulateOptions>;
 
+  type ArrayKeys<T> = {
+  [K in keyof T]: T[K] extends Array<any> ? K : never;
+}[keyof T];
+
+
 export abstract class BaseRepository<T extends Document> {
   constructor(protected model: Model<T>) {}
 
@@ -107,17 +112,18 @@ export abstract class BaseRepository<T extends Document> {
       { new: true },
     );
   }
-  async PushToArray(
-    filter: FilterQuery<T>,
-    arrayPath: string,
-    elements: any,
-  ): Promise<T | null> {
-    const update: UpdateQuery<T> = { $push: { [arrayPath]: elements } } as any;
-    return this.model
-      .findOneAndUpdate(filter, update, { new: true })
-      .lean<T>()
-      .exec();
-  }
+  async pushToArray<K extends ArrayKeys<T>>(
+  filter: FilterQuery<T>,
+  arrayPath: K,
+  element: T[K] extends Array<infer U> ? U : never,
+): Promise<T | null> {
+  return this.model.findOneAndUpdate(
+    filter,
+    { $push: { [arrayPath]: element } } as UpdateQuery<T>,
+    { new: true }
+  ).lean<T>().exec();
+}
+
   async findItemAndUpdate(
     filter: FilterQuery<T>,
     update: UpdateQuery<T>,
@@ -125,15 +131,18 @@ export abstract class BaseRepository<T extends Document> {
   ): Promise<T | null> {
     return this.model.findOneAndUpdate(filter, update, options);
   }
-  async addTOSet(filter: FilterQuery<T>, arrayPath: string, elements: any) {
-    const update: UpdateQuery<T> = {
-      $addToSet: { [arrayPath]: elements },
-    } as any;
-    return this.model
-      .findOneAndUpdate(filter, update, { new: true })
-      .lean<T>()
-      .exec();
-  }
+  async addToSet<K extends ArrayKeys<T>>(
+  filter: FilterQuery<T>,
+  arrayPath: K,
+  element: T[K] extends Array<infer U> ? U : never,
+): Promise<T | null> {
+  return this.model.findOneAndUpdate(
+    filter,
+    { $addToSet: { [arrayPath]: element } } as UpdateQuery<T>,
+    { new: true }
+  ).lean<T>().exec();
+}
+
   async aggregate<R = T>(pipeline: PipelineStage[]): Promise<R[]> {
     return this.model.aggregate(pipeline).exec();
   }
@@ -154,23 +163,18 @@ export abstract class BaseRepository<T extends Document> {
       .lean<T>();
   }
 
-  async pullItemFromArray(
-    filter: FilterQuery<T>,
-    arrayPath: string,
-    itemId: Types.ObjectId,
-  ): Promise<T | null> {
-    const result = await this.model.findOneAndUpdate(
-      filter,
-      {
-        $pull: {
-          [arrayPath]: { _id: itemId },
-        } as any,
-      },
-      { new: true },
-    );
+  async pullFromArray<K extends ArrayKeys<T>>(
+  filter: FilterQuery<T>,
+  arrayPath: K,
+  match: Partial<T[K] extends Array<infer U> ? U : never>,
+): Promise<T | null> {
+  return this.model.findOneAndUpdate(
+    filter,
+    { $pull: { [arrayPath]: match } } as UpdateQuery<T>,
+    { new: true }
+  ).lean<T>().exec();
+}
 
-    return result ?? null;
-  }
   async findByIDAndUpdateProfile<F = T>(
     id: Types.ObjectId,
     update: Partial<T>,
