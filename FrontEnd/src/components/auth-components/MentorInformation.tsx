@@ -105,7 +105,6 @@ const MentorDataForm = () => {
 
     try {
       const result = await UserService.updateMentorInformation(
-        user!.id,
         formData,
       );
       if (result) setWaithingCard(true);
