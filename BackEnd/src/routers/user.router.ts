@@ -22,11 +22,11 @@ const userController = new UserController(userService);
 
 userRouter.use(verifyUser);
 
-userRouter.get("/me/:userId", userController.fetchProfile);
-userRouter.patch("/:userId/change-password", userController.changePassword);
-userRouter.put("/:userId/profile-picture", userController.updateProfileImage);
-userRouter.put("/me/:userId", userController.updateUserProfile);
-userRouter.put("/:mentorId/mentor-profile", userController.addMentorData);
+userRouter.get("/me", userController.fetchProfile);
+userRouter.patch("/change-password", userController.changePassword);
+userRouter.put("/profile-picture", userController.updateProfileImage);
+userRouter.put("/me", userController.updateUserProfile);
+userRouter.put("/mentor-profile", userController.addMentorData);
 userRouter.get("/:userId/profile", userController.getUserProfile);
 
 export default userRouter;

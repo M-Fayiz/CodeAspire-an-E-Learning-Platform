@@ -5,7 +5,7 @@ import { successResponse } from "../../utils/response.util";
 import { HttpResponse } from "../../const/error-message.const";
 import { IEnrolledService } from "../../services/interface/IEnrolledService";
 import { FilterByDate } from "../../const/filter.const";
-import { IUser } from "../../types/user.types";
+
 
 export class EnrolledController implements IEnrolledController {
   constructor(private _enrolledService: IEnrolledService) {}
@@ -15,11 +15,11 @@ export class EnrolledController implements IEnrolledController {
     next: NextFunction,
   ): Promise<void> => {
     try {
-      const { learnerId } = req.params;
-
+    
+       const user=req.user as  {_id:string}
       const enrolledCourseData =
-        await this._enrolledService.getEnrolledCourses(learnerId);
-      console.info("enrolled course ", { enrolledCourseData });
+        await this._enrolledService.getEnrolledCourses(user._id);
+   
       res
         .status(HttpStatus.OK)
         .json(successResponse(HttpResponse.OK, { enrolledCourseData }));
@@ -92,13 +92,14 @@ export class EnrolledController implements IEnrolledController {
     next: NextFunction,
   ): Promise<void> => {
     try {
-      const { courseId, mentorId } = req.params;
-      const user = req.user;
+      const { courseId } = req.params;
+     
+     
+       const user=req.user as  {_id:string}
       const dashboardData =
         await this._enrolledService.getCourseEnrolledDashboardData(
           courseId,
-          mentorId,
-          user as IUser,
+          user._id ,
         );
 
       res
@@ -138,11 +139,11 @@ export class EnrolledController implements IEnrolledController {
     next: NextFunction,
   ): Promise<void> => {
     try {
-      const { mentorId } = req.params;
+      
       const { filter } = req.query;
-      console.log("filter :", filter);
+       const user=req.user as  {_id:string}
       const dashboardData = await this._enrolledService.getMentorDashboardData(
-        mentorId,
+        user._id,
         filter as FilterByDate,
       );
 
@@ -200,9 +201,10 @@ export class EnrolledController implements IEnrolledController {
     next: NextFunction,
   ): Promise<void> => {
     try {
-      const { learnerId } = req.params;
+     
+       const user=req.user as  {_id:string}
       const dashboardData =
-        await this._enrolledService.learnerDashboardCardData(learnerId);
+        await this._enrolledService.learnerDashboardCardData(user._id);
       res.status(HttpStatus.OK).json(
         successResponse(HttpResponse.OK, {
           dashboardData,

@@ -29,6 +29,12 @@ orderRouter.get(
   authorizedRole(IRole.Learner),
   orderController.get_payment_data,
 );
+orderRouter.get(
+  "/payment/transaction",
+  verifyUser,
+  authorizedRole(IRole.Admin,IRole.Mentor),
+  orderController.getTransactionHistory,
+);
 
 orderRouter.post(
   "/payment/create-checkout-session",
@@ -36,5 +42,6 @@ orderRouter.post(
   // authorizedRole(IRole.Learner),
   orderController.create_intent,
 );
+
 
 export default orderRouter;

@@ -107,5 +107,11 @@ class TransactionRepositoy extends baseRepository_1.BaseRepository {
     async updateTransaction(transactionId, updateData) {
         return await this.findByIDAndUpdate(transactionId, updateData);
     }
+    async getTransactionHistory(skip, limit) {
+        return await this.findAll({}, limit, skip);
+    }
+    async getTotalTransaction() {
+        return await this.countDocuments();
+    }
 }
 exports.TransactionRepositoy = TransactionRepositoy;

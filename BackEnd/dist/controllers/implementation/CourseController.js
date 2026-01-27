@@ -190,8 +190,8 @@ class CourseController {
         };
         this.getCourseListSlot = async (req, res, next) => {
             try {
-                const { mentorId } = req.params;
-                const courseList = await this._courseService.fetchCourseListForSlot(mentorId);
+                const user = req.user;
+                const courseList = await this._courseService.fetchCourseListForSlot(user._id);
                 res
                     .status(http_status_const_1.HttpStatus.OK)
                     .json((0, response_util_1.successResponse)(error_message_const_1.HttpResponse.OK, { courseList }));

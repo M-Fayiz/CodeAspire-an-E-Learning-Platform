@@ -10,9 +10,8 @@ class UserController {
         this._userService = _userService;
         this.fetchProfile = async (req, res, next) => {
             try {
-                const { userId } = req.params;
-                // logger.info('user logged controler',{id})
-                const userData = await this._userService.fetchUser(userId);
+                const user = req.user;
+                const userData = await this._userService.fetchUser(user._id);
                 res
                     .status(http_status_const_1.HttpStatus.OK)
                     .json((0, response_util_1.successResponse)(error_message_const_1.HttpResponse.OK, { userData }));
@@ -24,8 +23,8 @@ class UserController {
         this.changePassword = async (req, res, next) => {
             try {
                 const { currentPassword, newPassword } = req.body;
-                const { userId } = req.params;
-                await this._userService.changePassword(userId, currentPassword, newPassword);
+                const user = req.user;
+                await this._userService.changePassword(user._id, currentPassword, newPassword);
                 res
                     .status(http_status_const_1.HttpStatus.OK)
                     .json((0, response_util_1.successResponse)(error_message_const_1.HttpResponse.OK, { changed: true }));
@@ -37,8 +36,8 @@ class UserController {
         this.updateProfileImage = async (req, res, next) => {
             try {
                 const { imageURL } = req.body;
-                const { userId } = req.params;
-                const ImageSavedUrl = await this._userService.userProfilePitcureUpdate(imageURL, userId);
+                const user = req.user;
+                const ImageSavedUrl = await this._userService.userProfilePitcureUpdate(imageURL, user._id);
                 res
                     .status(http_status_const_1.HttpStatus.OK)
                     .json((0, response_util_1.successResponse)(error_message_const_1.HttpResponse.OK, { imgURL: ImageSavedUrl }));
@@ -49,9 +48,8 @@ class UserController {
         };
         this.updateUserProfile = async (req, res, next) => {
             try {
-                const { userId } = req.params;
-                console.log("body :", req.body);
-                const updatedData = await this._userService.updateUserProfile(userId, req.body);
+                const user = req.user;
+                const updatedData = await this._userService.updateUserProfile(user._id, req.body);
                 res
                     .status(http_status_const_1.HttpStatus.OK)
                     .json((0, response_util_1.successResponse)(error_message_const_1.HttpResponse.OK, { updatedData: updatedData }));
@@ -74,10 +72,9 @@ class UserController {
         };
         this.addMentorData = async (req, res, next) => {
             try {
-                const { mentorId } = req.params;
+                const user = req.user;
                 const userData = req.body;
-                console.log("user data :", req.body);
-                const mentorDataAndNotify = await this._userService.addMentorData(mentorId, userData);
+                const mentorDataAndNotify = await this._userService.addMentorData(user._id, userData);
                 (0, socket_utils_1.sendNotification)(mentorDataAndNotify.notificationDTO.userId, mentorDataAndNotify.notificationDTO);
                 res.status(http_status_const_1.HttpStatus.OK).json((0, response_util_1.successResponse)(error_message_const_1.HttpResponse.OK, {
                     mentorData: mentorDataAndNotify.MentorDtp,

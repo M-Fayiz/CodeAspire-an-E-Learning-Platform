@@ -14,6 +14,7 @@ const logger_config_1 = __importDefault(require("../../config/logger.config"));
 const calculateSplit_util_1 = require("../../utils/calculateSplit.util");
 const transaction_const_1 = require("../../const/transaction.const");
 const stripe_config_1 = require("../../config/stripe.config");
+const transaction_dto_1 = require("../../dtos/transaction.dto");
 class OrderService {
     constructor(_orderRepository, _courseRepository, _enrolledRepository, _transactionRepository) {
         this._orderRepository = _orderRepository;
@@ -182,6 +183,16 @@ class OrderService {
             expand: [transaction_const_1.StripeConst.payment_intent, transaction_const_1.StripeConst.iNVOICE],
         });
         return session;
+    }
+    async getTransactionHistory(role, page) {
+        let limit = 8;
+        let skip = (page - 1) * limit;
+        const trasnsactionData = await this._transactionRepository.getTransactionHistory(skip, limit);
+        const totalPage = await this._transactionRepository.getTotalTransaction();
+        if (!trasnsactionData) {
+            throw (0, http_error_1.createHttpError)(http_status_const_1.HttpStatus.NOT_FOUND, error_message_const_1.HttpResponse.ITEM_NOT_FOUND);
+        }
+        return { transactionHistory: trasnsactionData.map(data => (0, transaction_dto_1.transactionHistoryDto)(data, role)), totalPage: Math.floor(totalPage / limit) };
     }
 }
 exports.OrderService = OrderService;

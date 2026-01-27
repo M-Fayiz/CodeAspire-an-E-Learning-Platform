@@ -118,7 +118,7 @@ class EnrolledService {
         }
         return updatedData.rating;
     }
-    async getCourseEnrolledDashboardData(courseId, mentorId, user) {
+    async getCourseEnrolledDashboardData(courseId, mentorId) {
         const course_id = (0, objectId_1.parseObjectId)(courseId);
         const mentor_id = (0, objectId_1.parseObjectId)(mentorId);
         if (!course_id || !mentor_id) {
@@ -131,9 +131,6 @@ class EnrolledService {
         ]);
         if (!studentsAndRating || !course || !revenue) {
             throw (0, http_error_1.createHttpError)(http_status_const_1.HttpStatus.NOT_FOUND, error_message_const_1.HttpResponse.ITEM_NOT_FOUND);
-        }
-        if (course.mentorId._id.toString() !== user._id.toString()) {
-            throw (0, http_error_1.createHttpError)(http_status_const_1.HttpStatus.FORBIDDEN, error_message_const_1.HttpResponse.ACCESS_DENIED);
         }
         const { avgRating = 0, totalStudents = 0 } = studentsAndRating[0] || {};
         return (0, courseDashboard_dto_1.courseDashboardDTO)(totalStudents, avgRating, course, revenue[0]);

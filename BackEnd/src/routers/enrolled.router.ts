@@ -32,7 +32,7 @@ const enrolledService = new EnrolledService(
 const enrolledController = new EnrolledController(enrolledService);
 
 enrolledRouter.get(
-  "/:learnerId",
+  "/",
   verifyUser,
   authorizedRole(IRole.Learner),
   enrolledController.getEnrolledCourse,
@@ -50,13 +50,13 @@ enrolledRouter.get(
   enrolledController.getGraphOFCourse,
 );
 enrolledRouter.get(
-  "/course/:courseId/mentor/:mentorId",
+  "/course/:courseId/mentor/",
   verifyUser,
   authorizedRole(IRole.Mentor),
   enrolledController.getCourseDashboardData,
 );
 enrolledRouter.get(
-  "/mentor/:mentorId/dashboard",
+  "/mentor/dashboard",
   verifyUser,
   authorizedRole(IRole.Mentor),
   enrolledController.getMentorDashboardData,
@@ -74,7 +74,7 @@ enrolledRouter.get(
   enrolledController.getAdminRevanue,
 );
 enrolledRouter.get(
-  "/:learnerId/dashboard",
+  "/learner/dashboard",
   verifyUser,
   authorizedRole(IRole.Learner),
   enrolledController.getLearnerDashboardData,

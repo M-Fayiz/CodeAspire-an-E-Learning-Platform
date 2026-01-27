@@ -7,4 +7,9 @@ export interface IOrderController {
     res: Response,
     next: NextFunction,
   ): Promise<void>;
+getTransactionHistory(
+    req: Request,
+    res: Response,
+    next: NextFunction,
+  ): Promise<void>;
 }

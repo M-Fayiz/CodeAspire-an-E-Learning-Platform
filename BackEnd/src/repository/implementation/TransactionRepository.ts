@@ -11,6 +11,7 @@ import { IMentorTotalRevanue } from "../../types/mentorDashboard.types";
 import { graphPrps, SourceOfRevanye } from "../../types/adminDahsboard.type";
 import { TransactionStatus } from "../../const/transaction.const";
 
+
 export class TransactionRepositoy
   extends BaseRepository<ITransactionModel>
   implements ITransactionRepository
@@ -133,5 +134,11 @@ export class TransactionRepositoy
     updateData: UpdateQuery<ITransactionModel>,
   ): Promise<ITransactionModel | null> {
     return await this.findByIDAndUpdate(transactionId, updateData);
+  }
+  async getTransactionHistory(skip: number, limit: number): Promise<ITransactionModel[] | null> {
+    return await this.findAll({},limit,skip)
+  }
+  async getTotalTransaction(): Promise<number> {
+    return await this.countDocuments()
   }
 }

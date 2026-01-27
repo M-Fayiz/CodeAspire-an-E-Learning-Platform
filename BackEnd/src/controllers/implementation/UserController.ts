@@ -16,9 +16,11 @@ export class UserController implements IUserController {
     next: NextFunction,
   ): Promise<void> => {
     try {
-      const { userId } = req.params;
-      // logger.info('user logged controler',{id})
-      const userData = await this._userService.fetchUser(userId);
+     
+
+      const user=req.user as  {_id:string}
+  
+      const userData = await this._userService.fetchUser(user._id);
 
       res
         .status(HttpStatus.OK)
@@ -34,10 +36,10 @@ export class UserController implements IUserController {
   ): Promise<void> => {
     try {
       const { currentPassword, newPassword } = req.body;
-      const { userId } = req.params;
+      const user=req.user as  {_id:string}
 
       await this._userService.changePassword(
-        userId,
+        user._id,
         currentPassword,
         newPassword,
       );
@@ -56,11 +58,11 @@ export class UserController implements IUserController {
   ): Promise<void> => {
     try {
       const { imageURL } = req.body;
-      const { userId } = req.params;
-
-      const ImageSavedUrl = await this._userService.userProfilePitcureUpdate(
+       const user=req.user as  {_id:string}
+     
+        const ImageSavedUrl = await this._userService.userProfilePitcureUpdate(
         imageURL,
-        userId,
+        user._id,
       );
       res
         .status(HttpStatus.OK)
@@ -75,10 +77,10 @@ export class UserController implements IUserController {
     next: NextFunction,
   ): Promise<void> => {
     try {
-      const { userId } = req.params;
-      console.log("body :", req.body);
+   
+        const user=req.user as {_id:string}
       const updatedData = await this._userService.updateUserProfile(
-        userId,
+        user._id,
         req.body,
       );
       res
@@ -109,11 +111,10 @@ export class UserController implements IUserController {
     next: NextFunction,
   ): Promise<void> => {
     try {
-      const { mentorId } = req.params;
+      const user=req.user as  {_id:string}
       const userData = req.body;
-      console.log("user data :", req.body);
       const mentorDataAndNotify = await this._userService.addMentorData(
-        mentorId,
+        user._id,
         userData,
       );
 

@@ -26,14 +26,14 @@ const slotBookingRepository = new SlotBookingRepositoy_1.SlotBookingRepository()
 const learnerRepository = new LearnerRepository_1.LearnerRepository();
 const enrolledService = new EnrolledService_1.EnrolledService(enrolledRepository, courseRepository, transactionRepository, userRepository, certificateRepository, slotBookingRepository, learnerRepository);
 const enrolledController = new EnrolledController_1.EnrolledController(enrolledService);
-enrolledRouter.get("/:learnerId", authentication_middleware_1.verifyUser, (0, authorisation_middleware_1.authorizedRole)(user_types_1.IRole.Learner), enrolledController.getEnrolledCourse);
+enrolledRouter.get("/", authentication_middleware_1.verifyUser, (0, authorisation_middleware_1.authorizedRole)(user_types_1.IRole.Learner), enrolledController.getEnrolledCourse);
 enrolledRouter.get("/course/:enrolledId", authentication_middleware_1.verifyUser, (0, authorisation_middleware_1.authorizedRole)(user_types_1.IRole.Learner), enrolledController.getEnrolledDetails);
 enrolledRouter.get("/course/:courseId/chart", authentication_middleware_1.verifyUser, (0, authorisation_middleware_1.authorizedRole)(user_types_1.IRole.Mentor), enrolledController.getGraphOFCourse);
-enrolledRouter.get("/course/:courseId/mentor/:mentorId", authentication_middleware_1.verifyUser, (0, authorisation_middleware_1.authorizedRole)(user_types_1.IRole.Mentor), enrolledController.getCourseDashboardData);
-enrolledRouter.get("/mentor/:mentorId/dashboard", authentication_middleware_1.verifyUser, (0, authorisation_middleware_1.authorizedRole)(user_types_1.IRole.Mentor), enrolledController.getMentorDashboardData);
+enrolledRouter.get("/course/:courseId/mentor/", authentication_middleware_1.verifyUser, (0, authorisation_middleware_1.authorizedRole)(user_types_1.IRole.Mentor), enrolledController.getCourseDashboardData);
+enrolledRouter.get("/mentor/dashboard", authentication_middleware_1.verifyUser, (0, authorisation_middleware_1.authorizedRole)(user_types_1.IRole.Mentor), enrolledController.getMentorDashboardData);
 enrolledRouter.get("/mentor/dashboard/revanue", authentication_middleware_1.verifyUser, (0, authorisation_middleware_1.authorizedRole)(user_types_1.IRole.Mentor), enrolledController.getmentorRevanue);
 enrolledRouter.get("/admin/dashboard/revanue", authentication_middleware_1.verifyUser, (0, authorisation_middleware_1.authorizedRole)(user_types_1.IRole.Admin), enrolledController.getAdminRevanue);
-enrolledRouter.get("/:learnerId/dashboard", authentication_middleware_1.verifyUser, (0, authorisation_middleware_1.authorizedRole)(user_types_1.IRole.Learner), enrolledController.getLearnerDashboardData);
+enrolledRouter.get("/learner/dashboard", authentication_middleware_1.verifyUser, (0, authorisation_middleware_1.authorizedRole)(user_types_1.IRole.Learner), enrolledController.getLearnerDashboardData);
 enrolledRouter.put("/:enrolledId", authentication_middleware_1.verifyUser, (0, authorisation_middleware_1.authorizedRole)(user_types_1.IRole.Learner), enrolledController.updateProgress);
 enrolledRouter.put("/:enrolledId/rating", authentication_middleware_1.verifyUser, (0, authorisation_middleware_1.authorizedRole)(user_types_1.IRole.Learner), enrolledController.addRating);
 exports.default = enrolledRouter;

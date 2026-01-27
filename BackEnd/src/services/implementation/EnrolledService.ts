@@ -53,7 +53,7 @@ import { learnerDashboardCardsDTO } from "../../types/dtos.type/learnerDashboard
 import { learnerDashboardDetails } from "../../dtos/learnerDashnoard.dto";
 import { FilterByDate } from "../../const/filter.const";
 import { updateLearningStreak } from "../../utils/streak.util";
-import { ILearnerStreask, IRole, IUser } from "../../types/user.types";
+import { ILearnerStreask, IRole } from "../../types/user.types";
 import { ILearnerModel } from "../../models/user.model";
 import { ILearnerRepository } from "../../repository/interface/ILearnerRepository";
 import { InProgressCourse } from "../../types/learnerDashboard.type";
@@ -225,7 +225,6 @@ export class EnrolledService implements IEnrolledService {
   async getCourseEnrolledDashboardData(
     courseId: string,
     mentorId: string,
-    user: IUser,
   ): Promise<CourseDashboardDTO | null> {
     const course_id = parseObjectId(courseId);
     const mentor_id = parseObjectId(mentorId);
@@ -243,9 +242,7 @@ export class EnrolledService implements IEnrolledService {
       throw createHttpError(HttpStatus.NOT_FOUND, HttpResponse.ITEM_NOT_FOUND);
     }
 
-    if (course.mentorId._id.toString() !== user._id.toString()) {
-      throw createHttpError(HttpStatus.FORBIDDEN, HttpResponse.ACCESS_DENIED);
-    }
+  
     const { avgRating = 0, totalStudents = 0 } = studentsAndRating[0] || {};
 
     return courseDashboardDTO(totalStudents, avgRating, course, revenue[0]);

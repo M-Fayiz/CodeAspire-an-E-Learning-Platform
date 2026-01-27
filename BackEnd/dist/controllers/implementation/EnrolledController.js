@@ -9,9 +9,8 @@ class EnrolledController {
         this._enrolledService = _enrolledService;
         this.getEnrolledCourse = async (req, res, next) => {
             try {
-                const { learnerId } = req.params;
-                const enrolledCourseData = await this._enrolledService.getEnrolledCourses(learnerId);
-                console.info("enrolled course ", { enrolledCourseData });
+                const user = req.user;
+                const enrolledCourseData = await this._enrolledService.getEnrolledCourses(user._id);
                 res
                     .status(http_status_const_1.HttpStatus.OK)
                     .json((0, response_util_1.successResponse)(error_message_const_1.HttpResponse.OK, { enrolledCourseData }));
@@ -60,9 +59,9 @@ class EnrolledController {
         };
         this.getCourseDashboardData = async (req, res, next) => {
             try {
-                const { courseId, mentorId } = req.params;
+                const { courseId } = req.params;
                 const user = req.user;
-                const dashboardData = await this._enrolledService.getCourseEnrolledDashboardData(courseId, mentorId, user);
+                const dashboardData = await this._enrolledService.getCourseEnrolledDashboardData(courseId, user._id);
                 res
                     .status(http_status_const_1.HttpStatus.OK)
                     .json((0, response_util_1.successResponse)(error_message_const_1.HttpResponse.OK, { dashboardData }));
@@ -86,10 +85,9 @@ class EnrolledController {
         };
         this.getMentorDashboardData = async (req, res, next) => {
             try {
-                const { mentorId } = req.params;
                 const { filter } = req.query;
-                console.log("filter :", filter);
-                const dashboardData = await this._enrolledService.getMentorDashboardData(mentorId, filter);
+                const user = req.user;
+                const dashboardData = await this._enrolledService.getMentorDashboardData(user._id, filter);
                 res
                     .status(http_status_const_1.HttpStatus.OK)
                     .json((0, response_util_1.successResponse)(error_message_const_1.HttpResponse.OK, { dashboardData }));
@@ -126,8 +124,8 @@ class EnrolledController {
         };
         this.getLearnerDashboardData = async (req, res, next) => {
             try {
-                const { learnerId } = req.params;
-                const dashboardData = await this._enrolledService.learnerDashboardCardData(learnerId);
+                const user = req.user;
+                const dashboardData = await this._enrolledService.learnerDashboardCardData(user._id);
                 res.status(http_status_const_1.HttpStatus.OK).json((0, response_util_1.successResponse)(error_message_const_1.HttpResponse.OK, {
                     dashboardData,
                 }));

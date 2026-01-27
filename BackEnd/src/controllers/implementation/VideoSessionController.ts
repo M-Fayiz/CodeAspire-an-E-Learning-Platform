@@ -4,7 +4,6 @@ import { IVideoSeesionController } from "../interface/IVideoSessionController";
 import { HttpStatus } from "../../const/http-status.const";
 import { HttpResponse } from "../../const/error-message.const";
 import { successResponse } from "../../utils/response.util";
-import { sendNotification } from "../../utils/socket.utils";
 
 export class VideoSessionController implements IVideoSeesionController {
   constructor(private _slotBookingSevice: ISlotBookingService) {}

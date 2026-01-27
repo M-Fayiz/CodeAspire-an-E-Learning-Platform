@@ -25,7 +25,6 @@ class SharedController {
         this.createS3BucketDownloadURL = async (req, res, next) => {
             try {
                 const { key } = req.query;
-                console.log("key if aws file ", key);
                 const get_fileURL = await this._sharedService.generatePresignedGetUrl(key);
                 res
                     .status(http_status_const_1.HttpStatus.OK)

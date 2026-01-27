@@ -33,6 +33,19 @@ class OrderController {
                 next(error);
             }
         };
+        this.getTransactionHistory = async (req, res, next) => {
+            try {
+                const user = req.user;
+                const { page } = req.query;
+                const { transactionHistory, totalPage } = await this._orderService.getTransactionHistory(user.role, Number(page));
+                res
+                    .status(http_status_const_1.HttpStatus.OK)
+                    .json((0, response_util_1.successResponse)(error_message_const_1.HttpResponse.OK, { transactionHistory, totalPage }));
+            }
+            catch (error) {
+                next(error);
+            }
+        };
     }
 }
 exports.OrderController = OrderController;
