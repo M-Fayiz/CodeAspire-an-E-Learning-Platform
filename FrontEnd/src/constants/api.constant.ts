@@ -11,15 +11,13 @@ export const API = {
     GOOGLE_AUTH: (role: string) => `/api/v1/auth/google?role:${role}`,
   },
   USER: {
-    FETCH_USER_PROFILE: (userId: string) => `/users/me/${userId}`,
-    UPDATE_USER_PROFILE: (userId: string) => `/users/me/${userId}`,
-    CHANGE_PASSWORD: (userId: string) => `/users/${userId}/change-password`,
-    UPDATE_PROFILE_PICTURE: (userId: string) =>
-      `/users/${userId}/profile-picture`,
+    FETCH_USER_PROFILE:  `/users/me`,
+    UPDATE_USER_PROFILE: `/users/me`,
+    CHANGE_PASSWORD: `/users/change-password`,
+    UPDATE_PROFILE_PICTURE: `/users/profile-picture`,
     PUT_PRESIGNED_URL: "/users/s3-presigned-url",
     GET_PRESIGNED_URL: "/users/s3-getPresigned-url",
-    UPDATE_MENTOR_PROFILE: (mentorId: string) =>
-      `/users/${mentorId}/mentor-profile`,
+    UPDATE_MENTOR_PROFILE: `/users/mentor-profile`,
     UPDATE_PROFILE_DATA: (userId: string) => `/users/${userId}/profile-data`,
     GET_USER_PROFILE: (userId: string) => `/users/${userId}/profile`,
   },
@@ -58,7 +56,7 @@ export const API = {
     COURSE_DETAILS_ADMIN: (courseId: string) => `/courses/${courseId}/admin`,
     APPROVE_CURSE: (courseId: string) => `/courses/admin/approve/${courseId}`,
     REJECT_COURSE: (courseId: string) => `/courses/admin/reject/${courseId}`,
-    LIST_COURSE_FOR_SLOT: (mentorId: string) => `/courses/mentor/${mentorId}`,
+    LIST_COURSE_FOR_SLOT:  `/courses/mentor`,
     GET_COURSE_FORM_DATA: (courseId: string) => `/courses/form/${courseId}`,
     UPDATE_SESSION: (courseId: string, sessionId: string) =>
       `/courses/${courseId}/session/${sessionId}`,
@@ -70,19 +68,20 @@ export const API = {
   PAYMENT: {
     CREATE_PAYMENT_INTENT: "/orders/payment/create-checkout-session",
     GET_PAYMENT_DATA: (sessionsId: string) => `/orders/stripe/${sessionsId}`,
+    TRANSACTION_HISTORY:'/orders/payment/transaction'
   },
   ENROLLEMENT: {
-    GET_ENROLLED_COURSE: (learnerId: string) => `/enrollements/${learnerId}`,
+    GET_ENROLLED_COURSE:  `/enrollements`,
     GET_ENROLLD_COURSE_DETAILS: (enrolledId: string) =>
       `/enrollements/course/${enrolledId}`,
     UPDATE_PROGRESS: (enrolledId: string) => `/enrollements/${enrolledId}`,
     ADD_RATING: (enrolledId: string) => `/enrollements/${enrolledId}/rating`,
-    GET_COURSE_DASHBOARD: (courseId: string, mentorId: string) =>
-      `/enrollements/course/${courseId}/mentor/${mentorId}`,
+    GET_COURSE_DASHBOARD: (courseId: string) =>
+      `/enrollements/course/${courseId}/mentor`,
     GET_FILTERED_GRAPH: (courseId: string) =>
       `/enrollements/course/${courseId}/chart`,
-    GET_MENTOR_DASH_DATA: (mentorId: string) =>
-      `/enrollements/mentor/${mentorId}/dashboard`,
+    GET_MENTOR_DASH_DATA: 
+      `/enrollements/mentor/dashboard`,
     GET_REVANUE_GRAPH: `/enrollements/mentor/dashboard/revanue`,
     GET_ADMIN_REVANUE_GRAPH: `/enrollements/admin/dashboard/revanue`,
   },
@@ -129,8 +128,8 @@ export const API = {
       `/certificate/my-certificate/${learnerId}`,
   },
   LEARNER: {
-    LEARNER_DASHBOARD: (learnerId: string) =>
-      `/enrollements/${learnerId}/dashboard`,
+    LEARNER_DASHBOARD: 
+      `/enrollements/learner/dashboard`,
   },
   CHAT_BOT:{
       FETCH_MESSAGE:(learnerId:string,courseId:string)=>`/chat-bot/learner/${learnerId}/course/${courseId}`,

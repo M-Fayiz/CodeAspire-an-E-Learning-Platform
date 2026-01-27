@@ -28,7 +28,7 @@ const CourseEnrolledList = () => {
 
     (async () => {
       setLoading(true);
-      const data = await EnrolledService.getEnrolledCourse(user.id);
+      const data = await EnrolledService.getEnrolledCourse();
 
       if (data) {
         setEnrolledCourses(data);

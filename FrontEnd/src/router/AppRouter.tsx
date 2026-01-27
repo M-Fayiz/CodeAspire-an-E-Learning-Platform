@@ -41,6 +41,7 @@ import CertificatesList from "@/pages/certificate page/ListCertificatePage";
 import LearnerDashboard from "@/pages/learner page/Learner-Dashboard";
 import Unauthorized from "@/pages/not-found/UnAuthorized";
 import RootLayout from "@/components/auth-components/RouterLayout";
+import TransactionPage from "@/pages/transaction/transactionHistory";
 
 function Form_Courses_Provider() {
   return (
@@ -79,7 +80,7 @@ export const router = createBrowserRouter([
     children: [
       { index: true, element: <Navigate to="dashboard" /> },
       { path: "dashboard", element: <LearnerDashboard /> },
-      { path: "profile/:id", element: <ProfileManagement /> },
+      { path: "profile/u", element: <ProfileManagement /> },
       { path: "courses", element: <CourseLayout /> },
       { path: "enrolled-courses", element: <CourseEnrolledList /> },
       {
@@ -104,12 +105,13 @@ export const router = createBrowserRouter([
     children: [
       { index: true, element: <Navigate to="dashboard" /> },
       { path: "dashboard", element: <MentorDashboard /> },
-      { path: "profile/:id", element: <ProfileManagement /> },
+      { path: "profile/u", element: <ProfileManagement /> },
       { path: "data", element: <MentorDataForm /> },
       { path: "chats", element: <ChatPage /> },
       { path: "slot-management", element: <SlotManagement /> },
       { path: "booked-slot-list", element: <MentorBookedSlots /> },
       { path: "video-session/:bookingId", element: <VideoRoom /> },
+       { path: "transactions", element: <TransactionPage /> },
       {
         path: "courses",
         element: <Form_Courses_Provider />,
@@ -131,7 +133,7 @@ export const router = createBrowserRouter([
             handle: { breadcrumb: "Create Course" },
           },
           {
-            path: "dashboard/:id",
+            path: "dashboard/:courseId",
             element: <CourseDashboard />,
             handle: { breadcrumb: "Course Dashboard" },
           },
@@ -150,7 +152,7 @@ export const router = createBrowserRouter([
     children: [
       { index: true, element: <Navigate to="dashboard" /> },
       { path: "dashboard", element: <AdminDashboard /> },
-      { path: "profile/:id", element: <ProfileManagement /> },
+      { path: "profile/u", element: <ProfileManagement /> },
       { path: "users", element: <UserManagement /> },
       {
         path: "user-profile/:userId",
@@ -160,6 +162,7 @@ export const router = createBrowserRouter([
       { path: "courses", element: <CourseManagement /> },
       { path: "courses/:courseId", element: <AdminCourseDetails /> },
       { path: "chats", element: <ChatPage /> },
+      { path: "transactions", element: <TransactionPage /> },
     ],
   },
   {

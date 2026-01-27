@@ -10,7 +10,7 @@ import {
 } from "@/components/ui/accordion";
 import { Button } from "../ui/button";
 import UserService from "@/service/user.service";
-import { useAuth } from "@/context/auth.context";
+
 import { toast } from "sonner";
 import { ApiError } from "@/utility/apiError.util";
 
@@ -23,7 +23,7 @@ const AdditionalInformation: React.FC<MentorInfoProps> = ({ MentorData }) => {
   const [formData, setFormData] = useState({
     expertise: MentorData.expertise,
   });
-  const { user } = useAuth();
+
   const addExpertise = () => {
     if (
       newExpertise.trim() &&
@@ -46,7 +46,6 @@ const AdditionalInformation: React.FC<MentorInfoProps> = ({ MentorData }) => {
   const saveData = async () => {
     try {
       const result = await UserService.updateMentorInformation(
-        user!.id,
         formData,
       );
       if (result) {

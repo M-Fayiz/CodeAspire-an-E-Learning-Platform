@@ -1,5 +1,6 @@
 import { axiosInstance } from "@/axios/createInstance";
 import { API } from "@/constants/api.constant";
+import type { ITransactionDTO } from "@/types/transaction.type";
 import { throwAxiosError } from "@/utility/throwErrot";
 
 export const OrderService = {
@@ -33,4 +34,15 @@ export const OrderService = {
       throwAxiosError(error);
     }
   },
+  getTransactionHistory:async(page:number):Promise<{transactionHistory:ITransactionDTO[],totalPage:number}>=>{
+    try {
+      const response= await axiosInstance.get(API.PAYMENT.TRANSACTION_HISTORY,{
+
+        params:{page}
+      })
+      return response.data
+    } catch (error) {
+      throwAxiosError(error)
+    }
+  }
 };

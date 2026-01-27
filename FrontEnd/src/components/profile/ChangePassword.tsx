@@ -18,7 +18,6 @@ interface passWordsProps {
   setTabs: (tab: TapsComp) => void;
 }
 export const PasswordChangeForm: React.FC<passWordsProps> = ({
-  userId,
   setTabs,
 }) => {
   const [passwordData, setPasswordData] = useState<PasswordChangeData>({
@@ -58,7 +57,6 @@ export const PasswordChangeForm: React.FC<passWordsProps> = ({
     try {
       setIsLoading(true);
       const result = await UserService.changePassword(
-        userId,
         passwordData.currentPassword,
         passwordData.password,
       );

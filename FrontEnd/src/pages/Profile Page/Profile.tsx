@@ -45,7 +45,7 @@ const ProfileManagement: React.FC = () => {
     async function fetchUserData() {
       if (!user?.id) return;
       try {
-        const result = await UserService.fetchProfile(id as string);
+        const result = await UserService.fetchProfile();
         if (result) {
           if (result.profilePicture) {
             const get_fileURL = await sharedService.getPreSignedDownloadURL(
@@ -68,7 +68,7 @@ const ProfileManagement: React.FC = () => {
     e.preventDefault();
 
     try {
-      const result = await UserService.updateProfile(user!.id, updatedFields);
+      const result = await UserService.updateProfile( updatedFields);
 
       if (result) {
         setProfile(result.updatedData);
@@ -118,7 +118,6 @@ const ProfileManagement: React.FC = () => {
         result.uploadURL,
         result.fileURL,
         file,
-        user!.id,
       );
 
       if (fileURL) {

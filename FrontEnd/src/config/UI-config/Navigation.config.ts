@@ -8,6 +8,7 @@ import {
   MessageSquare,
   Users,
   CalendarDays,
+  History,
 } from "lucide-react";
 import React from "react";
 
@@ -31,6 +32,7 @@ const navigationConfig: Record<UserRoleType, NavigationItem[]> = {
     { icon: Book, label: "Course Management", path: "/admin/courses" },
     { icon: Layers, label: "Category Management", path: "/admin/category" },
     { icon: MessageSquare, label: "Messages", path: "/admin/chats" },
+    { icon: History, label: "Transaction History", path: "/admin/transactions" },
   ],
 
   learner: [
@@ -80,6 +82,7 @@ const navigationConfig: Record<UserRoleType, NavigationItem[]> = {
       label: "Messages",
       path: "/mentor/chats",
     },
+     { icon: History, label: "Transaction History", path: "/mentor/transactions" },
   ],
 };
 

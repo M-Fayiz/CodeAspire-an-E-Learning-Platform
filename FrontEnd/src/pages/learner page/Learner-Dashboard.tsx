@@ -30,7 +30,7 @@ const LearnerDashboard = () => {
   >([]);
   useEffect(() => {
     (async () => {
-      const dashData = await EnrolledService.learnerDashboardData(user!.id);
+      const dashData = await EnrolledService.learnerDashboardData();
       if (dashData) {
         setLearnerDashboardData(dashData);
         setCircleChart([

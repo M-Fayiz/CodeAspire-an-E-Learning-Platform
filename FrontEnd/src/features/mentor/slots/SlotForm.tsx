@@ -10,7 +10,6 @@ import {
 } from "@/components/ui/select";
 import courseService from "@/service/mentor/course.service";
 import type { SlotCourseDTO } from "@/types/DTOS/courses.dto.types";
-import { useAuth } from "@/context/auth.context";
 import { SlotDurationOptions } from "@/constants/slotManagment.const";
 import { SelectField } from "@/components/ui/selectField";
 import {
@@ -30,11 +29,11 @@ const SlotBookingForm: React.FC<SlotBookingFormProps> = ({
   setFormData,
   formError,
 }) => {
-  const { user } = useAuth();
+
   const [courses, setCourses] = useState<SlotCourseDTO[]>([]);
   useEffect(() => {
     (async () => {
-      const data = await courseService.listCourseOnSlot(user!.id);
+      const data = await courseService.listCourseOnSlot();
       if (data) setCourses(data);
     })();
   }, []);
@@ -123,9 +122,7 @@ const SlotBookingForm: React.FC<SlotBookingFormProps> = ({
         <label className="block text-sm font-medium text-gray-900 mb-2">
           Select Days <span className="text-red-600">*</span>
         </label>
-        {/* {formError.selectedDays && (
-          <p className="text-red-500 text-sm py-1">{formError.selectedDays}</p>
-        )} */}
+      
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -148,9 +145,9 @@ const SlotBookingForm: React.FC<SlotBookingFormProps> = ({
               </div>
             </div>
 
-            {/* Time Selectors */}
+      
             <div className="grid grid-cols-2 gap-4">
-              {/* Start Time */}
+             
               <div>
                 <label className="block text-sm font-medium text-gray-900 mb-2">
                   Start Time

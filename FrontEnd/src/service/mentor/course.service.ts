@@ -339,10 +339,10 @@ const courseService = {
    * @param mentorId
    * @returns list of course ID and tile array of Object
    */
-  listCourseOnSlot: async (mentorId: string): Promise<SlotCourseDTO[]> => {
+  listCourseOnSlot: async (): Promise<SlotCourseDTO[]> => {
     try {
       const response = await axiosInstance.get(
-        API.COURSE.LIST_COURSE_FOR_SLOT(mentorId),
+        API.COURSE.LIST_COURSE_FOR_SLOT,
       );
       return response.data.courseList;
     } catch (error) {

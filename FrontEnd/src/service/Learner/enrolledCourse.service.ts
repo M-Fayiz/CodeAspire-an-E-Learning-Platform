@@ -12,10 +12,10 @@ import type { IMentorDhasboardDTO } from "@/types/DTOS/mentorDashboard.dto.type"
 import type { learnerDashboardCardsDTO } from "@/types/DTOS/learnerDashboard.type";
 
 export const EnrolledService = {
-  getEnrolledCourse: async (learnerId: string): Promise<IEnrolledListDto[]> => {
+  getEnrolledCourse: async (): Promise<IEnrolledListDto[]> => {
     try {
       const response = await axiosInstance.get(
-        API.ENROLLEMENT.GET_ENROLLED_COURSE(learnerId),
+        API.ENROLLEMENT.GET_ENROLLED_COURSE,
       );
 
       const signedCourse = await Promise.all(
@@ -89,10 +89,10 @@ export const EnrolledService = {
       throwAxiosError(error);
     }
   },
-  getDashboardData: async (courseId: string, mentorId: string) => {
+  getDashboardData: async (courseId: string) => {
     try {
       const response = await axiosInstance.get(
-        API.ENROLLEMENT.GET_COURSE_DASHBOARD(courseId, mentorId),
+        API.ENROLLEMENT.GET_COURSE_DASHBOARD(courseId),
       );
       return response.data.dashboardData;
     } catch (error) {
@@ -116,12 +116,12 @@ export const EnrolledService = {
     }
   },
   getMentorDashboardData: async (
-    mentorId: string,
+  
     filter: string,
   ): Promise<IMentorDhasboardDTO> => {
     try {
       const response = await axiosInstance.get(
-        API.ENROLLEMENT.GET_MENTOR_DASH_DATA(mentorId),
+        API.ENROLLEMENT.GET_MENTOR_DASH_DATA,
         {
           params: { filter },
         },
@@ -160,11 +160,11 @@ export const EnrolledService = {
     }
   },
   learnerDashboardData: async (
-    learnerId: string,
+   
   ): Promise<learnerDashboardCardsDTO> => {
     try {
       const response = await axiosInstance.get(
-        API.LEARNER.LEARNER_DASHBOARD(learnerId),
+        API.LEARNER.LEARNER_DASHBOARD,
       );
       return response.data.dashboardData;
     } catch (error) {

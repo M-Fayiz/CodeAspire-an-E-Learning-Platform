@@ -1,60 +1,53 @@
-import type { AxiosError } from "axios";
 import { axiosInstance } from "../axios/createInstance";
 import { API } from "../constants/api.constant";
 import type { AnyUser, BaseUser } from "../types/users.type";
 import type { IMentorProps } from "../types/mentor.types";
 import { sharedService } from "./shared.service";
+import { throwAxiosError } from "@/utility/throwErrot";
 
 const UserService = {
-  fetchProfile: async (id: string): Promise<AnyUser> => {
+  fetchProfile: async (): Promise<AnyUser> => {
     try {
-      const response = await axiosInstance.get(API.USER.FETCH_USER_PROFILE(id));
+      const response = await axiosInstance.get(API.USER.FETCH_USER_PROFILE);
 
       return response.data.userData;
     } catch (error) {
-      const err = error as AxiosError<{ error: string }>;
-      const errorMessage = err.response?.data.error;
-      throw new Error(errorMessage);
+      throwAxiosError(error)
     }
   },
   changePassword: async (
-    id: string,
+   
     currentPassword: string,
     newPassword: string,
   ): Promise<{ status: number; message: string }> => {
     try {
-      const response = await axiosInstance.patch(API.USER.CHANGE_PASSWORD(id), {
+      const response = await axiosInstance.patch(API.USER.CHANGE_PASSWORD, {
         currentPassword,
         newPassword,
       });
       return response.data;
     } catch (error) {
-      const err = error as AxiosError<{ error: string }>;
-      const errorMessage = err.response?.data.error;
-      throw new Error(errorMessage);
+     throwAxiosError(error)
     }
   },
   uploadImageIntoS3: async (
     uploadURL: string,
     fileURL: string,
     file: File,
-    userId: string,
+    
   ) => {
     try {
       await sharedService.uploadToS3(uploadURL, file);
       const response = await axiosInstance.put(
-        API.USER.UPDATE_PROFILE_PICTURE(userId),
+        API.USER.UPDATE_PROFILE_PICTURE,
         { imageURL: fileURL },
       );
       return await sharedService.getPreSignedDownloadURL(response.data.imgURL);
     } catch (error) {
-      const err = error as AxiosError<{ error: string }>;
-      const errorMessage = err.response?.data.error;
-      throw new Error(errorMessage);
+     throwAxiosError(error)
     }
   },
   updateMentorInformation: async (
-    mentorId: string,
     mentorData: Partial<IMentorProps>,
   ) => {
     try {
@@ -69,29 +62,25 @@ const UserService = {
         mentorData.resume = result.fileURL;
       }
       const response = await axiosInstance.put(
-        API.USER.UPDATE_MENTOR_PROFILE(mentorId),
+        API.USER.UPDATE_MENTOR_PROFILE,
         { ...mentorData, isRequested: true },
       );
 
       return response.data;
     } catch (error) {
-      const err = error as AxiosError<{ error: string }>;
-      const errorMessage = err.response?.data.error;
-      throw new Error(errorMessage);
+     throwAxiosError(error)
     }
   },
-  updateProfile: async (userId: string, userData: Partial<BaseUser>) => {
+  updateProfile: async ( userData: Partial<BaseUser>) => {
     try {
       const response = await axiosInstance.put(
-        API.USER.UPDATE_USER_PROFILE(userId),
+        API.USER.UPDATE_USER_PROFILE,
         { ...userData },
       );
 
       return response.data;
     } catch (error) {
-      const err = error as AxiosError<{ error: string }>;
-      const errorMessage = err.response?.data.error;
-      throw new Error(errorMessage);
+     throwAxiosError(error)
     }
   },
   getUserProfile: async (userId: string) => {
@@ -109,9 +98,7 @@ const UserService = {
 
       return response.data.userData;
     } catch (error) {
-      const err = error as AxiosError<{ error: string }>;
-      const errorMessage = err.response?.data.error;
-      throw new Error(errorMessage);
+     throwAxiosError(error)
     }
   },
 };

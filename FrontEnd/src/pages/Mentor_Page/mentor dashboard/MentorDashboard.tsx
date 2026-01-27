@@ -45,7 +45,6 @@ export default function MentorDashboard() {
     (async () => {
       setLoading(true);
       const data = await EnrolledService.getMentorDashboardData(
-        user!.id,
         selectedPeriod,
       );
 

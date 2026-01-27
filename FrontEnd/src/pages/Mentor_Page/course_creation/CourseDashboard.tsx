@@ -1,4 +1,4 @@
-import { useAuth } from "@/context/auth.context";
+
 import { ChartAreaInteractive } from "@/features/mentor/course/CourseDashBoard/TrendGraph";
 import { EnrolledService } from "@/service/Learner/enrolledCourse.service";
 import type { CourseDashboardDTO } from "@/types/DTOS/courseDashboard.dto.type";
@@ -23,22 +23,22 @@ const CourseDashboard = () => {
   );
   const { setCourseId, setIsDraftReady } = useCourseFormContext();
   const [comment, setComment] = useState<IReviewDTO[] | null>(null);
-  const { id } = useParams<{ id: string }>();
-  const { user } = useAuth();
+  const { courseId } = useParams<{ courseId: string }>();
+
 
   useEffect(() => {
     (async () => {
       const data = await EnrolledService.getDashboardData(
-        id as string,
-        user!.id,
+        courseId as string,
+       
       );
       if (data) {
         setDashboardData(data);
       }
-      const commentData = await ReviewService.getCourseReviews(id as string);
+      const commentData = await ReviewService.getCourseReviews(courseId as string);
       setComment(commentData);
     })();
-  }, [id]);
+  }, [courseId]);
 
   const content = {
     stats: [
@@ -135,7 +135,7 @@ const CourseDashboard = () => {
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
         {/* Chart */}
         <div className="lg:col-span-2 bg-white rounded-xl shadow p-4">
-          <ChartAreaInteractive courseId={id as string} />
+          <ChartAreaInteractive courseId={courseId as string} />
         </div>
 
         {/* Comments */}
