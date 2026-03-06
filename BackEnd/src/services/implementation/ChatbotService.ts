@@ -29,7 +29,7 @@ export class ChatbotService implements IChatbotService{
         if(!isEnrolled){
             throw createHttpError(HttpStatus.NOT_FOUND,HttpResponse.NOT_ENROLLED)
         }   
-        console.log('course id :',course_Id)
+        
 
         const course= await this._courseRepository.getCourse(course_Id)
         console.log(course)
