@@ -23,7 +23,6 @@ class ChatbotService {
         if (!isEnrolled) {
             throw (0, http_error_1.createHttpError)(http_status_const_1.HttpStatus.NOT_FOUND, error_message_const_1.HttpResponse.NOT_ENROLLED);
         }
-        console.log('course id :', course_Id);
         const course = await this._courseRepository.getCourse(course_Id);
         console.log(course);
         if (!course) {
