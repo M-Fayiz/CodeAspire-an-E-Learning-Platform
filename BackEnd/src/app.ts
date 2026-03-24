@@ -60,8 +60,12 @@ app.use(cors(corsSetUp));
 
 // Routers
 
-app.get("/", (req, res) => {
-  res.send("SERVER WORKING");
+app.get("/health", (req, res) => {
+  res.status(200).json({
+    status: "OK",
+    uptime: process.uptime(),
+    timestamp: new Date()
+  });
 });
 
 app.use("/api/v1/auth", authRouter);
