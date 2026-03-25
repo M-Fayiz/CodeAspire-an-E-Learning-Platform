@@ -28,6 +28,7 @@ import webhookRouter from "./routers/webhook.router";
 import videoSessionRouter from "./routers/videoSession.router";
 import certificateRouter from "./routers/certificate.router";
 import chatBotRouter from "./routers/chatbot.router";
+import { HttpStatusCode } from "axios";
 
 dotenv.config();
 
@@ -60,8 +61,11 @@ app.use(cors(corsSetUp));
 
 // Routers
 
-app.all("/health", (req, res) => {
-  res.status(200).send("OK");
+app.get("/health", (req, res) => {
+  res.status(HttpStatusCode.Ok).json({
+    status: httpResponse.OK,
+    timestamp: Date.now()
+  });
 });
 
 app.use("/api/v1/auth", authRouter);
