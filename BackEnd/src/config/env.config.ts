@@ -101,4 +101,7 @@ export const env = {
   get GEMINI_API_KEY() {
     return process.env.GEMINI_API_KEY;
   },
+  get RESEND_API_KEY() {
+    return process.env.RESEND_API_KEY;
+  },
 };
