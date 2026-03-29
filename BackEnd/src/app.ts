@@ -62,7 +62,7 @@ app.use(cors(corsSetUp));
 
 // Routers
 
-app.head("/api/v1/health", (req, res) => {
+app.all("/api/v1/health", (req, res) => {
   res.status(HttpStatusCode.Ok).json({
     status: HttpResponse.OK,
     timestamp: Date.now()
