@@ -1,16 +1,13 @@
 "use strict";
-var __importDefault = (this && this.__importDefault) || function (mod) {
-    return (mod && mod.__esModule) ? mod : { "default": mod };
-};
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.sendMail = exports.sendToken = void 0;
-const email_config_1 = __importDefault(require("../config/email.config"));
 const env_config_1 = require("../config/env.config");
+const resend_config_1 = require("../config/resend.config");
 const sendToken = async (email, token, endPoint) => {
     const verifyUrl = `${env_config_1.env.CLIENT_URL_2}/auth/${endPoint}?token=${token}&email=${email}`;
     try {
-        const option = {
-            from: "",
+        await resend_config_1.resend.emails.send({
+            from: "CodeAspire <no-reply@codeaspire.online>",
             to: email,
             subject: "CodeAspire Sync OTP Verification",
             html: ` 
@@ -78,8 +75,7 @@ const sendToken = async (email, token, endPoint) => {
 </html>
 
             `,
-        };
-        await email_config_1.default.sendMail(option);
+        });
     }
     catch (error) {
         console.log(error);
@@ -88,18 +84,17 @@ const sendToken = async (email, token, endPoint) => {
 exports.sendToken = sendToken;
 const sendMail = async (email, title, message) => {
     try {
-        const option = {
-            from: "",
+        await resend_config_1.resend.emails.send({
+            from: "CodeAspire <no-reply@codeaspire.online>",
             to: email,
-            subject: "",
+            subject: "CodeAspire Course related Status",
             html: `
                 <h1>${title}</h1>
                 <p>${message}.</p><br />
                 <p>.</p>
                 <p>— CodeAspire Team</p>
             `,
-        };
-        await email_config_1.default.sendMail(option);
+        });
     }
     catch (error) {
         console.log(error);

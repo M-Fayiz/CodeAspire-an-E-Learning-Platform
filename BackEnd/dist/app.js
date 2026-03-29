@@ -33,6 +33,8 @@ const webhook_router_1 = __importDefault(require("./routers/webhook.router"));
 const videoSession_router_1 = __importDefault(require("./routers/videoSession.router"));
 const certificate_router_1 = __importDefault(require("./routers/certificate.router"));
 const chatbot_router_1 = __importDefault(require("./routers/chatbot.router"));
+const axios_1 = require("axios");
+const error_message_const_1 = require("./const/error-message.const");
 dotenv_1.default.config();
 const app = (0, express_1.default)();
 // MIddlewares
@@ -50,8 +52,11 @@ app.use(passport_1.default.initialize());
 // app.use(passport.session());
 app.use((0, cors_1.default)(cors_config_1.corsSetUp));
 // Routers
-app.get("/", (req, res) => {
-    res.send("SERVER WORKING");
+app.all("/api/v1/health", (req, res) => {
+    res.status(axios_1.HttpStatusCode.Ok).json({
+        status: error_message_const_1.HttpResponse.OK,
+        timestamp: Date.now()
+    });
 });
 app.use("/api/v1/auth", auth_router_1.default);
 app.use("/api/v1/users", user_router_1.default);
