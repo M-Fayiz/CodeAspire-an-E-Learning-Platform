@@ -1,10 +1,11 @@
-export const options = {
+import { env } from "./env.config";
+
+const isProduction = env.NODE_ENV === "production";
+
+export const cookieOptions = {
   httpOnly: true,
-  secure: true,
-  sameSite:
-    process.env.NODE_ENV === "production"
-      ? ("none" as const)
-      : ("lax" as const),
+  secure: isProduction,
+  sameSite: isProduction ? ("none" as const) : ("lax" as const),
   domain: undefined,
   path: "/",
 };

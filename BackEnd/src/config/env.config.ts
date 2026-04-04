@@ -2,6 +2,9 @@ import dotenv from "dotenv";
 dotenv.config();
 
 export const env = {
+  get NODE_ENV() {
+    return process.env.NODE_ENV;
+  },
   get port() {
     return process.env.Port;
   },

@@ -192,12 +192,11 @@ class CourseService {
     }
     async updateBaseCourseInfo(courseId, baseInfo) {
         const id = (0, objectId_1.parseObjectId)(courseId);
-        console.log("base infor ", id);
         if (!id) {
             throw (0, http_error_1.createHttpError)(http_status_const_1.HttpStatus.BAD_REQUEST, error_message_const_1.HttpResponse.INVALID_ID);
         }
         await this._courseRepository.updateBaseInfo(id, baseInfo);
-        const courseData = this._courseRepository.findCourse(id);
+        const courseData = await this._courseRepository.findCourse(id);
         return (0, course_dtos_1.courseDTO)(courseData);
     }
     async getAdminCourse(search, page) {

@@ -9,8 +9,9 @@ class OrderController {
         this._orderService = _orderService;
         this.create_intent = async (req, res, next) => {
             try {
-                const { userId, courseId } = req.body;
-                const { clientSecret, orderId, checkoutURL } = await this._orderService.paymentIntent(userId, courseId);
+                const user = req.user;
+                const { courseId } = req.body;
+                const { clientSecret, orderId, checkoutURL } = await this._orderService.paymentIntent(user._id, courseId);
                 res.status(http_status_const_1.HttpStatus.OK).json((0, response_util_1.successResponse)(error_message_const_1.HttpResponse.OK, {
                     clientSecret,
                     orderId,

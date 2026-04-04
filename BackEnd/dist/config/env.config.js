@@ -7,6 +7,9 @@ exports.env = void 0;
 const dotenv_1 = __importDefault(require("dotenv"));
 dotenv_1.default.config();
 exports.env = {
+    get NODE_ENV() {
+        return process.env.NODE_ENV;
+    },
     get port() {
         return process.env.Port;
     },

@@ -14,7 +14,6 @@ import adminRouter from "./routers/admin.router";
 import categoryRouter from "./routers/category.router";
 import courseRouter from "./routers/courses.router";
 import sharedRouter from "./routers/shared.router";
-// import { orderRouter, webhookRouter } from "./routers/order.router";
 import enrolledRouter from "./routers/enrolled.router";
 import reviewRouter from "./routers/review.router";
 import http from "http";
@@ -35,11 +34,9 @@ dotenv.config();
 
 const app = express();
 
-// MIddlewares
 app.use(cookieParser());
-app.use(morgan("dev")); //morgan
+app.use(morgan("dev"));
 
-/// exceptional case
 app.use(
   "/api/v1/webhook",
   express.raw({ type: "application/json" }),
@@ -47,25 +44,18 @@ app.use(
 );
 
 app.use(express.json());
-
 app.use(express.urlencoded({ extended: true }));
-// app.use(session(sessionConfig));
 
 const server = http.createServer(app);
-//socket
 intitializeSocket(server);
 
 app.use(passport.initialize());
-// app.use(passport.session());
-
 app.use(cors(corsSetUp));
 
-// Routers
-
-app.all("/api/v1/health", (req, res) => {
+app.all("/api/v1/health", (_req, res) => {
   res.status(HttpStatusCode.Ok).json({
     status: HttpResponse.OK,
-    timestamp: Date.now()
+    timestamp: Date.now(),
   });
 });
 
@@ -85,13 +75,21 @@ app.use("/api/v1/slot-booking", bookingROuter);
 app.use("/api/v1/video", videoSessionRouter);
 app.use("/api/v1/certificate", certificateRouter);
 app.use("/api/v1/chat-bot", chatBotRouter);
+
 const port = env.port;
 
-dbConnect();
-
-// Error Handler
 app.use(errorHandler);
 
-server.listen(port, () => {
-  console.log(`✅ Server  Running.... at${port} `);
-});
+async function bootstrap() {
+  try {
+    await dbConnect();
+    server.listen(port, () => {
+      console.log(`Server running on port ${port}`);
+    });
+  } catch (error) {
+    console.error("Failed to start server", error);
+    process.exit(1);
+  }
+}
+
+void bootstrap();

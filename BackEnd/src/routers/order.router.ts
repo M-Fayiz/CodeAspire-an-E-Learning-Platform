@@ -38,8 +38,8 @@ orderRouter.get(
 
 orderRouter.post(
   "/payment/create-checkout-session",
-  // verifyUser,
-  // authorizedRole(IRole.Learner),
+  verifyUser,
+  authorizedRole(IRole.Learner),
   orderController.create_intent,
 );
 

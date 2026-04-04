@@ -19,7 +19,6 @@ const admin_router_1 = __importDefault(require("./routers/admin.router"));
 const category_router_1 = __importDefault(require("./routers/category.router"));
 const courses_router_1 = __importDefault(require("./routers/courses.router"));
 const shared_router_1 = __importDefault(require("./routers/shared.router"));
-// import { orderRouter, webhookRouter } from "./routers/order.router";
 const enrolled_router_1 = __importDefault(require("./routers/enrolled.router"));
 const review_router_1 = __importDefault(require("./routers/review.router"));
 const http_1 = __importDefault(require("http"));
@@ -37,25 +36,19 @@ const axios_1 = require("axios");
 const error_message_const_1 = require("./const/error-message.const");
 dotenv_1.default.config();
 const app = (0, express_1.default)();
-// MIddlewares
 app.use((0, cookie_parser_1.default)());
-app.use((0, morgan_1.default)("dev")); //morgan
-/// exceptional case
+app.use((0, morgan_1.default)("dev"));
 app.use("/api/v1/webhook", express_1.default.raw({ type: "application/json" }), webhook_router_1.default);
 app.use(express_1.default.json());
 app.use(express_1.default.urlencoded({ extended: true }));
-// app.use(session(sessionConfig));
 const server = http_1.default.createServer(app);
-//socket
 (0, socket_io_1.intitializeSocket)(server);
 app.use(passport_1.default.initialize());
-// app.use(passport.session());
 app.use((0, cors_1.default)(cors_config_1.corsSetUp));
-// Routers
-app.all("/api/v1/health", (req, res) => {
+app.all("/api/v1/health", (_req, res) => {
     res.status(axios_1.HttpStatusCode.Ok).json({
         status: error_message_const_1.HttpResponse.OK,
-        timestamp: Date.now()
+        timestamp: Date.now(),
     });
 });
 app.use("/api/v1/auth", auth_router_1.default);
@@ -75,9 +68,17 @@ app.use("/api/v1/video", videoSession_router_1.default);
 app.use("/api/v1/certificate", certificate_router_1.default);
 app.use("/api/v1/chat-bot", chatbot_router_1.default);
 const port = env_config_1.env.port;
-(0, db_config_1.dbConnect)();
-// Error Handler
 app.use(error_handling_middleware_1.errorHandler);
-server.listen(port, () => {
-    console.log(`✅ Server  Running.... at${port} `);
-});
+async function bootstrap() {
+    try {
+        await (0, db_config_1.dbConnect)();
+        server.listen(port, () => {
+            console.log(`Server running on port ${port}`);
+        });
+    }
+    catch (error) {
+        console.error("Failed to start server", error);
+        process.exit(1);
+    }
+}
+void bootstrap();

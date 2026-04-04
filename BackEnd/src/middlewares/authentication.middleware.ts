@@ -9,26 +9,23 @@ import redisClient from "../config/redis.config";
 
 export async function verifyUser(
   req: Request,
-  res: Response,
+  _res: Response,
   next: NextFunction,
 ) {
   try {
     const { accessToken } = req.cookies;
     if (!accessToken) {
-      console.log("no acesstoken");
       throw createHttpError(HttpStatus.UNAUTHORIZED, HttpResponse.UNAUTHORIZED);
     }
 
     const decode = verifyAccesToken(accessToken);
-
-    const userId = decode._id;
-    if (!decode) {
-      console.log("access token expired ");
+    if (!decode?._id) {
       throw createHttpError(
         HttpStatus.UNAUTHORIZED,
         HttpResponse.ACCESS_TOKEN_EXPIRED,
       );
     }
+    const userId = decode._id;
     const isBlocked = await redisClient.get(`blocked:user:${userId}`);
     if (isBlocked) {
       console.log("user blocked 🟥");
@@ -38,7 +35,7 @@ export async function verifyUser(
       "_id email role isActive",
     );
 
-    if (!user || !user?.isActive) {
+    if (!user || !user.isActive) {
       throw createHttpError(HttpStatus.LOCKED, HttpResponse.USER_BLOCKED);
     }
     req.user = user;

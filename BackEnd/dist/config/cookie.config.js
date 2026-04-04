@@ -1,12 +1,12 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.options = void 0;
-exports.options = {
+exports.cookieOptions = void 0;
+const env_config_1 = require("./env.config");
+const isProduction = env_config_1.env.NODE_ENV === "production";
+exports.cookieOptions = {
     httpOnly: true,
-    secure: true,
-    sameSite: process.env.NODE_ENV === "production"
-        ? "none"
-        : "lax",
+    secure: isProduction,
+    sameSite: isProduction ? "none" : "lax",
     domain: undefined,
     path: "/",
 };

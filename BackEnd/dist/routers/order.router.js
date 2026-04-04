@@ -22,8 +22,5 @@ const orderService = new OrderService_1.OrderService(orderRepository, courseRepo
 const orderController = new OrderController_1.OrderController(orderService);
 orderRouter.get("/stripe/:id", authentication_middleware_1.verifyUser, (0, authorisation_middleware_1.authorizedRole)(user_types_1.IRole.Learner), orderController.get_payment_data);
 orderRouter.get("/payment/transaction", authentication_middleware_1.verifyUser, (0, authorisation_middleware_1.authorizedRole)(user_types_1.IRole.Admin, user_types_1.IRole.Mentor), orderController.getTransactionHistory);
-orderRouter.post("/payment/create-checkout-session", 
-// verifyUser,
-// authorizedRole(IRole.Learner),
-orderController.create_intent);
+orderRouter.post("/payment/create-checkout-session", authentication_middleware_1.verifyUser, (0, authorisation_middleware_1.authorizedRole)(user_types_1.IRole.Learner), orderController.create_intent);
 exports.default = orderRouter;

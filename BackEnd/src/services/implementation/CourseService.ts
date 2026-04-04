@@ -317,12 +317,12 @@ export class CourseService implements ICourseService {
     baseInfo: ICourses,
   ): Promise<ICourseDTO> {
     const id = parseObjectId(courseId);
-    console.log("base infor ", id);
+  
     if (!id) {
       throw createHttpError(HttpStatus.BAD_REQUEST, HttpResponse.INVALID_ID);
     }
     await this._courseRepository.updateBaseInfo(id, baseInfo);
-    const courseData = this._courseRepository.findCourse(id);
+    const courseData =await this._courseRepository.findCourse(id);
 
     return courseDTO(courseData as unknown as IPopulatedCourse);
   }

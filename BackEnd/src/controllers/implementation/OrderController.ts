@@ -15,9 +15,10 @@ export class OrderController implements IOrderController {
     next: NextFunction,
   ): Promise<void> => {
     try {
-      const { userId, courseId } = req.body;
+      const user = req.user as { _id: string };
+      const { courseId } = req.body;
       const { clientSecret, orderId, checkoutURL } =
-        await this._orderService.paymentIntent(userId, courseId);
+        await this._orderService.paymentIntent(user._id, courseId);
 
       res.status(HttpStatus.OK).json(
         successResponse(HttpResponse.OK, {
