@@ -8,9 +8,34 @@ import type {
 import { API } from "../constants/api.constant";
 
 import { throwAxiosError } from "@/utility/throwErrot";
+import { ApiError } from "@/utility/apiError.util";
 import { sharedService } from "./shared.service";
 import { HttpStatusCode } from "@/constants/statusCode";
 import { AUTH_TOKEN } from "@/constants/authToken.const";
+
+const storeAccessToken = (token?: string) => {
+  if (token) {
+    localStorage.setItem(AUTH_TOKEN.ACCESS_TOKEN, token);
+  }
+};
+
+const clearAccessToken = () => {
+  localStorage.removeItem(AUTH_TOKEN.ACCESS_TOKEN);
+};
+
+const consumeRedirectToken = () => {
+  const url = new URL(window.location.href);
+  const token = url.searchParams.get("token");
+
+  if (!token) {
+    return null;
+  }
+
+  storeAccessToken(token);
+  url.searchParams.delete("token");
+  window.history.replaceState({}, document.title, url.toString());
+  return token;
+};
 
 export const AuthService = {
   signUp: async (
@@ -32,11 +57,6 @@ export const AuthService = {
         token,
         email,
       });
-
-      if (response.data.token) {
-        localStorage.setItem(AUTH_TOKEN.ACCESS_TOKEN, response.data.token);
-      }
-
       return response.data.message;
     } catch (error) {
       throwAxiosError(error);
@@ -58,11 +78,24 @@ export const AuthService = {
           response.data.user.profile = profilrUrl;
         }
       }
-      if (response.data.token) {
-        localStorage.setItem(AUTH_TOKEN.ACCESS_TOKEN, response.data.token);
-      }
       return response.data?.user;
     } catch (error) {
+      throwAxiosError(error);
+    }
+  },
+
+  restoreSession: async (): Promise<IDecodedUserType> => {
+    try {
+      consumeRedirectToken();
+      return await AuthService.authME();
+    } catch (error) {
+      if (
+        error instanceof ApiError &&
+        error.status === HttpStatusCode.UNAUTHORIZED
+      ) {
+        await AuthService.refreshToken();
+        return await AuthService.authME();
+      }
       throwAxiosError(error);
     }
   },
@@ -77,8 +110,10 @@ export const AuthService = {
       const response = await axiosInstance.get(API.Auth.REFRESH_TOKEN_URL, {
         withCredentials: true,
       });
+      storeAccessToken(response?.data?.token);
       return response?.data.user;
     } catch (error) {
+      clearAccessToken();
       throwAxiosError(error);
     }
   },
@@ -87,15 +122,12 @@ export const AuthService = {
   ): Promise<{
     status: number;
     message: string;
-    id: string;
-    email: string;
-    role: string;
+    user: IDecodedUserType;
+    token?: string;
   }> => {
     try {
       const response = await axiosInstance.post(API.Auth.LOGIN_URL, data);
-      if (response.data.token) {
-        localStorage.setItem(AUTH_TOKEN.ACCESS_TOKEN, response.data.token);
-      }
+      storeAccessToken(response?.data?.token);
       return response?.data;
     } catch (error) {
       throwAxiosError(error);
@@ -108,9 +140,7 @@ export const AuthService = {
         {},
         { withCredentials: true },
       );
-      if (response.status === HttpStatusCode.OK) {
-        localStorage.removeItem(AUTH_TOKEN.ACCESS_TOKEN);
-      }
+      clearAccessToken();
       if (response.status == HttpStatusCode.OK) return true;
     } catch (error) {
       throwAxiosError(error);

@@ -112,4 +112,7 @@ exports.env = {
     get RESEND_API_KEY() {
         return process.env.RESEND_API_KEY;
     },
+    get ENABLE_EMAIL_DELIVERY() {
+        return process.env.ENABLE_EMAIL_DELIVERY;
+    },
 };

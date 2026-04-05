@@ -3,11 +3,23 @@ import type { AxiosInstance } from "axios";
 import { AuthService } from "../service/auth.service";
 import { HttpStatusCode } from "@/constants/statusCode";
 import { router } from "@/router/AppRouter";
+import { AUTH_TOKEN } from "@/constants/authToken.const";
 
 const createInstance = (): AxiosInstance => {
   const instance = axios.create({
     baseURL: `${import.meta.env.VITE_BASE_URL}/api/v1/`,
     withCredentials: true,
+  });
+
+  instance.interceptors.request.use((config) => {
+    const accessToken = localStorage.getItem(AUTH_TOKEN.ACCESS_TOKEN);
+
+    if (accessToken) {
+      config.headers = config.headers ?? {};
+      config.headers.Authorization = `Bearer ${accessToken}`;
+    }
+
+    return config;
   });
 
   instance.interceptors.response.use(
@@ -16,10 +28,9 @@ const createInstance = (): AxiosInstance => {
       const status = error.response?.status;
       const originalRequest = error.config as any;
 
-      const isAuthEndpoint =
-        originalRequest?.url?.includes("/auth/me") ||
-        originalRequest?.url?.includes("/auth/refresh-token");
-      console.log("isAuthEndpoin :", isAuthEndpoint);
+      const requestUrl = originalRequest?.url ?? "";
+      const isAuthEndpoint = requestUrl.includes("/auth/");
+      const isRefreshRequest = requestUrl.includes("/auth/refresh-token");
 
       if (
         status === HttpStatusCode.UNAUTHORIZED &&
@@ -34,15 +45,24 @@ const createInstance = (): AxiosInstance => {
           window.dispatchEvent(new Event("force-logout"));
         }
       }
-      if (status === HttpStatusCode.FORBIDDEN) {
+
+      if (isAuthEndpoint) {
+        return Promise.reject({
+          status,
+          message: (error.response?.data as any)?.error || "Request failed",
+        });
+      }
+
+      if (status === HttpStatusCode.FORBIDDEN && !isRefreshRequest) {
         router.navigate("/unauthorized");
         return;
       }
 
       if (status === HttpStatusCode.LOCKED) {
-        router.navigate("/login");
+        router.navigate("/auth/login");
         return;
       }
+
       return Promise.reject({
         status,
         message: (error.response?.data as any)?.error || "Request failed",

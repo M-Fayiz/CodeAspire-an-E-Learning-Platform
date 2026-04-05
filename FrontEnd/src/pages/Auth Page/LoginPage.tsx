@@ -9,6 +9,7 @@ import { Spinner } from "../../components/templates/Spinner";
 import { useAuth } from "../../context/auth.context";
 import { toast } from "sonner";
 import { ApiError } from "@/utility/apiError.util";
+import { UserRole } from "@/types/auth.types";
 
 const LoginPage: React.FC = () => {
   const [isLoading, setLoading] = useState(false);
@@ -19,8 +20,16 @@ const LoginPage: React.FC = () => {
   const handleAuthSubmit = async (data: ISignUp) => {
     try {
       setLoading(true);
-      await login(data);
-      navigate("/", { replace: true });
+      const user = await login(data);
+
+      const redirectPath =
+        user.role === UserRole.ADMIN
+          ? "/admin/dashboard"
+          : user.role === UserRole.MENTOR
+            ? "/mentor/dashboard"
+            : "/learner/dashboard";
+
+      navigate(redirectPath, { replace: true });
     } catch (error) {
       if (error instanceof ApiError) {
         toast.error(error.message);

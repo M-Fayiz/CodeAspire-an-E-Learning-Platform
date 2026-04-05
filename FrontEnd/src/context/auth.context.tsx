@@ -2,6 +2,7 @@ import {
   createContext,
   useContext,
   useEffect,
+  useRef,
   useState,
   type ReactNode,
 } from "react";
@@ -19,7 +20,7 @@ interface User extends IDecodedUserType {}
 interface AuthContextProps {
   user: User | null;
   status: AuthStatusType;
-  login: (data: ISignUp) => Promise<void>;
+  login: (data: ISignUp) => Promise<User>;
   signup: (
     data: ISignUp,
   ) => Promise<{ status: number; message: string; email: string }>;
@@ -29,7 +30,9 @@ interface AuthContextProps {
 
 const AuthContext = createContext<AuthContextProps>({
   user: null,
-  login: async () => {},
+  login: async () => {
+    throw new Error("Login not completed");
+  },
   logout: async () => {},
   signup: async () => {
     throw new Error("Signup not completed");
@@ -45,14 +48,26 @@ interface AuthContext {
 export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const [user, setUser] = useState<User | null>(null);
   const [status, setStatus] = useState<AuthStatusType>(AuthStatus.CHECKING);
+  const authRequestIdRef = useRef(0);
+  const isMountedRef = useRef(true);
 
   const bootstrapAuth = async () => {
+    const requestId = ++authRequestIdRef.current;
+
     try {
-      // await AuthService.refreshToken();
-      const user = await AuthService.authME();
+      const user = await AuthService.restoreSession();
+
+      if (!isMountedRef.current || requestId !== authRequestIdRef.current) {
+        return;
+      }
+
       setUser(user);
       setStatus(AuthStatus.AUTHENTICATED);
     } catch (error: any) {
+      if (!isMountedRef.current || requestId !== authRequestIdRef.current) {
+        return;
+      }
+
       if (error?.status === HttpStatusCode.UNAUTHORIZED) {
         setUser(null);
         setStatus(AuthStatus.GUEST);
@@ -67,9 +82,12 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   };
 
   useEffect(() => {
+    isMountedRef.current = true;
     bootstrapAuth();
+    return () => {
+      isMountedRef.current = false;
+    };
   }, []);
-  console.log("user : : :", user);
 
   useEffect(() => {
     const handleForceLogout = () => {
@@ -82,20 +100,31 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   }, []);
 
   const login = async (data: ISignUp) => {
-    await AuthService.login(data);
-    await bootstrapAuth();
+    authRequestIdRef.current += 1;
+    setStatus(AuthStatus.CHECKING);
+
+    try {
+      const response = await AuthService.login(data);
+      const user = response.user;
+      setUser(user);
+      setStatus(AuthStatus.AUTHENTICATED);
+      return user;
+    } catch (error) {
+      setUser(null);
+      setStatus(AuthStatus.GUEST);
+      throw error;
+    }
   };
 
   const signup = async (data: ISignUp) => {
-    const result = await AuthService.signUp(data);
-    await bootstrapAuth();
-    return result;
+    return await AuthService.signUp(data);
   };
 
   const logout = async () => {
+    authRequestIdRef.current += 1;
     await AuthService.logOut();
     setUser(null);
-    setStatus("guest");
+    setStatus(AuthStatus.GUEST);
   };
 
   return (

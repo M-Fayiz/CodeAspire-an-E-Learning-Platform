@@ -13,7 +13,10 @@ const jsonwebtoken_1 = __importDefault(require("jsonwebtoken"));
 const redis_config_1 = __importDefault(require("../config/redis.config"));
 async function verifyUser(req, _res, next) {
     try {
-        const { accessToken } = req.cookies;
+        const bearerToken = req.headers.authorization?.startsWith("Bearer ")
+            ? req.headers.authorization.slice(7).trim()
+            : null;
+        const accessToken = req.cookies?.accessToken ?? bearerToken;
         if (!accessToken) {
             throw (0, http_error_1.createHttpError)(http_status_const_1.HttpStatus.UNAUTHORIZED, error_message_const_1.HttpResponse.UNAUTHORIZED);
         }
@@ -24,7 +27,6 @@ async function verifyUser(req, _res, next) {
         const userId = decode._id;
         const isBlocked = await redis_config_1.default.get(`blocked:user:${userId}`);
         if (isBlocked) {
-            console.log("user blocked 🟥");
             throw (0, http_error_1.createHttpError)(http_status_const_1.HttpStatus.LOCKED, error_message_const_1.HttpResponse.USER_BLOCKED);
         }
         const user = await user_model_1.UserModel.findById(userId).select("_id email role isActive");

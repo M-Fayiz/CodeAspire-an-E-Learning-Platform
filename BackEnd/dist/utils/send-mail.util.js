@@ -3,8 +3,22 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.sendMail = exports.sendToken = void 0;
 const env_config_1 = require("../config/env.config");
 const resend_config_1 = require("../config/resend.config");
+const shouldSendEmails = env_config_1.env.ENABLE_EMAIL_DELIVERY === "true" &&
+    Boolean(env_config_1.env.RESEND_API_KEY) &&
+    Boolean(resend_config_1.resend);
+const logLocalEmail = (subject, email, targetUrl) => {
+    console.log(`[local-email-disabled] ${subject}`);
+    console.log(`to: ${email}`);
+    if (targetUrl) {
+        console.log(`action-url: ${targetUrl}`);
+    }
+};
 const sendToken = async (email, token, endPoint) => {
     const verifyUrl = `${env_config_1.env.CLIENT_URL_2}/auth/${endPoint}?token=${token}&email=${email}`;
+    if (!shouldSendEmails) {
+        logLocalEmail(`token delivery skipped for ${endPoint}`, email, verifyUrl);
+        return;
+    }
     try {
         await resend_config_1.resend.emails.send({
             from: "CodeAspire <no-reply@codeaspire.online>",
@@ -83,6 +97,11 @@ const sendToken = async (email, token, endPoint) => {
 };
 exports.sendToken = sendToken;
 const sendMail = async (email, title, message) => {
+    if (!shouldSendEmails) {
+        logLocalEmail(`email delivery skipped for ${title}`, email);
+        console.log(`message: ${message}`);
+        return;
+    }
     try {
         await resend_config_1.resend.emails.send({
             from: "CodeAspire <no-reply@codeaspire.online>",

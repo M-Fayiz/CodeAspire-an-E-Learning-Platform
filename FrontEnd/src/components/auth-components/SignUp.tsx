@@ -58,13 +58,13 @@ const SignupComponent: React.FC<AuthComponentProps> = ({
       setErrors(ERROR);
       return;
     }
-    setErrors({});
-    onSubmit(roleAdded);
-    setIsLoading(true);
-
-    setTimeout(() => {
+    try {
+      setErrors({});
+      setIsLoading(true);
+      await onSubmit(roleAdded);
+    } finally {
       setIsLoading(false);
-    }, 3000);
+    }
   };
 
   return (

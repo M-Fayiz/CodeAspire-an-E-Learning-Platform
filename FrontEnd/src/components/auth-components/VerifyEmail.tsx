@@ -26,7 +26,7 @@ function VerifyEmail() {
       try {
         await AuthService.verifyEmail(email, token);
 
-        checkAuth();
+        await checkAuth();
         setTimeout(() => {
           navigate("/");
         }, 3000);

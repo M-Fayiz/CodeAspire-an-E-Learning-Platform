@@ -13,7 +13,11 @@ export async function verifyUser(
   next: NextFunction,
 ) {
   try {
-    const { accessToken } = req.cookies;
+    const bearerToken = req.headers.authorization?.startsWith("Bearer ")
+      ? req.headers.authorization.slice(7).trim()
+      : null;
+    const accessToken = req.cookies?.accessToken ?? bearerToken;
+
     if (!accessToken) {
       throw createHttpError(HttpStatus.UNAUTHORIZED, HttpResponse.UNAUTHORIZED);
     }
@@ -25,12 +29,13 @@ export async function verifyUser(
         HttpResponse.ACCESS_TOKEN_EXPIRED,
       );
     }
+
     const userId = decode._id;
     const isBlocked = await redisClient.get(`blocked:user:${userId}`);
     if (isBlocked) {
-      console.log("user blocked 🟥");
       throw createHttpError(HttpStatus.LOCKED, HttpResponse.USER_BLOCKED);
     }
+
     const user = await UserModel.findById(userId).select(
       "_id email role isActive",
     );
@@ -38,6 +43,7 @@ export async function verifyUser(
     if (!user || !user.isActive) {
       throw createHttpError(HttpStatus.LOCKED, HttpResponse.USER_BLOCKED);
     }
+
     req.user = user;
     next();
   } catch (error: unknown) {

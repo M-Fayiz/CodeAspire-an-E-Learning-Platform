@@ -28,7 +28,7 @@ export interface IDecodedUserType {
 }
 
 export interface AuthComponentProps {
-  onSubmit: (data: ISignUp) => void;
+  onSubmit: (data: ISignUp) => Promise<void>;
   onGoogleAuth: (role: UserRoleType) => void;
 }
 

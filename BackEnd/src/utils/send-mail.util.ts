@@ -1,9 +1,19 @@
 
 import { env } from "../config/env.config";
-
-
-
 import { resend } from "../config/resend.config";
+
+const shouldSendEmails =
+  env.ENABLE_EMAIL_DELIVERY === "true" &&
+  Boolean(env.RESEND_API_KEY) &&
+  Boolean(resend);
+
+const logLocalEmail = (subject: string, email: string, targetUrl?: string) => {
+  console.log(`[local-email-disabled] ${subject}`);
+  console.log(`to: ${email}`);
+  if (targetUrl) {
+    console.log(`action-url: ${targetUrl}`);
+  }
+};
 
 
 export const sendToken = async (
@@ -13,8 +23,13 @@ export const sendToken = async (
 ) => {
   const verifyUrl = `${env.CLIENT_URL_2}/auth/${endPoint}?token=${token}&email=${email}`;
 
+  if (!shouldSendEmails) {
+    logLocalEmail(`token delivery skipped for ${endPoint}`, email, verifyUrl);
+    return;
+  }
+
   try {
-    await resend.emails.send({
+    await resend!.emails.send({
       from: "CodeAspire <no-reply@codeaspire.online>", 
       to: email,
       subject: "CodeAspire Sync OTP Verification",
@@ -94,8 +109,14 @@ export const sendMail = async (
   title: string,
   message: string,
 ) => {
+  if (!shouldSendEmails) {
+    logLocalEmail(`email delivery skipped for ${title}`, email);
+    console.log(`message: ${message}`);
+    return;
+  }
+
   try {
-    await resend.emails.send( {
+    await resend!.emails.send( {
       from: "CodeAspire <no-reply@codeaspire.online>",
       to: email,
       subject: "CodeAspire Course related Status",

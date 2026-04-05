@@ -1,6 +1,9 @@
 import { env } from "./env.config";
 
-const isProduction = env.NODE_ENV === "production";
+const isLocalClient = [env.CLIENT_ORGIN, env.CLIENT_URL_2].some((origin) =>
+  /localhost|127\.0\.0\.1/i.test(origin ?? ""),
+);
+const isProduction = env.NODE_ENV === "production" && !isLocalClient;
 
 export const cookieOptions = {
   httpOnly: true,

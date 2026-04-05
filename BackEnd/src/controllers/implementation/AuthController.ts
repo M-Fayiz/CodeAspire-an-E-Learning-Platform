@@ -13,16 +13,29 @@ import { env } from "../../config/env.config";
 export class AuthController implements IAuthController {
   constructor(private _authService: IAuthService) {}
 
+  private extractAccessToken(req: Request): string | null {
+    const cookieToken = req.cookies?.accessToken;
+    if (cookieToken) {
+      return cookieToken;
+    }
+
+    const authorizationHeader = req.headers.authorization;
+    if (authorizationHeader?.startsWith("Bearer ")) {
+      return authorizationHeader.slice(7).trim();
+    }
+
+    return null;
+  }
+
   async signUp(req: Request, res: Response, next: NextFunction): Promise<void> {
     try {
       const email = await this._authService.signUp(req.body);
-      res
-        .status(HttpStatus.OK)
-        .json(successResponse(HttpResponse.OK, { email: email }));
+      res.status(HttpStatus.OK).json(successResponse(HttpResponse.OK, { email }));
     } catch (error) {
       next(error);
     }
   }
+
   async verifyEmail(
     req: Request,
     res: Response,
@@ -44,24 +57,16 @@ export class AuthController implements IAuthController {
 
   async authMe(req: Request, res: Response, next: NextFunction): Promise<void> {
     try {
-      const { accessToken } = req.cookies;
-      console.log("➡️ get into auth me");
+      const accessToken = this.extractAccessToken(req);
 
       if (!accessToken) {
         return next(
-          createHttpError(
-            HttpStatus.UNAUTHORIZED,
-            HttpResponse.ACCESS_TOKEN_EXPIRED,
-          ),
+          createHttpError(HttpStatus.UNAUTHORIZED, HttpResponse.UNAUTHORIZED),
         );
       }
-      const user = await this._authService.authMe(accessToken);
 
-      res
-        .status(HttpStatus.OK)
-        .json(
-          successResponse(HttpResponse.OK, { user: user, token: accessToken }),
-        );
+      const user = await this._authService.authMe(accessToken);
+      res.status(HttpStatus.OK).json(successResponse(HttpResponse.OK, { user }));
     } catch (error) {
       next(error);
     }
@@ -81,14 +86,17 @@ export class AuthController implements IAuthController {
           HttpResponse.REFRESH_TOKEN_EXPIRED,
         );
       }
-      console.log("➡️ refresh Token");
+
       const { newAccessToken, payload } =
         await this._authService.refreshAccessToken(refreshToken);
-      console.log("🔥 Created New Access Token :", { newAccessToken });
+
       setAccessToken(res, newAccessToken);
-      res
-        .status(HttpStatus.OK)
-        .json(successResponse(HttpResponse.OK, { user: payload }));
+      res.status(HttpStatus.OK).json(
+        successResponse(HttpResponse.OK, {
+          user: payload,
+          token: newAccessToken,
+        }),
+      );
     } catch (error) {
       next(error);
     }
@@ -104,8 +112,8 @@ export class AuthController implements IAuthController {
 
       res.status(HttpStatus.OK).json(
         successResponse(HttpResponse.LOGGED_IN_SUCCESSFULLY, {
-          data: tokensAndUserData.MappedUser,
           token: tokensAndUserData.accessToken,
+          user: tokensAndUserData.MappedUser,
         }),
       );
     } catch (error) {
@@ -123,6 +131,7 @@ export class AuthController implements IAuthController {
       next(error);
     }
   }
+
   async forgotPassword(
     req: Request,
     res: Response,
@@ -130,14 +139,12 @@ export class AuthController implements IAuthController {
   ): Promise<void> {
     try {
       const email = await this._authService.forgotPassword(req.body.email);
-
-      res
-        .status(HttpStatus.OK)
-        .json(successResponse(HttpResponse.OK, { email: email }));
+      res.status(HttpStatus.OK).json(successResponse(HttpResponse.OK, { email }));
     } catch (error) {
       next(error);
     }
   }
+
   async resetPassword(
     req: Request,
     res: Response,
@@ -157,6 +164,7 @@ export class AuthController implements IAuthController {
       next(error);
     }
   }
+
   async googleAuthRedirection(
     req: Request,
     res: Response,
@@ -167,14 +175,13 @@ export class AuthController implements IAuthController {
         res.status(HttpStatus.FORBIDDEN).json(HttpResponse.INVALID_CREDNTIALS);
         return;
       }
-      const Data = await this._authService.generateToken(
-        req.user as IUserModel,
-      );
 
-      setAccessToken(res, Data.accessToken);
-      setRefreshToken(res, Data.refreshToken);
+      const data = await this._authService.generateToken(req.user as IUserModel);
 
-      res.redirect(`${env.CLIENT_URL_2}/?token=${Data.accessToken}`);
+      setAccessToken(res, data.accessToken);
+      setRefreshToken(res, data.refreshToken);
+
+      res.redirect(`${env.CLIENT_URL_2}/?token=${data.accessToken}`);
     } catch (error) {
       res.redirect(`${env.CLIENT_ORGIN}/auth/signup`);
       next(error);

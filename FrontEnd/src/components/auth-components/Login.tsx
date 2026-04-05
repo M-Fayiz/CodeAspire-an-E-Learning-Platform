@@ -20,7 +20,7 @@ export const LoginComponent: React.FC<AuthComponentProps> = ({
     setFormData((prv) => ({ ...prv, [name]: value }));
   };
 
-  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
     const result = loginSchema.safeParse(formData);
@@ -40,9 +40,13 @@ export const LoginComponent: React.FC<AuthComponentProps> = ({
       return;
     }
 
-    onSubmit(formData);
-    setErrors({});
-    setIsLoading(false);
+    try {
+      setErrors({});
+      setIsLoading(true);
+      await onSubmit(formData);
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   return (
