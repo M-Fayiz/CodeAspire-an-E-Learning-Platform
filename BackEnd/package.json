@@ -9,10 +9,13 @@
   "scripts": {
     "dev": "tsx watch src/app.ts",
     "start": "node dist/app.js",
-    "build": "tsc",
+    "build": "tsc -p tsconfig.build.json",
     "lint": "eslint . --ext .js,.mjs,.cjs,.ts,.mts,.cts",
     "lint:fix": "eslint . --ext .js,.mjs,.cjs,.ts,.mts,.cts --fix",
-    "format": "prettier --write ."
+    "format": "prettier --write .",
+    "test": "jest --runInBand",
+    "test:watch": "jest --watch",
+    "test:coverage": "jest --coverage"
   },
   "devDependencies": {
     "@eslint/js": "^9.31.0",
