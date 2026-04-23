@@ -27,13 +27,12 @@ const courseController = new CourseController(courseService);
 const courseRouter = express.Router();
 
 courseRouter.get("/", courseController.fetchCourse);
-
+courseRouter.get("/:courseId", courseController.getCourse);
 courseRouter.use(verifyUser);
 courseRouter.use(authorizedRole(IRole.Mentor, IRole.Admin, IRole.Learner));
 courseRouter.post("/", courseController.addCourse);
 courseRouter.get("/my-courses", courseController.getMentorDraftedCourseList);
 courseRouter.get("/admin-courses", courseController.getAdminCoursList);
-courseRouter.get("/:courseId", courseController.getCourse);
 courseRouter.get("/:courseId/admin", courseController.getAdminCourseDetails);
 courseRouter.get("/admin/:courseId", courseController.getCourseDetails);
 courseRouter.get("/mentor", courseController.getCourseListSlot);
