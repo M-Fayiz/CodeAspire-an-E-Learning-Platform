@@ -1,12 +1,17 @@
 node_modules
-logs
-.npm
-
+npm-debug.log
 
 .env
+.env.*
+!.env.example
+
 .git
 .gitignore
 
 .vscode
+coverage
+logs
+temp
+dist
 Dockerfile
 docker-compose*.yml

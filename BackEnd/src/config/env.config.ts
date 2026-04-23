@@ -6,7 +6,7 @@ export const env = {
     return process.env.NODE_ENV;
   },
   get port() {
-    return process.env.Port;
+    return process.env.PORT;
   },
   get MONGO_URL() {
     return process.env.MONGO_URL;

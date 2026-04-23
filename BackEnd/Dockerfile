@@ -1,12 +1,24 @@
-FROM node:18-alpine
+FROM node:22-alpine
 
 WORKDIR /app
 
 COPY package*.json ./
-RUN npm install --omit=dev
+RUN npm ci
 
-COPY dist ./dist
-COPY public ./public
+COPY . .
+RUN npm run build
+
+
+FROM node:22-alpine AS production
+WORKDIR /app
+
+ENV NODE_ENV=production
+
+COPY package*.json ./
+RUN npm ci --omit=dev
+
+COPY --from=build /app/dist ./dist
+COPY --from=build /app/public ./public
 
 EXPOSE 4000
 
