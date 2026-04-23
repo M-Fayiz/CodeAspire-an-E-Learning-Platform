@@ -1,0 +1,23 @@
+name: Codeaspire backend Deployment
+
+on:
+  push:
+    branches: ["main"]
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    defaults:
+      run:
+        working-directory: BackEnd
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Login to Docker Hub
+        run: echo "${{ secrets.DOCKERHUB_TOKEN }}" | docker login -u "${{ secrets.DOCKERHUB_USERNAME }}" --password-stdin
+      - name: Build Docker image
+        run: docker build -t fayizch/codeaspire-backend:latest .
+      - name: Push Docker image
+        run: docker push fayizch/codeaspire-backend:latest
