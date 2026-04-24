@@ -243,25 +243,6 @@ export class SlotBookingService implements ISlotBookingService {
       throw createHttpError(HttpStatus.NOT_FOUND, HttpResponse.NO_BOOKED_SLOT);
     }
 
-    const now = new Date();
-    const startTime = new Date(bookedData.startTime);
-    const endTime = new Date(bookedData.endTime);
-
-    const EARLY_JOIN_BUFFER = Number(env.EARLY_JOIN_BUFFER) * 60 * 1000;
-
-    const currentDate = now.toISOString().split("T")[0];
-    const sessionDate = new Date(bookedData.date).toISOString().split("T")[0];
-    // if (currentDate !== sessionDate) {
-    //   throw createHttpError(HttpStatus.CONFLICT, HttpResponse.SLOT_DATE);
-    // }
-
-    // if (now.getTime() < startTime.getTime() - EARLY_JOIN_BUFFER) {
-    //   throw createHttpError(HttpStatus.CONFLICT, HttpResponse.NOT_STARTED);
-    // }
-
-    // if (now.getTime() > endTime.getTime()) {
-    //   throw createHttpError(HttpStatus.CONFLICT, HttpResponse.SESSION_ENDED);
-    // }
     const notifyDataMentor = NotificationTemplates.JoinNowSession(
       bookedData.mentorId,
     );
@@ -332,7 +313,7 @@ export class SlotBookingService implements ISlotBookingService {
       bookedId: updatedData._id,
     };
   }
-  async getBookedSlots(date: Date): Promise<Types.ObjectId[]> {
+  async getBookedSlots(_date: Date): Promise<Types.ObjectId[]> {
     const slots = await this._slotBookingRepository.findAllSlots({});
     if (!slots) {
       throw createHttpError(HttpStatus.NOT_FOUND, HttpResponse.NO_BOOKED_SLOT);
