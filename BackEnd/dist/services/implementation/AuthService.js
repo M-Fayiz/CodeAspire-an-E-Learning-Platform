@@ -52,9 +52,15 @@ class AuthService {
             password: storedData.password,
             role: storedData.role,
             isActive: true,
+            isVerified: true,
             ApprovalStatus: user_types_1.mentorApprovalStatus.PENDING,
             isRequested: false,
         };
+        const isExistingUser = await this._userRepo.findUserByEmail(storedData.email);
+        if (isExistingUser) {
+            await redis_config_1.default.del(key);
+            throw (0, http_error_1.createHttpError)(http_status_const_1.HttpStatus.CONFLICT, error_message_const_1.HttpResponse.USER_EXIST);
+        }
         const newUser = await this._userRepo.createUser(user);
         await redis_config_1.default.del(key);
         if (!newUser) {

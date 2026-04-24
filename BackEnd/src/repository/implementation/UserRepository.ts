@@ -70,6 +70,7 @@ export class UserRepository
         name: profile.displayName,
         role: role,
         isActive: true,
+        isVerified: true,
       });
     }
     return user;

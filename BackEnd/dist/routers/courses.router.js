@@ -23,12 +23,12 @@ const courseService = new CourseService_1.CourseService(courseRepository, catego
 const courseController = new CourseController_1.CourseController(courseService);
 const courseRouter = express_1.default.Router();
 courseRouter.get("/", courseController.fetchCourse);
+courseRouter.get("/:courseId", courseController.getCourse);
 courseRouter.use(authentication_middleware_1.verifyUser);
 courseRouter.use((0, authorisation_middleware_1.authorizedRole)(user_types_1.IRole.Mentor, user_types_1.IRole.Admin, user_types_1.IRole.Learner));
 courseRouter.post("/", courseController.addCourse);
 courseRouter.get("/my-courses", courseController.getMentorDraftedCourseList);
 courseRouter.get("/admin-courses", courseController.getAdminCoursList);
-courseRouter.get("/:courseId", courseController.getCourse);
 courseRouter.get("/:courseId/admin", courseController.getAdminCourseDetails);
 courseRouter.get("/admin/:courseId", courseController.getCourseDetails);
 courseRouter.get("/mentor", courseController.getCourseListSlot);

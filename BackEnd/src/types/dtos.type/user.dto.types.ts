@@ -39,6 +39,7 @@ export interface IUserDTO {
   email: string;
   profile: string | undefined;
   role: IRole;
+  isVerified: boolean;
   ApprovalStatus?: mentorApprovalStatus;
   isRequested?: boolean;
 }

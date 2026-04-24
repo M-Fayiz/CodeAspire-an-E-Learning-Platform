@@ -77,9 +77,16 @@ export class AuthService implements IAuthService {
       password: storedData.password,
       role: storedData.role,
       isActive: true,
+      isVerified: true,
       ApprovalStatus: mentorApprovalStatus.PENDING,
       isRequested: false,
     };
+
+    const isExistingUser = await this._userRepo.findUserByEmail(storedData.email);
+    if (isExistingUser) {
+      await redisClient.del(key);
+      throw createHttpError(HttpStatus.CONFLICT, HttpResponse.USER_EXIST);
+    }
 
     const newUser = await this._userRepo.createUser(user as IUserModel);
     await redisClient.del(key);

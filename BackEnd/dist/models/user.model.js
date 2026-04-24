@@ -10,7 +10,13 @@ const modelName_const_1 = require("../const/modelName.const");
 const option = { discriminatorKey: "role", timestamps: true };
 const BaseUserSchema = new mongoose_1.default.Schema({
     name: { type: String, required: true },
-    email: { type: String, required: true },
+    email: {
+        type: String,
+        required: true,
+        unique: true,
+        lowercase: true,
+        trim: true,
+    },
     role: {
         type: String,
         enum: Object.values(user_types_1.IRole),
@@ -22,6 +28,7 @@ const BaseUserSchema = new mongoose_1.default.Schema({
     profilePicture: String,
     googleId: { type: String },
     isActive: { type: Boolean, default: true },
+    isVerified: { type: Boolean, default: false },
     ApprovalStatus: {
         type: String,
         enum: ["pending", "approved", "rejected", "requested"],

@@ -63,13 +63,19 @@ class BaseRepository {
         return this.model.findOneAndUpdate({ slug: slug }, { $set: update }, { new: true });
     }
     async pushToArray(filter, arrayPath, element) {
-        return this.model.findOneAndUpdate(filter, { $push: { [arrayPath]: element } }, { new: true }).lean().exec();
+        return this.model
+            .findOneAndUpdate(filter, { $push: { [arrayPath]: element } }, { new: true })
+            .lean()
+            .exec();
     }
     async findItemAndUpdate(filter, update, options = { new: true }) {
         return this.model.findOneAndUpdate(filter, update, options);
     }
     async addToSet(filter, arrayPath, element) {
-        return this.model.findOneAndUpdate(filter, { $addToSet: { [arrayPath]: element } }, { new: true }).lean().exec();
+        return this.model
+            .findOneAndUpdate(filter, { $addToSet: { [arrayPath]: element } }, { new: true })
+            .lean()
+            .exec();
     }
     async aggregate(pipeline) {
         return this.model.aggregate(pipeline).exec();
@@ -84,7 +90,10 @@ class BaseRepository {
             .lean();
     }
     async pullFromArray(filter, arrayPath, match) {
-        return this.model.findOneAndUpdate(filter, { $pull: { [arrayPath]: match } }, { new: true }).lean().exec();
+        return this.model
+            .findOneAndUpdate(filter, { $pull: { [arrayPath]: match } }, { new: true })
+            .lean()
+            .exec();
     }
     async findByIDAndUpdateProfile(id, update) {
         return this.model.findByIdAndUpdate(id, { $set: update }, {

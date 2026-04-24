@@ -170,21 +170,6 @@ class SlotBookingService {
         if (!bookedData) {
             throw (0, http_error_1.createHttpError)(http_status_const_1.HttpStatus.NOT_FOUND, error_message_const_1.HttpResponse.NO_BOOKED_SLOT);
         }
-        const now = new Date();
-        const startTime = new Date(bookedData.startTime);
-        const endTime = new Date(bookedData.endTime);
-        const EARLY_JOIN_BUFFER = Number(env_config_1.env.EARLY_JOIN_BUFFER) * 60 * 1000;
-        const currentDate = now.toISOString().split("T")[0];
-        const sessionDate = new Date(bookedData.date).toISOString().split("T")[0];
-        // if (currentDate !== sessionDate) {
-        //   throw createHttpError(HttpStatus.CONFLICT, HttpResponse.SLOT_DATE);
-        // }
-        // if (now.getTime() < startTime.getTime() - EARLY_JOIN_BUFFER) {
-        //   throw createHttpError(HttpStatus.CONFLICT, HttpResponse.NOT_STARTED);
-        // }
-        // if (now.getTime() > endTime.getTime()) {
-        //   throw createHttpError(HttpStatus.CONFLICT, HttpResponse.SESSION_ENDED);
-        // }
         const notifyDataMentor = notification_template_1.NotificationTemplates.JoinNowSession(bookedData.mentorId);
         const notifyDataLerner = notification_template_1.NotificationTemplates.JoinNowSession(bookedData.learnerId);
         const createdMentorNotify = await this._notificationRepository.createNotification(notifyDataMentor);
@@ -225,7 +210,7 @@ class SlotBookingService {
             bookedId: updatedData._id,
         };
     }
-    async getBookedSlots(date) {
+    async getBookedSlots(_date) {
         const slots = await this._slotBookingRepository.findAllSlots({});
         if (!slots) {
             throw (0, http_error_1.createHttpError)(http_status_const_1.HttpStatus.NOT_FOUND, error_message_const_1.HttpResponse.NO_BOOKED_SLOT);

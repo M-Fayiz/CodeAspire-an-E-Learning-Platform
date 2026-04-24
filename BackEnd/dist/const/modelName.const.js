@@ -3,6 +3,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.DbModelName = void 0;
 var DbModelName;
 (function (DbModelName) {
+    DbModelName["AUTH_SESSION"] = "AuthSession";
     DbModelName["CATEGORY"] = "Category";
     DbModelName["CHAT"] = "Chat";
     DbModelName["COURSE"] = "Course";

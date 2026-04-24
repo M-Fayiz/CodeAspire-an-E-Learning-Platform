@@ -17,6 +17,7 @@ export interface IUser {
   role: IRole;
   profilePicture?: string;
   isActive: boolean;
+  isVerified: boolean;
   createdAt: Date;
   updatedAt: Date;
   bio?: string;

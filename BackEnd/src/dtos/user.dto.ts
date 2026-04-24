@@ -8,6 +8,7 @@ export function userDTO(user: IAnyUser): IUserDTO {
     email: user.email,
     role: user.role,
     profile: user.profilePicture,
+    isVerified: user.isVerified,
     ApprovalStatus: user.ApprovalStatus,
     isRequested: user.isRequested,
   };

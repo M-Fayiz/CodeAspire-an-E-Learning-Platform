@@ -1,4 +1,5 @@
 export enum DbModelName {
+  AUTH_SESSION = "AuthSession",
   CATEGORY = "Category",
   CHAT = "Chat",
   COURSE = "Course",

@@ -27,7 +27,13 @@ export interface ILearnerModel
 const BaseUserSchema = new mongoose.Schema(
   {
     name: { type: String, required: true },
-    email: { type: String, required: true },
+    email: {
+      type: String,
+      required: true,
+      unique: true,
+      lowercase: true,
+      trim: true,
+    },
 
     role: {
       type: String,
@@ -40,6 +46,7 @@ const BaseUserSchema = new mongoose.Schema(
     profilePicture: String,
     googleId: { type: String },
     isActive: { type: Boolean, default: true },
+    isVerified: { type: Boolean, default: false },
     ApprovalStatus: {
       type: String,
       enum: ["pending", "approved", "rejected", "requested"],
@@ -109,6 +116,7 @@ export interface IPayload {
   name?: string;
   email: string;
   role: IRole;
+  isVerified?: boolean;
   ApprovalStatus?: mentorApprovalStatus;
   isRequested?: boolean;
 }

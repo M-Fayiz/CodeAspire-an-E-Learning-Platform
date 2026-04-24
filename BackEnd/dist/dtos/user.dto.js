@@ -8,6 +8,7 @@ function userDTO(user) {
         email: user.email,
         role: user.role,
         profile: user.profilePicture,
+        isVerified: user.isVerified,
         ApprovalStatus: user.ApprovalStatus,
         isRequested: user.isRequested,
     };

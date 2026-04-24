@@ -41,6 +41,7 @@ class UserRepository extends baseRepository_1.BaseRepository {
                 name: profile.displayName,
                 role: role,
                 isActive: true,
+                isVerified: true,
             });
         }
         return user;
